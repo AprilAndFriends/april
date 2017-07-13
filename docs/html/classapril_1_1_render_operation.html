@@ -59,7 +59,7 @@
 </div><!--header-->
 <div class="contents">
 
-<p>Defines possible rendering methods.  
+<p>Checks if this is a triangle-based <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a>.  
  <a href="classapril_1_1_render_operation.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="april_util_8h_source.html">aprilUtil.h</a>&gt;</code></p>
@@ -104,6 +104,15 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
 <tr class="memitem:a6e82ec019eb8a53895b3f56f6660a67a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6e82ec019eb8a53895b3f56f6660a67a"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;other) const </td></tr>
 <tr class="separator:a6e82ec019eb8a53895b3f56f6660a67a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf23f8aca2c01fe5ebf5b3eb5dea316a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acf23f8aca2c01fe5ebf5b3eb5dea316a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isTriangle</b> () const </td></tr>
+<tr class="separator:acf23f8aca2c01fe5ebf5b3eb5dea316a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b1e4999c1e0c474ad99619edc017295"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4b1e4999c1e0c474ad99619edc017295"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isLine</b> () const </td></tr>
+<tr class="separator:a4b1e4999c1e0c474ad99619edc017295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac06b80f134b4270440941354ae62a3e1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac06b80f134b4270440941354ae62a3e1"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isPoint</b> () const </td></tr>
+<tr class="separator:ac06b80f134b4270440941354ae62a3e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -145,9 +154,6 @@ static const <a class="el" href="classapril_1_1_render_operation.html">RenderOpe
 static const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_operation.html#add97e2b8052c7c5f05eee28effe4bff0">TriangleStrip</a></td></tr>
 <tr class="memdesc:add97e2b8052c7c5f05eee28effe4bff0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triangle-strip. <br /></td></tr>
 <tr class="separator:add97e2b8052c7c5f05eee28effe4bff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82f153bd7249f2d87a11642de176eaf3"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_operation.html#a82f153bd7249f2d87a11642de176eaf3">TriangleFan</a></td></tr>
-<tr class="memdesc:a82f153bd7249f2d87a11642de176eaf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Triangle-fan.  <a href="#a82f153bd7249f2d87a11642de176eaf3">More...</a><br /></td></tr>
-<tr class="separator:a82f153bd7249f2d87a11642de176eaf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92b6b9b1a2e1484ac6270c9937832413"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a92b6b9b1a2e1484ac6270c9937832413"></a>
 static const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_operation.html#a92b6b9b1a2e1484ac6270c9937832413">LineList</a></td></tr>
 <tr class="memdesc:a92b6b9b1a2e1484ac6270c9937832413"><td class="mdescLeft">&#160;</td><td class="mdescRight">Line-list. <br /></td></tr>
@@ -160,6 +166,9 @@ static const <a class="el" href="classapril_1_1_render_operation.html">RenderOpe
 static const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_operation.html#a418037dcc27aa7df971271475da25244">PointList</a></td></tr>
 <tr class="memdesc:a418037dcc27aa7df971271475da25244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Point-list. <br /></td></tr>
 <tr class="separator:a418037dcc27aa7df971271475da25244"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a445f8cbde1a82ca718d40036b99efe81"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a445f8cbde1a82ca718d40036b99efe81"></a>
+static const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a>&#160;</td><td class="memItemRight" valign="bottom"><b>TriangleFan</b></td></tr>
+<tr class="separator:a445f8cbde1a82ca718d40036b99efe81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -171,32 +180,14 @@ hltypes::Map&lt; unsigned int, hstr &gt; &amp;&#160;</td><td class="memItemRight
 <tr class="separator:a7d41a34864df1b8a272155db79b9264a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Defines possible rendering methods. </p>
-</div><h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="a82f153bd7249f2d87a11642de176eaf3"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> april::RenderOperation::TriangleFan</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Triangle-fan. </p>
-<dl class="section note"><dt>Note</dt><dd>This will be deprecated soon. </dd></dl>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<div class="textblock"><p>Checks if this is a triangle-based <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a>. </p>
+<p>Defines possible rendering methods.</p>
+<dl class="section return"><dt>Returns</dt><dd>True if triangle-based <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a>. Checks if this is a triangle-based <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a>. </dd>
+<dd>
+True if triangle-based <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a>. Checks if this is a triangle-based <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a>. </dd>
+<dd>
+True if triangle-based <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a>. </dd></dl>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/april/<a class="el" href="april_util_8h_source.html">aprilUtil.h</a></li>
 </ul>
 </div><!-- contents -->

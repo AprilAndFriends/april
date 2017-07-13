@@ -131,6 +131,12 @@ aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="
 <tr class="memitem:a666f61065cf5a7b88e583eb438a8d612"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#a666f61065cf5a7b88e583eb438a8d612">april::addSymbolicColor</a> (chstr symbolicName, const <a class="el" href="classapril_1_1_color.html">april::Color</a> &amp;color)</td></tr>
 <tr class="memdesc:a666f61065cf5a7b88e583eb438a8d612"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a new symbolic <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>.  <a href="april_8h.html#a666f61065cf5a7b88e583eb438a8d612">More...</a><br /></td></tr>
 <tr class="separator:a666f61065cf5a7b88e583eb438a8d612"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9447b1313fb7fbb8a47e78ca769cf719"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#a9447b1313fb7fbb8a47e78ca769cf719">april::loadSymbolicColorsFromFile</a> (chstr filename)</td></tr>
+<tr class="memdesc:a9447b1313fb7fbb8a47e78ca769cf719"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a list of symbolic <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> instances from a formatted file.  <a href="april_8h.html#a9447b1313fb7fbb8a47e78ca769cf719">More...</a><br /></td></tr>
+<tr class="separator:a9447b1313fb7fbb8a47e78ca769cf719"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14608b41c5c613e1d870b014fc0d1152"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#a14608b41c5c613e1d870b014fc0d1152">april::loadSymbolicColorsFromResource</a> (chstr filename)</td></tr>
+<tr class="memdesc:a14608b41c5c613e1d870b014fc0d1152"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a list of symbolic <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> instances from a formatted resource file.  <a href="april_8h.html#a14608b41c5c613e1d870b014fc0d1152">More...</a><br /></td></tr>
+<tr class="separator:a14608b41c5c613e1d870b014fc0d1152"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f65b7d96dd2299ca5aa479aa2ee0a57"><td class="memItemLeft" align="right" valign="top">aprilFnExport bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#a0f65b7d96dd2299ca5aa479aa2ee0a57">april::findSymbolicColor</a> (chstr symbolicName, <a class="el" href="classapril_1_1_color.html">april::Color</a> &amp;color)</td></tr>
 <tr class="memdesc:a0f65b7d96dd2299ca5aa479aa2ee0a57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> with the given symbolic name.  <a href="april_8h.html#a0f65b7d96dd2299ca5aa479aa2ee0a57">More...</a><br /></td></tr>
 <tr class="separator:a0f65b7d96dd2299ca5aa479aa2ee0a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -146,13 +152,13 @@ aprilExport hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el
 <tr class="separator:a211c77086f1c3a69f7781e6456216451"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><dl class="section version"><dt>Version</dt><dd>4.3</dd></dl>
+<div class="textblock"><dl class="section version"><dt>Version</dt><dd>4.4</dd></dl>
 <h1><a class="anchor" id="LICENSE"></a>
 LICENSE</h1>
 <p>This program is free software; you can redistribute it and/or modify it under the terms of the BSD license: <a href="http://opensource.org/licenses/BSD-3-Clause">http://opensource.org/licenses/BSD-3-Clause</a></p>
 <h1><a class="anchor" id="DESCRIPTION"></a>
 DESCRIPTION</h1>
-<p>Defines a generic render system. </p>
+<p>Defines API functions. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="file_a666f61065cf5a7b88e583eb438a8d612"></a>
 <div class="memitem">
@@ -907,6 +913,60 @@ createWindow </dd></dl>
 <dl class="section see"><dt>See also</dt><dd>createRenderSystem </dd>
 <dd>
 createWindow </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="file_a9447b1313fb7fbb8a47e78ca769cf719"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">aprilFnExport void april::loadSymbolicColorsFromFile </td>
+          <td>(</td>
+          <td class="paramtype">chstr&#160;</td>
+          <td class="paramname"><em>filename</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Loads a list of symbolic <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> instances from a formatted file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">filename</td><td>The filename. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>If a symbolic <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> with the same name already exists, it will be overwritten. </dd>
+<dd>
+The format is "color:name", one entry per line. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="file_a14608b41c5c613e1d870b014fc0d1152"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">aprilFnExport void april::loadSymbolicColorsFromResource </td>
+          <td>(</td>
+          <td class="paramtype">chstr&#160;</td>
+          <td class="paramname"><em>filename</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Loads a list of symbolic <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> instances from a formatted resource file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">filename</td><td>The filename. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>If a symbolic <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> with the same name already exists, it will be overwritten. </dd>
+<dd>
+The format is "color:name", one entry per line. </dd></dl>
 
 </div>
 </div>

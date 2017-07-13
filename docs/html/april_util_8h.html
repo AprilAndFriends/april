@@ -48,6 +48,7 @@
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">aprilUtil.h File Reference</div>  </div>
@@ -65,7 +66,7 @@
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_operation.html">april::RenderOperation</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines possible rendering methods.  <a href="classapril_1_1_render_operation.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if this is a triangle-based <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a>.  <a href="classapril_1_1_render_operation.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_blend_mode.html">april::BlendMode</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines blending modes.  <a href="classapril_1_1_blend_mode.html#details">More...</a><br /></td></tr>
@@ -86,6 +87,12 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a vertex with a UV-coordinate component and a color component.  <a href="classapril_1_1_colored_textured_vertex.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a69382662eed94572fdd11ddfd9f26bfb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a69382662eed94572fdd11ddfd9f26bfb"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>APRIL_HSTR_SEPARATOR</b>&#160;&#160;&#160;','</td></tr>
+<tr class="separator:a69382662eed94572fdd11ddfd9f26bfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a1c984a257d8355bddfeabee8ec60368e"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_util_8h.html#a1c984a257d8355bddfeabee8ec60368e">april::rgbToHsl</a> (unsigned char r, unsigned char g, unsigned char b, float *h, float *s, float *l)</td></tr>
@@ -97,15 +104,15 @@ Functions</h2></td></tr>
 <tr class="memitem:ab2cc15ff60cd7b47dc48a072f9626aec"><td class="memItemLeft" align="right" valign="top">aprilFnExport hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_util_8h.html#ab2cc15ff60cd7b47dc48a072f9626aec">april::generateName</a> (chstr prefix)</td></tr>
 <tr class="memdesc:ab2cc15ff60cd7b47dc48a072f9626aec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a unique name with a given prefix.  <a href="april_util_8h.html#ab2cc15ff60cd7b47dc48a072f9626aec">More...</a><br /></td></tr>
 <tr class="separator:ab2cc15ff60cd7b47dc48a072f9626aec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a958114af751b5a05d60d00ccfee4f3c0"><td class="memItemLeft" align="right" valign="top">aprilFnExport hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_util_8h.html#a958114af751b5a05d60d00ccfee4f3c0">april::gvec2ToHstr</a> (gvec2 vector)</td></tr>
-<tr class="memdesc:a958114af751b5a05d60d00ccfee4f3c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a string representation for a gtypes::Vector2.  <a href="april_util_8h.html#a958114af751b5a05d60d00ccfee4f3c0">More...</a><br /></td></tr>
-<tr class="separator:a958114af751b5a05d60d00ccfee4f3c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d2d8ba1940d4a10f9fc149e9951b157"><td class="memItemLeft" align="right" valign="top">aprilFnExport hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_util_8h.html#a8d2d8ba1940d4a10f9fc149e9951b157">april::gvec3ToHstr</a> (gvec3 vector)</td></tr>
-<tr class="memdesc:a8d2d8ba1940d4a10f9fc149e9951b157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a string representation for a gtypes::Vector3.  <a href="april_util_8h.html#a8d2d8ba1940d4a10f9fc149e9951b157">More...</a><br /></td></tr>
-<tr class="separator:a8d2d8ba1940d4a10f9fc149e9951b157"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ea5467b351a4f46f9eaf9f2dae1989e"><td class="memItemLeft" align="right" valign="top">aprilFnExport hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_util_8h.html#a4ea5467b351a4f46f9eaf9f2dae1989e">april::grectToHstr</a> (grect rect)</td></tr>
-<tr class="memdesc:a4ea5467b351a4f46f9eaf9f2dae1989e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a string representation for a gtypes::Rectangle.  <a href="april_util_8h.html#a4ea5467b351a4f46f9eaf9f2dae1989e">More...</a><br /></td></tr>
-<tr class="separator:a4ea5467b351a4f46f9eaf9f2dae1989e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64ba8ec9368194ec9e99bf762b3af956"><td class="memItemLeft" align="right" valign="top">aprilFnExport hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_util_8h.html#a64ba8ec9368194ec9e99bf762b3af956">april::gvec2ToHstr</a> (cgvec2 vector)</td></tr>
+<tr class="memdesc:a64ba8ec9368194ec9e99bf762b3af956"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a string representation for a gtypes::Vector2.  <a href="april_util_8h.html#a64ba8ec9368194ec9e99bf762b3af956">More...</a><br /></td></tr>
+<tr class="separator:a64ba8ec9368194ec9e99bf762b3af956"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a366b2d2079bce8ed18bbb80a3576d9fa"><td class="memItemLeft" align="right" valign="top">aprilFnExport hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_util_8h.html#a366b2d2079bce8ed18bbb80a3576d9fa">april::gvec3ToHstr</a> (cgvec3 vector)</td></tr>
+<tr class="memdesc:a366b2d2079bce8ed18bbb80a3576d9fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a string representation for a gtypes::Vector3.  <a href="april_util_8h.html#a366b2d2079bce8ed18bbb80a3576d9fa">More...</a><br /></td></tr>
+<tr class="separator:a366b2d2079bce8ed18bbb80a3576d9fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad395c61faa1b77a4975675e3a6df629e"><td class="memItemLeft" align="right" valign="top">aprilFnExport hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_util_8h.html#ad395c61faa1b77a4975675e3a6df629e">april::grectToHstr</a> (cgrect rect)</td></tr>
+<tr class="memdesc:ad395c61faa1b77a4975675e3a6df629e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a string representation for a gtypes::Rectangle.  <a href="april_util_8h.html#ad395c61faa1b77a4975675e3a6df629e">More...</a><br /></td></tr>
+<tr class="separator:ad395c61faa1b77a4975675e3a6df629e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90d55c20a047df88c1e727a12553adae"><td class="memItemLeft" align="right" valign="top">aprilFnExport gvec2&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_util_8h.html#a90d55c20a047df88c1e727a12553adae">april::hstrToGvec2</a> (chstr string)</td></tr>
 <tr class="memdesc:a90d55c20a047df88c1e727a12553adae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates gtypes::Vector2 from a string representation.  <a href="april_util_8h.html#a90d55c20a047df88c1e727a12553adae">More...</a><br /></td></tr>
 <tr class="separator:a90d55c20a047df88c1e727a12553adae"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -117,7 +124,7 @@ Functions</h2></td></tr>
 <tr class="separator:a1314772c8136b4ceab5f4db63f6818a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><dl class="section version"><dt>Version</dt><dd>4.3</dd></dl>
+<div class="textblock"><dl class="section version"><dt>Version</dt><dd>4.4</dd></dl>
 <h1><a class="anchor" id="LICENSE"></a>
 LICENSE</h1>
 <p>This program is free software; you can redistribute it and/or modify it under the terms of the BSD license: <a href="http://opensource.org/licenses/BSD-3-Clause">http://opensource.org/licenses/BSD-3-Clause</a></p>
@@ -150,18 +157,26 @@ DESCRIPTION</h1>
 
 </div>
 </div>
-<a class="anchor" id="file_a4ea5467b351a4f46f9eaf9f2dae1989e"></a>
+<a class="anchor" id="file_ad395c61faa1b77a4975675e3a6df629e"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">aprilFnExport hstr april::grectToHstr </td>
           <td>(</td>
-          <td class="paramtype">grect&#160;</td>
+          <td class="paramtype">cgrect&#160;</td>
           <td class="paramname"><em>rect</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Creates a string representation for a gtypes::Rectangle. </p>
@@ -176,18 +191,26 @@ DESCRIPTION</h1>
 
 </div>
 </div>
-<a class="anchor" id="file_a958114af751b5a05d60d00ccfee4f3c0"></a>
+<a class="anchor" id="file_a64ba8ec9368194ec9e99bf762b3af956"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">aprilFnExport hstr april::gvec2ToHstr </td>
           <td>(</td>
-          <td class="paramtype">gvec2&#160;</td>
+          <td class="paramtype">cgvec2&#160;</td>
           <td class="paramname"><em>vector</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Creates a string representation for a gtypes::Vector2. </p>
@@ -202,18 +225,26 @@ DESCRIPTION</h1>
 
 </div>
 </div>
-<a class="anchor" id="file_a8d2d8ba1940d4a10f9fc149e9951b157"></a>
+<a class="anchor" id="file_a366b2d2079bce8ed18bbb80a3576d9fa"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">aprilFnExport hstr april::gvec3ToHstr </td>
           <td>(</td>
-          <td class="paramtype">gvec3&#160;</td>
+          <td class="paramtype">cgvec3&#160;</td>
           <td class="paramname"><em>vector</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Creates a string representation for a gtypes::Vector3. </p>
@@ -295,6 +326,9 @@ DESCRIPTION</h1>
 <a class="anchor" id="file_a1314772c8136b4ceab5f4db63f6818a1"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">aprilFnExport grect april::hstrToGrect </td>
@@ -304,6 +338,11 @@ DESCRIPTION</h1>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Creates gtypes::Rectangle from a string representation. </p>
@@ -321,6 +360,9 @@ DESCRIPTION</h1>
 <a class="anchor" id="file_a90d55c20a047df88c1e727a12553adae"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">aprilFnExport gvec2 april::hstrToGvec2 </td>
@@ -330,6 +372,11 @@ DESCRIPTION</h1>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Creates gtypes::Vector2 from a string representation. </p>
@@ -347,6 +394,9 @@ DESCRIPTION</h1>
 <a class="anchor" id="file_a112000813fcc383ebcf80dcd74a1fe46"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">aprilFnExport gvec3 april::hstrToGvec3 </td>
@@ -356,6 +406,11 @@ DESCRIPTION</h1>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Creates gtypes::Vector3 from a string representation. </p>

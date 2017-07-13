@@ -95,20 +95,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a8234d39601622f2dd10867f21ac6380f"><td class="memItemLeft" align="right" valign="top">aprilFnExport bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_platform_8h.html#a8234d39601622f2dd10867f21ac6380f">april::openUrl</a> (chstr url)</td></tr>
 <tr class="memdesc:a8234d39601622f2dd10867f21ac6380f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opens a URL.  <a href="_platform_8h.html#a8234d39601622f2dd10867f21ac6380f">More...</a><br /></td></tr>
 <tr class="separator:a8234d39601622f2dd10867f21ac6380f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0178bea9ebca226b31b73c2163d31559"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_platform_8h.html#a0178bea9ebca226b31b73c2163d31559">april::messageBox</a> (chstr title, chstr text, MessageBoxButton buttons=MessageBoxButton::Ok, MessageBoxStyle style=MessageBoxStyle::Normal, hmap&lt; MessageBoxButton, hstr &gt; customButtonTitles=hmap&lt; MessageBoxButton, hstr &gt;(), void(*callback)(MessageBoxButton)=NULL, bool modal=false, bool terminateOnDisplay=false)</td></tr>
-<tr class="memdesc:a0178bea9ebca226b31b73c2163d31559"><td class="mdescLeft">&#160;</td><td class="mdescRight">Displays an OS message box.  <a href="_platform_8h.html#a0178bea9ebca226b31b73c2163d31559">More...</a><br /></td></tr>
-<tr class="separator:a0178bea9ebca226b31b73c2163d31559"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86caaa67214e38a92e7272460685b620"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a86caaa67214e38a92e7272460685b620"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_platform_8h.html#a86caaa67214e38a92e7272460685b620">april::_makeButtonLabels</a> (hstr *ok, hstr *yes, hstr *no, hstr *cancel, MessageBoxButton buttons, hmap&lt; MessageBoxButton, hstr &gt; customButtonTitles)</td></tr>
-<tr class="memdesc:a86caaa67214e38a92e7272460685b620"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used internally only. <br /></td></tr>
-<tr class="separator:a86caaa67214e38a92e7272460685b620"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0c3b20c220404ea420f8aa37a540333"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af0c3b20c220404ea420f8aa37a540333"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_platform_8h.html#af0c3b20c220404ea420f8aa37a540333">april::messageBox_platform</a> (chstr title, chstr text, MessageBoxButton buttons=MessageBoxButton::Ok, MessageBoxStyle style=MessageBoxStyle::Normal, hmap&lt; MessageBoxButton, hstr &gt; customButtonTitles=hmap&lt; MessageBoxButton, hstr &gt;(), void(*callback)(MessageBoxButton)=NULL, bool modal=false)</td></tr>
-<tr class="memdesc:af0c3b20c220404ea420f8aa37a540333"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used internally only. <br /></td></tr>
-<tr class="separator:af0c3b20c220404ea420f8aa37a540333"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d303a5c29fa821567711d70e5321714"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_platform_8h.html#a7d303a5c29fa821567711d70e5321714">april::showMessageBox</a> (chstr title, chstr text, MessageBoxButton buttons=MessageBoxButton::Ok, MessageBoxStyle style=MessageBoxStyle::Normal, hmap&lt; MessageBoxButton, hstr &gt; customButtonTitles=hmap&lt; MessageBoxButton, hstr &gt;(), void(*callback)(MessageBoxButton)=NULL, bool modal=false, bool terminateOnDisplay=false)</td></tr>
+<tr class="memdesc:a7d303a5c29fa821567711d70e5321714"><td class="mdescLeft">&#160;</td><td class="mdescRight">Displays an OS message box.  <a href="_platform_8h.html#a7d303a5c29fa821567711d70e5321714">More...</a><br /></td></tr>
+<tr class="separator:a7d303a5c29fa821567711d70e5321714"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><dl class="section version"><dt>Version</dt><dd>4.3</dd></dl>
+<div class="textblock"><dl class="section version"><dt>Version</dt><dd>4.4</dd></dl>
 <h1><a class="anchor" id="LICENSE"></a>
 LICENSE</h1>
 <p>This program is free software; you can redistribute it and/or modify it under the terms of the BSD license: <a href="http://opensource.org/licenses/BSD-3-Clause">http://opensource.org/licenses/BSD-3-Clause</a></p>
@@ -210,12 +202,38 @@ DESCRIPTION</h1>
 
 </div>
 </div>
-<a class="anchor" id="file_a0178bea9ebca226b31b73c2163d31559"></a>
+<a class="anchor" id="file_a8234d39601622f2dd10867f21ac6380f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">aprilFnExport void april::messageBox </td>
+          <td class="memname">aprilFnExport bool april::openUrl </td>
+          <td>(</td>
+          <td class="paramtype">chstr&#160;</td>
+          <td class="paramname"><em>url</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Opens a URL. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">url</td><td>The URL to open. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the system call was successful. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The return value might be true even if a URL couldn't be opened due to problems, e.g. Internet connectivity. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="file_a7d303a5c29fa821567711d70e5321714"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">aprilFnExport void april::showMessageBox </td>
           <td>(</td>
           <td class="paramtype">chstr&#160;</td>
           <td class="paramname"><em>title</em>, </td>
@@ -293,32 +311,6 @@ terminateOnDisplay may not work the same way in all OSes. </dd>
 Depending on the OS, this function may return immediately. Write your code to assume that this function is asynchronous to avoid problems. </dd>
 <dd>
 Expect that "callback" will be called asynchrously once the message box is dismissed. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="file_a8234d39601622f2dd10867f21ac6380f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">aprilFnExport bool april::openUrl </td>
-          <td>(</td>
-          <td class="paramtype">chstr&#160;</td>
-          <td class="paramname"><em>url</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Opens a URL. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">url</td><td>The URL to open. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the system call was successful. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The return value might be true even if a URL couldn't be opened due to problems, e.g. Internet connectivity. </dd></dl>
 
 </div>
 </div>
