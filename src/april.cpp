@@ -13,6 +13,7 @@
 
 #define __HL_INCLUDE_PLATFORM_HEADERS
 #include <hltypes/harray.h>
+#include <hltypes/hfile.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hplatform.h>
@@ -547,6 +548,30 @@ namespace april
 	void addSymbolicColor(chstr symbolicName, const april::Color& color)
 	{
 		symbolicColors[symbolicName] = color;
+	}
+
+	static void _loadSymbolicColors(chstr stream)
+	{
+		harray<hstr> lines = stream.replaced("\r\n", "\n").split('\n', -1, true);
+		harray<hstr> data;
+		foreach (hstr, it, lines)
+		{
+			data = (*it).split(':', 1, true);
+			if (data.size() == 2)
+			{
+				symbolicColors[data[1]] = data[0];
+			}
+		}
+	}
+
+	void loadSymbolicColorsFromFile(chstr filename)
+	{
+		_loadSymbolicColors(hfile::hread(filename));
+	}
+	
+	void loadSymbolicColorsFromResource(chstr filename)
+	{
+		_loadSymbolicColors(hresource::hread(filename));
 	}
 
 	bool findSymbolicColor(chstr symbolicName, april::Color& color)
