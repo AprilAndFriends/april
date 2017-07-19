@@ -214,10 +214,10 @@ namespace april
 #endif
 		hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
 		hlog::write(logTag, "Extensions supported: " + extensions);
-#ifndef _WINRT
-		this->caps.npotTexturesLimited = (extensions.contains("IMG_texture_npot") || extensions.contains("APPLE_texture_2D_limited_npot"));
-#else
+#if defined(_IOS) || defined(_WINRT) // iOS devices support limited NPOT textures as per device specification since iPhone 3G S
 		this->caps.npotTexturesLimited = true;
+#else
+		this->caps.npotTexturesLimited = (extensions.contains("IMG_texture_npot") || extensions.contains("APPLE_texture_2D_limited_npot"));
 #endif
 		this->caps.npotTextures = (extensions.contains("OES_texture_npot") || extensions.contains("ARB_texture_non_power_of_two"));
 		// TODO - is there a way to make this work on Win32?
