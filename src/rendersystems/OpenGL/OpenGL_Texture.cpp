@@ -179,7 +179,7 @@ namespace april
 				this->_uploadPotSafeClearData();
 			}
 			int srcBpp = srcFormat.getBpp();
-			if (sx == 0 && dx == 0 && srcWidth == this->width && sw == this->width)
+			if (sx == 0 && dx == 0 && sw == this->width && srcWidth == this->width)
 			{
 				glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + sy * srcWidth) * srcBpp]);
 			}
