@@ -56,18 +56,9 @@ namespace april
 			{
 				return " 7";
 			}
-			osVersionInfo.dwMinorVersion = 2;
-			if (VerifyVersionInfoW(&osVersionInfo, VER_MINORVERSION, conditionMask) != 0)
-			{
-				return " 8";
-			}
-			osVersionInfo.dwMinorVersion = 3;
-			if (VerifyVersionInfoW(&osVersionInfo, VER_MINORVERSION, conditionMask) != 0)
-			{
-				return " 8.1";
-			}
-			// all future 6.x Windows versions will be labeled as "8.x" to avoid assumptions
-			return " 8.x";
+			// MS completely ruined version detection from Win 8 onwards and requires a manifest to even
+			// be able to tell what Windows version is running so let's just call it all Windows 10
+			return " 10";
 		}
 		osVersionInfo.dwMajorVersion = 10;
 		if (VerifyVersionInfoW(&osVersionInfo, VER_MAJORVERSION, conditionMask) != 0)
