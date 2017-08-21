@@ -224,12 +224,12 @@ namespace april
 	/// @brief Loads a list of symbolic Color instances from a formatted file.
 	/// @param[in] filename The filename.
 	/// @note If a symbolic Color with the same name already exists, it will be overwritten.
-	/// @note The format is "color:name", one entry per line.
+	/// @note The format is "color:name", one entry per line. Lines starting with # are regarded as comments and will be ignored.
 	aprilFnExport void loadSymbolicColorsFromFile(chstr filename);
 	/// @brief Loads a list of symbolic Color instances from a formatted resource file.
 	/// @param[in] filename The filename.
 	/// @note If a symbolic Color with the same name already exists, it will be overwritten.
-	/// @note The format is "color:name", one entry per line.
+	/// @note The format is "color:name", one entry per line. Lines starting with # are regarded as comments and will be ignored.
 	aprilFnExport void loadSymbolicColorsFromResource(chstr filename);
 	/// @brief Finds the Color with the given symbolic name.
 	/// @param[in] symbolicName The name of the Color.

@@ -556,10 +556,13 @@ namespace april
 		harray<hstr> data;
 		foreach (hstr, it, lines)
 		{
-			data = (*it).split(':', 1, true);
-			if (data.size() == 2)
+			if (!(*it).trimmedLeft.startsWith("#"))
 			{
-				symbolicColors[data[1]] = data[0];
+				data = (*it).split(':', 1, true);
+				if (data.size() == 2)
+				{
+					symbolicColors[data[1]] = data[0];
+				}
 			}
 		}
 	}
