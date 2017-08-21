@@ -556,7 +556,7 @@ namespace april
 		harray<hstr> data;
 		foreach (hstr, it, lines)
 		{
-			if (!(*it).trimmedLeft.startsWith("#"))
+			if (!(*it).trimmedLeft().startsWith("#"))
 			{
 				data = (*it).split(':', 1, true);
 				if (data.size() == 2)
