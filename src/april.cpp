@@ -215,49 +215,7 @@ namespace april
 		hlog::write(logTag, "Initializing APRIL: " + version.toString());
 		hlog::writef(logTag, "Platform: %s %s, %d bit", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
 		// symbolic colors
-		symbolicColors["white"] = april::Color::White;
-		symbolicColors["black"] = april::Color::Black;
-		symbolicColors["grey"] = april::Color::Grey;
-		symbolicColors["red"] = april::Color::Red;
-		symbolicColors["green"] = april::Color::Green;
-		symbolicColors["blue"] = april::Color::Blue;
-		symbolicColors["yellow"] = april::Color::Yellow;
-		symbolicColors["magenta"] = april::Color::Magenta;
-		symbolicColors["cyan"] = april::Color::Cyan;
-		symbolicColors["orange"] = april::Color::Orange;
-		symbolicColors["pink"] = april::Color::Pink;
-		symbolicColors["teal"] = april::Color::Teal;
-		symbolicColors["neon"] = april::Color::Neon;
-		symbolicColors["purple"] = april::Color::Purple;
-		symbolicColors["aqua"] = april::Color::Aqua;
-		symbolicColors["light_grey"] = april::Color::LightGrey;
-		symbolicColors["light_red"] = april::Color::LightRed;
-		symbolicColors["light_green"] = april::Color::LightGreen;
-		symbolicColors["light_blue"] = april::Color::LightBlue;
-		symbolicColors["light_yellow"] = april::Color::LightYellow;
-		symbolicColors["light_magenta"] = april::Color::LightMagenta;
-		symbolicColors["light_cyan"] = april::Color::LightCyan;
-		symbolicColors["light_orange"] = april::Color::LightOrange;
-		symbolicColors["light_pink"] = april::Color::LightPink;
-		symbolicColors["light_teal"] = april::Color::LightTeal;
-		symbolicColors["light_neon"] = april::Color::LightNeon;
-		symbolicColors["light_purple"] = april::Color::LightPurple;
-		symbolicColors["light_aqua"] = april::Color::LightAqua;
-		symbolicColors["dark_grey"] = april::Color::DarkGrey;
-		symbolicColors["dark_red"] = april::Color::DarkRed;
-		symbolicColors["dark_green"] = april::Color::DarkGreen;
-		symbolicColors["dark_blue"] = april::Color::DarkBlue;
-		symbolicColors["dark_yellow"] = april::Color::DarkYellow;
-		symbolicColors["dark_magenta"] = april::Color::DarkMagenta;
-		symbolicColors["dark_cyan"] = april::Color::DarkCyan;
-		symbolicColors["dark_orange"] = april::Color::DarkOrange;
-		symbolicColors["dark_pink"] = april::Color::DarkPink;
-		symbolicColors["dark_teal"] = april::Color::DarkTeal;
-		symbolicColors["dark_neon"] = april::Color::DarkNeon;
-		symbolicColors["dark_purple"] = april::Color::DarkPurple;
-		symbolicColors["dark_aqua"] = april::Color::DarkAqua;
-        symbolicColors["clear"] = april::Color::Clear;
-        symbolicColors["blank"] = april::Color::Blank;
+		resetSymbolicColors();
         
 		// extensions
 		if (extensions.size() == 0)
@@ -595,6 +553,54 @@ namespace april
 			return true;
 		}
 		return false;
+	}
+
+	void resetSymbolicColors()
+	{
+		symbolicColors.clear();
+		symbolicColors["white"] = april::Color::White;
+		symbolicColors["black"] = april::Color::Black;
+		symbolicColors["grey"] = april::Color::Grey;
+		symbolicColors["red"] = april::Color::Red;
+		symbolicColors["green"] = april::Color::Green;
+		symbolicColors["blue"] = april::Color::Blue;
+		symbolicColors["yellow"] = april::Color::Yellow;
+		symbolicColors["magenta"] = april::Color::Magenta;
+		symbolicColors["cyan"] = april::Color::Cyan;
+		symbolicColors["orange"] = april::Color::Orange;
+		symbolicColors["pink"] = april::Color::Pink;
+		symbolicColors["teal"] = april::Color::Teal;
+		symbolicColors["neon"] = april::Color::Neon;
+		symbolicColors["purple"] = april::Color::Purple;
+		symbolicColors["aqua"] = april::Color::Aqua;
+		symbolicColors["light_grey"] = april::Color::LightGrey;
+		symbolicColors["light_red"] = april::Color::LightRed;
+		symbolicColors["light_green"] = april::Color::LightGreen;
+		symbolicColors["light_blue"] = april::Color::LightBlue;
+		symbolicColors["light_yellow"] = april::Color::LightYellow;
+		symbolicColors["light_magenta"] = april::Color::LightMagenta;
+		symbolicColors["light_cyan"] = april::Color::LightCyan;
+		symbolicColors["light_orange"] = april::Color::LightOrange;
+		symbolicColors["light_pink"] = april::Color::LightPink;
+		symbolicColors["light_teal"] = april::Color::LightTeal;
+		symbolicColors["light_neon"] = april::Color::LightNeon;
+		symbolicColors["light_purple"] = april::Color::LightPurple;
+		symbolicColors["light_aqua"] = april::Color::LightAqua;
+		symbolicColors["dark_grey"] = april::Color::DarkGrey;
+		symbolicColors["dark_red"] = april::Color::DarkRed;
+		symbolicColors["dark_green"] = april::Color::DarkGreen;
+		symbolicColors["dark_blue"] = april::Color::DarkBlue;
+		symbolicColors["dark_yellow"] = april::Color::DarkYellow;
+		symbolicColors["dark_magenta"] = april::Color::DarkMagenta;
+		symbolicColors["dark_cyan"] = april::Color::DarkCyan;
+		symbolicColors["dark_orange"] = april::Color::DarkOrange;
+		symbolicColors["dark_pink"] = april::Color::DarkPink;
+		symbolicColors["dark_teal"] = april::Color::DarkTeal;
+		symbolicColors["dark_neon"] = april::Color::DarkNeon;
+		symbolicColors["dark_purple"] = april::Color::DarkPurple;
+		symbolicColors["dark_aqua"] = april::Color::DarkAqua;
+		symbolicColors["clear"] = april::Color::Clear;
+		symbolicColors["blank"] = april::Color::Blank;
 	}
 
 }

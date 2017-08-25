@@ -241,6 +241,8 @@ namespace april
 	/// @param[out] hexColor The output hex string for the color.
 	/// @return True if Color exists and return succeeded. False if Color under symbolicName does not exist.
 	aprilFnExport bool findSymbolicColor(chstr symbolicName, hstr& hexColor);
+	/// @brief Resets symbolic colors to default.
+	aprilFnExport void resetSymbolicColors();
 
 }
 #endif
