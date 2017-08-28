@@ -135,7 +135,6 @@ namespace april
 		// GL defaults
 		glEnable(GL_BLEND);
 		glEnable(GL_TEXTURE_2D);
-		glDisable(GL_ALPHA_TEST);
 		// pixel data
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
