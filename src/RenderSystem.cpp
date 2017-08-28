@@ -77,6 +77,7 @@ namespace april
 	{
 		this->depthBuffer = false;
 		this->vSync = true;
+		this->tripleBuffering = false;
 		this->debugInfo = false;
 	}
 

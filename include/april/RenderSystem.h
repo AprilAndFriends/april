@@ -103,6 +103,8 @@ namespace april
 			bool depthBuffer;
 			/// @brief Vertical Sync.
 			bool vSync;
+			/// @brief Triple back buffer.
+			bool tripleBuffering;
 			/// @brief Special debug info.
 			bool debugInfo;
 
