@@ -40,29 +40,34 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 @property (nonatomic, assign) april::MessageBoxButton *buttonTypes;
 @property (nonatomic, readonly) april::MessageBoxButton selectedButton;
 @end
+
 @implementation AprilMessageBoxDelegate
+
 @synthesize callback;
 @synthesize selectedButton;
 @dynamic buttonTypes;
+
 -(id)initWithModality:(BOOL)_isModal
 {
 	self = [super init];
-	if(self)
+	if (self)
 	{
 		runLoop = CFRunLoopGetCurrent();
 		isModal = _isModal;
 	}
 	return self;
 }
+
 -(april::MessageBoxButton*)buttonTypes
 {
 	return buttonTypes;
 }
+
 -(void)setButtonTypes:(april::MessageBoxButton*)_buttonTypes
 {
-	buttonTypes[0] = buttonTypes[0];
-	buttonTypes[1] = buttonTypes[1];
-	buttonTypes[2] = buttonTypes[2];
+	buttonTypes[0] = _buttonTypes[0];
+	buttonTypes[1] = _buttonTypes[1];
+	buttonTypes[2] = _buttonTypes[2];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -80,6 +85,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 	
 	[self release];
 }
+
 - (void)willPresentAlertView:(UIAlertView*)alertView
 {
 	NSString *reqSysVer = @"4.0";
@@ -110,6 +116,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 	}
 	
 }
+
 @end
 
 namespace april
@@ -275,7 +282,7 @@ namespace april
 
 		AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] initWithModality:modal] autorelease];
 		mbd.callback = callback;
-		mbd.buttonTypes = buttonTypes;
+		[mbd setButtonTypes:buttonTypes];
 		[mbd retain];
 
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:titlens
