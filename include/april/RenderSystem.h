@@ -164,34 +164,35 @@ namespace april
 		/// April attempts to reset the RenderSystem internally when needed so external calls should be unneccessary.
 		void suspend();
 
-		/// @return The RenderSystem name.
+		/// @brief Gets the RenderSystem name.
 		HL_DEFINE_GET(hstr, name, Name);
-		/// @return The Options with which the RenderSystem was created.
+		/// @brief Gets the Options with which the RenderSystem was created.
 		HL_DEFINE_GET(Options, options, Options);
-		/// @return The capabilities of the RenderSystem.
+		/// @brief Gets the capabilities of the RenderSystem.
 		HL_DEFINE_GET(Caps, caps, Caps);
-		/// @return The current RenderMode.
+		/// @brief Gets the current RenderMode.
 		HL_DEFINE_GET(RenderMode, renderMode, RenderMode);
-		/// @return How many times a render call was called during this frame.
+		/// @brief Gets how many times a render call was called during this frame.
 		HL_DEFINE_GET(int, statCurrentFrameRenderCalls, StatCurrentFrameRenderCalls);
-		/// @return How many times a render call was called during the last frame.
+		/// @brief Gets how many times a render call was called during the last frame.
 		HL_DEFINE_GET(int, statLastFrameRenderCalls, StatLastFrameRenderCalls);
-		/// @return How many times the texture was switched during this frame.
+		/// @brief Gets how many times the texture was switched during this frame.
 		HL_DEFINE_GET(int, statCurrentFrameTextureSwitches, StatCurrentFrameTextureSwitches);
-		/// @return How many times the texture was switched during the last frame.
+		/// @brief Gets how many times the texture was switched during the last frame.
 		HL_DEFINE_GET(int, statLastFrameTextureSwitches, StatLastFrameTextureSwitches);
-		/// @return How many vertices were rendered during this frame.
+		/// @brief Gets how many vertices were rendered during this frame.
 		HL_DEFINE_GET(int, statCurrentFrameVertexCount, StatCurrentFrameVertexCount);
-		/// @return How many vertices were rendered during the last frame.
+		/// @brief Gets how many vertices were rendered during the last frame.
 		HL_DEFINE_GET(int, statLastFrameVertexCount, StatLastFrameVertexCount);
-		/// @return How many triangles were rendered during this frame.
+		/// @brief Gets how many triangles were rendered during this frame.
 		HL_DEFINE_GET(int, statCurrentFrameTriangleCount, StatCurrentFrameTriangleCount);
-		/// @return How many triangles were rendered during the last frame.
+		/// @brief Gets how many triangles were rendered during the last frame.
 		HL_DEFINE_GET(int, statLastFrameTriangleCount, StatLastFrameTriangleCount);
-		/// @return How many lines were rendered during this frame.
+		/// @brief Gets how many lines were rendered during this frame.
 		HL_DEFINE_GET(int, statCurrentFrameLineCount, StatCurrentFrameLineCount);
-		/// @return How many lines were rendered during the last frame.
+		/// @brief Gets how many lines were rendered during the last frame.
 		HL_DEFINE_GET(int, statLastFrameLineCount, StatLastFrameLineCount);
+		/// @brief Gets all currently existing textures in the RenderSystem.
 		/// @return All currently existing textures in the RenderSystem.
 		harray<Texture*> getTextures();
 		/// @brief Gets a list of all supported display modes.
