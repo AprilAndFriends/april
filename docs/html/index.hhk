@@ -169,6 +169,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="april_8h.html#a9447b1313fb7fbb8a47e78ca769cf719"><param name="Name" value="loadSymbolicColorsFromFile"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="april_8h.html#a14608b41c5c613e1d870b014fc0d1152"><param name="Name" value="loadSymbolicColorsFromResource"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="april_8h.html#a211c77086f1c3a69f7781e6456216451"><param name="Name" value="logTag"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="april_8h.html#a761bf5f770c1cca88eda0143b373f3f5"><param name="Name" value="resetSymbolicColors"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="april_8h.html#adb224fa6ccfca4976f7077a665b0e447"><param name="Name" value="setMaxAsyncTextureUploadsPerFrame"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="april_8h.html#a96d0b6e3e724ec0d412f9f24e7e3ae4e"><param name="Name" value="setMaxWaitingAsyncTextures"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="april_8h.html#a89dd0c0210e4b18a5c939dd3549feea1"><param name="Name" value="setTextureExtensions"></OBJECT>
@@ -955,6 +956,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#a65edc6c59f7b2d473e59385c2c232f92"><param name="Name" value="depthBuffer"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#ab4d82bf4461764d9d45ec0e924795842"><param name="Name" value="Options"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#ab946178e6fc0ac5910fa898af28fe2b9"><param name="Name" value="toString"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#ab69b41883da9d385aa8473baf25d32be"><param name="Name" value="tripleBuffering"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#a1413a7bbcb6f4253a66ebbb14b9cce84"><param name="Name" value="vSync"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#a038a5ec34e3580db46ff94df5da1f973"><param name="Name" value="~Options"></OBJECT>
   </UL>
@@ -3003,6 +3005,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_state.html#a0c35e45197bb8b1112628845b41b5fb9"><param name="Name" value="april::RenderState"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#af3892951eaa14d3cfbacef5e3d48e9ee"><param name="Name" value="april::RenderSystem"></OBJECT>
   </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="april_8h.html#a761bf5f770c1cca88eda0143b373f3f5"><param name="Name" value="resetSymbolicColors"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structapril_1_1_window_1_1_options.html#a43947d034d9af77bc06c442b3dc8748b"><param name="Name" value="resizable"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_timer.html#a116cfc8651446b2e0f58a7901c5cac20"><param name="Name" value="resolution"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#a469f0f655705c82f09cecb98c10b86af"><param name="Name" value="Return"></OBJECT>
@@ -3176,6 +3179,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_operation.html#add97e2b8052c7c5f05eee28effe4bff0"><param name="Name" value="TriangleStrip"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_button.html#a561b6f50c3f6a853db7ac5293b94a70b"><param name="Name" value="TriggerL"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_button.html#a9279854948f53c73aef51bdd35b072dc"><param name="Name" value="TriggerR"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#ab69b41883da9d385aa8473baf25d32be"><param name="Name" value="tripleBuffering"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a1e03a6060369015ccc2db32979b4773c"><param name="Name" value="type"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture_1_1_type.html#a593e0d3107e158123a80b717edb44d4d"><param name="Name" value="Type"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structapril_1_1_window_1_1_controller_input_event.html#a8a19569a269b7c28005baaedb0cc8a85"><param name="Name" value="type"></OBJECT>

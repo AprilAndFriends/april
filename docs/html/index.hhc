@@ -500,6 +500,7 @@
           <LI><OBJECT type="text/sitemap"><param name="Name" value="toString"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#ab946178e6fc0ac5910fa898af28fe2b9"><param name="ImageNumber" value="11"></OBJECT>
           <LI><OBJECT type="text/sitemap"><param name="Name" value="debugInfo"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#a779771d8098c117ec3ceaf15a4b96763"><param name="ImageNumber" value="11"></OBJECT>
           <LI><OBJECT type="text/sitemap"><param name="Name" value="depthBuffer"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#a65edc6c59f7b2d473e59385c2c232f92"><param name="ImageNumber" value="11"></OBJECT>
+          <LI><OBJECT type="text/sitemap"><param name="Name" value="tripleBuffering"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#ab69b41883da9d385aa8473baf25d32be"><param name="ImageNumber" value="11"></OBJECT>
           <LI><OBJECT type="text/sitemap"><param name="Name" value="vSync"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#a1413a7bbcb6f4253a66ebbb14b9cce84"><param name="ImageNumber" value="11"></OBJECT>
           </UL>
         <LI><OBJECT type="text/sitemap"><param name="Name" value="RenderMode"><param name="Local" value="classapril_1_1_render_system_1_1_render_mode.html"><param name="ImageNumber" value="1"></OBJECT>
@@ -1512,6 +1513,7 @@
           <LI><OBJECT type="text/sitemap"><param name="Name" value="init"><param name="Local" value="april_8h.html#a4775d6d3fe7baf88cd295b67999ccd24"><param name="ImageNumber" value="11"></OBJECT>
           <LI><OBJECT type="text/sitemap"><param name="Name" value="loadSymbolicColorsFromFile"><param name="Local" value="april_8h.html#a9447b1313fb7fbb8a47e78ca769cf719"><param name="ImageNumber" value="11"></OBJECT>
           <LI><OBJECT type="text/sitemap"><param name="Name" value="loadSymbolicColorsFromResource"><param name="Local" value="april_8h.html#a14608b41c5c613e1d870b014fc0d1152"><param name="ImageNumber" value="11"></OBJECT>
+          <LI><OBJECT type="text/sitemap"><param name="Name" value="resetSymbolicColors"><param name="Local" value="april_8h.html#a761bf5f770c1cca88eda0143b373f3f5"><param name="ImageNumber" value="11"></OBJECT>
           <LI><OBJECT type="text/sitemap"><param name="Name" value="setMaxAsyncTextureUploadsPerFrame"><param name="Local" value="april_8h.html#adb224fa6ccfca4976f7077a665b0e447"><param name="ImageNumber" value="11"></OBJECT>
           <LI><OBJECT type="text/sitemap"><param name="Name" value="setMaxWaitingAsyncTextures"><param name="Local" value="april_8h.html#a96d0b6e3e724ec0d412f9f24e7e3ae4e"><param name="ImageNumber" value="11"></OBJECT>
           <LI><OBJECT type="text/sitemap"><param name="Name" value="setTextureExtensions"><param name="Local" value="april_8h.html#a89dd0c0210e4b18a5c939dd3549feea1"><param name="ImageNumber" value="11"></OBJECT>
@@ -2153,6 +2155,7 @@
               <LI><OBJECT type="text/sitemap"><param name="Name" value="toString"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#ab946178e6fc0ac5910fa898af28fe2b9"><param name="ImageNumber" value="11"></OBJECT>
               <LI><OBJECT type="text/sitemap"><param name="Name" value="debugInfo"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#a779771d8098c117ec3ceaf15a4b96763"><param name="ImageNumber" value="11"></OBJECT>
               <LI><OBJECT type="text/sitemap"><param name="Name" value="depthBuffer"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#a65edc6c59f7b2d473e59385c2c232f92"><param name="ImageNumber" value="11"></OBJECT>
+              <LI><OBJECT type="text/sitemap"><param name="Name" value="tripleBuffering"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#ab69b41883da9d385aa8473baf25d32be"><param name="ImageNumber" value="11"></OBJECT>
               <LI><OBJECT type="text/sitemap"><param name="Name" value="vSync"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#a1413a7bbcb6f4253a66ebbb14b9cce84"><param name="ImageNumber" value="11"></OBJECT>
               </UL>
             <LI><OBJECT type="text/sitemap"><param name="Name" value="RenderMode"><param name="Local" value="classapril_1_1_render_system_1_1_render_mode.html"><param name="ImageNumber" value="1"></OBJECT>
@@ -2382,6 +2385,7 @@
             <LI><OBJECT type="text/sitemap"><param name="Name" value="toString"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#ab946178e6fc0ac5910fa898af28fe2b9"><param name="ImageNumber" value="11"></OBJECT>
             <LI><OBJECT type="text/sitemap"><param name="Name" value="debugInfo"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#a779771d8098c117ec3ceaf15a4b96763"><param name="ImageNumber" value="11"></OBJECT>
             <LI><OBJECT type="text/sitemap"><param name="Name" value="depthBuffer"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#a65edc6c59f7b2d473e59385c2c232f92"><param name="ImageNumber" value="11"></OBJECT>
+            <LI><OBJECT type="text/sitemap"><param name="Name" value="tripleBuffering"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#ab69b41883da9d385aa8473baf25d32be"><param name="ImageNumber" value="11"></OBJECT>
             <LI><OBJECT type="text/sitemap"><param name="Name" value="vSync"><param name="Local" value="structapril_1_1_render_system_1_1_options.html#a1413a7bbcb6f4253a66ebbb14b9cce84"><param name="ImageNumber" value="11"></OBJECT>
             </UL>
           <LI><OBJECT type="text/sitemap"><param name="Name" value="Caps"><param name="Local" value="structapril_1_1_render_system_1_1_caps.html"><param name="ImageNumber" value="1"></OBJECT>
