@@ -477,13 +477,13 @@ namespace april
 	bool Mac_Window::shouldIgnoreUpdate()
 	{
 		return false;
-		bool ret;
-		hmutex::ScopeLock lock;
-		lock.acquire(&this->ignoreUpdateMutex);
-		ret = this->ignoreUpdate;
-		lock.release();
-		
-		return ret;
+//		bool ret;
+//		hmutex::ScopeLock lock;
+//		lock.acquire(&this->ignoreUpdateMutex);
+//		ret = this->ignoreUpdate;
+//		lock.release();
+//		
+//		return ret;
 	}
 	
 	void Mac_Window::setIgnoreUpdateFlag(bool value)
