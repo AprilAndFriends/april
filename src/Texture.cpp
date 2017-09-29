@@ -179,7 +179,7 @@ namespace april
 	{
 		if (w == 0 || h == 0)
 		{
-			hlog::errorf(logTag, "Cannot create texture with dimentions %d,%d!", w, h);
+			hlog::errorf(logTag, "Cannot create texture with dimensions %d,%d!", w, h);
 			return false;
 		}
 		this->filename = "";
@@ -204,6 +204,11 @@ namespace april
 		this->dataAsync = NULL;
 		this->asyncLoadQueued = false;
 		hlog::write(logTag, "Creating texture: " + this->_getInternalName());
+		int maxTextureSize = april::rendersys->getCaps().maxTextureSize;
+		if (maxTextureSize > 0 && (this->width > maxTextureSize || this->height > maxTextureSize))
+		{
+			hlog::warnf(logTag, "Texture size for '%s' is %d,%d while the reported system max texture size is %d!", this->_getInternalName().cStr(), this->width, this->height, maxTextureSize);
+		}
 		this->dataFormat = 0;
 		this->_assignFormat();
 		bool result = this->_deviceCreateTexture(data, size, type);
@@ -252,6 +257,11 @@ namespace april
 		this->dataAsync = NULL;
 		this->asyncLoadQueued = false;
 		hlog::write(logTag, "Creating texture: " + this->_getInternalName());
+		int maxTextureSize = april::rendersys->getCaps().maxTextureSize;
+		if (maxTextureSize > 0 && (this->width > maxTextureSize || this->height > maxTextureSize))
+		{
+			hlog::warnf(logTag, "Texture size for '%s' is %d,%d while the reported system max texture size is %d!", this->_getInternalName().cStr(), this->width, this->height, maxTextureSize);
+		}
 		this->dataFormat = 0;
 		this->_assignFormat();
 		bool result = this->_deviceCreateTexture(this->data, size, type);
@@ -487,6 +497,11 @@ namespace april
 				size = image->compressedSize;
 				this->compressedSize = size;
 			}
+			int maxTextureSize = april::rendersys->getCaps().maxTextureSize;
+			if (maxTextureSize > 0 && (this->width > maxTextureSize || this->height > maxTextureSize))
+			{
+				hlog::warnf(logTag, "Texture size for '%s' is %d,%d while the reported system max texture size is %d!", this->_getInternalName().cStr(), this->width, this->height, maxTextureSize);
+			}
 			currentData = image->data;
 			image->data = NULL;
 			delete image;
@@ -549,26 +564,26 @@ namespace april
 		}
 		if (this->data != NULL || ((this->type == Type::Volatile || this->type == Type::RenderTarget) && this->width > 0 && this->height > 0))
 		{
-			hstr err = "This texture type does not support async loading! texture: '" + this->_getInternalName() + "', reason: ";
+			hstr err = "This texture type does not support async loading! texture: '" + this->_getInternalName() + "', reasons:";
 			if (this->data != NULL)
 			{
-				err += "data isn't NULL.";
+				err += "\ndata isn't NULL.";
 			}
 			if (this->type == Type::Volatile)
 			{
-				err += "type is 'volatile'.";
+				err += "\ntype is 'volatile'.";
 			}
 			if (this->type == Type::RenderTarget)
 			{
-				err += "type is 'render target'.";
+				err += "\ntype is 'render target'.";
 			}
 			if (this->width > 0)
 			{
-				err += "width is larger than 0.";
+				err += "\nwidth is larger than 0.";
 			}
 			if (this->height > 0)
 			{
-				err += "height is larger than 0.";
+				err += "\nheight is larger than 0.";
 			}
 			hlog::warn(logTag, err);
 			return false;
@@ -736,6 +751,11 @@ namespace april
 		if (this->dataFormat != 0)
 		{
 			this->compressedSize = image->compressedSize;
+		}
+		int maxTextureSize = april::rendersys->getCaps().maxTextureSize;
+		if (maxTextureSize > 0 && (this->width > maxTextureSize || this->height > maxTextureSize))
+		{
+			hlog::warnf(logTag, "Texture size for '%s' is %d,%d while the reported system max texture size is %d!", this->_getInternalName().cStr(), this->width, this->height, maxTextureSize);
 		}
 		lock.acquire(&this->asyncLoadMutex);
 		if (this->asyncLoadQueued && !this->asyncLoadDiscarded)
