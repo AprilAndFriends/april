@@ -243,7 +243,9 @@ namespace april
 	{
 		SystemInfo info = april::getSystemInfo(); // calling getSystemInfo() is required here so it's initialized on certain platforms
 		hlog::writef(logTag, "OS Version: %s", info.osVersion.toString().cStr());
-		hlog::writef(logTag, "Using: %s, %s", april::rendersys->getName().cStr(), april::window->getName().cStr());
+		hstr renderSystemName = (april::rendersys != NULL ? april::rendersys->getName() : "NULL");
+		hstr windowName = (april::window != NULL ? april::window->getName() : "NULL");
+		hlog::writef(logTag, "Using: %s, %s", renderSystemName.cStr(), windowName.cStr());
 	}
 
 	void _createRenderSystem(RenderSystemType renderSystemType)
