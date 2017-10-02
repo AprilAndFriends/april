@@ -294,6 +294,7 @@
     <ProjectGuid>{2D053CDA-686B-4B36-80EB-1DA5F0CEF8F9}</ProjectGuid>
     <RootNamespace>april</RootNamespace>
   </PropertyGroup>
+  <Import Project="..\..\..\hltypes\msvc\vs2015\props-generic\system.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="props\default.props" />
   <Import Project="..\..\..\hltypes\msvc\vs2015\props-generic\platform-$(Platform).props" />

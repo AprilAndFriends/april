@@ -54,6 +54,7 @@
     <ProjectGuid>{D6973076-9317-4EF2-A0B8-B7A18AC0713E}</ProjectGuid>
     <RootNamespace>png</RootNamespace>
   </PropertyGroup>
+  <Import Project="..\..\..\..\..\hltypes\msvc\vs2012\props-generic\system.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="props\default.props" />
   <Import Project="..\..\..\..\..\hltypes\msvc\vs2012\props-generic\platform-$(Platform).props" />

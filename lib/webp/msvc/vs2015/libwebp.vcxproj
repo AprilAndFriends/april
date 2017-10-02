@@ -54,6 +54,7 @@
     <ProjectGuid>{115121E1-2F6F-48FF-89EF-6B530A6D59ED}</ProjectGuid>
     <RootNamespace>webp</RootNamespace>
   </PropertyGroup>
+  <Import Project="..\..\..\..\..\hltypes\msvc\vs2015\props-generic\system.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="props\default.props" />
   <Import Project="..\..\..\..\..\hltypes\msvc\vs2015\props-generic\platform-$(Platform).props" />
