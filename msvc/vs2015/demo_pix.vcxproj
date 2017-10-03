@@ -54,6 +54,7 @@
     <ProjectGuid>{3779CEDA-3D08-4E79-88A7-A47C85316825}</ProjectGuid>
     <RootNamespace>demo_pix</RootNamespace>
   </PropertyGroup>
+  <Import Project="..\..\..\hltypes\msvc\vs2015\props-generic\system.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="props-demos\default.props" />
   <Import Project="..\..\..\hltypes\msvc\vs2015\props-generic\platform-$(Platform).props" />

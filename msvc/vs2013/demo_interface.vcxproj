@@ -22,6 +22,7 @@
     <ProjectGuid>{8469E474-67C7-457A-97BC-28FAE7085B0F}</ProjectGuid>
     <RootNamespace>demo_interface</RootNamespace>
   </PropertyGroup>
+  <Import Project="..\..\..\hltypes\msvc\vs2013\props-generic\system.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <Import Project="props-demos\default.props" />
   <Import Project="..\..\..\hltypes\msvc\vs2013\props-generic\platform-$(Platform).props" />
