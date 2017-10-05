@@ -19,6 +19,7 @@
 #include "DirectX12_RenderSystem.h"
 #include "Platform.h"
 #include "RenderSystem.h"
+#include "UpdateDelegate.h"
 #include "Window.h"
 #include "WinUWP.h"
 #include "WinUWP_Cursor.h"
@@ -358,7 +359,11 @@ namespace april
 			return;
 		}
 		this->running = april::window->updateOneFrame();
-		rendersys->presentFrame();
+		UpdateDelegate* updateDelegate = april::window->getUpdateDelegate();
+		if (updateDelegate != NULL)
+		{
+			updateDelegate->onPresentFrame();
+		}
 		this->firstFrameAfterActivateHack = false;
 		if (!this->running)
 		{
@@ -609,35 +614,35 @@ namespace april
 		storedModelviewMatrix = rendersys->getModelviewMatrix();
 		windowSize = april::window->getSize();
 		viewport.setSize(windowSize);
-		rendersys->setOrthoProjection(viewport);
+		april::rendersys->setOrthoProjection(viewport);
 #ifndef _WINP8
 		textureSize.set(SPLASH_WIDTH, SPLASH_HEIGHT);
 		textureSize *= (float)DisplayInformation::GetForCurrentView()->ResolutionScale * 0.01f;
 #else // on WinP8 the splash graphic is rotated by -90° and needs to be stretched over the entire screen
-		rendersys->translate(windowSize.x * 0.5f, windowSize.y * 0.5f);
+		april::rendersys->translate(windowSize.x * 0.5f, windowSize.y * 0.5f);
 		hswap(windowSize.x, windowSize.y);
 		hswap(viewport.w, viewport.h);
-		rendersys->rotate(90.0f);
-		rendersys->translate(-windowSize.x * 0.5f, -windowSize.y * 0.5f);
+		april::rendersys->rotate(90.0f);
+		april::rendersys->translate(-windowSize.x * 0.5f, -windowSize.y * 0.5f);
 		textureSize.set(windowSize.x, windowSize.x * this->splashTexture->getHeight() / this->splashTexture->getWidth());
 #endif
 		drawRect.set(hroundf(windowSize.x - textureSize.x) * 0.5f, hroundf(windowSize.y - textureSize.y) * 0.5f, textureSize);
-		rendersys->setBlendMode(BlendMode::Alpha);
-		rendersys->setColorMode(ColorMode::Multiply);
+		april::rendersys->setBlendMode(BlendMode::Alpha);
+		april::rendersys->setColorMode(ColorMode::Multiply);
 		// rendering X times to avoid buffer swap problems
 		for_iter (i, 0, count)
 		{
-			rendersys->drawFilledRect(viewport, this->backgroundColor);
+			april::rendersys->drawFilledRect(viewport, this->backgroundColor);
 			if (this->splashTexture != NULL)
 			{
-				rendersys->setTexture(this->splashTexture);
-				rendersys->drawTexturedRect(drawRect, src);
+				april::rendersys->setTexture(this->splashTexture);
+				april::rendersys->drawTexturedRect(drawRect, src);
 			}
-			rendersys->presentFrame();
+			april::rendersys->presentFrame();
 		}
-		rendersys->reset();
-		rendersys->setProjectionMatrix(storedProjectionMatrix);
-		rendersys->setModelviewMatrix(storedModelviewMatrix);
+		april::rendersys->reset();
+		april::rendersys->setProjectionMatrix(storedProjectionMatrix);
+		april::rendersys->setModelviewMatrix(storedModelviewMatrix);
 	}
 
 	Texture* WinUWP_App::_tryLoadTexture(chstr nodeName, chstr attributeName)

@@ -31,6 +31,7 @@
 #include "OpenGL_Texture.h"
 #include "Platform.h"
 #include "RenderState.h"
+#include "UpdateDelegate.h"
 #ifdef _WIN32_WINDOW
 #include "Win32_Window.h"
 #endif
@@ -162,7 +163,11 @@ namespace april
 		this->setOrthoProjection(viewport);
 		this->_updateDeviceState(true);
 		april::window->performUpdate(0.0f);
-		this->presentFrame();
+		UpdateDelegate* updateDelegate = april::window->getUpdateDelegate();
+		if (updateDelegate != NULL)
+		{
+			updateDelegate->onPresentFrame();
+		}
 	}
 
 	void OpenGL_RenderSystem::_setDeviceViewport(cgrect rect)
