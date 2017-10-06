@@ -473,6 +473,7 @@ namespace april
 	void addTextureExtension(chstr extension)
 	{
 		april::extensions += extension;
+		hlog::write(logTag, "Adding texture extension, now extensions are: " + april::extensions.joined(','));
 	}
 	
 	harray<hstr> getTextureExtensions()
@@ -482,6 +483,7 @@ namespace april
 	
 	void setTextureExtensions(const harray<hstr>& extensions)
 	{
+		hlog::write(logTag, "Setting texture extensions: " + extensions.joined(','));
 		april::extensions = extensions;
 	}
 
