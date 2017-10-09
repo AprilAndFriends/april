@@ -220,7 +220,7 @@ void april_init(const harray<hstr>& args)
 	april::window->setMouseDelegate(mouseDelegate);
 	cursor = april::window->createCursorFromResource(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
-	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "etc1", april::Texture::Type::Managed);
+	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo", april::Texture::Type::Managed);
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
 	textureRect.x = -textureRect.w * 0.5f;
 	textureRect.y = -textureRect.h * 0.5f;
