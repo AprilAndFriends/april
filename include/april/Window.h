@@ -478,15 +478,15 @@ namespace april
 		static inline void setLaunchCallback(void (*callback)(void*)) { msLaunchCallback = callback; }
 		static void handleLaunchCallback(void* args);
 
-		DEPRECATED_ATTRIBUTE("Deprecated API. Use createCursorFromResource() instead.")
+		HL_DEPRECATED("Deprecated API. Use createCursorFromResource() instead.")
 			inline Cursor* createCursor(chstr filename) { return this->createCursorFromResource(filename); }
-		DEPRECATED_ATTRIBUTE("Deprecated API. Use getInputMode() instead.")
+		HL_DEPRECATED("Deprecated API. Use getInputMode() instead.")
 			inline bool isTouchEnabled() { return (this->inputMode == InputMode::Touch); }
-		DEPRECATED_ATTRIBUTE("Deprecated API. Use isVirtualKeyboardVisible() instead.")
+		HL_DEPRECATED("Deprecated API. Use isVirtualKeyboardVisible() instead.")
 			inline bool isVirtualKeyboardActive() { return this->isVirtualKeyboardVisible(); }
-		DEPRECATED_ATTRIBUTE("Deprecated API. Use showVirtualKeyboard() instead.")
+		HL_DEPRECATED("Deprecated API. Use showVirtualKeyboard() instead.")
 			inline void beginKeyboardHandling() { this->showVirtualKeyboard(); }
-		DEPRECATED_ATTRIBUTE("Deprecated API. Use hideVirtualKeyboard() instead.")
+		HL_DEPRECATED("Deprecated API. Use hideVirtualKeyboard() instead.")
 			inline void terminateKeyboardHandling() { this->hideVirtualKeyboard(); }
 #endif
 
