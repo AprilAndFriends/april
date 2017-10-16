@@ -1,6 +1,6 @@
 
 /// @file
-/// @version 4.4
+/// @version 4.5
 ///
 /// @section LICENSE
 ///

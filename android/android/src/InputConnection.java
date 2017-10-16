@@ -1,6 +1,6 @@
 package com.april;
 
-/// @version 4.4
+/// @version 4.5
 
 import android.view.inputmethod.BaseInputConnection;
 import android.view.KeyEvent;
