@@ -202,6 +202,7 @@
     <ClCompile Include="..\..\src\delegates\InputDelegate.cpp" />
     <ClInclude Include="..\..\include\april\InputMode.h" />
     <ClCompile Include="..\..\src\delegates\KeyboardDelegate.cpp" />
+    <ClCompile Include="..\..\src\delegates\MotionDelegate.cpp" />
     <ClCompile Include="..\..\src\delegates\MouseDelegate.cpp" />
     <ClCompile Include="..\..\src\delegates\SystemDelegate.cpp" />
     <ClCompile Include="..\..\src\delegates\TouchDelegate.cpp" />
@@ -252,6 +253,7 @@
     <ClInclude Include="..\..\include\april\Keys.h" />
     <ClInclude Include="..\..\include\april\main.h" />
     <ClInclude Include="..\..\include\april\main_base.h" />
+    <ClInclude Include="..\..\include\april\MotionDelegate.h" />
     <ClInclude Include="..\..\include\april\MouseDelegate.h" />
     <ClInclude Include="..\..\include\april\PixelShader.h" />
     <ClInclude Include="..\..\include\april\Platform.h" />

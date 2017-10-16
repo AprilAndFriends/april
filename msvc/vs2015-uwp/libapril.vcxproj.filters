@@ -170,6 +170,9 @@
     <ClCompile Include="..\..\src\delegates\KeyboardDelegate.cpp">
       <Filter>Source Files\delegates</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\delegates\MotionDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\delegates\MouseDelegate.cpp">
       <Filter>Source Files\delegates</Filter>
     </ClCompile>
@@ -350,6 +353,9 @@
       <Filter>Header Files\delegates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\KeyboardDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\MotionDelegate.h">
       <Filter>Header Files\delegates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\MouseDelegate.h">

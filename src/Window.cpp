@@ -19,6 +19,7 @@
 #include "Cursor.h"
 #include "KeyboardDelegate.h"
 #include "Keys.h"
+#include "MotionDelegate.h"
 #include "MouseDelegate.h"
 #include "Platform.h"
 #include "RenderSystem.h"
@@ -44,26 +45,33 @@ namespace april
 
 	HL_ENUM_CLASS_DEFINE(Window::MouseInputEvent::Type,
 	(
-		HL_ENUM_DEFINE_VALUE(Window::MouseInputEvent::Type, Down, 0);
-		HL_ENUM_DEFINE_VALUE(Window::MouseInputEvent::Type, Up, 1);
-		HL_ENUM_DEFINE_VALUE(Window::MouseInputEvent::Type, Cancel, 2);
-		HL_ENUM_DEFINE_VALUE(Window::MouseInputEvent::Type, Move, 3);
-		HL_ENUM_DEFINE_VALUE(Window::MouseInputEvent::Type, Scroll, 4);
+		HL_ENUM_DEFINE(Window::MouseInputEvent::Type, Down);
+		HL_ENUM_DEFINE(Window::MouseInputEvent::Type, Up);
+		HL_ENUM_DEFINE(Window::MouseInputEvent::Type, Cancel);
+		HL_ENUM_DEFINE(Window::MouseInputEvent::Type, Move);
+		HL_ENUM_DEFINE(Window::MouseInputEvent::Type, Scroll);
 	));
 
 	HL_ENUM_CLASS_DEFINE(Window::KeyInputEvent::Type,
 	(
-		HL_ENUM_DEFINE_VALUE(Window::KeyInputEvent::Type, Down, 0);
-		HL_ENUM_DEFINE_VALUE(Window::KeyInputEvent::Type, Up, 1);
+		HL_ENUM_DEFINE(Window::KeyInputEvent::Type, Down);
+		HL_ENUM_DEFINE(Window::KeyInputEvent::Type, Up);
 	));
 
 	HL_ENUM_CLASS_DEFINE(Window::ControllerInputEvent::Type,
 	(
-		HL_ENUM_DEFINE_VALUE(Window::ControllerInputEvent::Type, Down, 0);
-		HL_ENUM_DEFINE_VALUE(Window::ControllerInputEvent::Type, Up, 1);
-		HL_ENUM_DEFINE_VALUE(Window::ControllerInputEvent::Type, Axis, 2);
-		HL_ENUM_DEFINE_VALUE(Window::ControllerInputEvent::Type, Connected, 3);
-		HL_ENUM_DEFINE_VALUE(Window::ControllerInputEvent::Type, Disconnected, 4);
+		HL_ENUM_DEFINE(Window::ControllerInputEvent::Type, Down);
+		HL_ENUM_DEFINE(Window::ControllerInputEvent::Type, Up);
+		HL_ENUM_DEFINE(Window::ControllerInputEvent::Type, Axis);
+		HL_ENUM_DEFINE(Window::ControllerInputEvent::Type, Connected);
+		HL_ENUM_DEFINE(Window::ControllerInputEvent::Type, Disconnected);
+	));
+
+	HL_ENUM_CLASS_DEFINE(Window::MotionInputEvent::Type,
+	(
+		HL_ENUM_DEFINE(Window::MotionInputEvent::Type, LinearAccelerometer);
+		HL_ENUM_DEFINE(Window::MotionInputEvent::Type, Rotation);
+		HL_ENUM_DEFINE(Window::MotionInputEvent::Type, Gyroscope);
 	));
 
 	Window::MouseInputEvent::MouseInputEvent()
@@ -96,7 +104,7 @@ namespace april
 	Window::TouchInputEvent::TouchInputEvent()
 	{
 	}
-		
+	
 	Window::TouchInputEvent::TouchInputEvent(harray<gvec2>& touches)
 	{
 		this->touches = touches;
@@ -114,6 +122,17 @@ namespace april
 		this->controllerIndex = controllerIndex;
 		this->buttonCode = buttonCode;
 		this->axisValue = axisValue;
+	}
+
+	Window::MotionInputEvent::MotionInputEvent()
+	{
+		this->type = Type::LinearAccelerometer;
+	}
+
+	Window::MotionInputEvent::MotionInputEvent(Window::MotionInputEvent::Type type, cgvec3 motionVector)
+	{
+		this->type = type;
+		this->motionVector = motionVector;
 	}
 
 	Window* window = NULL;
@@ -173,6 +192,7 @@ namespace april
 		this->keyboardDelegate = NULL;
 		this->touchDelegate = NULL;
 		this->controllerDelegate = NULL;
+		this->motionDelegate = NULL;
 		this->systemDelegate = NULL;
 	}
 	
@@ -243,6 +263,7 @@ namespace april
 			this->keyboardDelegate = NULL;
 			this->touchDelegate = NULL;
 			this->controllerDelegate = NULL;
+			this->motionDelegate = NULL;
 			this->systemDelegate = NULL;
 			this->mouseEvents.clear();
 			this->keyEvents.clear();
@@ -477,6 +498,12 @@ namespace april
 			controllerEvent = this->controllerEvents.removeFirst();
 			this->handleControllerEvent(controllerEvent.type, controllerEvent.controllerIndex, controllerEvent.buttonCode, controllerEvent.axisValue);
 		}
+		MotionInputEvent motionEvent;
+		while (this->motionEvents.size() > 0) // required while instead of for, because this loop could modify this->motionEvent when the event is propagated
+		{
+			motionEvent = this->motionEvents.removeFirst();
+			this->handleMotionEvent(motionEvent.type, motionEvent.motionVector);
+		}
 	}
 
 	void Window::terminateMainLoop()
@@ -699,6 +726,25 @@ namespace april
 		}
 	}
 
+	void Window::handleMotionEvent(Window::MotionInputEvent::Type type, cgvec3 motionVector)
+	{
+		if (this->motionDelegate != NULL)
+		{
+			if (type == MotionInputEvent::Type::LinearAccelerometer)
+			{
+				this->motionDelegate->onLinearAccelerometer(motionVector);
+			}
+			else if (type == MotionInputEvent::Type::Rotation)
+			{
+				this->motionDelegate->onRotation(motionVector);
+			}
+			else if (type == MotionInputEvent::Type::Gyroscope)
+			{
+				this->motionDelegate->onGyroscope(motionVector);
+			}
+		}
+	}
+
 	bool Window::handleQuitRequestEvent(bool canCancel)
 	{
 		// returns whether or not the windowing system is permitted to close the window
@@ -809,6 +855,11 @@ namespace april
 	void Window::queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
 	{
 		this->controllerEvents += ControllerInputEvent(type, controllerIndex, buttonCode, axisValue);
+	}
+
+	void Window::queueMotionEvent(Window::MotionInputEvent::Type type, cgvec3 motionVector)
+	{
+		this->motionEvents += MotionInputEvent(type, motionVector);
 	}
 
 	float Window::_calcTimeSinceLastFrame()

@@ -14,6 +14,7 @@
 #define APRIL_WINDOW_H
 
 #include <gtypes/Vector2.h>
+#include <gtypes/Vector3.h>
 #include <hltypes/henum.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
@@ -29,6 +30,7 @@ namespace april
 	class Cursor;
 	class ControllerDelegate;
 	class KeyboardDelegate;
+	class MotionDelegate;
 	class MouseDelegate;
 	class RenderSystem;
 	class SystemDelegate;
@@ -171,6 +173,38 @@ namespace april
 			
 		};
 
+		/// @brief Defines motion input event data.
+		struct aprilExport MotionInputEvent
+		{
+			/// @class Type
+			/// @brief Defines motion event types.
+			HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, Type,
+			(
+				/// @var static const Type Type::LinearAccelerometer
+				/// @brief Linear accelerometer vector.
+				HL_ENUM_DECLARE(Type, LinearAccelerometer);
+				/// @var static const Type Type::Rotation
+				/// @brief Device rotation.
+				HL_ENUM_DECLARE(Type, Rotation);
+				/// @var static const Type Type::Gyroscope
+				/// @brief Gyroscope vector.
+				HL_ENUM_DECLARE(Type, Gyroscope);
+			));
+
+			/// @brief The event type.
+			Type type;
+			/// @brief Motion data vector.
+			gvec3 motionVector;
+
+			/// @brief Basic constructor.
+			MotionInputEvent();
+			/// @brief Constructor.
+			/// @param[in] type The event type.
+			/// @param[in] motionVector Motion data vector.
+			MotionInputEvent(Type type, cgvec3 motionVector);
+
+		};
+
 		/// @brief Defines options for creation of the window.
 		struct aprilExport Options
 		{
@@ -290,6 +324,8 @@ namespace april
 		HL_DEFINE_GETSET(TouchDelegate*, touchDelegate, TouchDelegate);
 		/// @brief The controller input delegate.
 		HL_DEFINE_GETSET(ControllerDelegate*, controllerDelegate, ControllerDelegate);
+		/// @brief The motion input delegate.
+		HL_DEFINE_GETSET(MotionDelegate*, motionDelegate, MotionDelegate);
 		/// @brief The system handling delegate.
 		HL_DEFINE_GETSET(SystemDelegate*, systemDelegate, SystemDelegate);
 
@@ -406,6 +442,10 @@ namespace april
 		/// @param[in] buttonCode The button code.
 		/// @param[in] axisValue The axis value.
 		virtual void handleControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
+		/// @brief Handles a motion event and propagates it to the delegate.
+		/// @param[in] type The event type.
+		/// @param[in] motionVector Motion data vector.
+		virtual void handleMotionEvent(MotionInputEvent::Type type, cgvec3 motionVector);
 		/// @brief Handles a quit event and propagates it to the delegate.
 		/// @param[in] canCancel Whether the window quitting can be canceled.
 		/// @return True if the system is allowed to actually close the window.
@@ -462,6 +502,11 @@ namespace april
 		/// @param[in] axisValue The axis value.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
 		virtual void queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
+		/// @brief Queues a motion event for processing before the start of the next frame.
+		/// @param[in] type The event type.
+		/// @param[in] motionVector Motion data vector.
+		/// @note This is mostly used internally, but it can also be used to simulate input.
+		virtual void queueMotionEvent(MotionInputEvent::Type type, cgvec3 motionVector);
 
 		/// @brief Starts the main loop.
 		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april_main implementation is used.
@@ -552,6 +597,8 @@ namespace april
 		harray<TouchInputEvent> touchEvents;
 		/// @brief Queued controller events.
 		harray<ControllerInputEvent> controllerEvents;
+		/// @brief Queued motion events.
+		harray<MotionInputEvent> motionEvents;
 		/// @brief The Timer object used for timing purposes.
 		Timer timer;
 		/// @brief The controller emulation keys.
@@ -576,6 +623,8 @@ namespace april
 		TouchDelegate* touchDelegate;
 		/// @brief The current controller delegate.
 		ControllerDelegate* controllerDelegate;
+		/// @brief The current motion delegate.
+		MotionDelegate* motionDelegate;
 		/// @brief The current system delegate.
 		SystemDelegate* systemDelegate;
 
