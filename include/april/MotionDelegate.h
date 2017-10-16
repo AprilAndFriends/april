@@ -29,12 +29,15 @@ namespace april
 		/// @brief Destructor.
 		virtual ~MotionDelegate();
 
+		/// @brief Called when the gravity vector of the device changes.
+		/// @param[in] motionVector Gravity vector in the Cartesian coordinate system.
+		virtual void onGravity(cgvec3 motionVector);
 		/// @brief Called when the linear accelerometer of the device detects changes.
 		/// @param[in] motionVector Linear acceleration vector in the Cartesian coordinate system.
 		virtual void onLinearAccelerometer(cgvec3 motionVector);
 		/// @brief Called when the rotation of the device changes.
-		/// @param[in] rotationVector Rotation vector equal to the last three components of a unit quaternion.
-		virtual void onRotation(cgvec3 rotationVector);
+		/// @param[in] motionVector Rotation vector equal to the last three components of a unit quaternion.
+		virtual void onRotation(cgvec3 motionVector);
 		/// @brief Called when the gyroscope of the device detects changes.
 		/// @param[in] motionVector Movement vector in the Cartesian coordinate system.
 		virtual void onGyroscope(cgvec3 motionVector);
