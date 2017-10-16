@@ -23,6 +23,12 @@
 		7FA3ED1811F9817A001D1DDD /* Window.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FA3ED1711F9817A001D1DDD /* Window.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7FA3ED2711F98BAE001D1DDD /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
 		7FC8FA29122FA58F0092964C /* Timer.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FC8FA28122FA58F0092964C /* Timer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8404CC161F951AB600272BF4 /* MotionDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8404CC151F951AB600272BF4 /* MotionDelegate.cpp */; };
+		8404CC171F951AC600272BF4 /* MotionDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8404CC151F951AB600272BF4 /* MotionDelegate.cpp */; };
+		8404CC181F951AC700272BF4 /* MotionDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8404CC151F951AB600272BF4 /* MotionDelegate.cpp */; };
+		8404CC191F951AC800272BF4 /* MotionDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8404CC151F951AB600272BF4 /* MotionDelegate.cpp */; };
+		8404CC1B1F951AEB00272BF4 /* MotionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 8404CC1A1F951AEB00272BF4 /* MotionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8404CC1C1F951B1400272BF4 /* MotionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 8404CC1A1F951AEB00272BF4 /* MotionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B4046B361ECDCA3C00F85550 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B321ECDCA3C00F85550 /* egl.cpp */; };
 		B4046B371ECDCA3C00F85550 /* egl.h in Headers */ = {isa = PBXBuildFile; fileRef = B4046B331ECDCA3C00F85550 /* egl.h */; };
 		B4046B381ECDCA3C00F85550 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */; };
@@ -386,6 +392,8 @@
 		7FA3ED1711F9817A001D1DDD /* Window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Window.h; path = include/april/Window.h; sourceTree = "<group>"; };
 		7FA3ED2611F98BAE001D1DDD /* Window.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Window.cpp; path = src/Window.cpp; sourceTree = "<group>"; };
 		7FC8FA28122FA58F0092964C /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = include/april/Timer.h; sourceTree = "<group>"; };
+		8404CC151F951AB600272BF4 /* MotionDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MotionDelegate.cpp; path = src/delegates/MotionDelegate.cpp; sourceTree = "<group>"; };
+		8404CC1A1F951AEB00272BF4 /* MotionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MotionDelegate.h; path = include/april/MotionDelegate.h; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* april.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4046B321ECDCA3C00F85550 /* egl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egl.cpp; path = src/util/egl.cpp; sourceTree = "<group>"; };
@@ -481,7 +489,6 @@
 		D136819B187BFB6600E66E32 /* androidUtilJNI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = androidUtilJNI.h; path = include/april/androidUtilJNI.h; sourceTree = "<group>"; };
 		D136819C187BFB6600E66E32 /* ControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControllerDelegate.h; path = include/april/ControllerDelegate.h; sourceTree = "<group>"; };
 		D136819D187BFB6600E66E32 /* main_base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main_base.h; path = include/april/main_base.h; sourceTree = "<group>"; };
-		D136819E187BFB6600E66E32 /* OpenKODE_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenKODE_main.h; path = include/april/OpenKODE_main.h; sourceTree = "<group>"; };
 		D136819F187BFB6600E66E32 /* RenderState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderState.h; path = include/april/RenderState.h; sourceTree = "<group>"; };
 		D13681A0187BFB6600E66E32 /* Standard_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Standard_main.h; path = include/april/Standard_main.h; sourceTree = "<group>"; };
 		D13681A1187BFB6600E66E32 /* Win32_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Win32_main.h; path = include/april/Win32_main.h; sourceTree = "<group>"; };
@@ -749,7 +756,6 @@
 				D136819A187BFB6600E66E32 /* Android_main.h */,
 				D136819B187BFB6600E66E32 /* androidUtilJNI.h */,
 				D136819D187BFB6600E66E32 /* main_base.h */,
-				D136819E187BFB6600E66E32 /* OpenKODE_main.h */,
 				D136819F187BFB6600E66E32 /* RenderState.h */,
 				D13681A0187BFB6600E66E32 /* Standard_main.h */,
 				D13681A1187BFB6600E66E32 /* Win32_main.h */,
@@ -936,6 +942,7 @@
 				D1E7203316D37B2700B9C9AD /* InputDelegate.h */,
 				D1E7203416D37B2700B9C9AD /* KeyboardDelegate.h */,
 				D136819C187BFB6600E66E32 /* ControllerDelegate.h */,
+				8404CC1A1F951AEB00272BF4 /* MotionDelegate.h */,
 				D1E7203516D37B2700B9C9AD /* MouseDelegate.h */,
 				D1E7203616D37B2700B9C9AD /* SystemDelegate.h */,
 				D1E7203716D37B2700B9C9AD /* TouchDelegate.h */,
@@ -1075,6 +1082,7 @@
 				D1E7204416D37C2300B9C9AD /* EventDelegate.cpp */,
 				D1E7204516D37C2300B9C9AD /* InputDelegate.cpp */,
 				D1E7204616D37C2300B9C9AD /* KeyboardDelegate.cpp */,
+				8404CC151F951AB600272BF4 /* MotionDelegate.cpp */,
 				D1E7204716D37C2300B9C9AD /* MouseDelegate.cpp */,
 				D1E7204816D37C2300B9C9AD /* SystemDelegate.cpp */,
 				D1E7204916D37C2300B9C9AD /* TouchDelegate.cpp */,
@@ -1195,6 +1203,7 @@
 				7F42F7A711EB178C00B1C1DF /* Keys.h in Headers */,
 				B45500F41BD7A7BA00E75E43 /* OpenGL1_RenderSystem.h in Headers */,
 				D11FB8FC1E6866DD001A7E9A /* InputMode.h in Headers */,
+				8404CC1C1F951B1400272BF4 /* MotionDelegate.h in Headers */,
 				7F42F7A811EB178C00B1C1DF /* RenderSystem.h in Headers */,
 				7FA3ED1811F9817A001D1DDD /* Window.h in Headers */,
 				7F4D0FEA11FEE6C500F2F9F5 /* main.h in Headers */,
@@ -1269,6 +1278,7 @@
 				D1AF66CD170B1E5900A43743 /* EventDelegate.h in Headers */,
 				D1AF66CE170B1E5900A43743 /* Image.h in Headers */,
 				B45500F31BD7A7BA00E75E43 /* OpenGL1_RenderSystem.h in Headers */,
+				8404CC1B1F951AEB00272BF4 /* MotionDelegate.h in Headers */,
 				D1B486B719337389004674EB /* Mac_LoadingOverlay.h in Headers */,
 				B436D2EF1D05AEB000DA2C15 /* RenderHelper.h in Headers */,
 				D1AF66CF170B1E5900A43743 /* InputDelegate.h in Headers */,
@@ -1428,6 +1438,7 @@
 				B455013E1BD7A7DE00E75E43 /* OpenGLES2_Texture.cpp in Sources */,
 				B4046B421ECDCB8A00F85550 /* egl.cpp in Sources */,
 				B45501361BD7A7DE00E75E43 /* OpenGLES2_RenderSystem.cpp in Sources */,
+				8404CC171F951AC600272BF4 /* MotionDelegate.cpp in Sources */,
 				D1FED159192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
 				D14BF96A15875F3300D31573 /* aprilUtil.cpp in Sources */,
 				D1E7204B16D37C2300B9C9AD /* EventDelegate.cpp in Sources */,
@@ -1509,6 +1520,7 @@
 				B44FBDA91BE0E44A00DD8995 /* OpenGLES1_RenderSystem.cpp in Sources */,
 				B44FBDAA1BE0E44A00DD8995 /* OpenGL1_RenderSystem.cpp in Sources */,
 				B44FBDAB1BE0E44A00DD8995 /* OpenGLES1_Texture.cpp in Sources */,
+				8404CC191F951AC800272BF4 /* MotionDelegate.cpp in Sources */,
 				B44FBDAC1BE0E44A00DD8995 /* KeyboardDelegate.cpp in Sources */,
 				B44FBDAD1BE0E44A00DD8995 /* MouseDelegate.cpp in Sources */,
 				B44FBDAE1BE0E44A00DD8995 /* SystemDelegate.cpp in Sources */,
@@ -1593,6 +1605,7 @@
 				D1534766178AD62A00151D1A /* TimerPosix.cpp in Sources */,
 				D1B486A919337389004674EB /* Mac_AppDelegate.mm in Sources */,
 				D153476A178AD62A00151D1A /* ControllerDelegate.cpp in Sources */,
+				8404CC181F951AC700272BF4 /* MotionDelegate.cpp in Sources */,
 				D1B4873A19337479004674EB /* Mac_Platform.mm in Sources */,
 				D1FED15A192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
 				B45501471BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,
@@ -1661,6 +1674,7 @@
 				D1AF66B7170B1E5900A43743 /* ImageJpt.cpp in Sources */,
 				D1AF66B8170B1E5900A43743 /* ImagePng.cpp in Sources */,
 				D1FED158192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
+				8404CC161F951AB600272BF4 /* MotionDelegate.cpp in Sources */,
 				D1B4873819337479004674EB /* Mac_Platform.mm in Sources */,
 				D1B486AC19337389004674EB /* Mac_CocoaWindow.mm in Sources */,
 				B45501451BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,

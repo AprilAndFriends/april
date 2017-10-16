@@ -22,17 +22,17 @@ namespace april
 	{
 	}
 
-	void MotionDelegate::onLinearAccelerometer(gvec3 motionVector)
+	void MotionDelegate::onLinearAccelerometer(cgvec3 motionVector)
 	{
 		hlog::debug(logTag, "Event onLinearAccelerometer() was not implemented.");
 	}
 
-	void MotionDelegate::onRotation(gvec3 rotationVector)
+	void MotionDelegate::onRotation(cgvec3 rotationVector)
 	{
 		hlog::debug(logTag, "Event onRotation() was not implemented.");
 	}
 
-	void MotionDelegate::onGyroscope(gvec3 motionVector)
+	void MotionDelegate::onGyroscope(cgvec3 motionVector)
 	{
 		hlog::debug(logTag, "Event onGyroscope() was not implemented.");
 	}
