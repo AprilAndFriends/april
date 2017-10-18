@@ -470,18 +470,21 @@ namespace april
 				hlog::error(logTag, "No filename for texture specified!");
 				return false;
 			}
-			Image* image = NULL;
-			if (this->format == Image::Format::Invalid)
-			{
-				image = (this->fromResource ? Image::createFromResource(this->filename) : Image::createFromFile(this->filename));
-			}
-			else
-			{
-				image = (this->fromResource ? Image::createFromResource(this->filename, this->format) : Image::createFromFile(this->filename, this->format));
-			}
+			// must not call createFromResource() or createFromFile() that converts automatically, because _processImageFormatSupport() needs to be called first
+			Image* image = (this->fromResource ? Image::createFromResource(this->filename) : Image::createFromFile(this->filename));
 			if (image != NULL)
 			{
 				image = this->_processImageFormatSupport(image);
+			}
+			if (image != NULL && Image::needsConversion(image->format, this->format))
+			{
+				unsigned char* data = NULL;
+				if (Image::convertToFormat(image->w, image->h, image->data, image->format, &data, this->format))
+				{
+					delete[] image->data;
+					image->format = this->format;
+					image->data = data;
+				}
 			}
 			if (image == NULL)
 			{
@@ -640,6 +643,10 @@ namespace april
 				return false;
 			}
 			Image* image = (this->fromResource ? Image::readMetaDataFromResource(this->filename) : Image::readMetaDataFromFile(this->filename));
+			if (image != NULL)
+			{
+				image = this->_processImageFormatSupport(image);
+			}
 			if (image == NULL)
 			{
 				hlog::error(logTag, "Failed to load texture: " + this->_getInternalName());
@@ -723,18 +730,21 @@ namespace april
 		}
 		lock.release();
 		hlog::write(logTag, "Loading async texture: " + this->_getInternalName());
-		Image* image = NULL;
-		if (this->format == Image::Format::Invalid)
-		{
-			image = Image::createFromStream(*(hsbase*)stream, "." + hfile::extensionOf(this->filename));
-		}
-		else
-		{
-			image = Image::createFromStream(*(hsbase*)stream, "." + hfile::extensionOf(this->filename), this->format);
-		}
+		// must not call createFromStream() that converts automatically, because _processImageFormatSupport() needs to be called first
+		Image* image = Image::createFromStream(*(hsbase*)stream, "." + hfile::extensionOf(this->filename));
 		if (image != NULL)
 		{
 			image = this->_processImageFormatSupport(image);
+		}
+		if (image != NULL && Image::needsConversion(image->format, this->format))
+		{
+			unsigned char* data = NULL;
+			if (Image::convertToFormat(image->w, image->h, image->data, image->format, &data, this->format))
+			{
+				delete[] image->data;
+				image->format = this->format;
+				image->data = data;
+			}
 		}
 		if (image == NULL)
 		{
@@ -775,25 +785,32 @@ namespace april
 		{
 			hlog::warn(logTag, "Texture format not supported, trying to convert to an RGBA format: " + this->_getInternalName());
 			Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(Image::Format::RGBA);
-			Image* newImage = NULL;
-			bool result = false;
-			if (image->format == Image::Format::Alpha)
+			if (image->data != NULL)
 			{
-				newImage = Image::create(image->w, image->h, april::Color::White, nativeFormat);
-				result = newImage->insertAlphaMap(image);
-			}
-			else
-			{
-				newImage = Image::create(image->w, image->h, april::Color::Clear, nativeFormat);
-				result = newImage->write(0, 0, image->w, image->h, 0, 0, image);
-			}
-			delete image;
-			image = newImage;
-			if (!result)
-			{
-				hlog::error(logTag, "Could not write format: " + this->_getInternalName());
+				bool result = false;
+				Image* newImage = NULL;
+				if (image->format == Image::Format::Alpha)
+				{
+					newImage = Image::create(image->w, image->h, april::Color::White, nativeFormat);
+					result = newImage->insertAlphaMap(image);
+				}
+				else
+				{
+					newImage = Image::create(image->w, image->h, april::Color::Clear, nativeFormat);
+					result = newImage->write(0, 0, image->w, image->h, 0, 0, image);
+				}
 				delete image;
-				image = NULL;
+				image = newImage;
+				if (!result)
+				{
+					hlog::error(logTag, "Could not write format: " + this->_getInternalName());
+					delete image;
+					image = NULL;
+				}
+			}
+			else // might have been a meta data load
+			{
+				image->format = nativeFormat;
 			}
 		}
 		return image;
