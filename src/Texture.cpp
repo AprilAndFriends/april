@@ -476,7 +476,7 @@ namespace april
 			{
 				image = this->_processImageFormatSupport(image);
 			}
-			if (image != NULL && Image::needsConversion(image->format, this->format))
+			if (image != NULL && this->format != Image::Format::Invalid && Image::needsConversion(image->format, this->format))
 			{
 				unsigned char* data = NULL;
 				if (Image::convertToFormat(image->w, image->h, image->data, image->format, &data, this->format))
@@ -736,7 +736,7 @@ namespace april
 		{
 			image = this->_processImageFormatSupport(image);
 		}
-		if (image != NULL && Image::needsConversion(image->format, this->format))
+		if (image != NULL && this->format != Image::Format::Invalid && Image::needsConversion(image->format, this->format))
 		{
 			unsigned char* data = NULL;
 			if (Image::convertToFormat(image->w, image->h, image->data, image->format, &data, this->format))

@@ -2241,6 +2241,10 @@ namespace april
 
 	bool Image::needsConversion(Format srcFormat, Format destFormat, bool preventCopy)
 	{
+		if (srcFormat == Format::Invalid || destFormat == Format::Invalid)
+		{
+			return false;
+		}
 		if (preventCopy && srcFormat == destFormat)
 		{
 			return false;
