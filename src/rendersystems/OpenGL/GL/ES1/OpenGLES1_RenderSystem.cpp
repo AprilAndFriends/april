@@ -55,7 +55,7 @@ namespace april
 		this->blendSeparationSupported = (extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate"));
 		hlog::write(logTag, "Blend-separate supported: " + hstr(this->blendSeparationSupported ? "yes" : "no"));
 #endif
-#if defined(_ANDROID) || defined(_IOS)
+#ifdef _ANDROID
 		this->etc1Supported = extensions.contains("OES_compressed_ETC1_RGB8_texture");
 		hlog::write(logTag, "ETC1 supported: " + hstr(this->etc1Supported ? "yes" : "no"));
 		// Android has problems with alpha textures in some implementations

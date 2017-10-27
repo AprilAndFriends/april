@@ -227,7 +227,7 @@ namespace april
 			extensions += ".pvrz";
 			extensions += ".pvr";
 #endif
-#if defined(_ANDROID) || defined(_IOS)
+#ifdef _ANDROID
 			extensions += ".etcx";
 #endif
 		}

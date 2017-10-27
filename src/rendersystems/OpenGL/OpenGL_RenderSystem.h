@@ -57,8 +57,8 @@
 	#endif
 #endif
 
-#if defined(_ANDROID) || defined(_IOS)
-	#define GL_ETCX_RGBA8_OES_HACK (GL_ETC1_RGB8_OES | (1u << 31))
+#ifdef _ANDROID
+#define GL_ETCX_RGBA8_OES_HACK (GL_ETC1_RGB8_OES | (1u << 31))
 #endif
 
 #include <hltypes/hstring.h>

@@ -21,7 +21,7 @@ namespace april
 {
 	OpenGLES_Texture::OpenGLES_Texture(bool fromResource) : OpenGL_Texture(fromResource)
 	{
-#if defined(_ANDROID) || defined(_IOS)
+#ifdef _ANDROID
 		this->alphaTextureId = 0;
 #endif
 	}
@@ -47,7 +47,7 @@ namespace april
 			this->firstUpload = false;
 		}
 #endif
-#if defined(_ANDROID) || defined(_IOS)
+#ifdef _ANDROID
 		if ((this->dataFormat & GL_ETC1_RGB8_OES) == GL_ETC1_RGB8_OES)
 		{
 			if (!APRIL_OGLES_RENDERSYS->etc1Supported)
@@ -90,7 +90,7 @@ namespace april
 
 	bool OpenGLES_Texture::_deviceDestroyTexture()
 	{
-#if defined(_ANDROID) || defined(_IOS)
+#ifdef _ANDROID
 		if (this->alphaTextureId != 0)
 		{
 			glDeleteTextures(1, &this->alphaTextureId);
