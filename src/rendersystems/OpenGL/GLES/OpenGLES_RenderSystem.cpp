@@ -120,7 +120,7 @@ namespace april
 	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(),
 		deviceState_matrixChanged(true), deviceState_systemColorChanged(true), deviceState_colorModeFactorChanged(true)
 	{
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		this->etc1Supported = false;
 #endif
 	}
@@ -148,7 +148,7 @@ namespace april
 		this->pixelShaderColoredTexturedMultiply = NULL;
 		this->pixelShaderColoredTexturedAlphaMap = NULL;
 		this->pixelShaderColoredTexturedLerp = NULL;
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		this->pixelShaderTexturedMultiply_AlphaHack = NULL;
 		this->pixelShaderTexturedLerp_AlphaHack = NULL;
 		this->pixelShaderColoredTexturedMultiply_AlphaHack = NULL;
@@ -166,7 +166,7 @@ namespace april
 		this->shaderColoredTexturedMultiply = NULL;
 		this->shaderColoredTexturedAlphaMap = NULL;
 		this->shaderColoredTexturedLerp = NULL;
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		this->shaderTexturedMultiply_AlphaHack = NULL;
 		this->shaderTexturedLerp_AlphaHack = NULL;
 		this->shaderColoredTexturedMultiply_AlphaHack = NULL;
@@ -225,7 +225,7 @@ namespace april
 		this->blendSeparationSupported = (extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate"));
 		hlog::write(logTag, "Blend-separate supported: " + hstr(this->blendSeparationSupported ? "yes" : "no"));
 #endif
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		this->etc1Supported = extensions.contains("OES_compressed_ETC1_RGB8_texture");
 		hlog::write(logTag, "ETC1 supported: " + hstr(this->etc1Supported ? "yes" : "no"));
 #endif
@@ -265,7 +265,7 @@ namespace april
 		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedMultiply, ColoredTexturedMultiply, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedAlphaMap, ColoredTexturedAlphaMap, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedLerp, ColoredTexturedLerp, data);
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		LOAD_PIXEL_SHADER(this->pixelShaderTexturedMultiply_AlphaHack, TexturedMultiply_AlphaHack, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderTexturedLerp_AlphaHack, TexturedLerp_AlphaHack, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedMultiply_AlphaHack, ColoredTexturedMultiply_AlphaHack, data);
@@ -283,7 +283,7 @@ namespace april
 		LOAD_PROGRAM(this->shaderColoredTexturedMultiply, this->pixelShaderColoredTexturedMultiply, this->vertexShaderColoredTextured);
 		LOAD_PROGRAM(this->shaderColoredTexturedAlphaMap, this->pixelShaderColoredTexturedAlphaMap, this->vertexShaderColoredTextured);
 		LOAD_PROGRAM(this->shaderColoredTexturedLerp, this->pixelShaderColoredTexturedLerp, this->vertexShaderColoredTextured);
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		LOAD_PROGRAM(this->shaderTexturedMultiply_AlphaHack, this->pixelShaderTexturedMultiply_AlphaHack, this->vertexShaderTextured);
 		LOAD_PROGRAM(this->shaderTexturedLerp_AlphaHack, this->pixelShaderTexturedLerp_AlphaHack, this->vertexShaderTextured);
 		LOAD_PROGRAM(this->shaderColoredTexturedMultiply_AlphaHack, this->pixelShaderColoredTexturedMultiply_AlphaHack, this->vertexShaderColoredTextured);
@@ -309,7 +309,7 @@ namespace april
 		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedMultiply);
 		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedAlphaMap);
 		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedLerp);
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		DELETE_PIXEL_SHADER(this->pixelShaderTexturedMultiply_AlphaHack);
 		DELETE_PIXEL_SHADER(this->pixelShaderTexturedLerp_AlphaHack);
 		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedMultiply_AlphaHack);
@@ -327,7 +327,7 @@ namespace april
 		_HL_TRY_DELETE(this->shaderColoredTexturedMultiply);
 		_HL_TRY_DELETE(this->shaderColoredTexturedAlphaMap);
 		_HL_TRY_DELETE(this->shaderColoredTexturedLerp);
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		_HL_TRY_DELETE(this->shaderTexturedMultiply_AlphaHack);
 		_HL_TRY_DELETE(this->shaderTexturedLerp_AlphaHack);
 		_HL_TRY_DELETE(this->shaderColoredTexturedMultiply_AlphaHack);
@@ -391,7 +391,7 @@ namespace april
 
 	void OpenGLES_RenderSystem::_setDeviceTexture(Texture* texture)
 	{
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		if (texture != NULL)
 		{
 			OpenGLES_Texture* currentTexture = (OpenGLES_Texture*)texture;
@@ -437,7 +437,7 @@ namespace april
 		{
 			hlog::warn(logTag, "Trying to set unsupported color mode!");
 		}
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		OpenGLES_Texture* currentTexture = (OpenGLES_Texture*)this->deviceState->texture;
 		bool useAlphaHack = (this->deviceState->useTexture && currentTexture != NULL && currentTexture->alphaTextureId != 0);
 		if (useAlphaHack)
@@ -477,7 +477,7 @@ namespace april
 			{
 				glUniform1i(samplerLocation, 0);
 			}
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 			if (useAlphaHack) // will only be true if this->deviceState->useTexture is true
 			{
 				samplerLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "sampler2dAlpha");

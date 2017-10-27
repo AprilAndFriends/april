@@ -29,7 +29,7 @@ namespace april
 		~OpenGLES_Texture();
 
 	protected:
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		unsigned int alphaTextureId;
 #endif
 

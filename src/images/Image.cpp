@@ -576,7 +576,7 @@ namespace april
 			return Image::_loadPvrz(file);
 		}
 #endif
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		if (filename.lowered().endsWith(".etcx"))
 		{
 			file.open(filename);
@@ -640,7 +640,7 @@ namespace april
 			return Image::_loadPvrz(file);
 		}
 #endif
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		if (filename.lowered().endsWith(".etcx"))
 		{
 			file.open(filename);
@@ -698,7 +698,7 @@ namespace april
 			return Image::_loadPvrz(stream);
 		}
 #endif
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		if (logicalExtension.lowered().endsWith(".etcx"))
 		{
 			return Image::_loadEtcx(stream);
@@ -831,7 +831,7 @@ namespace april
 			return Image::_readMetaDataPvrz(file);
 		}
 #endif
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		if (filename.lowered().endsWith(".etcx"))
 		{
 			file.open(filename);
@@ -879,7 +879,7 @@ namespace april
 			return Image::_readMetaDataPvrz(file);
 		}
 #endif
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		if (filename.lowered().endsWith(".etcx"))
 		{
 			file.open(filename);
@@ -921,7 +921,7 @@ namespace april
 			return Image::_readMetaDataPvrz(stream);
 		}
 #endif
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		if (logicalExtension.lowered().endsWith(".etcx"))
 		{
 			return Image::_readMetaDataEtcx(stream);

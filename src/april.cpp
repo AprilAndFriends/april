@@ -151,7 +151,7 @@
 	#define APRIL_PLATFORM_NAME "Unix"
 #endif
 #ifndef APRIL_PLATFORM_NAME
-#define APRIL_PLATFORM_NAME "Unknown"
+	#define APRIL_PLATFORM_NAME "Unknown"
 #endif
 
 #ifdef _ARM
@@ -227,7 +227,7 @@ namespace april
 			extensions += ".pvrz";
 			extensions += ".pvr";
 #endif
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 			extensions += ".etcx";
 #endif
 		}

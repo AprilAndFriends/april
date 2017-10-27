@@ -62,7 +62,7 @@ namespace april
 		OpenGLES_PixelShader* pixelShaderColoredTexturedMultiply;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedAlphaMap;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedLerp;
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		OpenGLES_PixelShader* pixelShaderTexturedMultiply_AlphaHack;
 		OpenGLES_PixelShader* pixelShaderTexturedLerp_AlphaHack;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedMultiply_AlphaHack;
@@ -80,13 +80,11 @@ namespace april
 		ShaderProgram* shaderColoredTexturedMultiply;
 		ShaderProgram* shaderColoredTexturedAlphaMap;
 		ShaderProgram* shaderColoredTexturedLerp;
-#ifdef _ANDROID
+#if defined(_ANDROID) || defined(_IOS)
 		ShaderProgram* shaderTexturedMultiply_AlphaHack;
 		ShaderProgram* shaderTexturedLerp_AlphaHack;
 		ShaderProgram* shaderColoredTexturedMultiply_AlphaHack;
 		ShaderProgram* shaderColoredTexturedLerp_AlphaHack;
-#endif
-#ifdef _ANDROID
 		bool etc1Supported;
 #endif
 
