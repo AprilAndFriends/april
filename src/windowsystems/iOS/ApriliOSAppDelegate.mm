@@ -5,20 +5,22 @@
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
-/// 
-/// @section DESCRIPTION
-/// 
-#import "TargetConditionals.h"
+
+#include <locale.h>
+
+#include <hltypes/hlog.h>
+
+#import <AVFoundation/AVFoundation.h>
+#import <TargetConditionals.h>
 #import "ApriliOSAppDelegate.h"
 #import "main_base.h"
 #import "AprilViewController.h"
 #import "EAGLView.h"
+
 #include "april.h"
-#include <hltypes/hlog.h>
 #include "iOS_Window.h"
 #include "RenderSystem.h"
 #include "Window.h"
-#import <AVFoundation/AVFoundation.h>
 
 typedef bool (*iOSUrlCallback)(chstr, chstr, void*);
 static harray<iOSUrlCallback> gUrlCallbacks;
@@ -41,6 +43,8 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 
 - (BOOL)application:(UIApplication*) application didFinishLaunchingWithOptions:(NSDictionary*) launchOptions
 {
+	// this doesn't seem to work on iOS, but let's leave it here if Apple ever decides to actually support basic OS stuff
+	setlocale(LC_ALL, "en_US.UTF-8"); // make sure the app uses a neutral locale that includes all specifics for all locales
 	hlog::write(april::logTag, "Creating iOS window");
 #if TARGET_IPHONE_SIMULATOR
 	NSLog(@"[april] iOS Simulator document location: %@",[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject]);
