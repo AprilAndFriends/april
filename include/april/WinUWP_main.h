@@ -30,7 +30,7 @@
 [Platform::MTAThread]
 int main(Platform::Array<Platform::String^>^ args)
 {
-	setlocale(LC_ALL, "en"); // make sure the app uses a neutral locale that includes all specifics for all locales
+	setlocale(LC_ALL, "en_US.UTF-8"); // make sure the app uses a neutral locale that includes all specifics for all locales
 	// extract arguments
 	int argc = 0;
 	char** argv = new char*[argc];

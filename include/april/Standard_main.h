@@ -29,7 +29,7 @@
 /// @note This is used internally only.
 int main(int argc, char** argv)
 {
-	setlocale(LC_ALL, "en"); // make sure the app uses a neutral locale that includes all specifics for all locales
+	setlocale(LC_ALL, "en_US.UTF-8"); // make sure the app uses a neutral locale that includes all specifics for all locales
 #ifdef __SINGLE_INSTANCE
 	if (!april::__lockSingleInstanceMutex(hstr::fromUnicode(__APRIL_SINGLE_INSTANCE_NAME), argv[0]))
 	{
