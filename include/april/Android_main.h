@@ -15,6 +15,7 @@
 #define APRIL_ANDROID_MAIN_H
 
 #include <jni.h>
+#include <locale.h>
 #include <string.h>
 
 #include "aprilExport.h"
@@ -26,6 +27,7 @@
 /// @note Don't worry about this, this is how Android/Java/JNI has to initialize things.
 extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 {
+	setlocale(LC_ALL, ""); // make sure the app uses a neutral locale that includes all specifics for all locales
 	return april::__JNI_OnLoad(&april_init, &april_destroy, vm, reserved);
 }
 #endif

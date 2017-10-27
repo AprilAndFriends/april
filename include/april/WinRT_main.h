@@ -14,7 +14,7 @@
 #ifndef APRIL_WINRT_MAIN_H
 #define APRIL_WINRT_MAIN_H
 
-#include "aprilExport.h"
+#include <locale.h>
 
 #include <hltypes/harray.h>
 #include <hltypes/hltypesUtil.h>
@@ -44,6 +44,7 @@ namespace APRIL_WINP8_ROOT_NAMESPACE_HACK
 [Platform::MTAThread]
 int main(Platform::Array<Platform::String^>^ args)
 {
+	setlocale(LC_ALL, ""); // make sure the app uses a neutral locale that includes all specifics for all locales
 	// extract arguments
 	int argc = 0;
 	char** argv = new char*[argc];

@@ -14,6 +14,7 @@
 #ifndef APRIL_WIN32_MAIN_H
 #define APRIL_WIN32_MAIN_H
 
+#include <locale.h>
 #include <stdio.h>
 #include <shellapi.h>
 
@@ -34,6 +35,7 @@
 /// @note This is used internally only.
 int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCmdLine, int nCmdShow)
 {
+	setlocale(LC_ALL, ""); // make sure the app uses a neutral locale that includes all specifics for all locales
 	// extract arguments
 	int argc = 0;
 	wchar_t** wArgv = CommandLineToArgvW(wCmdLine, &argc);
