@@ -27,7 +27,7 @@
 /// @note Don't worry about this, this is how Android/Java/JNI has to initialize things.
 extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 {
-	setlocale(LC_ALL, "en_US.UTF-8"); // make sure the app uses a neutral locale that includes all specifics for all locales
+	setlocale(LC_ALL, __APRIL_DEFAULT_LOCALE); // make sure the app uses a neutral locale that includes all specifics for all locales
 	return april::__JNI_OnLoad(&april_init, &april_destroy, vm, reserved);
 }
 #endif

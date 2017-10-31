@@ -12,6 +12,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <TargetConditionals.h>
+
 #import "ApriliOSAppDelegate.h"
 #import "main_base.h"
 #import "AprilViewController.h"
@@ -44,7 +45,7 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 - (BOOL)application:(UIApplication*) application didFinishLaunchingWithOptions:(NSDictionary*) launchOptions
 {
 	// this doesn't seem to work on iOS, but let's leave it here if Apple ever decides to actually support basic OS stuff
-	setlocale(LC_ALL, "en_US.UTF-8"); // make sure the app uses a neutral locale that includes all specifics for all locales
+	setlocale(LC_ALL, __APRIL_DEFAULT_LOCALE); // make sure the app uses a neutral locale that includes all specifics for all locales
 	hlog::write(april::logTag, "Creating iOS window");
 #if TARGET_IPHONE_SIMULATOR
 	NSLog(@"[april] iOS Simulator document location: %@",[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject]);

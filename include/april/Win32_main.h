@@ -35,7 +35,7 @@
 /// @note This is used internally only.
 int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCmdLine, int nCmdShow)
 {
-	setlocale(LC_ALL, "en_US.UTF-8"); // make sure the app uses a neutral locale that includes all specifics for all locales
+	setlocale(LC_ALL, __APRIL_DEFAULT_LOCALE); // make sure the app uses a neutral locale that includes all specifics for all locales
 	// extract arguments
 	int argc = 0;
 	wchar_t** wArgv = CommandLineToArgvW(wCmdLine, &argc);

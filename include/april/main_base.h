@@ -23,6 +23,15 @@
 
 #include "aprilExport.h"
 
+/// @brief Different platforms differently handle string transformations depending on locale. Which locale needs to be used for proper handling also depends on the platform.
+#ifndef __APRIL_DEFAULT_LOCALE
+#ifdef _WIN32
+#define __APRIL_DEFAULT_LOCALE "en"
+#else
+#define __APRIL_DEFAULT_LOCALE "en_US.UTF-8"
+#endif
+#endif
+
 /// @brief Define __APRIL_SINGLE_INSTANCE_NAME if you want an automated single-instance system.
 /// @note Only pure Win32 supports and/or needs this.
 #ifdef __APRIL_SINGLE_INSTANCE_NAME
