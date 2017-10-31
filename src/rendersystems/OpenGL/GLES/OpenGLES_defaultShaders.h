@@ -30,7 +30,7 @@
 
 // vertex header defines
 #define SHADER_VERTEX_Include "\
-	uniform mediump mat4 transformationMatrix; \n\
+	uniform highp mat4 transformationMatrix; \n\
 	attribute highp vec4 position; \n\
 "
 #define SHADER_VERTEX_Plain_Include "\
@@ -145,7 +145,7 @@
 #define SHADER_PixelTexturedAlphaMap SHADER_PIXEL_Textured_Include "\
 	void main(void) \n\
 	{ \n\
-		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		mediump vec4 tex = texture2D(sampler2d, texFrag); \n\
 		gl_FragColor = vec4(systemColor.rgb, systemColor.a * tex.r); \n\
 	} \n\
 "
@@ -153,7 +153,7 @@
 	uniform lowp float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
-		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		mediump vec4 tex = texture2D(sampler2d, texFrag); \n\
 		gl_FragColor = vec4(mix(tex.rgb, systemColor.rgb, lerpAlpha), tex.a * systemColor.a); \n\
 	} \n\
 "
@@ -187,7 +187,7 @@
 #define SHADER_PixelColoredTexturedAlphaMap SHADER_PIXEL_ColoredTextured_Include "\
 	void main(void) \n\
 	{ \n\
-		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		mediump vec4 tex = texture2D(sampler2d, texFrag); \n\
 		gl_FragColor = vec4(colorFrag.rgb, colorFrag.a * tex.r); \n\
 	} \n\
 "
@@ -195,7 +195,7 @@
 	uniform lowp float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
-		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		mediump vec4 tex = texture2D(sampler2d, texFrag); \n\
 		gl_FragColor = vec4(mix(tex.rgb, colorFrag.rgb, lerpAlpha), tex.a * colorFrag.a); \n\
 	} \n\
 "
@@ -211,7 +211,7 @@
 	uniform lowp float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
-		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		mediump vec4 tex = texture2D(sampler2d, texFrag); \n\
 		gl_FragColor = vec4(mix(tex.rgb, systemColor.rgb, lerpAlpha), texture2D(sampler2dAlpha, texFrag).r * systemColor.a); \n\
 	} \n\
 "
@@ -226,7 +226,7 @@
 	uniform lowp float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
-		lowp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		mediump vec4 tex = texture2D(sampler2d, texFrag); \n\
 		gl_FragColor = vec4(mix(tex.rgb, colorFrag.rgb, lerpAlpha), texture2D(sampler2dAlpha, texFrag).r * colorFrag.a); \n\
 	} \n\
 "
