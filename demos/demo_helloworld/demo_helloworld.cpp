@@ -50,12 +50,6 @@ april::Color backgroundColor = april::Color::Aqua;
 
 class Ball
 {
-private:
-	gvec2 position;
-	gvec2 velocity;
-
-	static const int size = 96;
-	static const int speed = 256;
 public:
 	Ball()
 	{
@@ -93,6 +87,14 @@ public:
 		v[3].x = x2; v[3].y = y2; v[3].z = 0; v[3].u = 1; v[3].v = 1;
 		april::rendersys->render(april::RenderOperation::TriangleStrip, v, 4);
 	}
+
+protected:
+	gvec2 position;
+	gvec2 velocity;
+
+	static const int size = 96;
+	static const int speed = 256;
+
 };
 
 harray<Ball> balls;
@@ -184,17 +186,14 @@ void april_init(const harray<hstr>& args)
 #endif
 	april::init(april::RenderSystemType::Default, april::WindowType::Default);
 	april::createRenderSystem();
-
 	april::Window::Options windowOptions;
 	windowOptions.resizable = true;
-
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Hello World Demo", windowOptions);
 #ifdef _WINRT
 	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
 #endif
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setSystemDelegate(systemDelegate);
-	
 	cursor = april::window->createCursorFromResource(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
 	ball = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo");	
@@ -207,10 +206,9 @@ void april_destroy()
 	april::window->destroyCursor(cursor);
 	cursor = NULL;
 	april::rendersys->destroyTexture(ball);
-	ball = NULL;
-	
+	ball = NULL;	
+	delete systemDelegate;
+	systemDelegate = NULL;
 	delete updateDelegate;
 	updateDelegate = NULL;
-	delete systemDelegate;
-	systemDelegate = NULL;	
 }
