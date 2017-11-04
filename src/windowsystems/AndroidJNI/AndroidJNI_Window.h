@@ -41,6 +41,7 @@ namespace april
 		
 		void enterMainLoop();
 		void presentFrame();
+		bool updateOneFrame();
 		
 		void queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index);
 		void queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);

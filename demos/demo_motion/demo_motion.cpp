@@ -24,6 +24,7 @@
 #include <april/Cursor.h>
 #include <april/KeyboardDelegate.h>
 #include <april/main.h>
+#include <april/MotionDelegate.h>
 #include <april/MouseDelegate.h>
 #include <april/Platform.h>
 #include <april/RenderSystem.h>
@@ -34,7 +35,7 @@
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
-#define LOG_TAG "demo_helloworld"
+#define LOG_TAG "demo_motion"
 
 april::Cursor* cursor = NULL;
 april::Texture* ball = NULL;
@@ -47,30 +48,43 @@ grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
 gvec2 size = drawRect.getSize() * 5 / 16;
 april::Color backgroundColor = april::Color::Black;
+gvec3 gravity(0.0f, 0.0f, 0.0f);
+gvec2 sizeFactor(0.001f, 0.001f); // 1 px is 1mm
+float ballElasticityFactor = 0.5f;
 
 class Ball
 {
 public:
 	Ball()
 	{
-		this->position.set((float)hrand((int)drawRect.w - size), (float)hrand((int)drawRect.h - size));
-		this->velocity.set((float)speed, (float)speed);
+		this->position.set((float)(int)((drawRect.w - size) * 0.5f), (float)(int)((drawRect.h - size) * 0.5f));
 	}
 
 	void update(float timeDelta)
 	{
+		gvec2 screenSize(drawRect.w - size, drawRect.h - size);
+		this->velocity += gvec2(-gravity.x, gravity.y) / sizeFactor * timeDelta; // (-x, y) because of screen space and gravity vector direction
+		this->velocity *= 0.995f; // friction
 		this->position += this->velocity * timeDelta;
-
-		if (this->position.x < 0 || this->position.x > drawRect.w - size)
+		if (this->position.x < 0)
 		{
-			this->position -= this->velocity * timeDelta;
-			this->velocity.x = -this->velocity.x;
+			this->position.x = -this->position.x * ballElasticityFactor;
+			this->velocity.x = -this->velocity.x * ballElasticityFactor;
 		}
-
-		if (this->position.y < 0 || this->position.y > drawRect.h - size)
+		else if (this->position.x > screenSize.x)
 		{
-			this->position -= this->velocity * timeDelta;
-			this->velocity.y = -this->velocity.y;
+			this->position.x = screenSize.x + (screenSize.x - this->position.x) * ballElasticityFactor;
+			this->velocity.x = -this->velocity.x * ballElasticityFactor;
+		}
+		if (this->position.y < 0)
+		{
+			this->position.y = -this->position.y * ballElasticityFactor;
+			this->velocity.y = -this->velocity.y * ballElasticityFactor;
+		}
+		else if (this->position.y > screenSize.y)
+		{
+			this->position.y = screenSize.y + (screenSize.y - this->position.y) * ballElasticityFactor;
+			this->velocity.y = -this->velocity.y * ballElasticityFactor;
 		}
 	}
 
@@ -93,7 +107,6 @@ protected:
 	gvec2 velocity;
 
 	static const int size = 96;
-	static const int speed = 256;
 
 };
 
@@ -102,9 +115,9 @@ harray<Ball> balls;
 class UpdateDelegate : public april::UpdateDelegate
 {
 	bool onUpdate(float timeDelta)
-	{	
+	{
 		april::rendersys->clear();
-		april::rendersys->setOrthoProjection(drawRect);	
+		april::rendersys->setOrthoProjection(drawRect);
 		april::rendersys->drawFilledRect(drawRect, backgroundColor);
 		foreach (Ball, it, balls)
 		{
@@ -130,8 +143,25 @@ public:
 
 };
 
+class MotionDelegate : public april::MotionDelegate
+{
+public:
+	MotionDelegate() : april::MotionDelegate()
+	{
+		this->gravityEnabled = true;
+	}
+
+	void onGravity(cgvec3 motionVector)
+	{
+		hlog::writef(LOG_TAG, "motion vector: %g,%g,%g", motionVector.x, motionVector.y, motionVector.z);
+		gravity = motionVector;
+	}
+
+};
+
 static UpdateDelegate* updateDelegate = NULL;
 static SystemDelegate* systemDelegate = NULL;
+static MotionDelegate* motionDelegate = NULL;
 
 void april_init(const harray<hstr>& args)
 {
@@ -180,23 +210,27 @@ void april_init(const harray<hstr>& args)
 #endif
 	srand((unsigned int)htime());
 	updateDelegate = new UpdateDelegate();
-	systemDelegate = new SystemDelegate();	
+	systemDelegate = new SystemDelegate();
+	motionDelegate = new MotionDelegate();
 #if defined(_ANDROID) || defined(_IOS)
-	drawRect.setSize(april::getSystemInfo().displayResolution);
+	gvec2 resolution = april::getSystemInfo().displayResolution;
+	hswap(resolution.x, resolution.y);
+	drawRect.setSize(resolution);
 #endif
 	april::init(april::RenderSystemType::Default, april::WindowType::Default);
 	april::createRenderSystem();
 	april::Window::Options windowOptions;
 	windowOptions.resizable = true;
-	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Hello World Demo", windowOptions);
+	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Motion Demo", windowOptions);
 #ifdef _WINRT
 	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
 #endif
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setSystemDelegate(systemDelegate);
+	april::window->setMotionDelegate(motionDelegate);
 	cursor = april::window->createCursorFromResource(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
-	ball = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo");	
+	ball = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo");
 	balls.add(Ball());
 }
 
@@ -206,7 +240,9 @@ void april_destroy()
 	april::window->destroyCursor(cursor);
 	cursor = NULL;
 	april::rendersys->destroyTexture(ball);
-	ball = NULL;	
+	ball = NULL;
+	delete motionDelegate;
+	motionDelegate = NULL;
 	delete systemDelegate;
 	systemDelegate = NULL;
 	delete updateDelegate;

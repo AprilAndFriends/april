@@ -29,6 +29,15 @@ namespace april
 		/// @brief Destructor.
 		virtual ~MotionDelegate();
 
+		/// @brief Whether gravity sensor is used.
+		HL_DEFINE_ISSET(gravityEnabled, GravityEnabled);
+		/// @brief Whether linear accelerometer sensor is used.
+		HL_DEFINE_ISSET(linearAccelerometerEnabled, LinearAccelerometerEnabled);
+		/// @brief Whether rotation sensor is used.
+		HL_DEFINE_ISSET(rotationEnabled, RotationEnabled);
+		/// @brief Whether gyroscope is used.
+		HL_DEFINE_ISSET(gyroscopeEnabled, GyroscopeEnabled);
+
 		/// @brief Called when the gravity vector of the device changes.
 		/// @param[in] motionVector Gravity vector in the Cartesian coordinate system.
 		virtual void onGravity(cgvec3 motionVector);
@@ -41,6 +50,16 @@ namespace april
 		/// @brief Called when the gyroscope of the device detects changes.
 		/// @param[in] motionVector Movement vector in the Cartesian coordinate system.
 		virtual void onGyroscope(cgvec3 motionVector);
+
+	protected:
+		/// @brief Whether gravity sensor is used.
+		bool gravityEnabled;
+		/// @brief Whether linear accelerometer sensor is used.
+		bool linearAccelerometerEnabled;
+		/// @brief Whether rotation sensor is used.
+		bool rotationEnabled;
+		/// @brief Whether gyroscope is used.
+		bool gyroscopeEnabled;
 
 	};
 

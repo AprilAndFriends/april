@@ -155,6 +155,26 @@ namespace april
 		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::ControllerInputEvent::Type::Axis, (int)controllerIndex, Button::fromInt((int)buttonCode), axisValue));
 	}
 
+	void JNICALL _JNI_onGravity(JNIEnv* env, jclass classe, jfloat x, jfloat y, jfloat z)
+	{
+		PROTECTED_WINDOW_CALL(queueMotionEvent(april::Window::MotionInputEvent::Type::Gravity, gvec3(x, y, z)));
+	}
+
+	void JNICALL _JNI_onLinearAccelerometer(JNIEnv* env, jclass classe, jfloat x, jfloat y, jfloat z)
+	{
+		PROTECTED_WINDOW_CALL(queueMotionEvent(april::Window::MotionInputEvent::Type::LinearAccelerometer, gvec3(x, y, z)));
+	}
+
+	void JNICALL _JNI_onRotation(JNIEnv* env, jclass classe, jfloat x, jfloat y, jfloat z)
+	{
+		PROTECTED_WINDOW_CALL(queueMotionEvent(april::Window::MotionInputEvent::Type::Rotation, gvec3(x, y, z)));
+	}
+
+	void JNICALL _JNI_onGyroscope(JNIEnv* env, jclass classe, jfloat x, jfloat y, jfloat z)
+	{
+		PROTECTED_WINDOW_CALL(queueMotionEvent(april::Window::MotionInputEvent::Type::Gyroscope, gvec3(x, y, z)));
+	}
+
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)
 	{
 		bool focused = (jFocused != JNI_FALSE);
@@ -257,7 +277,7 @@ namespace april
 		}
 	}
 	
-#define METHOD_COUNT 26 // make sure this fits
+#define METHOD_COUNT 30 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
 		{"setVariables",						_JARGS(_JVOID, _JSTR _JSTR),					(void*)&april::_JNI_setVariables				},
@@ -271,6 +291,10 @@ namespace april
 		{"onButtonDown",						_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onButtonDown				},
 		{"onButtonUp",							_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onButtonUp					},
 		{"onControllerAxisChange",				_JARGS(_JVOID, _JINT _JINT _JFLOAT),			(bool*)&april::_JNI_onControllerAxisChange		},
+		{"onGravity",							_JARGS(_JVOID, _JFLOAT _JFLOAT _JFLOAT),		(void*)&april::_JNI_onGravity					},
+		{"onLinearAccelerometer",				_JARGS(_JVOID, _JFLOAT _JFLOAT _JFLOAT),		(void*)&april::_JNI_onLinearAccelerometer		},
+		{"onRotation",							_JARGS(_JVOID, _JFLOAT _JFLOAT _JFLOAT),		(void*)&april::_JNI_onRotation					},
+		{"onGyroscope",							_JARGS(_JVOID, _JFLOAT _JFLOAT _JFLOAT),		(void*)&april::_JNI_onGyroscope					},
 		{"onWindowFocusChanged",				_JARGS(_JVOID, _JBOOL),							(void*)&april::_JNI_onWindowFocusChanged		},
 		{"onVirtualKeyboardChanged",			_JARGS(_JVOID, _JBOOL _JFLOAT),					(void*)&april::_JNI_onVirtualKeyboardChanged	},
 		{"onLowMemory",							_JARGS(_JVOID, ),								(void*)&april::_JNI_onLowMemory					},
@@ -287,6 +311,8 @@ namespace april
 		{"onDialogNo",							_JARGS(_JVOID, ),								(void*)&april::_JNI_onDialogNo					},
 		{"onDialogCancel",						_JARGS(_JVOID, ),								(void*)&april::_JNI_onDialogCancel				}
 	};
+
+
 	
 	jint __JNI_OnLoad(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), JavaVM* vm, void* reserved)
 	{

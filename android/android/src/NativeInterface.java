@@ -76,6 +76,10 @@ public class NativeInterface
 	public static native void onButtonDown(int controllerIndex, int buttonCode);
 	public static native void onButtonUp(int controllerIndex, int buttonCode);
 	public static native void onControllerAxisChange(int controllerIndex, int buttonCode, float axisValue);
+	public static native void onGravity(float x, float y, float z);
+	public static native void onLinearAccelerometer(float x, float y, float z);
+	public static native void onRotation(float x, float y, float z);
+	public static native void onGyroscope(float x, float y, float z);
 	public static native void onWindowFocusChanged(boolean focused);
 	public static native void onVirtualKeyboardChanged(boolean visible, float heightRation);
 	public static native void onLowMemory();
@@ -93,6 +97,11 @@ public class NativeInterface
 	public static native void onDialogYes();
 	public static native void onDialogNo();
 	public static native void onDialogCancel();
+	
+	public static void setSensorsEnabled(final boolean gravity, final boolean linearAccelerometer, final boolean rotation, final boolean gyroscope)
+	{
+		NativeInterface.aprilActivity.setSensorsEnabled(gravity, linearAccelerometer, rotation, gyroscope);
+	}
 	
 	public static Object getDisplayResolution()
 	{

@@ -11,6 +11,8 @@ import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,6 +34,12 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	private boolean enabledNavigationBarHiding = true;
 	
 	protected SystemSettingsObserver systemSettingsObserver = null;
+	protected SensorEventListener sensorEventListener = new SensorEventListener();
+	protected SensorManager sensorManager = null;
+	protected Sensor sensorGravity = null;
+	protected Sensor sensorLinearAccelerometer = null;
+	protected Sensor sensorRotation = null;
+	protected Sensor sensorGyroscope = null;
 	
 	public void forceArchivePath(String archivePath) // use this code in your Activity to force APK as archive file
 	{
@@ -146,6 +154,62 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		return this.glView;
 	}
 	
+	public void setSensorsEnabled(final boolean gravity, final boolean linearAccelerometer, final boolean rotation, final boolean gyroscope)
+	{
+		if (this.sensorManager == null && (gravity || linearAccelerometer || rotation || gyroscope))
+		{
+			this.sensorManager = (SensorManager)this.getSystemService(Context.SENSOR_SERVICE);
+		}
+		if (gravity)
+		{
+			if (this.sensorGravity == null)
+			{
+				this.sensorGravity = this.sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+			}
+		}
+		else
+		{
+			this.sensorGravity = null;
+		}
+		if (linearAccelerometer)
+		{
+			if (this.sensorLinearAccelerometer == null)
+			{
+				this.sensorLinearAccelerometer = this.sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+			}
+		}
+		else
+		{
+			this.sensorLinearAccelerometer = null;
+		}
+		if (rotation)
+		{
+			if (this.sensorRotation == null)
+			{
+				this.sensorRotation = this.sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+			}
+		}
+		else
+		{
+			this.sensorRotation = null;
+		}
+		if (gyroscope)
+		{
+			if (this.sensorGyroscope == null)
+			{
+				this.sensorGyroscope = this.sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+			}
+		}
+		else
+		{
+			this.sensorGyroscope = null;
+		}
+		if (this.sensorManager != null)
+		{
+			this.registerSensorEventListener();
+		}
+	}
+	
 	public String createDataPath()
 	{
 		return (Environment.getExternalStorageDirectory() + "/Android/obb/" +
@@ -233,6 +297,26 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		}
 	}
 	
+	protected void registerSensorEventListener()
+	{
+		if (this.sensorGravity != null)
+		{
+			this.sensorManager.registerListener(this.sensorEventListener, this.sensorGravity, SensorManager.SENSOR_DELAY_NORMAL);
+		}
+		if (this.sensorLinearAccelerometer != null)
+		{
+			this.sensorManager.registerListener(this.sensorEventListener, this.sensorLinearAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		}
+		if (this.sensorRotation != null)
+		{
+			this.sensorManager.registerListener(this.sensorEventListener, this.sensorRotation, SensorManager.SENSOR_DELAY_NORMAL);
+		}
+		if (this.sensorGyroscope != null)
+		{
+			this.sensorManager.registerListener(this.sensorEventListener, this.sensorGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
+		}
+	}
+
 	@Override
 	protected void onStart()
 	{
@@ -250,7 +334,7 @@ public class Activity extends android.app.Activity implements IActivityEvents
 			}
 		});
 	}
-
+	
 	@Override
 	protected void onResume()
 	{
@@ -261,6 +345,10 @@ public class Activity extends android.app.Activity implements IActivityEvents
 			this.callbacksOnResume.get(i).execute();
 		}
 		this.hideNavigationBar();
+		if (this.sensorManager != null)
+		{
+			this.registerSensorEventListener();
+		}
 		// native call is queued into render thread
 		this.glView.queueEvent(new Runnable()
 		{
@@ -274,6 +362,10 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	@Override
 	protected void onPause()
 	{
+		if (this.sensorManager != null)
+		{
+			this.sensorManager.unregisterListener(this.sensorEventListener);
+		}
 		for (int i = 0; i < this.callbacksOnPause.size(); ++i)
 		{
 			this.callbacksOnPause.get(i).execute();

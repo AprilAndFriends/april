@@ -22,6 +22,7 @@
 #include "AndroidJNI_Window.h"
 #include "AndroidJNI_Keys.h"
 #include "april.h"
+#include "MotionDelegate.h"
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "SystemDelegate.h"
@@ -62,7 +63,7 @@ namespace april
 
 	void AndroidJNI_Window::enterMainLoop()
 	{
-		hlog::error(logTag, "Using enterMainLoop on Android JNI!");
+		hlog::error(logTag, "Using enterMainLoop() on Android JNI is not valid!");
 		exit(-1);
 	}
 	
@@ -71,6 +72,30 @@ namespace april
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodSwapBuffers, "swapBuffers", _JARGS(_JVOID, ));
 		env->CallStaticVoidMethod(classNativeInterface, methodSwapBuffers);
 		env->PopLocalFrame(NULL);
+	}
+
+	bool AndroidJNI_Window::updateOneFrame()
+	{
+		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
+		jmethodID methodSetSensorsEnabled = env->GetStaticMethodID(classNativeInterface, "setSensorsEnabled", _JARGS(_JVOID, _JBOOL _JBOOL _JBOOL _JBOOL));
+		if (methodSetSensorsEnabled != NULL)
+		{
+			if (this->motionDelegate != NULL)
+			{
+				env->CallStaticVoidMethod(classNativeInterface, methodSetSensorsEnabled, this->motionDelegate->isGravityEnabled(),
+					this->motionDelegate->isLinearAccelerometerEnabled(), this->motionDelegate->isRotationEnabled(), this->motionDelegate->isGyroscopeEnabled());
+			}
+			else
+			{
+				env->CallStaticVoidMethod(classNativeInterface, methodSetSensorsEnabled, JNI_FALSE, JNI_FALSE, JNI_FALSE, JNI_FALSE);
+			}
+		}
+		else
+		{
+			hlog::error(APRIL_JNI_LOG_TAG, "Could not find method, check definition: setSensorsEnabled");
+		}
+		env->PopLocalFrame(NULL);
+		return Window::updateOneFrame();
 	}
 
 	void AndroidJNI_Window::queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index)
