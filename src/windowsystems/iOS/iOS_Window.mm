@@ -293,11 +293,8 @@ namespace april
 
 	void iOS_Window::checkEvents()
 	{
-	//	SInt32 result;
-	//	do
-	//	{
-	//		result = CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0, TRUE);
-	//	} while (result == kCFRunLoopRunHandledSource);
+		// TODO - handling is done manually somewhere else, needs refactoring
+		//Window::checkEvents();
 	}
 	
 	void iOS_Window::callTouchCallback()
@@ -493,7 +490,6 @@ namespace april
 		}
 	}
 	
-	//////////////
 	void iOS_Window::handleDisplayAndUpdate()
 	{
 		bool result = this->updateOneFrame();
@@ -505,7 +501,6 @@ namespace april
 		{
 			this->terminateMainLoop();
 		}
-
 	}
 
 	void iOS_Window::applicationWillResignActive()

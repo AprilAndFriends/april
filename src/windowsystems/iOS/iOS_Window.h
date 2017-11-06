@@ -15,6 +15,7 @@
 
 #include "Timer.h"
 #include "Window.h"
+
 struct CGRect;
 
 namespace april

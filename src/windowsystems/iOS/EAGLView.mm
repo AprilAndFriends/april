@@ -14,34 +14,36 @@
 #import <OpenGLES/EAGLDrawable.h>
 
 #import "EAGLView.h"
-#include <hltypes/hlog.h>
-#include "iOS_Window.h"
-#include "RenderSystem.h"
-#include "april.h"
-#include "Keys.h"
 
+#include <hltypes/hlog.h>
+
+#include "april.h"
+#include "iOS_Window.h"
+#include "Keys.h"
+#include "MotionDelegate.h"
+#include "RenderSystem.h"
 
 #define USE_DEPTH_BUFFER 0
-#define aprilWindow ((april::iOS_Window*) april::window)
-
+#define GRAVITY 9.81f
+#define aprilWindow ((april::iOS_Window*)april::window)
 
 // A class extension to declare private methods
 @interface EAGLView ()
 
 @property (nonatomic, retain) EAGLContext* context;
 @property (nonatomic, assign) CADisplayLink* displayLink;
+@property (nonatomic, assign) CMMotionManager* sensorManager;
 
 - (BOOL) createFramebuffer;
 - (void) destroyFramebuffer;
 
 @end
 
-
-
 @implementation EAGLView
 
 @synthesize context;
 @synthesize displayLink;
+@synthesize sensorManager;
 
 // You must implement this method
 + (Class)layerClass
@@ -150,6 +152,11 @@
 		[textField addTarget:self
 						   action:@selector(textFieldFinished:)
 							forControlEvents:UIControlEventEditingDidEndOnExit];
+		self.sensorManager = [[CMMotionManager alloc] init];
+		// 60 FPS
+		self.sensorManager.deviceMotionUpdateInterval = 0.016666667f;
+		self.sensorManager.accelerometerUpdateInterval = 0.016666667f;
+		self.sensorManager.gyroUpdateInterval = 0.016666667f;
 		// create ios window object
 		april::init(april::RenderSystemType::Default, april::WindowType::Default);
 		april::createRenderSystem();
@@ -211,14 +218,94 @@
 
     [EAGLContext setCurrentContext:context];
 	
-	if (april::window)
+	if (april::window != NULL)
     {
+		[self updateSensors];
         aprilWindow->handleDisplayAndUpdate();
     }
-
 	if (frameInterval != link.frameInterval)
 	{
 		[link setFrameInterval:frameInterval];
+	}
+}
+
+-(void)updateSensors
+{
+	april::MotionDelegate* motionDelegate = april::window->getMotionDelegate();
+	bool gravity = false;
+	bool linearAccelerometer = false;
+	bool rotation = false;
+	bool gyroscope = false;
+	if (motionDelegate != NULL)
+	{
+		gravity = motionDelegate->isGravityEnabled();
+		linearAccelerometer = motionDelegate->isLinearAccelerometerEnabled();
+		rotation = motionDelegate->isRotationEnabled();
+		gyroscope = motionDelegate->isGyroscopeEnabled();
+	}
+	if (gravity)
+	{
+		if (self.sensorManager.isDeviceMotionAvailable)
+		{
+			if (!self.sensorManager.isDeviceMotionActive)
+			{
+				[self.sensorManager startDeviceMotionUpdates];
+			}
+			CMAcceleration motionVector = self.sensorManager.deviceMotion.gravity;
+			april::window->handleMotionEvent(april::Window::MotionInputEvent::Type::Gravity, gvec3(motionVector.x * GRAVITY, motionVector.y * GRAVITY, motionVector.z * GRAVITY));
+		}
+	}
+	else if (self.sensorManager != NULL && self.sensorManager.isDeviceMotionActive)
+	{
+		[self.sensorManager stopDeviceMotionUpdates];
+	}
+	if (linearAccelerometer)
+	{
+		if (self.sensorManager.isAccelerometerAvailable)
+		{
+			if (!self.sensorManager.isAccelerometerActive)
+			{
+				[self.sensorManager startAccelerometerUpdates];
+			}
+			CMAcceleration motionVector = self.sensorManager.accelerometerData.acceleration;
+			april::window->handleMotionEvent(april::Window::MotionInputEvent::Type::LinearAccelerometer, gvec3(motionVector.x, motionVector.y, motionVector.z));
+		}
+	}
+	else if (self.sensorManager != NULL && self.sensorManager.isAccelerometerActive)
+	{
+		[self.sensorManager stopAccelerometerUpdates];
+	}
+	if (rotation)
+	{
+		if (self.sensorManager.isDeviceMotionAvailable)
+		{
+			if (!self.sensorManager.isDeviceMotionActive)
+			{
+				[self.sensorManager startDeviceMotionUpdates];
+			}
+			CMRotationRate motionVector = self.sensorManager.deviceMotion.rotationRate;
+			april::window->handleMotionEvent(april::Window::MotionInputEvent::Type::Rotation, gvec3(motionVector.x, motionVector.y, motionVector.z));
+		}
+	}
+	else if (self.sensorManager != NULL && self.sensorManager.isDeviceMotionActive)
+	{
+		[self.sensorManager stopDeviceMotionUpdates];
+	}
+	if (gyroscope)
+	{
+		if (self.sensorManager.isGyroAvailable)
+		{
+			if (!self.sensorManager.isGyroActive)
+			{
+				[self.sensorManager startGyroUpdates];
+			}
+			CMRotationRate motionVector = self.sensorManager.gyroData.rotationRate;
+			april::window->handleMotionEvent(april::Window::MotionInputEvent::Type::Gyroscope, gvec3(motionVector.x, motionVector.y, motionVector.z));
+		}
+	}
+	else if (self.sensorManager != NULL && self.sensorManager.isGyroActive)
+	{
+		[self.sensorManager stopGyroUpdates];
 	}
 }
 

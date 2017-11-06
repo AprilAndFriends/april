@@ -10,6 +10,7 @@
 /// 
 /// Defines an EAGL view.
 
+#import <CoreMotion/CMMotionManager.h>
 #import <UIKit/UIKit.h>
 #import <OpenGLES/EAGL.h>
 #import <OpenGLES/ES1/gl.h>
@@ -39,6 +40,9 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 	
 	/* Textfield */
 	UITextField *textField;
+	
+	CMMotionManager* sensorManager;
+
 @public
 	bool app_started;
 	bool displayLinkAttached;
@@ -59,5 +63,6 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 - (void)applicationDidBecomeActive:(UIApplication*)app;
 - (void)applicationWillResignActive:(UIApplication*)app;
 - (void)setUpdateInterval:(int)interval;
+- (void)updateSensors;
 
 @end
