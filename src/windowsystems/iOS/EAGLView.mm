@@ -243,7 +243,7 @@
 		rotation = motionDelegate->isRotationEnabled();
 		gyroscope = motionDelegate->isGyroscopeEnabled();
 	}
-	if (gravity)
+	if (gravity || rotation)
 	{
 		if (self.sensorManager.isDeviceMotionAvailable)
 		{
@@ -251,8 +251,16 @@
 			{
 				[self.sensorManager startDeviceMotionUpdates];
 			}
-			CMAcceleration motionVector = self.sensorManager.deviceMotion.gravity;
-			april::window->handleMotionEvent(april::Window::MotionInputEvent::Type::Gravity, gvec3(motionVector.x * GRAVITY, motionVector.y * GRAVITY, motionVector.z * GRAVITY));
+			if (gravity)
+			{
+				CMAcceleration motionVector = self.sensorManager.deviceMotion.gravity;
+				april::window->handleMotionEvent(april::Window::MotionInputEvent::Type::Gravity, gvec3(motionVector.x * GRAVITY, motionVector.y * GRAVITY, motionVector.z * GRAVITY));
+			}
+			if (rotation)
+			{
+				CMRotationRate motionVector = self.sensorManager.deviceMotion.rotationRate;
+				april::window->handleMotionEvent(april::Window::MotionInputEvent::Type::Rotation, gvec3(motionVector.x, motionVector.y, motionVector.z));
+			}
 		}
 	}
 	else if (self.sensorManager != NULL && self.sensorManager.isDeviceMotionActive)
@@ -274,22 +282,6 @@
 	else if (self.sensorManager != NULL && self.sensorManager.isAccelerometerActive)
 	{
 		[self.sensorManager stopAccelerometerUpdates];
-	}
-	if (rotation)
-	{
-		if (self.sensorManager.isDeviceMotionAvailable)
-		{
-			if (!self.sensorManager.isDeviceMotionActive)
-			{
-				[self.sensorManager startDeviceMotionUpdates];
-			}
-			CMRotationRate motionVector = self.sensorManager.deviceMotion.rotationRate;
-			april::window->handleMotionEvent(april::Window::MotionInputEvent::Type::Rotation, gvec3(motionVector.x, motionVector.y, motionVector.z));
-		}
-	}
-	else if (self.sensorManager != NULL && self.sensorManager.isDeviceMotionActive)
-	{
-		[self.sensorManager stopDeviceMotionUpdates];
 	}
 	if (gyroscope)
 	{
