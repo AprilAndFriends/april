@@ -76,8 +76,9 @@ public class NativeInterface
 	public static native void onButtonDown(int controllerIndex, int buttonCode);
 	public static native void onButtonUp(int controllerIndex, int buttonCode);
 	public static native void onControllerAxisChange(int controllerIndex, int buttonCode, float axisValue);
-	public static native void onGravity(float x, float y, float z);
+	public static native void onAccelerometer(float x, float y, float z);
 	public static native void onLinearAccelerometer(float x, float y, float z);
+	public static native void onGravity(float x, float y, float z);
 	public static native void onRotation(float x, float y, float z);
 	public static native void onGyroscope(float x, float y, float z);
 	public static native void onWindowFocusChanged(boolean focused);
@@ -98,9 +99,9 @@ public class NativeInterface
 	public static native void onDialogNo();
 	public static native void onDialogCancel();
 	
-	public static void setSensorsEnabled(final boolean gravity, final boolean linearAccelerometer, final boolean rotation, final boolean gyroscope)
+	public static void setSensorsEnabled(final boolean accelerometer, final boolean linearAccelerometer, final boolean gravity, final boolean rotation, final boolean gyroscope)
 	{
-		NativeInterface.aprilActivity.setSensorsEnabled(gravity, linearAccelerometer, rotation, gyroscope);
+		NativeInterface.aprilActivity.setSensorsEnabled(accelerometer, linearAccelerometer, gravity, rotation, gyroscope);
 	}
 	
 	public static Object getDisplayResolution()

@@ -36,8 +36,9 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	protected SystemSettingsObserver systemSettingsObserver = null;
 	protected SensorEventListener sensorEventListener = new SensorEventListener();
 	protected SensorManager sensorManager = null;
-	protected Sensor sensorGravity = null;
+	protected Sensor sensorAccelerometer = null;
 	protected Sensor sensorLinearAccelerometer = null;
+	protected Sensor sensorGravity = null;
 	protected Sensor sensorRotation = null;
 	protected Sensor sensorGyroscope = null;
 	
@@ -154,22 +155,22 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		return this.glView;
 	}
 	
-	public void setSensorsEnabled(final boolean gravity, final boolean linearAccelerometer, final boolean rotation, final boolean gyroscope)
+	public void setSensorsEnabled(final boolean accelerometer, final boolean linearAccelerometer, final boolean gravity, final boolean rotation, final boolean gyroscope)
 	{
-		if (this.sensorManager == null && (gravity || linearAccelerometer || rotation || gyroscope))
+		if (this.sensorManager == null && (accelerometer || linearAccelerometer || gravity || rotation || gyroscope))
 		{
 			this.sensorManager = (SensorManager)this.getSystemService(Context.SENSOR_SERVICE);
 		}
-		if (gravity)
+		if (accelerometer)
 		{
-			if (this.sensorGravity == null)
+			if (this.sensorAccelerometer == null)
 			{
-				this.sensorGravity = this.sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+				this.sensorAccelerometer = this.sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 			}
 		}
 		else
 		{
-			this.sensorGravity = null;
+			this.sensorAccelerometer = null;
 		}
 		if (linearAccelerometer)
 		{
@@ -181,6 +182,17 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		else
 		{
 			this.sensorLinearAccelerometer = null;
+		}
+		if (gravity)
+		{
+			if (this.sensorGravity == null)
+			{
+				this.sensorGravity = this.sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+			}
+		}
+		else
+		{
+			this.sensorGravity = null;
 		}
 		if (rotation)
 		{
@@ -299,13 +311,17 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	
 	protected void registerSensorEventListener()
 	{
-		if (this.sensorGravity != null)
+		if (this.sensorAccelerometer != null)
 		{
-			this.sensorManager.registerListener(this.sensorEventListener, this.sensorGravity, SensorManager.SENSOR_DELAY_NORMAL);
+			this.sensorManager.registerListener(this.sensorEventListener, this.sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 		}
 		if (this.sensorLinearAccelerometer != null)
 		{
 			this.sensorManager.registerListener(this.sensorEventListener, this.sensorLinearAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+		}
+		if (this.sensorGravity != null)
+		{
+			this.sensorManager.registerListener(this.sensorEventListener, this.sensorGravity, SensorManager.SENSOR_DELAY_NORMAL);
 		}
 		if (this.sensorRotation != null)
 		{

@@ -155,14 +155,19 @@ namespace april
 		PROTECTED_WINDOW_CALL(queueControllerEvent(april::Window::ControllerInputEvent::Type::Axis, (int)controllerIndex, Button::fromInt((int)buttonCode), axisValue));
 	}
 
-	void JNICALL _JNI_onGravity(JNIEnv* env, jclass classe, jfloat x, jfloat y, jfloat z)
+	void JNICALL _JNI_onAccelerometer(JNIEnv* env, jclass classe, jfloat x, jfloat y, jfloat z)
 	{
-		PROTECTED_WINDOW_CALL(queueMotionEvent(april::Window::MotionInputEvent::Type::Gravity, gvec3(x, y, z)));
+		PROTECTED_WINDOW_CALL(queueMotionEvent(april::Window::MotionInputEvent::Type::Accelerometer, gvec3(x, y, z)));
 	}
 
 	void JNICALL _JNI_onLinearAccelerometer(JNIEnv* env, jclass classe, jfloat x, jfloat y, jfloat z)
 	{
 		PROTECTED_WINDOW_CALL(queueMotionEvent(april::Window::MotionInputEvent::Type::LinearAccelerometer, gvec3(x, y, z)));
+	}
+
+	void JNICALL _JNI_onGravity(JNIEnv* env, jclass classe, jfloat x, jfloat y, jfloat z)
+	{
+		PROTECTED_WINDOW_CALL(queueMotionEvent(april::Window::MotionInputEvent::Type::Gravity, gvec3(x, y, z)));
 	}
 
 	void JNICALL _JNI_onRotation(JNIEnv* env, jclass classe, jfloat x, jfloat y, jfloat z)
@@ -277,7 +282,7 @@ namespace april
 		}
 	}
 	
-#define METHOD_COUNT 30 // make sure this fits
+#define METHOD_COUNT 31 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
 		{"setVariables",						_JARGS(_JVOID, _JSTR _JSTR),					(void*)&april::_JNI_setVariables				},
@@ -291,8 +296,9 @@ namespace april
 		{"onButtonDown",						_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onButtonDown				},
 		{"onButtonUp",							_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onButtonUp					},
 		{"onControllerAxisChange",				_JARGS(_JVOID, _JINT _JINT _JFLOAT),			(bool*)&april::_JNI_onControllerAxisChange		},
-		{"onGravity",							_JARGS(_JVOID, _JFLOAT _JFLOAT _JFLOAT),		(void*)&april::_JNI_onGravity					},
+		{"onAccelerometer",						_JARGS(_JVOID, _JFLOAT _JFLOAT _JFLOAT),		(void*)&april::_JNI_onAccelerometer				},
 		{"onLinearAccelerometer",				_JARGS(_JVOID, _JFLOAT _JFLOAT _JFLOAT),		(void*)&april::_JNI_onLinearAccelerometer		},
+		{"onGravity",							_JARGS(_JVOID, _JFLOAT _JFLOAT _JFLOAT),		(void*)&april::_JNI_onGravity					},
 		{"onRotation",							_JARGS(_JVOID, _JFLOAT _JFLOAT _JFLOAT),		(void*)&april::_JNI_onRotation					},
 		{"onGyroscope",							_JARGS(_JVOID, _JFLOAT _JFLOAT _JFLOAT),		(void*)&april::_JNI_onGyroscope					},
 		{"onWindowFocusChanged",				_JARGS(_JVOID, _JBOOL),							(void*)&april::_JNI_onWindowFocusChanged		},

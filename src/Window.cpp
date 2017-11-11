@@ -69,8 +69,9 @@ namespace april
 
 	HL_ENUM_CLASS_DEFINE(Window::MotionInputEvent::Type,
 	(
-		HL_ENUM_DEFINE(Window::MotionInputEvent::Type, Gravity);
+		HL_ENUM_DEFINE(Window::MotionInputEvent::Type, Accelerometer);
 		HL_ENUM_DEFINE(Window::MotionInputEvent::Type, LinearAccelerometer);
+		HL_ENUM_DEFINE(Window::MotionInputEvent::Type, Gravity);
 		HL_ENUM_DEFINE(Window::MotionInputEvent::Type, Rotation);
 		HL_ENUM_DEFINE(Window::MotionInputEvent::Type, Gyroscope);
 	));
@@ -732,13 +733,17 @@ namespace april
 	{
 		if (this->motionDelegate != NULL)
 		{
-			if (type == MotionInputEvent::Type::Gravity)
+			if (type == MotionInputEvent::Type::Accelerometer)
 			{
-				this->motionDelegate->onGravity(motionVector);
+				this->motionDelegate->onAccelerometer(motionVector);
 			}
 			else if (type == MotionInputEvent::Type::LinearAccelerometer)
 			{
 				this->motionDelegate->onLinearAccelerometer(motionVector);
+			}
+			else if (type == MotionInputEvent::Type::Gravity)
+			{
+				this->motionDelegate->onGravity(motionVector);
 			}
 			else if (type == MotionInputEvent::Type::Rotation)
 			{

@@ -14,7 +14,8 @@
 
 namespace april
 {
-	MotionDelegate::MotionDelegate() : gravityEnabled(false), linearAccelerometerEnabled(false), rotationEnabled(false), gyroscopeEnabled(false)
+	MotionDelegate::MotionDelegate() : accelerometerEnabled(false), linearAccelerometerEnabled(false), gravityEnabled(false),
+		rotationEnabled(false), gyroscopeEnabled(false)
 	{
 	}
 
@@ -22,14 +23,19 @@ namespace april
 	{
 	}
 
-	void MotionDelegate::onGravity(cgvec3 motionVector)
+	void MotionDelegate::onAccelerometer(cgvec3 motionVector)
 	{
-		hlog::debug(logTag, "Event onGravity() was not implemented.");
+		hlog::debug(logTag, "Event onAccelerometer() was not implemented.");
 	}
 
 	void MotionDelegate::onLinearAccelerometer(cgvec3 motionVector)
 	{
 		hlog::debug(logTag, "Event onLinearAccelerometer() was not implemented.");
+	}
+
+	void MotionDelegate::onGravity(cgvec3 motionVector)
+	{
+		hlog::debug(logTag, "Event onGravity() was not implemented.");
 	}
 
 	void MotionDelegate::onRotation(cgvec3 motionVector)

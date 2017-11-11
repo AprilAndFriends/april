@@ -77,13 +77,14 @@ namespace april
 	bool AndroidJNI_Window::updateOneFrame()
 	{
 		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
-		jmethodID methodSetSensorsEnabled = env->GetStaticMethodID(classNativeInterface, "setSensorsEnabled", _JARGS(_JVOID, _JBOOL _JBOOL _JBOOL _JBOOL));
+		jmethodID methodSetSensorsEnabled = env->GetStaticMethodID(classNativeInterface, "setSensorsEnabled", _JARGS(_JVOID, _JBOOL _JBOOL _JBOOL _JBOOL _JBOOL));
 		if (methodSetSensorsEnabled != NULL)
 		{
 			if (this->motionDelegate != NULL)
 			{
-				env->CallStaticVoidMethod(classNativeInterface, methodSetSensorsEnabled, this->motionDelegate->isGravityEnabled(),
-					this->motionDelegate->isLinearAccelerometerEnabled(), this->motionDelegate->isRotationEnabled(), this->motionDelegate->isGyroscopeEnabled());
+				env->CallStaticVoidMethod(classNativeInterface, methodSetSensorsEnabled,
+					this->motionDelegate->isAccelerometerEnabled(), this->motionDelegate->isLinearAccelerometerEnabled(),
+					this->motionDelegate->isGravityEnabled(), this->motionDelegate->isRotationEnabled(), this->motionDelegate->isGyroscopeEnabled());
 			}
 			else
 			{

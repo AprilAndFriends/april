@@ -15,33 +15,38 @@ public class SensorEventListener implements android.hardware.SensorEventListener
 	
 	public void onSensorChanged(SensorEvent event)
 	{
-		float x = -event.values[0];
-		float y = -event.values[1];
-		float z = -event.values[2];
+		float x = event.values[0];
+		float y = event.values[1];
+		float z = event.values[2];
 		if (NativeInterface.activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-		{
-			x = event.values[1];
-			y = -event.values[0];
-		}
-		else if (NativeInterface.activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE)
 		{
 			x = -event.values[1];
 			y = event.values[0];
 		}
+		else if (NativeInterface.activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE)
+		{
+			x = event.values[1];
+			y = -event.values[0];
+		}
 		else if (NativeInterface.activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT)
 		{
-			x = event.values[0];
-			y = event.values[1];
+			x = -event.values[0];
+			y = -event.values[1];
 		}
 		int type = event.sensor.getType();
-		if (type == Sensor.TYPE_GRAVITY)
+		if (type == Sensor.TYPE_ACCELEROMETER)
 		{
-			NativeInterface.onGravity(x, y, z);
+			NativeInterface.onAccelerometer(x, y, z);
 			return;
 		}
 		if (type == Sensor.TYPE_LINEAR_ACCELERATION)
 		{
 			NativeInterface.onLinearAccelerometer(x, y, z);
+			return;
+		}
+		if (type == Sensor.TYPE_GRAVITY)
+		{
+			NativeInterface.onGravity(-x, -y, -z);
 			return;
 		}
 		if (type == Sensor.TYPE_ROTATION_VECTOR)
