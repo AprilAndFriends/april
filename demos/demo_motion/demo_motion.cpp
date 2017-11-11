@@ -63,7 +63,7 @@ public:
 	void update(float timeDelta)
 	{
 		gvec2 screenSize(drawRect.w - size, drawRect.h - size);
-		this->velocity += gvec2(-accelerometer.x, accelerometer.y) / sizeFactor * timeDelta; // (-x, y) because of screen space and accelerometer vector direction
+		this->velocity += gvec2(accelerometer.x, -accelerometer.y) / sizeFactor * timeDelta; // (x, -y) because of screen space and accelerometer vector direction
 		this->velocity *= 0.995f; // friction
 		this->position += this->velocity * timeDelta;
 		if (this->position.x < 0)
