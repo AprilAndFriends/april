@@ -182,7 +182,7 @@ namespace april
 		this->fpsCount = 0;
 		this->fpsTimer = 0.0f;
 		this->fpsResolution = 0.5f;
-		this->timeDeltaMaxLimit = 0.2f;
+		this->timeDeltaMaxLimit = 0.1f;
 		this->cursor = NULL;
 		this->cursorVisible = false;
 		this->virtualKeyboardVisible = false;
@@ -546,11 +546,11 @@ namespace april
 		{
 			timeDelta = 0.0f;
 		}
+		this->fpsTimer += timeDelta;
 		if (this->timeDeltaMaxLimit > 0.0f)
 		{
 			timeDelta = hmin(timeDelta, this->timeDeltaMaxLimit);
 		}
-		this->fpsTimer += timeDelta;
 		if (this->fpsTimer > 0.0f)
 		{
 			++this->fpsCount;
