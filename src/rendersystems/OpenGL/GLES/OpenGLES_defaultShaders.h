@@ -21,7 +21,7 @@
 	varying mediump vec2 texFrag; \n\
 "
 #define SHADER_Colored_Include "\
-	varying lowp vec4 colorFrag; \n\
+	varying mediump vec4 colorFrag; \n\
 "
 #define SHADER_ColoredTextured_Include "\
 " SHADER_Colored_Include "\
@@ -35,33 +35,33 @@
 "
 #define SHADER_VERTEX_Plain_Include "\
 " SHADER_VERTEX_Include "\
-	uniform lowp vec4 systemColor; \n\
+	uniform mediump vec4 systemColor; \n\
 "
 #define SHADER_VERTEX_Textured_Include "\
 " SHADER_VERTEX_Include "\
 " SHADER_Textured_Include "\
-	uniform lowp vec4 systemColor; \n\
+	uniform mediump vec4 systemColor; \n\
 	attribute mediump vec2 tex; \n\
 "
 #define SHADER_VERTEX_Colored_Include "\
 " SHADER_VERTEX_Include "\
 " SHADER_Colored_Include "\
-	attribute lowp vec4 color; \n\
+	attribute mediump vec4 color; \n\
 "
 #define SHADER_VERTEX_ColoredTextured_Include "\
 " SHADER_VERTEX_Include "\
 " SHADER_ColoredTextured_Include "\
-	attribute lowp vec4 color; \n\
+	attribute mediump vec4 color; \n\
 	attribute mediump vec2 tex; \n\
 "
 
 // pixel header defines
 #define SHADER_PIXEL_Plain_Include "\
-	uniform lowp vec4 systemColor; \n\
+	uniform mediump vec4 systemColor; \n\
 "
 #define SHADER_PIXEL_Textured_Include "\
 " SHADER_Textured_Include "\
-	uniform lowp vec4 systemColor; \n\
+	uniform mediump vec4 systemColor; \n\
 	uniform sampler2D sampler2d; \n\
 "
 #define SHADER_PIXEL_Colored_Include "\
@@ -75,7 +75,7 @@
 // pixel header defines (ALPHA-HACK)
 #define SHADER_PIXEL_Textured_AlphaHack_Include "\
 " SHADER_Textured_Include "\
-	uniform lowp vec4 systemColor; \n\
+	uniform mediump vec4 systemColor; \n\
 	uniform sampler2D sampler2d; \n\
 	uniform sampler2D sampler2dAlpha; \n\
 "
@@ -129,7 +129,7 @@
 	} \n\
 "
 #define SHADER_PixelLerp SHADER_PIXEL_Plain_Include "\
-	uniform lowp float lerpAlpha; \n\
+	uniform mediump float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
 		gl_FragColor = vec4(mix(vec3(1.0, 1.0, 1.0), systemColor.rgb, lerpAlpha), systemColor.a); \n\
@@ -150,7 +150,7 @@
 	} \n\
 "
 #define SHADER_PixelTexturedLerp SHADER_PIXEL_Textured_Include "\
-	uniform lowp float lerpAlpha; \n\
+	uniform mediump float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
 		mediump vec4 tex = texture2D(sampler2d, texFrag); \n\
@@ -171,7 +171,7 @@
 	} \n\
 "
 #define SHADER_PixelColoredLerp SHADER_PIXEL_Colored_Include "\
-	uniform lowp float lerpAlpha; \n\
+	uniform mediump float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
 		gl_FragColor = vec4(mix(vec3(1.0, 1.0, 1.0), colorFrag.rgb, lerpAlpha), colorFrag.a); \n\
@@ -192,7 +192,7 @@
 	} \n\
 "
 #define SHADER_PixelColoredTexturedLerp SHADER_PIXEL_ColoredTextured_Include "\
-	uniform lowp float lerpAlpha; \n\
+	uniform mediump float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
 		mediump vec4 tex = texture2D(sampler2d, texFrag); \n\
@@ -208,7 +208,7 @@
 	} \n\
 "
 #define SHADER_PixelTexturedLerp_AlphaHack SHADER_PIXEL_Textured_AlphaHack_Include "\
-	uniform lowp float lerpAlpha; \n\
+	uniform mediump float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
 		mediump vec4 tex = texture2D(sampler2d, texFrag); \n\
@@ -223,7 +223,7 @@
 	} \n\
 "
 #define SHADER_PixelColoredTexturedLerp_AlphaHack SHADER_PIXEL_ColoredTextured_AlphaHack_Include "\
-	uniform lowp float lerpAlpha; \n\
+	uniform mediump float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
 		mediump vec4 tex = texture2D(sampler2d, texFrag); \n\
