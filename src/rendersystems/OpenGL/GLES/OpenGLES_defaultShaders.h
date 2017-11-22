@@ -145,8 +145,7 @@
 #define SHADER_PixelTexturedAlphaMap SHADER_PIXEL_Textured_Include "\
 	void main(void) \n\
 	{ \n\
-		mediump vec4 tex = texture2D(sampler2d, texFrag); \n\
-		gl_FragColor = vec4(systemColor.rgb, systemColor.a * tex.r); \n\
+		gl_FragColor = vec4(systemColor.rgb, texture2D(sampler2d, texFrag).r * systemColor.a); \n\
 	} \n\
 "
 #define SHADER_PixelTexturedLerp SHADER_PIXEL_Textured_Include "\
@@ -187,8 +186,7 @@
 #define SHADER_PixelColoredTexturedAlphaMap SHADER_PIXEL_ColoredTextured_Include "\
 	void main(void) \n\
 	{ \n\
-		mediump vec4 tex = texture2D(sampler2d, texFrag); \n\
-		gl_FragColor = vec4(colorFrag.rgb, colorFrag.a * tex.r); \n\
+		gl_FragColor = vec4(colorFrag.rgb, texture2D(sampler2d, texFrag).r * colorFrag.a); \n\
 	} \n\
 "
 #define SHADER_PixelColoredTexturedLerp SHADER_PIXEL_ColoredTextured_Include "\
@@ -211,8 +209,7 @@
 	uniform mediump float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
-		mediump vec4 tex = texture2D(sampler2d, texFrag); \n\
-		gl_FragColor = vec4(mix(tex.rgb, systemColor.rgb, lerpAlpha), texture2D(sampler2dAlpha, texFrag).r * systemColor.a); \n\
+		gl_FragColor = vec4(mix(texture2D(sampler2d, texFrag).rgb, systemColor.rgb, lerpAlpha), texture2D(sampler2dAlpha, texFrag).r * systemColor.a); \n\
 	} \n\
 "
 
@@ -226,8 +223,7 @@
 	uniform mediump float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
-		mediump vec4 tex = texture2D(sampler2d, texFrag); \n\
-		gl_FragColor = vec4(mix(tex.rgb, colorFrag.rgb, lerpAlpha), texture2D(sampler2dAlpha, texFrag).r * colorFrag.a); \n\
+		gl_FragColor = vec4(mix(texture2D(sampler2d, texFrag).rgb, colorFrag.rgb, lerpAlpha), texture2D(sampler2dAlpha, texFrag).r * colorFrag.a); \n\
 	} \n\
 "
 
