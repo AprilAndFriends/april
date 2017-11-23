@@ -14,6 +14,9 @@
 #ifndef APRIL_OPENGLES_DEFAULT_SHADERS_H
 #define APRIL_OPENGLES_DEFAULT_SHADERS_H
 
+#define SHADER_AlphaHack_ALPHA_THRESHOLD "0.01" // combination of alpha using compressed RGB components can lead to very small, but non-zero alpha value
+#define SHADER_AlphaHack_ALPHA_DECOMPRESS_MULTIPLIERS "0.75, 0.1875, 0.0625" // the factors for the compressed RGB value weights
+
 // general header defines
 #define SHADER_Plain_Include "\
 "
@@ -75,12 +78,14 @@
 // pixel header defines (ALPHA-HACK)
 #define SHADER_PIXEL_Textured_AlphaHack_Include "\
 " SHADER_Textured_Include "\
+	const mediump vec3 alphaDecompressFactors = vec3(" SHADER_AlphaHack_ALPHA_DECOMPRESS_MULTIPLIERS "); \n\
 	uniform mediump vec4 systemColor; \n\
 	uniform sampler2D sampler2d; \n\
 	uniform sampler2D sampler2dAlpha; \n\
 "
 #define SHADER_PIXEL_ColoredTextured_AlphaHack_Include "\
 " SHADER_ColoredTextured_Include "\
+	const mediump vec3 alphaDecompressFactors = vec3(" SHADER_AlphaHack_ALPHA_DECOMPRESS_MULTIPLIERS "); \n\
 	uniform sampler2D sampler2d; \n\
 	uniform sampler2D sampler2dAlpha; \n\
 "
@@ -202,28 +207,52 @@
 #define SHADER_PixelTexturedMultiply_AlphaHack SHADER_PIXEL_Textured_AlphaHack_Include "\
 	void main(void) \n\
 	{ \n\
-		gl_FragColor = vec4(texture2D(sampler2d, texFrag).rgb, texture2D(sampler2dAlpha, texFrag).r) * systemColor; \n\
+		mediump vec3 alphaFragments = texture2D(sampler2dAlpha, texFrag).rgb * alphaDecompressFactors; \n\
+		mediump vec4 newColor = vec4(texture2D(sampler2d, texFrag).rgb, alphaFragments.r + alphaFragments.g + alphaFragments.b) * systemColor; \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
 	} \n\
 "
 #define SHADER_PixelTexturedLerp_AlphaHack SHADER_PIXEL_Textured_AlphaHack_Include "\
 	uniform mediump float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
-		gl_FragColor = vec4(mix(texture2D(sampler2d, texFrag).rgb, systemColor.rgb, lerpAlpha), texture2D(sampler2dAlpha, texFrag).r * systemColor.a); \n\
+		mediump vec3 alphaFragments = texture2D(sampler2dAlpha, texFrag).rgb * alphaDecompressFactors; \n\
+		mediump vec4 newColor = vec4(mix(texture2D(sampler2d, texFrag).rgb, systemColor.rgb, lerpAlpha), (alphaFragments.r + alphaFragments.g + alphaFragments.b) * systemColor.a); \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
 	} \n\
 "
 
 #define SHADER_PixelColoredTexturedMultiply_AlphaHack SHADER_PIXEL_ColoredTextured_AlphaHack_Include "\
 	void main(void) \n\
 	{ \n\
-		gl_FragColor = vec4(texture2D(sampler2d, texFrag).rgb, texture2D(sampler2dAlpha, texFrag).r) * colorFrag; \n\
+		mediump vec3 alphaFragments = texture2D(sampler2dAlpha, texFrag).rgb * alphaDecompressFactors; \n\
+		mediump vec4 newColor = vec4(texture2D(sampler2d, texFrag).rgb, alphaFragments.r + alphaFragments.g + alphaFragments.b) * colorFrag; \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
 	} \n\
 "
 #define SHADER_PixelColoredTexturedLerp_AlphaHack SHADER_PIXEL_ColoredTextured_AlphaHack_Include "\
 	uniform mediump float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\
-		gl_FragColor = vec4(mix(texture2D(sampler2d, texFrag).rgb, colorFrag.rgb, lerpAlpha), texture2D(sampler2dAlpha, texFrag).r * colorFrag.a); \n\
+		mediump vec3 alphaFragments = texture2D(sampler2dAlpha, texFrag).rgb * alphaDecompressFactors; \n\
+		mediump vec4 newColor = vec4(mix(texture2D(sampler2d, texFrag).rgb, colorFrag.rgb, lerpAlpha), (alphaFragments.r + alphaFragments.g + alphaFragments.b) * colorFrag.a); \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
 	} \n\
 "
 
