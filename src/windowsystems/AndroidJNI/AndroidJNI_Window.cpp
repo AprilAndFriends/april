@@ -88,7 +88,7 @@ namespace april
 			}
 			else
 			{
-				env->CallStaticVoidMethod(classNativeInterface, methodSetSensorsEnabled, JNI_FALSE, JNI_FALSE, JNI_FALSE, JNI_FALSE);
+				env->CallStaticVoidMethod(classNativeInterface, methodSetSensorsEnabled, JNI_FALSE, JNI_FALSE, JNI_FALSE, JNI_FALSE, JNI_FALSE);
 			}
 		}
 		else
