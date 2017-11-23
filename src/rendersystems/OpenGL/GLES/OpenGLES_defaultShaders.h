@@ -77,14 +77,12 @@
 // pixel header defines (ALPHA-HACK)
 #define SHADER_PIXEL_Textured_AlphaHack_Include "\
 " SHADER_Textured_Include "\
-	const mediump vec3 alphaDecompressFactors = vec3(" SHADER_AlphaHack_ALPHA_DECOMPRESS_MULTIPLIERS "); \n\
 	uniform mediump vec4 systemColor; \n\
 	uniform sampler2D sampler2d; \n\
 	uniform sampler2D sampler2dAlpha; \n\
 "
 #define SHADER_PIXEL_ColoredTextured_AlphaHack_Include "\
 " SHADER_ColoredTextured_Include "\
-	const mediump vec3 alphaDecompressFactors = vec3(" SHADER_AlphaHack_ALPHA_DECOMPRESS_MULTIPLIERS "); \n\
 	uniform sampler2D sampler2d; \n\
 	uniform sampler2D sampler2dAlpha; \n\
 "
