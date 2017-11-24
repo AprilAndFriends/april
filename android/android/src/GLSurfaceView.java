@@ -275,6 +275,11 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	public boolean onGenericMotionEvent(final MotionEvent event)
 	{
 		final int source = event.getSource();
+		if ((source & InputDevice.SOURCE_CLASS_POINTER) == InputDevice.SOURCE_CLASS_POINTER && event.getAction() == MotionEvent.ACTION_SCROLL)
+		{
+			NativeInterface.onScroll(-event.getAxisValue(MotionEvent.AXIS_HSCROLL), -event.getAxisValue(MotionEvent.AXIS_VSCROLL));
+			return true;
+		}
 		if ((source & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK && event.getAction() == MotionEvent.ACTION_MOVE)
 		{
 			final float axisLX = event.getAxisValue(MotionEvent.AXIS_X);
