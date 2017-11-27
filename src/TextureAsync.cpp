@@ -9,6 +9,7 @@
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/harray.h>
+#include <hltypes/hlog.h>
 #include <hltypes/hmap.h>
 #include <hltypes/hmutex.h>
 #include <hltypes/hstream.h>
@@ -69,6 +70,7 @@ namespace april
 	{
 		if (cpus == 0)
 		{
+			hlog::write(logTag, "april::getSystemInfo() in TextureAsync::queueLoad()");
 			cpus = april::getSystemInfo().cpuCores;
 		}
 		hmutex::ScopeLock lock(&TextureAsync::queueMutex);

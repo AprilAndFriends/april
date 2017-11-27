@@ -365,6 +365,7 @@ namespace april
 
 	void Window::setFullscreen(bool value)
 	{
+		hlog::write(logTag, "april::getSystemInfo() in Window::setFullscreen()");
 		SystemInfo info = april::getSystemInfo();
 		int w = hround(info.displayResolution.x);
 		int h = hround(info.displayResolution.y);
@@ -392,6 +393,7 @@ namespace april
 	{
 		if (this->options.hotkeyFullscreen)
 		{
+			hlog::write(logTag, "april::getSystemInfo() in Window::toggleHotkeyFullscreen()");
 			SystemInfo info = april::getSystemInfo();
 			int width = hround(info.displayResolution.x);
 			int height = hround(info.displayResolution.y);

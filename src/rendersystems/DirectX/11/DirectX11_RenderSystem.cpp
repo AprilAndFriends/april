@@ -155,6 +155,7 @@ namespace april
 
 	bool DirectX11_RenderSystem::_deviceCreate(Options options)
 	{
+		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_deviceCreate()");
 		this->setViewport(grect(0.0f, 0.0f, april::getSystemInfo().displayResolution));
 		return true;
 	}
@@ -183,6 +184,7 @@ namespace april
 		_HL_TRY_DELETE(this->shaderColoredTexturedMultiply);
 		_HL_TRY_DELETE(this->shaderColoredTexturedLerp);
 		_HL_TRY_DELETE(this->shaderColoredTexturedAlphaMap);
+		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_deviceDestroy()");
 		this->setViewport(grect(0.0f, 0.0f, april::getSystemInfo().displayResolution));
 		return true;
 	}
@@ -366,6 +368,7 @@ namespace april
 		{
 			throw Exception("Unable to get parent factory from DXGI adapter!");
 		}
+		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_createSwapChain()");
 		SystemInfo info = april::getSystemInfo();
 		int w = hround(info.displayResolution.x);
 		int h = hround(info.displayResolution.y);
@@ -467,6 +470,7 @@ namespace april
 		this->d3dDeviceContext->RSSetState(this->rasterState.Get());
 		D3D11_TEXTURE2D_DESC backBufferDesc = {0};
 		_backBuffer->GetDesc(&backBufferDesc);
+		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_configureDevice()");
 		SystemInfo info = april::getSystemInfo();
 		this->setViewport(grect(0.0f, 0.0f, (float)backBufferDesc.Width, (float)backBufferDesc.Height)); // just to be on the safe side and prevent floating point errors
 		// blend modes
@@ -611,6 +615,7 @@ namespace april
 	{
 		grect viewport = rect;
 		// this is needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
+		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_setDeviceViewport()");
 		gvec2 resolution = april::getSystemInfo().displayResolution;
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();

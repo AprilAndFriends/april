@@ -133,6 +133,7 @@ namespace april
 
 	void WinRT_Window::changeSize(float w, float h)
 	{
+		hlog::write(logTag, "april::getSystemInfo() in WinRT_Window::changeSize()");
 		april::getSystemInfo(); // so the displayResolution value gets updated
 		float dpiRatio = WinRT::getDpiRatio();
 		this->width = hround(w * dpiRatio);
