@@ -22,6 +22,8 @@
 
 namespace april
 {
+	extern SystemInfo info;
+
 	harray<Texture*> TextureAsync::textures;
 	harray<hstream*> TextureAsync::streams;
 	hmutex TextureAsync::queueMutex;
@@ -71,7 +73,7 @@ namespace april
 		if (cpus == 0)
 		{
 			hlog::write(logTag, "april::getSystemInfo() in TextureAsync::queueLoad()");
-			cpus = april::getSystemInfo().cpuCores;
+			cpus = info.cpuCores; // not calling getSystemInfo() due to threading issues on WinRT where device resolution needs to be updated, might need some redesign
 		}
 		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
 		if (TextureAsync::textures.has(texture))

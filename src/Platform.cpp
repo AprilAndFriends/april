@@ -27,7 +27,6 @@ namespace april
 		showMessageBox(title, text, buttons, style, customButtonTitles, callback, modal, terminateOnDisplay);
 	}
 
-
 	HL_ENUM_CLASS_DEFINE(MessageBoxButton,
 	(
 		HL_ENUM_DEFINE(MessageBoxButton, Ok);
@@ -83,7 +82,7 @@ namespace april
 	bool (*_openUrl)(chstr) = &_openUrl_platform;
 	void (*_showMessageBox)(chstr, chstr, MessageBoxButton, MessageBoxStyle, hmap<MessageBoxButton, hstr>, void (*)(MessageBoxButton), bool) = &_showMessageBox_platform;
 
-	static SystemInfo info;
+	SystemInfo info;
 	harray<hstr> args;
 
 	SystemInfo::SystemInfo()
