@@ -179,7 +179,7 @@ namespace april
 				if (delaySplash > 0.0f && delaySplash - (htickCount() - this->startTime) * 0.001f > 0.0f)
 				{
 					this->_tryLoadSplashTexture();
-					this->_tryRenderSplashTexture(3);
+					this->_tryRenderSplashTexture(5);
 				}
 			}
 		}
