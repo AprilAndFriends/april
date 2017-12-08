@@ -290,7 +290,6 @@ namespace april
 
 	void RenderSystem::_deviceSetupDisplayModes()
 	{
-		hlog::write(logTag, "april::getSystemInfo() in RenderSystem::_deviceSetupDisplayModes()");
 		gvec2 resolution = april::getSystemInfo().displayResolution;
 		this->displayModes += RenderSystem::DisplayMode((int)resolution.x, (int)resolution.y, 60);
 	}
