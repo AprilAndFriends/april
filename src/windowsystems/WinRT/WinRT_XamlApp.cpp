@@ -209,6 +209,7 @@ namespace april
 			this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinRT_XamlApp::OnRender));
 			if (rendersys != NULL)
 			{
+				rendersys->clear();
 				bool rendered = false;
 				if (april::window != NULL)
 				{
@@ -240,12 +241,13 @@ namespace april
 				}
 				if (!rendered)
 				{
-					// clearing all backbuffers, just in case
+					// clearing all backbuffers, just in case, again
 					for_iter (i, 0, 3)
 					{
 						rendersys->clear();
 						rendersys->presentFrame();
 					}
+					rendersys->clear();
 					rendersys->reset();
 				}
 			}
@@ -614,6 +616,7 @@ namespace april
 	{
 		if (this->splashTexture == NULL)
 		{
+			rendersys->clear();
 			return;
 		}
 		static gmat4 storedProjectionMatrix;
