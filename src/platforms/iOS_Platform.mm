@@ -16,6 +16,7 @@
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #import <CoreGraphics/CoreGraphics.h>
+#import <mach/mach.h>
 
 #import <OpenGLES/ES1/gl.h>
 
@@ -207,8 +208,14 @@ namespace april
 	
 	int64_t _getRamConsumption_platform()
 	{
-		// TODOa
-		hlog::warn(logTag, "Cannot use getRamConsumption() on this platform.");
+		struct task_basic_info info;
+		mach_msg_type_number_t size = sizeof(info);
+		kern_return_t result = task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&info, &size);
+		if (result == KERN_SUCCESS)
+		{
+			return (int64_t)info.resident_size;
+		}
+		hlog::error(logTag, "getRamConsumption() failed, task_info() failed!");
 		return 0LL;
 	}	
 	
