@@ -84,6 +84,12 @@
     <Filter Include="Source Files\rendersystems\OpenGL\GL\1">
       <UniqueIdentifier>{9928026c-27fb-4619-aa07-f9c4c33d2e8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\rendercommands">
+      <UniqueIdentifier>{131cd70d-b6fb-478c-ad07-1cc4e12b9311}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendercommands">
+      <UniqueIdentifier>{b81de23f-99b9-4b7b-a434-c733c90dad2d}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\rendersystems\DirectX\11">
       <UniqueIdentifier>{edfbadb8-e07f-4516-9ad6-479af740625c}</UniqueIdentifier>
     </Filter>
@@ -290,6 +296,21 @@
     <ClCompile Include="..\..\src\Keys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\rendercommands\RenderCommand.cpp">
+      <Filter>Source Files\rendercommands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendercommands\ClearCommand.cpp">
+      <Filter>Source Files\rendercommands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendercommands\RenderCommandQueue.cpp">
+      <Filter>Source Files\rendercommands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendercommands\ClearColorCommand.cpp">
+      <Filter>Source Files\rendercommands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendercommands\ClearDepthCommand.cpp">
+      <Filter>Source Files\rendercommands</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -374,9 +395,6 @@
       <Filter>Header Files\delegates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\util\egl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\april\RenderState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\main_base.h">
@@ -474,6 +492,30 @@
     </ClInclude>
     <ClInclude Include="..\..\include\april\InputMode.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\ClearCommand.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\RenderCommand.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\RenderCommandQueue.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\RenderState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\ClearColorCommand.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\ClearDepthCommand.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\RenderCommands.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\VertexRenderCommand.h">
+      <Filter>Header Files\rendercommands</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\windowsystems\WinRT\WinRT_XamlOverlay.xaml.h">
       <Filter>Header Files</Filter>

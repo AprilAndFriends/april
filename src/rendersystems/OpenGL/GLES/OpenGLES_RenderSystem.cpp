@@ -335,9 +335,9 @@ namespace april
 #endif
 	}
 
-	void OpenGLES_RenderSystem::_updateDeviceState(bool forceUpdate)
+	void OpenGLES_RenderSystem::_updateDeviceState(RenderState* state, bool forceUpdate)
 	{
-		OpenGL_RenderSystem::_updateDeviceState(forceUpdate);
+		OpenGL_RenderSystem::_updateDeviceState(state, forceUpdate);
 		this->_updateShader(forceUpdate);
 	}
 

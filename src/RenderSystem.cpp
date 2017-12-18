@@ -23,6 +23,7 @@
 #include "april.h"
 #include "aprilUtil.h"
 #include "Image.h"
+#include "RenderCommands.h"
 #include "RenderHelperLayered2D.h"
 #include "RenderSystem.h"
 #include "RenderState.h"
@@ -165,6 +166,12 @@ namespace april
 			this->options = options;
 			this->state->reset();
 			this->deviceState->reset();
+			foreach (RenderCommandQueue*, it, this->renderCommandsQueues)
+			{
+				delete (*it);
+			}
+			this->renderCommandsQueues.clear();
+			this->_flushDestroyTexturesQueue();
 			this->statCurrentFrameRenderCalls = 0;
 			this->statLastFrameRenderCalls = 0;
 			this->statCurrentFrameTextureSwitches = 0;
@@ -219,6 +226,12 @@ namespace april
 			}
 			this->state->reset();
 			this->deviceState->reset();
+			foreach (RenderCommandQueue*, it, this->renderCommandsQueues)
+			{
+				delete (*it);
+			}
+			this->renderCommandsQueues.clear();
+			this->_flushDestroyTexturesQueue();
 			this->statCurrentFrameRenderCalls = 0;
 			this->statLastFrameRenderCalls = 0;
 			this->statCurrentFrameTextureSwitches = 0;
@@ -247,7 +260,7 @@ namespace april
 		grect viewport(0.0f, 0.0f, april::window->getSize());
 		this->setViewport(viewport);
 		this->setOrthoProjection(viewport);
-		this->_updateDeviceState(true);
+		this->_updateDeviceState(this->state, true);
 		this->clear();
 	}
 
@@ -271,7 +284,7 @@ namespace april
 			this->deviceState->texture->load();
 		}
 		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
-		this->_updateDeviceState(true);
+		this->_updateDeviceState(this->state, true);
 	}
 
 	void RenderSystem::_deviceReset()
@@ -491,16 +504,7 @@ namespace april
 		hmutex::ScopeLock lock(&this->texturesMutex);
 		this->textures -= texture;
 		lock.release();
-		if (this->state->texture == texture)
-		{
-			this->state->texture = NULL;
-		}
-		if (this->deviceState->texture == texture)
-		{
-			this->deviceState->texture = NULL;
-			this->_setDeviceTexture(NULL);
-		}
-		delete texture;
+		this->destroyTexturesQueue += texture;
 	}
 
 	PixelShader* RenderSystem::createPixelShaderFromResource(chstr filename)
@@ -733,89 +737,117 @@ namespace april
 		this->state->projectionMatrixChanged = true;
 	}
 
-	void RenderSystem::_updateDeviceState(bool forceUpdate)
+	void RenderSystem::_updateDeviceState(RenderState* state, bool forceUpdate)
 	{
 		// viewport
-		if (forceUpdate || this->state->viewportChanged)
+		if (forceUpdate || state->viewportChanged)
 		{
-			if (forceUpdate || this->deviceState->viewport != this->state->viewport)
+			if (forceUpdate || this->deviceState->viewport != state->viewport)
 			{
-				this->_setDeviceViewport(this->state->viewport);
-				this->deviceState->viewport = this->state->viewport;
+				this->_setDeviceViewport(state->viewport);
+				this->deviceState->viewport = state->viewport;
 			}
-			this->state->viewportChanged = false;
+			state->viewportChanged = false;
 		}
 		// modelview matrix
-		if (forceUpdate || this->state->modelviewMatrixChanged)
+		if (forceUpdate || state->modelviewMatrixChanged)
 		{
-			if (forceUpdate || this->deviceState->modelviewMatrix != this->state->modelviewMatrix)
+			if (forceUpdate || this->deviceState->modelviewMatrix != state->modelviewMatrix)
 			{
-				this->_setDeviceModelviewMatrix(this->state->modelviewMatrix);
-				this->deviceState->modelviewMatrix = this->state->modelviewMatrix;
+				this->_setDeviceModelviewMatrix(state->modelviewMatrix);
+				this->deviceState->modelviewMatrix = state->modelviewMatrix;
 			}
-			this->state->modelviewMatrixChanged = false;
+			state->modelviewMatrixChanged = false;
 		}
 		// projection matrix
-		if (forceUpdate || this->state->projectionMatrixChanged)
+		if (forceUpdate || state->projectionMatrixChanged)
 		{
-			if (forceUpdate || this->deviceState->projectionMatrix != this->state->projectionMatrix)
+			if (forceUpdate || this->deviceState->projectionMatrix != state->projectionMatrix)
 			{
-				this->_setDeviceProjectionMatrix(this->state->projectionMatrix);
-				this->deviceState->projectionMatrix = this->state->projectionMatrix;
+				this->_setDeviceProjectionMatrix(state->projectionMatrix);
+				this->deviceState->projectionMatrix = state->projectionMatrix;
 			}
-			this->state->projectionMatrixChanged = false;
+			state->projectionMatrixChanged = false;
 		}
 		// depth buffer
-		if (forceUpdate || this->deviceState->depthBuffer != this->state->depthBuffer || this->deviceState->depthBufferWrite != this->state->depthBufferWrite)
+		if (forceUpdate || this->deviceState->depthBuffer != state->depthBuffer || this->deviceState->depthBufferWrite != state->depthBufferWrite)
 		{
-			this->_setDeviceDepthBuffer(this->state->depthBuffer, this->state->depthBufferWrite);
-			this->deviceState->depthBuffer = this->state->depthBuffer;
-			this->deviceState->depthBufferWrite = this->state->depthBufferWrite;
+			this->_setDeviceDepthBuffer(state->depthBuffer, state->depthBufferWrite);
+			this->deviceState->depthBuffer = state->depthBuffer;
+			this->deviceState->depthBufferWrite = state->depthBufferWrite;
 		}
 		// device render mode
-		if (forceUpdate || this->deviceState->useTexture != this->state->useTexture || this->deviceState->useColor != this->state->useColor)
+		if (forceUpdate || this->deviceState->useTexture != state->useTexture || this->deviceState->useColor != state->useColor)
 		{
-			this->_setDeviceRenderMode(this->state->useTexture, this->state->useColor);
+			this->_setDeviceRenderMode(state->useTexture, state->useColor);
 		}
 		// texture
-		if (forceUpdate || this->deviceState->texture != this->state->texture || this->deviceState->useTexture != this->state->useTexture)
+		if (forceUpdate || this->deviceState->texture != state->texture || this->deviceState->useTexture != state->useTexture)
 		{
 			// filtering and wrapping applied before loading texture data, some systems are optimized to work like this (e.g. iOS OpenGLES guidelines suggest it)
-			if (this->state->texture != NULL && this->state->useTexture)
+			if (state->texture != NULL && state->useTexture)
 			{
 				++this->statCurrentFrameTextureSwitches;
-				this->state->texture->load();
-				this->state->texture->unlock();
-				this->_setDeviceTexture(this->state->texture);
-				this->_setDeviceTextureFilter(this->state->texture->getFilter());
-				this->_setDeviceTextureAddressMode(this->state->texture->getAddressMode());
+				state->texture->load();
+				state->texture->unlock();
+				this->_setDeviceTexture(state->texture);
+				this->_setDeviceTextureFilter(state->texture->getFilter());
+				this->_setDeviceTextureAddressMode(state->texture->getAddressMode());
 			}
 			else
 			{
 				this->_setDeviceTexture(NULL);
 			}
-			this->deviceState->texture = this->state->texture;
+			this->deviceState->texture = state->texture;
 		}
 		// blend mode
-		if (forceUpdate || this->deviceState->blendMode != this->state->blendMode)
+		if (forceUpdate || this->deviceState->blendMode != state->blendMode)
 		{
-			this->_setDeviceBlendMode(this->state->blendMode);
-			this->deviceState->blendMode = this->state->blendMode;
+			this->_setDeviceBlendMode(state->blendMode);
+			this->deviceState->blendMode = state->blendMode;
 		}
 		// color mode
-		if (forceUpdate || this->deviceState->colorMode != this->state->colorMode || this->deviceState->colorModeFactor != this->state->colorModeFactor ||
-			this->deviceState->useTexture != this->state->useTexture || this->deviceState->useColor != this->state->useColor ||
-			this->deviceState->systemColor != this->state->systemColor)
+		if (forceUpdate || this->deviceState->colorMode != state->colorMode || this->deviceState->colorModeFactor != state->colorModeFactor ||
+			this->deviceState->useTexture != state->useTexture || this->deviceState->useColor != state->useColor ||
+			this->deviceState->systemColor != state->systemColor)
 		{
-			this->_setDeviceColorMode(this->state->colorMode, this->state->colorModeFactor, this->state->useTexture, this->state->useColor, this->state->systemColor);
-			this->deviceState->colorMode = this->state->colorMode;
-			this->deviceState->colorModeFactor = this->state->colorModeFactor;
-			this->deviceState->useColor = this->state->useColor;
-			this->deviceState->systemColor = this->state->systemColor;
+			this->_setDeviceColorMode(state->colorMode, state->colorModeFactor, state->useTexture, state->useColor, state->systemColor);
+			this->deviceState->colorMode = state->colorMode;
+			this->deviceState->colorModeFactor = state->colorModeFactor;
+			this->deviceState->useColor = state->useColor;
+			this->deviceState->systemColor = state->systemColor;
 		}
 		// shared variables
-		this->deviceState->useTexture = this->state->useTexture;
-		this->deviceState->useColor = this->state->useColor;
+		this->deviceState->useTexture = state->useTexture;
+		this->deviceState->useColor = state->useColor;
+	}
+
+	void RenderSystem::_flushDestroyTexturesQueue()
+	{
+		foreach (Texture*, it, this->destroyTexturesQueue)
+		{
+			if (this->state->texture == (*it))
+			{
+				this->state->texture = NULL;
+			}
+			if (this->deviceState->texture == (*it))
+			{
+				this->deviceState->texture = NULL;
+				this->_setDeviceTexture(NULL);
+			}
+			delete (*it);
+		}
+		this->destroyTexturesQueue.clear();
+	}
+
+	void RenderSystem::_addRenderCommand(RenderCommand* command)
+	{
+		// TODO - mutex this to ensure thread-safety
+		if (this->renderCommandsQueues.size() == 0)
+		{
+			this->renderCommandsQueues += new RenderCommandQueue();
+		}
+		this->renderCommandsQueues.last()->commands += command;
 	}
 
 	void RenderSystem::clear(bool depth)
@@ -823,12 +855,13 @@ namespace april
 		if (this->renderHelper != NULL)
 		{
 			this->renderHelper->clear();
+			return;
 		}
 		if (!this->options.depthBuffer)
 		{
 			depth = false;
 		}
-		this->_deviceClear(depth);
+		this->_addRenderCommand(new ClearCommand(depth));
 	}
 
 	void RenderSystem::clear(Color color, bool depth)
@@ -837,14 +870,14 @@ namespace april
 		{
 			depth = false;
 		}
-		this->_deviceClear(color, depth);
+		this->_addRenderCommand(new ClearColorCommand(color, depth));
 	}
 
 	void RenderSystem::clearDepth()
 	{
 		if (this->options.depthBuffer)
 		{
-			this->_deviceClearDepth();
+			this->_addRenderCommand(new ClearDepthCommand());
 		}
 	}
 
@@ -954,8 +987,7 @@ namespace april
 		this->state->useTexture = false;
 		this->state->useColor = false;
 		this->state->systemColor = Color::White;
-		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, vertices, count);
+		this->_addRenderCommand(new VertexRenderCommand<PlainVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, const Color& color)
@@ -968,8 +1000,7 @@ namespace april
 		this->state->useTexture = false;
 		this->state->useColor = false;
 		this->state->systemColor = color;
-		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, vertices, count);
+		this->_addRenderCommand(new VertexRenderCommand<PlainVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count)
@@ -978,8 +1009,7 @@ namespace april
 		this->state->useTexture = true;
 		this->state->useColor = false;
 		this->state->systemColor = Color::White;
-		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, vertices, count);
+		this->_addRenderCommand(new VertexRenderCommand<TexturedVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, const Color& color)
@@ -992,8 +1022,7 @@ namespace april
 		this->state->useTexture = true;
 		this->state->useColor = false;
 		this->state->systemColor = color;
-		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, vertices, count);
+		this->_addRenderCommand(new VertexRenderCommand<TexturedVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count)
@@ -1002,8 +1031,7 @@ namespace april
 		this->state->useTexture = false;
 		this->state->useColor = true;
 		this->state->systemColor = Color::White;
-		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, vertices, count);
+		this->_addRenderCommand(new VertexRenderCommand<ColoredVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count)
@@ -1012,8 +1040,7 @@ namespace april
 		this->state->useTexture = true;
 		this->state->useColor = true;
 		this->state->systemColor = Color::White;
-		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, vertices, count);
+		this->_addRenderCommand(new VertexRenderCommand<ColoredTexturedVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_drawRectInternal(cgrect rect, const Color& color)
@@ -1198,7 +1225,18 @@ namespace april
 	void RenderSystem::presentFrame()
 	{
 		this->flushFrame(true);
+		if (this->renderCommandsQueues.size() > 0)
+		{
+			RenderCommandQueue* queue = this->renderCommandsQueues.removeFirst();
+			foreach (RenderCommand*, it, queue->commands)
+			{
+				(*it)->execute();
+			}
+			delete queue;
+		}
 		april::window->presentFrame();
+		// textures may now be safely destroyed
+		this->_flushDestroyTexturesQueue();
 	}
 
 	unsigned int RenderSystem::_numPrimitives(const RenderOperation& renderOperation, int count) const

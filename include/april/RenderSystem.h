@@ -26,15 +26,21 @@
 #include "aprilUtil.h"
 #include "Color.h"
 #include "Image.h"
-#include "RenderState.h"
 #include "Texture.h"
 
 namespace april
 {
+	class ClearCommand;
+	class ClearColorCommand;
+	class ClearDepthCommand;
 	class Image;
 	class PixelShader;
+	class RenderCommand;
+	class RenderCommandQueue;
 	class RenderHelper;
+	class RenderState;
 	class Texture;
+	template <typename T> class VertexRenderCommand;
 	class VertexShader;
 	class Window;
 
@@ -42,9 +48,14 @@ namespace april
 	class aprilExport RenderSystem
 	{
 	public:
+		friend class ClearCommand;
+		friend class ClearColorCommand;
+		friend class ClearDepthCommand;
+		friend class RenderCommand;
 		friend class RenderHelper;
 		friend class RenderHelperLayered2D;
 		friend class Texture;
+		template <typename T> friend class VertexRenderCommand;
 		friend class Window;
 
 		/// @class RenderMode
@@ -548,6 +559,8 @@ namespace april
 		float pixelOffset;
 		/// @brief All currently existing textures.
 		harray<Texture*> textures;
+		/// @brief All currently queued textures for deletion.
+		harray<Texture*> destroyTexturesQueue;
 		/// @brief All supported display modes.
 		harray<DisplayMode> displayModes;
 		/// @brief The current state of the RenderSystem.
@@ -558,6 +571,8 @@ namespace april
 		hmutex texturesMutex;
 		/// @brief Special helper object that can handle rendering in a different way.
 		RenderHelper* renderHelper;
+		/// @brief Render command queue.
+		harray<RenderCommandQueue*> renderCommandsQueues;
 
 		/// @brief How many times a render call was called during this frame.
 		int statCurrentFrameRenderCalls;
@@ -609,7 +624,12 @@ namespace april
 		/// @brief Updates the device state based on the current render system state. This method only updates things tha have changed to improve performance.
 		/// @param[in] forceUpdate If true, will force an update of the entire device state, regardless of the current state.
 		/// @note The parameter forceUpdate is useful when the device is in an unknown or inconsistent state, but should be used with care as it invalidates all optimizations.
-		virtual void _updateDeviceState(bool forceUpdate = false);
+		virtual void _updateDeviceState(RenderState* state, bool forceUpdate = false);
+		/// @brief Actually destroys all queue textures for deletion.
+		void _flushDestroyTexturesQueue();
+		/// @brief Adds a render command to the queue.
+		/// @param[in] command The command to add.
+		void _addRenderCommand(RenderCommand* command);
 
 		/// @brief Initializes everything internal for the RenderSystem
 		virtual void _deviceInit() = 0;

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
@@ -107,6 +107,12 @@
     </Filter>
     <Filter Include="Source Files\rendersystems\OpenGL\GL\1">
       <UniqueIdentifier>{9928026c-27fb-4619-aa07-f9c4c33d2e8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendercommands">
+      <UniqueIdentifier>{131cd70d-b6fb-478c-ad07-1cc4e12b9311}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendercommands">
+      <UniqueIdentifier>{b81de23f-99b9-4b7b-a434-c733c90dad2d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -323,6 +329,21 @@
     <ClCompile Include="..\..\src\Keys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\rendercommands\RenderCommand.cpp">
+      <Filter>Source Files\rendercommands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendercommands\ClearCommand.cpp">
+      <Filter>Source Files\rendercommands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendercommands\RenderCommandQueue.cpp">
+      <Filter>Source Files\rendercommands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendercommands\ClearColorCommand.cpp">
+      <Filter>Source Files\rendercommands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendercommands\ClearDepthCommand.cpp">
+      <Filter>Source Files\rendercommands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -433,9 +454,6 @@
     <ClInclude Include="..\..\src\windowsystems\AndroidJNI\AndroidJNI_Keys.h">
       <Filter>Header Files\windowsystems\AndroidJNI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\april\RenderState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\april\Android_main.h">
       <Filter>Header Files\platforms</Filter>
     </ClInclude>
@@ -525,6 +543,30 @@
     </ClInclude>
     <ClInclude Include="..\..\include\april\InputMode.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\ClearCommand.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\RenderCommand.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\RenderCommandQueue.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\RenderState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\ClearColorCommand.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\ClearDepthCommand.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\RenderCommands.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\VertexRenderCommand.h">
+      <Filter>Header Files\rendercommands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

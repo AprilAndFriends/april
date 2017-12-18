@@ -173,6 +173,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\platforms\WinRT_main.cpp" />
     <ClCompile Include="..\..\src\platforms\WinRT_Platform.cpp" />
+    <ClCompile Include="..\..\src\rendercommands\ClearColorCommand.cpp" />
+    <ClCompile Include="..\..\src\rendercommands\ClearCommand.cpp" />
+    <ClCompile Include="..\..\src\rendercommands\ClearDepthCommand.cpp" />
+    <ClCompile Include="..\..\src\rendercommands\RenderCommand.cpp" />
+    <ClCompile Include="..\..\src\rendercommands\RenderCommandQueue.cpp" />
     <ClCompile Include="..\..\src\RenderHelper.cpp" />
     <ClCompile Include="..\..\src\RenderHelperLayered2D.cpp" />
     <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_PixelShader.cpp" />
@@ -257,7 +262,6 @@
     <ClInclude Include="..\..\include\april\MouseDelegate.h" />
     <ClInclude Include="..\..\include\april\PixelShader.h" />
     <ClInclude Include="..\..\include\april\Platform.h" />
-    <ClInclude Include="..\..\include\april\RenderState.h" />
     <ClInclude Include="..\..\include\april\RenderSystem.h" />
     <ClInclude Include="..\..\include\april\SystemDelegate.h" />
     <ClInclude Include="..\..\include\april\Texture.h" />
@@ -268,6 +272,14 @@
     <ClInclude Include="..\..\include\april\VirtualKeyboard.h" />
     <ClInclude Include="..\..\include\april\WinRT_main.h" />
     <ClInclude Include="..\..\include\april\Window.h" />
+    <ClInclude Include="..\..\src\rendercommands\ClearColorCommand.h" />
+    <ClInclude Include="..\..\src\rendercommands\ClearCommand.h" />
+    <ClInclude Include="..\..\src\rendercommands\ClearDepthCommand.h" />
+    <ClInclude Include="..\..\src\rendercommands\RenderCommand.h" />
+    <ClInclude Include="..\..\src\rendercommands\RenderCommandQueue.h" />
+    <ClInclude Include="..\..\src\rendercommands\RenderCommands.h" />
+    <ClInclude Include="..\..\src\rendercommands\VertexRenderCommand.h" />
+    <ClInclude Include="..\..\src\RenderState.h" />
     <ClInclude Include="..\..\src\util\egl.h" />
     <ClInclude Include="..\..\src\RenderHelper.h" />
     <ClInclude Include="..\..\src\RenderHelperLayered2D.h" />
