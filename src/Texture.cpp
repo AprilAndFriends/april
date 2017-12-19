@@ -212,19 +212,20 @@ namespace april
 		this->dataFormat = 0;
 		this->_assignFormat();
 		bool result = this->_deviceCreateTexture(data, size, type);
-		hmutex::ScopeLock lock(&this->asyncLoadMutex);
-		this->loaded = result;
-		lock.release();
 		if (!result)
 		{
 			this->type = type;
+			hmutex::ScopeLock lock(&this->asyncLoadMutex);
+			this->loaded = result;
 			return false;
 		}
 		if (this->firstUpload)
 		{
-			this->write(0, 0, this->width, this->height, 0, 0, data, this->width, this->height, format);
+			this->_rawWrite(0, 0, this->width, this->height, 0, 0, data, this->width, this->height, format);
 		}
 		this->type = type;
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		this->loaded = result;
 		return true;
 	}
 
@@ -265,16 +266,16 @@ namespace april
 		this->dataFormat = 0;
 		this->_assignFormat();
 		bool result = this->_deviceCreateTexture(this->data, size, type);
-		hmutex::ScopeLock lock(&this->asyncLoadMutex);
-		this->loaded = result;
-		lock.release();
 		if (!result)
 		{
 			this->type = type;
 			return false;
 		}
-		this->fillRect(0, 0, this->width, this->height, color);
+		this->_rawFillRect(0, 0, this->width, this->height, color);
 		this->type = type;
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		this->loaded = result;
+		lock.release();
 		return true;
 	}
 
@@ -531,16 +532,15 @@ namespace april
 		}
 		this->_assignFormat();
 		bool result = this->_deviceCreateTexture(currentData, size, this->type);
-		lock.acquire(&this->asyncLoadMutex);
-		this->dataAsync = NULL; // not needed anymore and makes isLoadedAsync() return false now
-		this->loaded = result;
-		lock.release();
 		if (!result)
 		{
 			if (currentData != NULL && this->data != currentData)
 			{
 				delete[] currentData;
 			}
+			lock.acquire(&this->asyncLoadMutex);
+			this->dataAsync = NULL; // not needed anymore and makes isLoadedAsync() return false now
+			this->loaded = result;
 			return false;
 		}
 		if (currentData != NULL)
@@ -549,7 +549,7 @@ namespace april
 			{
 				Type type = this->type;
 				this->type = Type::Volatile; // so the write() call right below goes through
-				this->write(0, 0, this->width, this->height, 0, 0, currentData, this->width, this->height, format);
+				this->_rawWrite(0, 0, this->width, this->height, 0, 0, currentData, this->width, this->height, format);
 				this->type = type;
 			}
 			if (this->type != Type::Volatile && this->type != Type::RenderTarget && (this->type != Type::Immutable || this->filename == ""))
@@ -572,8 +572,11 @@ namespace april
 		}
 		else if (this->type == Type::Volatile) // when recreating a texture, it is important that it is created empty to avoid problems (e.g. DX9 creates a white initial texture)
 		{
-			this->clear();
+			this->_rawClear();
 		}
+		lock.acquire(&this->asyncLoadMutex);
+		this->dataAsync = NULL; // not needed anymore and makes isLoadedAsync() return false now
+		this->loaded = result;
 		return true;
 	}
 
@@ -904,6 +907,11 @@ namespace april
 			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
+		return this->_rawClear();
+	}
+
+	bool Texture::_rawClear()
+	{
 		Lock lock = this->_tryLock();
 		if (lock.failed)
 		{
@@ -940,6 +948,11 @@ namespace april
 			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
+		return this->_rawSetPixel(x, y, color);
+	}
+
+	bool Texture::_rawSetPixel(int x, int y, const Color& color)
+	{
 		Lock lock = this->_tryLock(x, y, 1, 1);
 		if (lock.failed)
 		{
@@ -975,9 +988,14 @@ namespace april
 			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
+		return this->_rawFillRect(x, y, w, h, color);
+	}
+
+	bool Texture::_rawFillRect(int x, int y, int w, int h, const Color& color)
+	{
 		if (w == 1 && h == 1)
 		{
-			return this->setPixel(x, y, color);
+			return this->_rawSetPixel(x, y, color);
 		}
 		Lock lock = this->_tryLock(x, y, w, h);
 		if (lock.failed)
@@ -1047,6 +1065,11 @@ namespace april
 			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
+		return this->_rawWrite(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat);
+	}
+
+	bool Texture::_rawWrite(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
 		if ((this->type == Type::Volatile || this->type == Type::RenderTarget) &&
 			!Image::needsConversion(srcFormat, april::rendersys->getNativeTextureFormat(this->format)) &&
 			!this->locked && this->_uploadToGpu(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat))

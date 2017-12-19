@@ -804,6 +804,38 @@ namespace april
 		/// @note This is usually used for debugging and logging purposes.
 		hstr _getInternalName() const;
 
+		/// @brief Clears the entire image and sets all image data to zeroes without safety checks. Used internally only.
+		/// @return True if successful.
+		bool _rawClear();
+		/// @brief Sets the color of a specific pixel without safety checks. Used internally only.
+		/// @param[in] x X-coordinate.
+		/// @param[in] y Y-coordinate.
+		/// @param[in] color The new Color of the pixel.
+		/// @return True if successful.
+		bool _rawSetPixel(int x, int y, const Color& color);
+		/// @brief Fills a rectangle area with one color without safety checks. Used internally only.
+		/// @param[in] x X-coordinate.
+		/// @param[in] y Y-coordinate.
+		/// @param[in] w Width of the area.
+		/// @param[in] h Height of the area.
+		/// @param[in] color The Color used for filling.
+		/// @return True if successful.
+		bool _rawFillRect(int x, int y, int w, int h, const Color& color);
+		/// @brief Writes image data directly onto the texture without safety checks. Used internally only.
+		/// @param[in] sx Source data X-coordinate.
+		/// @param[in] sy Source data Y-coordinate.
+		/// @param[in] sw Width of the area on the source to be copied.
+		/// @param[in] sh Height of the area on the source to be copied.
+		/// @param[in] dx Destination X-coordinate.
+		/// @param[in] dy Destination Y-coordinate.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @return True if successful.
+		/// @note Pixels on the destination will be overwritten.
+		bool _rawWrite(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+
 		/// @brief Sets up dimensions and internal state of the texture to be power-of-two compliant.
 		/// @param[out] outWidth Power-of-two width.
 		/// @param[out] outHeight Power-of-two height.
