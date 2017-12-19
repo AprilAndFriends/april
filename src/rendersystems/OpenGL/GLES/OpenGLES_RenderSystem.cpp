@@ -24,6 +24,7 @@
 #include "OpenGLES_RenderSystem.h"
 #include "OpenGLES_Texture.h"
 #include "OpenGLES_VertexShader.h"
+#include "RenderState.h"
 #include "Window.h"
 
 #define VERTEX_ARRAY 0
