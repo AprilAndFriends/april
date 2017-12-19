@@ -68,8 +68,6 @@ class UpdateDelegate : public april::UpdateDelegate
 {
 	bool onUpdate(float timeDelta)
 	{
-		harray<int> a;
-		a.randomize();
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(drawRect);
 		/// some general texture testing

@@ -21,28 +21,47 @@
 
 namespace april
 {
+	/// @brief Defines a rendersystem state.
 	class RenderState
 	{
 	public:
+		/// @brief The current viewport.
 		grect viewport;
+		/// @brief Whether the viewport has changed.
 		bool viewportChanged;
+		/// @brief The current modelview matrix.
 		gmat4 modelviewMatrix;
+		/// @brief Whether the modelview matrix has changed.
 		bool modelviewMatrixChanged;
+		/// @brief The current projection matrix.
 		gmat4 projectionMatrix;
+		/// @brief Whether the projection matrix has changed.
 		bool projectionMatrixChanged;
+		/// @brief Whether the depth buffer is currently enabled.
 		bool depthBuffer;
+		/// @brief Whether writing to the depth buffer is currently enabled.
 		bool depthBufferWrite;
+		/// @brief Whether texture coordinates are used in vertices.
 		bool useTexture;
+		/// @brief Whether color is used in vertices.
 		bool useColor;
+		/// @brief The current unique texture ID.
 		Texture* texture;
+		/// @brief The current blend mode.
 		BlendMode blendMode;
+		/// @brief The current color mode.
 		ColorMode colorMode;
+		/// @brief The current color mode factor.
 		float colorModeFactor;
+		/// @brief The current system color.
 		Color systemColor;
 
+		/// @brief Basic constructor.
 		RenderState();
+		/// @brief Destructor.
 		virtual ~RenderState();
 		
+		/// @brief Resets or sets up the initial state.
 		virtual void reset();
 
 	};

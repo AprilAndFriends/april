@@ -171,7 +171,11 @@ namespace april
 				delete (*it);
 			}
 			this->renderCommandsQueues.clear();
-			this->_flushDestroyTexturesQueue();
+			foreach (Texture*, it, this->destroyTexturesQueue)
+			{
+				delete (*it);
+			}
+			this->destroyTexturesQueue.clear();
 			this->statCurrentFrameRenderCalls = 0;
 			this->statLastFrameRenderCalls = 0;
 			this->statCurrentFrameTextureSwitches = 0;
@@ -231,7 +235,11 @@ namespace april
 				delete (*it);
 			}
 			this->renderCommandsQueues.clear();
-			this->_flushDestroyTexturesQueue();
+			foreach (Texture*, it, this->destroyTexturesQueue)
+			{
+				delete (*it);
+			}
+			this->destroyTexturesQueue.clear();
 			this->statCurrentFrameRenderCalls = 0;
 			this->statLastFrameRenderCalls = 0;
 			this->statCurrentFrameTextureSwitches = 0;
@@ -503,8 +511,8 @@ namespace april
 		texture->waitForAsyncLoad(); // waiting for all async stuff to finish
 		hmutex::ScopeLock lock(&this->texturesMutex);
 		this->textures -= texture;
-		lock.release();
 		this->destroyTexturesQueue += texture;
+		lock.release();
 	}
 
 	PixelShader* RenderSystem::createPixelShaderFromResource(chstr filename)
@@ -788,7 +796,8 @@ namespace april
 			if (state->texture != NULL && state->useTexture)
 			{
 				++this->statCurrentFrameTextureSwitches;
-				state->texture->load();
+				state->texture->loadAsync();
+				state->texture->ensureLoaded();
 				state->texture->unlock();
 				this->_setDeviceTexture(state->texture);
 				this->_setDeviceTextureFilter(state->texture->getFilter());
@@ -822,32 +831,17 @@ namespace april
 		this->deviceState->useColor = state->useColor;
 	}
 
-	void RenderSystem::_flushDestroyTexturesQueue()
-	{
-		foreach (Texture*, it, this->destroyTexturesQueue)
-		{
-			if (this->state->texture == (*it))
-			{
-				this->state->texture = NULL;
-			}
-			if (this->deviceState->texture == (*it))
-			{
-				this->deviceState->texture = NULL;
-				this->_setDeviceTexture(NULL);
-			}
-			delete (*it);
-		}
-		this->destroyTexturesQueue.clear();
-	}
-
 	void RenderSystem::_addRenderCommand(RenderCommand* command)
 	{
-		// TODO - mutex this to ensure thread-safety
+		hmutex::ScopeLock lock(&this->renderMutex);
 		if (this->renderCommandsQueues.size() == 0)
 		{
 			this->renderCommandsQueues += new RenderCommandQueue();
 		}
 		this->renderCommandsQueues.last()->commands += command;
+		this->state->viewportChanged = false;
+		this->state->modelviewMatrixChanged = false;
+		this->state->projectionMatrixChanged = false;
 	}
 
 	void RenderSystem::clear(bool depth)
@@ -861,7 +855,7 @@ namespace april
 		{
 			depth = false;
 		}
-		this->_addRenderCommand(new ClearCommand(depth));
+		this->_addRenderCommand(new ClearCommand(*this->state, depth));
 	}
 
 	void RenderSystem::clear(Color color, bool depth)
@@ -870,14 +864,14 @@ namespace april
 		{
 			depth = false;
 		}
-		this->_addRenderCommand(new ClearColorCommand(color, depth));
+		this->_addRenderCommand(new ClearColorCommand(*this->state, color, depth));
 	}
 
 	void RenderSystem::clearDepth()
 	{
 		if (this->options.depthBuffer)
 		{
-			this->_addRenderCommand(new ClearDepthCommand());
+			this->_addRenderCommand(new ClearDepthCommand(*this->state));
 		}
 	}
 
@@ -1224,19 +1218,44 @@ namespace april
 
 	void RenderSystem::presentFrame()
 	{
+		if (this->renderCommandsQueues.size() == 0)
+		{
+			this->renderCommandsQueues += new RenderCommandQueue();
+		}
+		this->renderCommandsQueues.first()->commands += new RenderCommand(*this->state);
+		this->_devicePresentFrame(); // TODOx - remove when running async code
+		hmutex::ScopeLock lock(&this->renderMutex);
+		this->renderCommandsQueues += new RenderCommandQueue();
+	}
+
+	void RenderSystem::_devicePresentFrame()
+	{
 		this->flushFrame(true);
+		hmutex::ScopeLock lock(&this->renderMutex);
+		hmutex::ScopeLock lockTextures(&this->texturesMutex);
+		harray<Texture*> destroyTexturesQueue = this->destroyTexturesQueue;
+		this->destroyTexturesQueue.clear();
+		lockTextures.release();
 		if (this->renderCommandsQueues.size() > 0)
 		{
 			RenderCommandQueue* queue = this->renderCommandsQueues.removeFirst();
+			lock.release();
 			foreach (RenderCommand*, it, queue->commands)
 			{
 				(*it)->execute();
 			}
 			delete queue;
 		}
+		else
+		{
+			lock.release();
+		}
 		april::window->presentFrame();
 		// textures may now be safely destroyed
-		this->_flushDestroyTexturesQueue();
+		foreach (Texture*, it, destroyTexturesQueue)
+		{
+			delete (*it);
+		}
 	}
 
 	unsigned int RenderSystem::_numPrimitives(const RenderOperation& renderOperation, int count) const

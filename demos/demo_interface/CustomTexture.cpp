@@ -15,6 +15,7 @@
 
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
+#include <april/RenderState.h>
 
 #include "CustomRenderSystem.h"
 #include "CustomTexture.h"
@@ -53,43 +54,44 @@ bool CustomTexture::_deviceDestroyTexture()
 
 void CustomTexture::_assignFormat()
 {
-	switch (this->format)
+	if (this->format == april::Image::Format::ARGB || this->format == april::Image::Format::XRGB || this->format == april::Image::Format::RGBA ||
+		this->format == april::Image::Format::RGBX || this->format == april::Image::Format::ABGR || this->format == april::Image::Format::XBGR)
 	{
-	case april::Image::FORMAT_ARGB:
-	case april::Image::FORMAT_XRGB:
-	case april::Image::Format::RGBA:
-	case april::Image::FORMAT_RGBX:
-	case april::Image::FORMAT_ABGR:
-	case april::Image::FORMAT_XBGR:
 		this->glFormat = this->internalFormat = GL_RGBA;
-		break;
-	case april::Image::FORMAT_BGRA:
-	case april::Image::FORMAT_BGRX:
+	}
+	else if (this->format == april::Image::Format::BGRA || this->format == april::Image::Format::BGRX)
+	{
 		this->glFormat = GL_RGBA;
 		this->internalFormat = GL_RGBA;
-		break;
-	case april::Image::FORMAT_RGB:
+	}
+	else if (this->format == april::Image::Format::RGB)
+	{
 		this->glFormat = this->internalFormat = GL_RGB;
-		break;
-	case april::Image::FORMAT_BGR:
+	}
+	else if (this->format == april::Image::Format::BGR)
+	{
 		this->glFormat = GL_RGB;
 		this->internalFormat = GL_RGB;
-		break;
-	case april::Image::FORMAT_ALPHA:
+	}
+	else if (this->format == april::Image::Format::Alpha)
+	{
 		this->glFormat = this->internalFormat = GL_ALPHA;
-		break;
-	case april::Image::FORMAT_GRAYSCALE:
+	}
+	else if (this->format == april::Image::Format::Greyscale)
+	{
 		this->glFormat = this->internalFormat = GL_LUMINANCE;
-		break;
-	case april::Image::FORMAT_COMPRESSED:
-		this->glFormat = this->internalFormat = 0;
-		break;
-	case april::Image::FORMAT_PALETTE:
-		this->glFormat = this->internalFormat = 0;
-		break;
-	default:
+	}
+	else if (this->format == april::Image::Format::Compressed)
+	{
+		this->glFormat = this->internalFormat = 0; // compressed image formats will set these values as they need to
+	}
+	else if (this->format == april::Image::Format::Palette)
+	{
+		this->glFormat = this->internalFormat = 0; // paletted image formats will set these values as they need to
+	}
+	else
+	{
 		this->glFormat = this->internalFormat = GL_RGBA;
-		break;
 	}
 }
 
@@ -143,7 +145,7 @@ bool CustomTexture::_unlockSystem(Lock& lock, bool update)
 
 bool CustomTexture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, april::Image::Format srcFormat)
 {
-	if (this->format == april::Image::FORMAT_COMPRESSED || this->format == april::Image::FORMAT_PALETTE)
+	if (this->format == april::Image::Format::Compressed || this->format == april::Image::Format::Palette)
 	{
 		return false;
 	}
@@ -159,7 +161,7 @@ bool CustomTexture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy,
 		{
 			this->_uploadClearData();
 		}
-		int srcBpp = april::Image::getFormatBpp(srcFormat);
+		int srcBpp = srcFormat.getBpp();
 		if (sx == 0 && dx == 0 && srcWidth == this->width && sw == this->width)
 		{
 			glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + sy * srcWidth) * srcBpp]);

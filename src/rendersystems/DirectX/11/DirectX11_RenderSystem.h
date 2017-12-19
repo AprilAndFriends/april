@@ -76,7 +76,6 @@ namespace april
 		Image::Format getNativeTextureFormat(Image::Format format) const;
 		unsigned int getNativeColorUInt(const april::Color& color) const;
 		Image* takeScreenshot(Image::Format format);
-		void presentFrame();
 
 		void updateOrientation();
 
@@ -186,6 +185,7 @@ namespace april
 		void _deviceRender(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count);
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
+		void _devicePresentFrame();
 
 		void _setDX11VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize);
 

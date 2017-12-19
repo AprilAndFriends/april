@@ -454,6 +454,9 @@
     <ClInclude Include="..\..\src\windowsystems\AndroidJNI\AndroidJNI_Keys.h">
       <Filter>Header Files\windowsystems\AndroidJNI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\april\RenderState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\include\april\Android_main.h">
       <Filter>Header Files\platforms</Filter>
     </ClInclude>
@@ -552,9 +555,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\rendercommands\RenderCommandQueue.h">
       <Filter>Header Files\rendercommands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\RenderState.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\rendercommands\ClearColorCommand.h">
       <Filter>Header Files\rendercommands</Filter>

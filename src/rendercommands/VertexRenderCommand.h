@@ -24,21 +24,19 @@ namespace april
 	class VertexRenderCommand : public RenderCommand
 	{
 	public:
-		VertexRenderCommand(const RenderState& state, const RenderOperation& renderOperation, const T* vertices, int count)
+		VertexRenderCommand(const RenderState& state, const RenderOperation& renderOperation, const T* vertices, int count) : RenderCommand(state)
 		{
-			this->state = state;
 			this->renderOperation = renderOperation;
 			this->vertices.add(vertices, count);
 		}
 
 		void execute()
 		{
-			april::rendersys->_updateDeviceState(&this->state);
+			RenderCommand::execute();
 			april::rendersys->_deviceRender(this->renderOperation, (T*)this->vertices, this->vertices.size());
 		}
 
 	protected:
-		RenderState state;
 		RenderOperation renderOperation;
 		harray<T> vertices;
 

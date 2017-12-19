@@ -541,7 +541,13 @@ namespace april
 		/// @brief Flushes the currently rendered data to the backbuffer for display.
 		/// @note Usually this doesn't need to be called manually. Calls flushFrame().
 		/// @see flushFrame
-		virtual void presentFrame();
+		void presentFrame();
+		/*
+		/// @brief Flushes all.
+		/// @note Usually this doesn't need to be called manually. This is needed for some implemenations that don't call presentFrame() within C++ at all.
+		/// @see presentFrame
+		virtual void flushRenderQueue();
+		*/
 
 	protected:
 		/// @brief The RenderSystem's name.
@@ -569,6 +575,8 @@ namespace april
 		RenderState* deviceState;
 		/// @brief Mutex required for registering and unregistering of textures that allows for multi-threaded access.
 		hmutex texturesMutex;
+		/// @brief Mutex required for async update/rendering.
+		hmutex renderMutex;
 		/// @brief Special helper object that can handle rendering in a different way.
 		RenderHelper* renderHelper;
 		/// @brief Render command queue.
@@ -625,8 +633,6 @@ namespace april
 		/// @param[in] forceUpdate If true, will force an update of the entire device state, regardless of the current state.
 		/// @note The parameter forceUpdate is useful when the device is in an unknown or inconsistent state, but should be used with care as it invalidates all optimizations.
 		virtual void _updateDeviceState(RenderState* state, bool forceUpdate = false);
-		/// @brief Actually destroys all queue textures for deletion.
-		void _flushDestroyTexturesQueue();
 		/// @brief Adds a render command to the queue.
 		/// @param[in] command The command to add.
 		void _addRenderCommand(RenderCommand* command);
@@ -810,6 +816,8 @@ namespace april
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
 		virtual void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count) = 0;
+		/// @brief Flushes the currently rendered data to the backbuffer for display.
+		virtual void _devicePresentFrame();
 
 		/// @brief Calculates the number of primitives based on the number of vertices.
 		/// @param[in] renderOperation The RenderOperation that is used for rendering

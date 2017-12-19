@@ -725,9 +725,9 @@ namespace april
 		return image;
 	}
 	
-	void DirectX9_RenderSystem::presentFrame()
+	void DirectX9_RenderSystem::_devicePresentFrame()
 	{
-		RenderSystem::presentFrame();
+		RenderSystem::_devicePresentFrame();
 		this->d3dDevice->EndScene();
 		HRESULT hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
 		if (hr == D3DERR_DEVICELOST)
@@ -772,7 +772,7 @@ namespace april
 					}
 					else
 					{
-						hlog::errorf(logTag, "Failed to reset device!, context: DirectX9_RenderSystem::presentFrame() hresult: %08X", hr);
+						hlog::errorf(logTag, "Failed to reset device!, context: DirectX9_RenderSystem::_devicePresentFrame() hresult: %08X", hr);
 					}
 				}
 				else if (hr == D3DERR_DRIVERINTERNALERROR)

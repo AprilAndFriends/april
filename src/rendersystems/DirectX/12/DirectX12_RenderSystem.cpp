@@ -1062,8 +1062,9 @@ namespace april
 		return NULL;
 	}
 	
-	void DirectX12_RenderSystem::presentFrame()
+	void DirectX12_RenderSystem_devicePresentFrame()
 	{
+		RenderSystem::_devicePresentFrame();
 		D3D12_RESOURCE_BARRIER presentResourceBarrier = {};
 		presentResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		presentResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;

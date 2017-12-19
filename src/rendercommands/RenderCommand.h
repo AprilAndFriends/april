@@ -13,15 +13,20 @@
 #ifndef APRIL_RENDER_COMMAND_H
 #define APRIL_RENDER_COMMAND_H
 
+#include "RenderState.h"
+
 namespace april
 {
 	class RenderCommand
 	{
 	public:
-		RenderCommand();
+		RenderCommand(const RenderState& state);
 		virtual ~RenderCommand();
 		
-		virtual void execute() = 0;
+		virtual void execute();
+
+	protected:
+		RenderState state;
 
 	};
 	

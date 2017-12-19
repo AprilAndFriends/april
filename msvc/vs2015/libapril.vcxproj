@@ -611,6 +611,7 @@
     <ClInclude Include="..\..\include\april\MouseDelegate.h" />
     <ClInclude Include="..\..\include\april\PixelShader.h" />
     <ClInclude Include="..\..\include\april\Platform.h" />
+    <ClInclude Include="..\..\include\april\RenderState.h" />
     <ClInclude Include="..\..\include\april\RenderSystem.h" />
     <ClInclude Include="..\..\include\april\Standard_main.h" />
     <ClInclude Include="..\..\include\april\SystemDelegate.h" />
@@ -629,7 +630,6 @@
     <ClInclude Include="..\..\src\rendercommands\RenderCommandQueue.h" />
     <ClInclude Include="..\..\src\rendercommands\RenderCommands.h" />
     <ClInclude Include="..\..\src\rendercommands\VertexRenderCommand.h" />
-    <ClInclude Include="..\..\src\RenderState.h" />
     <ClInclude Include="..\..\src\util\egl.h" />
     <ClInclude Include="..\..\src\RenderHelper.h" />
     <ClInclude Include="..\..\src\RenderHelperLayered2D.h" />

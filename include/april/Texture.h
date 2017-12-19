@@ -161,6 +161,9 @@ namespace april
 		/// @brief Loads the texture immediately. If the texture was queued to be loaded asynchronously, this method will wait until it's loaded and return true.
 		/// @return True if successful or already loaded.
 		bool load();
+		/// @brief Uploads the texture data to the GPU.
+		/// @return True if successful or already loaded.
+		bool upload();
 		/// @brief Loads the texture asynchronously.
 		/// @return True if queueing was successful.
 		/// @note Using a texture before it is uploaded to the GPU will cause undefined behavior. Always call load() before using it, because this ensures that it's loaded.
@@ -171,6 +174,11 @@ namespace april
 		/// @brief Loads the texture's meta data only.
 		/// @return True if successful or already loaded.
 		bool loadMetaData();
+		/// @brief Makes sure the texture is loaded if it can be loaded or was async queued.
+		/// @see load
+		/// @see waitForAsyncLoad
+		/// @return True if successful or already loaded.
+		bool ensureLoaded();
 		/// @brief Waits for the texture to load asynchronously.
 		/// @param[in] timeout How long to wait maximally in seconds.
 		/// @note A timeout value of 0.0 means indefinitely.
@@ -193,7 +201,7 @@ namespace april
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
 		/// @return The Color of the pixel.
-		Color getPixel(int x, int y) const;
+		Color getPixel(int x, int y);
 		/// @brief Sets the color of a specific pixel.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
@@ -204,7 +212,7 @@ namespace april
 		/// @param[in] x Decimal X-coordinate.
 		/// @param[in] y Decimal Y-coordinate.
 		/// @return The interpolated Color of the pixel.
-		Color getInterpolatedPixel(float x, float y) const;
+		Color getInterpolatedPixel(float x, float y);
 		/// @brief Fills a rectangle area with one color.
 		/// @param[in] x X-coordinate.
 		/// @param[in] y Y-coordinate.
@@ -389,7 +397,7 @@ namespace april
 		/// @param[in] position Pixel coordinate.
 		/// @return The Color of the pixel.
 		/// @see getPixel(int x, int y)
-		Color getPixel(cgvec2 position) const;
+		Color getPixel(cgvec2 position);
 		/// @brief Sets the color of a specific pixel.
 		/// @param[in] position Pixel coordinate.
 		/// @param[in] color The new Color of the pixel.
@@ -400,7 +408,7 @@ namespace april
 		/// @param[in] position Pixel coordinate.
 		/// @return The interpolated Color of the pixel.
 		/// @see getInterpolatedPixel(float x, float y)
-		Color getInterpolatedPixel(cgvec2 position) const;
+		Color getInterpolatedPixel(cgvec2 position);
 		/// @brief Fills a rectangle area with one color.
 		/// @param[in] rect The rectangle area.
 		/// @param[in] color The Color used for filling.

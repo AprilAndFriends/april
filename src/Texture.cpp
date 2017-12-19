@@ -443,6 +443,26 @@ namespace april
 			this->waitForAsyncLoad();
 			return true; // will already call this method again through TextureAsync::update() so it does not need to continue
 		}
+		lock.release();
+		this->loadMetaData();
+		return this->loadAsync();
+		//return (this->loadAsync() && this->ensureLoaded());
+	}
+
+	bool Texture::upload()
+	{
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		if (this->loaded)
+		{
+			return true;
+		}
+		this->asyncLoadDiscarded = false; // a possible previous unload call must be canceled
+		if (this->asyncLoadQueued)
+		{
+			lock.release();
+			this->waitForAsyncLoad();
+			return true; // will already call this method again through TextureAsync::update() so it does not need to continue
+		}
 		int size = 0;
 		unsigned char* currentData = NULL;
 		if (this->data != NULL) // reload from memory
@@ -665,6 +685,32 @@ namespace april
 		return true;
 	}
 
+	bool Texture::ensureLoaded()
+	{
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		if (this->loaded)
+		{
+			return true;
+		}
+		if (this->asyncLoadQueued)
+		{
+			lock.release();
+			TextureAsync::prioritizeLoad(this);
+			while (true)
+			{
+				lock.acquire(&this->asyncLoadMutex);
+				if (this->loaded)
+				{
+					return true;
+				}
+				lock.release();
+				hthread::sleep(0.01f);
+				TextureAsync::update(); // TODOx - remove
+			}
+		}
+		return false;
+	}
+
 	void Texture::waitForAsyncLoad(float timeout)
 	{
 		TextureAsync::prioritizeLoad(this);
@@ -853,7 +899,7 @@ namespace april
 			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
@@ -867,7 +913,7 @@ namespace april
 		return this->_unlock(lock, true);
 	}
 
-	Color Texture::getPixel(int x, int y) const
+	Color Texture::getPixel(int x, int y)
 	{
 		Color color = Color::Clear;
 		if (!this->_isReadable())
@@ -889,7 +935,7 @@ namespace april
 			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
@@ -902,7 +948,7 @@ namespace april
 		return this->_unlock(lock, Image::setPixel(lock.x, lock.y, color, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
 	}
 
-	Color Texture::getInterpolatedPixel(float x, float y) const
+	Color Texture::getInterpolatedPixel(float x, float y)
 	{
 		Color color = Color::Clear;
 		if (!this->_isReadable())
@@ -924,7 +970,7 @@ namespace april
 			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
@@ -996,7 +1042,7 @@ namespace april
 			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
@@ -1032,12 +1078,12 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + texture->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
-		if (!texture->isLoaded())
+		if (!texture->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot read texture '%s', not loaded!", texture->_getInternalName().cStr());
 			return false;
@@ -1059,7 +1105,7 @@ namespace april
 			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
@@ -1089,12 +1135,12 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + texture->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
-		if (!texture->isLoaded())
+		if (!texture->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot read texture '%s', not loaded!", texture->_getInternalName().cStr());
 			return false;
@@ -1116,7 +1162,7 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
@@ -1146,12 +1192,12 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + texture->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
-		if (!texture->isLoaded())
+		if (!texture->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot read texture '%s', not loaded!", texture->_getInternalName().cStr());
 			return false;
@@ -1173,7 +1219,7 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
@@ -1203,12 +1249,12 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + texture->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
-		if (!texture->isLoaded())
+		if (!texture->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot read texture '%s', not loaded!", texture->_getInternalName().cStr());
 			return false;
@@ -1230,7 +1276,7 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
@@ -1250,7 +1296,7 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
@@ -1270,7 +1316,7 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
@@ -1290,7 +1336,7 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
@@ -1320,12 +1366,12 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + texture->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
-		if (!texture->isLoaded())
+		if (!texture->ensureLoaded())
 		{
 			hlog::errorf(logTag, "Cannot read texture '%s', not loaded!", texture->_getInternalName().cStr());
 			return false;
@@ -1348,7 +1394,7 @@ namespace april
 
 	// overloads
 
-	Color Texture::getPixel(cgvec2 position) const
+	Color Texture::getPixel(cgvec2 position)
 	{
 		return this->getPixel(HROUND_GVEC2(position));
 	}
@@ -1358,7 +1404,7 @@ namespace april
 		return this->setPixel(HROUND_GVEC2(position), color);
 	}
 
-	Color Texture::getInterpolatedPixel(cgvec2 position) const
+	Color Texture::getInterpolatedPixel(cgvec2 position)
 	{
 		return this->getInterpolatedPixel(position.x, position.y);
 	}

@@ -20,7 +20,7 @@ namespace april
 	class ClearDepthCommand : public RenderCommand
 	{
 	public:
-		ClearDepthCommand();
+		ClearDepthCommand(const RenderState& state);
 		
 		void execute();
 

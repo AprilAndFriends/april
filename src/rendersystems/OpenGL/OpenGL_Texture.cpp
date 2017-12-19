@@ -17,6 +17,7 @@
 #include "Image.h"
 #include "OpenGL_RenderSystem.h"
 #include "OpenGL_Texture.h"
+#include "RenderState.h"
 
 #define APRIL_OGL_RENDERSYS ((OpenGL_RenderSystem*)april::rendersys)
 

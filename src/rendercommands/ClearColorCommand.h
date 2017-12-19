@@ -21,7 +21,7 @@ namespace april
 	class ClearColorCommand : public ClearCommand
 	{
 	public:
-		ClearColorCommand(const april::Color& color, bool useDepth);
+		ClearColorCommand(const RenderState& state, const april::Color& color, bool useDepth);
 		
 		void execute();
 

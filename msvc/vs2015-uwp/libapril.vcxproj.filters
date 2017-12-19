@@ -394,6 +394,9 @@
     <ClInclude Include="..\..\src\util\egl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\april\RenderState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\include\april\main_base.h">
       <Filter>Header Files\platforms</Filter>
     </ClInclude>
@@ -468,9 +471,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\rendercommands\RenderCommandQueue.h">
       <Filter>Header Files\rendercommands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\RenderState.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\rendercommands\ClearColorCommand.h">
       <Filter>Header Files\rendercommands</Filter>

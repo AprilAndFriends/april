@@ -11,13 +11,14 @@
 
 namespace april
 {
-	ClearCommand::ClearCommand(bool useDepth) : RenderCommand()
+	ClearCommand::ClearCommand(const RenderState& state, bool useDepth) : RenderCommand(state)
 	{
 		this->useDepth = useDepth;
 	}
 	
 	void ClearCommand::execute()
 	{
+		RenderCommand::execute();
 		april::rendersys->_deviceClear(this->useDepth);
 	}
 	

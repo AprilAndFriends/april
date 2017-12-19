@@ -11,12 +11,13 @@
 
 namespace april
 {
-	ClearDepthCommand::ClearDepthCommand() : RenderCommand()
+	ClearDepthCommand::ClearDepthCommand(const RenderState& state) : RenderCommand(state)
 	{
 	}
 	
 	void ClearDepthCommand::execute()
 	{
+		RenderCommand::execute();
 		april::rendersys->_deviceClearDepth();
 	}
 	
