@@ -35,10 +35,14 @@ namespace april
 	class ClearDepthCommand;
 	class Image;
 	class PixelShader;
+	class PresentFrameCommand;
 	class RenderCommand;
 	class RenderCommandQueue;
 	class RenderHelper;
 	class RenderState;
+	class ResetCommand;
+	class StateUpdateCommand;
+	class SuspendCommand;
 	class Texture;
 	template <typename T> class VertexRenderCommand;
 	class VertexShader;
@@ -51,9 +55,13 @@ namespace april
 		friend class ClearCommand;
 		friend class ClearColorCommand;
 		friend class ClearDepthCommand;
+		friend class PresentFrameCommand;
 		friend class RenderCommand;
 		friend class RenderHelper;
 		friend class RenderHelperLayered2D;
+		friend class ResetCommand;
+		friend class StateUpdateCommand;
+		friend class SuspendCommand;
 		friend class Texture;
 		template <typename T> friend class VertexRenderCommand;
 		friend class Window;
@@ -245,6 +253,10 @@ namespace april
 		/// @return The amount of video RAM available.
 		/// @note This value is in MB (1 MB = 1024 kB, 1 kB = 1024 B).
 		virtual int getVRam() const = 0;
+
+		/// @brief Updates the RenderSystem.
+		/// @param[in] timeDelta Time since last frame.
+		void update(float timeDelta = 0.0f);
 
 		/// @brief Sets the current RenderMode.
 		void setRenderMode(RenderMode renderMode, const hmap<hstr, hstr>& options = hmap<hstr, hstr>());
@@ -635,7 +647,8 @@ namespace april
 		virtual void _updateDeviceState(RenderState* state, bool forceUpdate = false);
 		/// @brief Adds a render command to the queue.
 		/// @param[in] command The command to add.
-		void _addRenderCommand(RenderCommand* command);
+		/// @param[in] immediate Whether it needs to be processed ASAP rather than waiting for more commands to batch.
+		void _addRenderCommand(RenderCommand* command, bool processAsap = false);
 
 		/// @brief Initializes everything internal for the RenderSystem
 		virtual void _deviceInit() = 0;

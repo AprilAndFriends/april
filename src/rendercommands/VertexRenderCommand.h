@@ -14,6 +14,7 @@
 #define APRIL_VERTEX_RENDER_COMMAND_H
 
 #include <hltypes/harray.h>
+#include <hltypes/hlog.h>
 
 #include "RenderCommand.h"
 #include "RenderState.h"
@@ -32,6 +33,7 @@ namespace april
 
 		void execute()
 		{
+			hlog::error("OK", "Vertex");
 			RenderCommand::execute();
 			april::rendersys->_deviceRender(this->renderOperation, (T*)this->vertices, this->vertices.size());
 		}

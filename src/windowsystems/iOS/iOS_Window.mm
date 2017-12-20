@@ -493,6 +493,10 @@ namespace april
 	void iOS_Window::handleDisplayAndUpdate()
 	{
 		bool result = this->updateOneFrame();
+		if (april::rendersys != NULL)
+		{
+			april::rendersys->update();
+		}
 		if (this->updateDelegate != NULL)
 		{
 			this->updateDelegate->onPresentFrame();

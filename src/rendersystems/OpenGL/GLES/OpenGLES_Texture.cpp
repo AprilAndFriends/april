@@ -52,7 +52,7 @@ namespace april
 		{
 			if (!APRIL_OGLES_RENDERSYS->etc1Supported)
 			{
-				hlog::error(logTag, "Trying to use ETC1 textures, but system they were not supported!");
+				hlog::error(logTag, "Trying to use ETC1 textures, but system reported that they are not supported!");
 				this->_deviceDestroyTexture();
 				return false;
 			}

@@ -13,11 +13,15 @@
 #ifndef APRIL_RENDER_COMMANDS_H
 #define APRIL_RENDER_COMMANDS_H
 
-#include "RenderCommand.h"
-#include "RenderCommandQueue.h"
 #include "ClearCommand.h"
 #include "ClearDepthCommand.h"
 #include "ClearColorCommand.h"
+#include "PresentFrameCommand.h"
+#include "RenderCommand.h"
+#include "RenderCommandQueue.h"
+#include "ResetCommand.h"
+#include "StateUpdateCommand.h"
+#include "SuspendCommand.h"
 #include "VertexRenderCommand.h"
 
 #endif

@@ -17,14 +17,16 @@
 #include <hltypes/hstring.h>
 
 #define __NATIVE_INTERFACE_CLASS "com/april/NativeInterface"
+#include "AndroidJNI_Keys.h"
+#include "AndroidJNI_Window.h"
 #include "androidUtilJNI.h"
 #include "april.h"
 #include "Keys.h"
 #include "main_base.h"
 #include "Platform.h"
 #include "RenderSystem.h"
+#include "UpdateDelegate.h"
 #include "Window.h"
-#include "AndroidJNI_Keys.h"
 
 #define PROTECTED_WINDOW_CALL(methodCall) \
 	if (april::window != NULL) \
@@ -36,6 +38,7 @@
 	{ \
 		april::rendersys->methodCall; \
 	}
+#define ANDROID_WINDOW ((AndroidJNI_Window*)april::window)
 
 namespace april
 {
@@ -106,9 +109,14 @@ namespace april
 			try
 			{
 				result = april::window->updateOneFrame();
-				if (april::rendersys != NULL)
+				PROTECTED_RENDERSYS_CALL(update());
+				UpdateDelegate* updateDelegate = april::window->getUpdateDelegate();
+				if (updateDelegate != NULL)
 				{
-					april::rendersys->flushFrame(true);
+					// during this code the presentFrame() calls from the window must be ignored, but the render system still has to call them
+					ANDROID_WINDOW->setManualPresentFrameEnabled(false);
+					updateDelegate->onPresentFrame();
+					ANDROID_WINDOW->setManualPresentFrameEnabled(true);
 				}
 			}
 			catch (hexception& e)
@@ -323,8 +331,6 @@ namespace april
 		{"onDialogNo",							_JARGS(_JVOID, ),								(void*)&april::_JNI_onDialogNo					},
 		{"onDialogCancel",						_JARGS(_JVOID, ),								(void*)&april::_JNI_onDialogCancel				}
 	};
-
-
 	
 	jint __JNI_OnLoad(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), JavaVM* vm, void* reserved)
 	{

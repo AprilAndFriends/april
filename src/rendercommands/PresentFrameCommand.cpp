@@ -8,21 +8,19 @@
 
 #include <hltypes/hlog.h>
 
-#include "ClearCommand.h"
+#include "PresentFrameCommand.h"
 #include "RenderSystem.h"
 
 namespace april
 {
-	ClearCommand::ClearCommand(const RenderState& state, bool useDepth) : RenderCommand(state)
+	PresentFrameCommand::PresentFrameCommand(const RenderState& state) : RenderCommand(state)
 	{
-		this->useDepth = useDepth;
 	}
 	
-	void ClearCommand::execute()
+	void PresentFrameCommand::execute()
 	{
-		hlog::error("OK", "Clear");
-		RenderCommand::execute();
-		april::rendersys->_deviceClear(this->useDepth);
+		hlog::warn("OK", "PRESENT");
+		april::rendersys->_devicePresentFrame();
 	}
 	
 }

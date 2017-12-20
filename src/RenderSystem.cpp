@@ -268,7 +268,7 @@ namespace april
 		grect viewport(0.0f, 0.0f, april::window->getSize());
 		this->setViewport(viewport);
 		this->setOrthoProjection(viewport);
-		this->_updateDeviceState(this->state, true);
+		this->_addRenderCommand(new StateUpdateCommand(*this->state));
 		this->clear();
 	}
 
@@ -285,14 +285,7 @@ namespace april
 		this->statLastFrameTriangleCount = 0;
 		this->statCurrentFrameLineCount = 0;
 		this->statLastFrameLineCount = 0;
-		this->_deviceReset();
-		this->_deviceSetup();
-		if (this->deviceState->texture != NULL)
-		{
-			this->deviceState->texture->load();
-		}
-		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
-		this->_updateDeviceState(this->state, true);
+		this->_addRenderCommand(new ResetCommand(*this->state, april::window->getSize()), true);
 	}
 
 	void RenderSystem::_deviceReset()
@@ -302,7 +295,7 @@ namespace april
 	void RenderSystem::suspend()
 	{
 		hlog::write(logTag, "Suspending rendersystem.");
-		this->_deviceSuspend();
+		this->_addRenderCommand(new SuspendCommand(*this->state), true);
 	}
 
 	void RenderSystem::_deviceSuspend()
@@ -418,6 +411,34 @@ namespace april
 	{
 		this->state->projectionMatrix = value;
 		this->state->projectionMatrixChanged = true;
+	}
+
+	void RenderSystem::update(float timeDelta)
+	{
+		hmutex::ScopeLock lock(&this->renderMutex);
+		hmutex::ScopeLock lockTextures(&this->texturesMutex);
+		harray<Texture*> destroyTexturesQueue = this->destroyTexturesQueue;
+		this->destroyTexturesQueue.clear();
+		lockTextures.release();
+		if (this->renderCommandsQueues.size() > 1)
+		{
+			RenderCommandQueue* queue = this->renderCommandsQueues.removeFirst();
+			lock.release();
+			foreach (RenderCommand*, it, queue->commands)
+			{
+				(*it)->execute();
+			}
+			delete queue;
+		}
+		else
+		{
+			lock.release();
+		}
+		// textures may now be safely destroyed
+		foreach (Texture*, it, destroyTexturesQueue)
+		{
+			delete (*it);
+		}
 	}
 	
 	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, Texture::LoadMode loadMode)
@@ -832,7 +853,7 @@ namespace april
 		this->deviceState->useColor = state->useColor;
 	}
 
-	void RenderSystem::_addRenderCommand(RenderCommand* command)
+	void RenderSystem::_addRenderCommand(RenderCommand* command, bool processAsap)
 	{
 		hmutex::ScopeLock lock(&this->renderMutex);
 		if (this->renderCommandsQueues.size() == 0)
@@ -840,6 +861,11 @@ namespace april
 			this->renderCommandsQueues += new RenderCommandQueue();
 		}
 		this->renderCommandsQueues.last()->commands += command;
+		if (processAsap)
+		{
+			this->renderCommandsQueues += new RenderCommandQueue();
+		}
+		lock.release();
 		this->state->viewportChanged = false;
 		this->state->modelviewMatrixChanged = false;
 		this->state->projectionMatrixChanged = false;
@@ -1219,44 +1245,13 @@ namespace april
 
 	void RenderSystem::presentFrame()
 	{
-		if (this->renderCommandsQueues.size() == 0)
-		{
-			this->renderCommandsQueues += new RenderCommandQueue();
-		}
-		this->renderCommandsQueues.first()->commands += new RenderCommand(*this->state);
-		this->_devicePresentFrame(); // TODOx - remove when running async code
-		hmutex::ScopeLock lock(&this->renderMutex);
-		this->renderCommandsQueues += new RenderCommandQueue();
+		this->_addRenderCommand(new PresentFrameCommand(*this->state), true);
 	}
 
 	void RenderSystem::_devicePresentFrame()
 	{
 		this->flushFrame(true);
-		hmutex::ScopeLock lock(&this->renderMutex);
-		hmutex::ScopeLock lockTextures(&this->texturesMutex);
-		harray<Texture*> destroyTexturesQueue = this->destroyTexturesQueue;
-		this->destroyTexturesQueue.clear();
-		lockTextures.release();
-		if (this->renderCommandsQueues.size() > 0)
-		{
-			RenderCommandQueue* queue = this->renderCommandsQueues.removeFirst();
-			lock.release();
-			foreach (RenderCommand*, it, queue->commands)
-			{
-				(*it)->execute();
-			}
-			delete queue;
-		}
-		else
-		{
-			lock.release();
-		}
 		april::window->presentFrame();
-		// textures may now be safely destroyed
-		foreach (Texture*, it, destroyTexturesQueue)
-		{
-			delete (*it);
-		}
 	}
 
 	unsigned int RenderSystem::_numPrimitives(const RenderOperation& renderOperation, int count) const

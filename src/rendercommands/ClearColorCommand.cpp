@@ -6,6 +6,8 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
+#include <hltypes/hlog.h>
+
 #include "ClearColorCommand.h"
 #include "Color.h"
 #include "RenderSystem.h"
@@ -19,6 +21,7 @@ namespace april
 	
 	void ClearColorCommand::execute()
 	{
+		hlog::error("OK", "Clear Color");
 		RenderCommand::execute();
 		april::rendersys->_deviceClear(this->color, this->useDepth);
 	}

@@ -37,6 +37,7 @@ namespace april
 		inline void setCursorVisible(bool value) { }
 		HL_DEFINE_GET(int, width, Width);
 		HL_DEFINE_GET(int, height, Height);
+		HL_DEFINE_ISSET(manualPresentFrameEnabled, ManualPresentFrameEnabled);
 		void* getBackendId() const;
 		
 		void enterMainLoop();
@@ -55,6 +56,7 @@ namespace april
 	protected:
 		int width;
 		int height;
+		bool manualPresentFrameEnabled;
 		bool forcedFocus;
 
 		Cursor* _createCursor(bool fromResource);

@@ -118,8 +118,8 @@ namespace april
 		return true;
 	}
 
-	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(),
-		deviceState_matrixChanged(true), deviceState_systemColorChanged(true), deviceState_colorModeFactorChanged(true)
+	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(), deviceState_matrixChanged(true),
+		deviceState_systemColorChanged(true), deviceState_colorModeFactorChanged(true)
 	{
 #ifdef _ANDROID
 		this->etc1Supported = false;
@@ -213,7 +213,12 @@ namespace april
 			return;
 		}
 #endif
-		hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
+		hstr extensions;
+		const GLubyte* extensionsString = glGetString(GL_EXTENSIONS);
+		if (extensionsString != NULL)
+		{
+			hstr extensions = (const char*)extensionsString;
+		}
 		hlog::write(logTag, "Extensions supported: " + extensions);
 #if defined(_IOS) || defined(_WINRT) // iOS devices support limited NPOT textures as per device specification since iPhone 3G S
 		this->caps.npotTexturesLimited = true;

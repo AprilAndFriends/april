@@ -344,6 +344,18 @@
     <ClCompile Include="..\..\src\rendercommands\ClearDepthCommand.cpp">
       <Filter>Source Files\rendercommands</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\rendercommands\ResetCommand.cpp">
+      <Filter>Source Files\rendercommands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendercommands\StateUpdateCommand.cpp">
+      <Filter>Source Files\rendercommands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendercommands\SuspendCommand.cpp">
+      <Filter>Source Files\rendercommands</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendercommands\PresentFrameCommand.cpp">
+      <Filter>Source Files\rendercommands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -566,6 +578,18 @@
       <Filter>Header Files\rendercommands</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\rendercommands\VertexRenderCommand.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\ResetCommand.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\StateUpdateCommand.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\SuspendCommand.h">
+      <Filter>Header Files\rendercommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendercommands\PresentFrameCommand.h">
       <Filter>Header Files\rendercommands</Filter>
     </ClInclude>
   </ItemGroup>

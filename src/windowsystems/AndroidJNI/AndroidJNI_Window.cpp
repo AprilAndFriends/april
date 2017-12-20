@@ -32,7 +32,7 @@ namespace april
 {
 	extern void* javaVM;
 
-	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), forcedFocus(false)
+	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), manualPresentFrameEnabled(true), forcedFocus(false)
 	{
 		this->name = april::WindowType::AndroidJNI.getName();
 		initAndroidKeyMap();
@@ -123,9 +123,12 @@ namespace april
 	
 	void AndroidJNI_Window::hideVirtualKeyboard()
 	{
-		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodHideVirtualKeyboard, "hideVirtualKeyboard", _JARGS(_JVOID, ));
-		env->CallStaticVoidMethod(classNativeInterface, methodHideVirtualKeyboard);
-		env->PopLocalFrame(NULL);
+		if (this->manualPresentFrameEnabled)
+		{
+			APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodHideVirtualKeyboard, "hideVirtualKeyboard", _JARGS(_JVOID, ));
+			env->CallStaticVoidMethod(classNativeInterface, methodHideVirtualKeyboard);
+			env->PopLocalFrame(NULL);
+		}
 	}
 
 	void AndroidJNI_Window::handleFocusChangeEvent(bool focused)

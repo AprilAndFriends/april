@@ -8,21 +8,19 @@
 
 #include <hltypes/hlog.h>
 
-#include "ClearCommand.h"
+#include "SuspendCommand.h"
 #include "RenderSystem.h"
 
 namespace april
 {
-	ClearCommand::ClearCommand(const RenderState& state, bool useDepth) : RenderCommand(state)
+	SuspendCommand::SuspendCommand(const RenderState& state) : RenderCommand(state)
 	{
-		this->useDepth = useDepth;
 	}
 	
-	void ClearCommand::execute()
+	void SuspendCommand::execute()
 	{
-		hlog::error("OK", "Clear");
-		RenderCommand::execute();
-		april::rendersys->_deviceClear(this->useDepth);
+		hlog::error("OK", "Suspend");
+		april::rendersys->_deviceSuspend();
 	}
 	
 }

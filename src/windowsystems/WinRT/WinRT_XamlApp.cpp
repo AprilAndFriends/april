@@ -271,7 +271,12 @@ namespace april
 			return;
 		}
 		this->running = april::window->updateOneFrame();
-		rendersys->presentFrame();
+		april::rendersys->update();
+		UpdateDelegate* updateDelegate = april::window->getUpdateDelegate();
+		if (updateDelegate != NULL)
+		{
+			updateDelegate->onPresentFrame();
+		}
 		this->firstFrameAfterActivateHack = false;
 		if (!this->running)
 		{

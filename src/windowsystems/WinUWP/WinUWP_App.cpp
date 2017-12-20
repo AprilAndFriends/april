@@ -359,6 +359,7 @@ namespace april
 			return;
 		}
 		this->running = april::window->updateOneFrame();
+		april::rendersys->update();
 		UpdateDelegate* updateDelegate = april::window->getUpdateDelegate();
 		if (updateDelegate != NULL)
 		{

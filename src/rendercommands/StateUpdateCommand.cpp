@@ -6,23 +6,18 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#include "RenderCommand.h"
 #include "RenderSystem.h"
+#include "StateUpdateCommand.h"
 
 namespace april
 {
-	RenderCommand::RenderCommand(const RenderState& state)
+	StateUpdateCommand::StateUpdateCommand(const RenderState& state) : RenderCommand(state)
 	{
-		this->state = state;
 	}
 	
-	RenderCommand::~RenderCommand()
+	void StateUpdateCommand::execute()
 	{
-	}
-
-	void RenderCommand::execute()
-	{
-		april::rendersys->_updateDeviceState(&this->state);
+		april::rendersys->_updateDeviceState(&this->state, true);
 	}
 	
 }

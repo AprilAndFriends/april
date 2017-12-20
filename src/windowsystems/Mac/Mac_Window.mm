@@ -391,10 +391,17 @@ namespace april
 		if (result && mOverlayWindow != nil)
 		{
 			float timeDelta = this->timer.diff(false);
-			if (timeDelta > 0.5f) timeDelta = 0.5f;
+			// TODO - needs to be changed to properly use the system settings rather than hardcoding their own settings
+			if (timeDelta > 0.5f)
+			{
+				timeDelta = 0.5f;
+			}
 			updateLoadingOverlay(timeDelta);
 		}
-
+		if (april::rendersys != NULL)
+		{
+			april::rendersys->update();
+		}
 		if (this->fpsCounter)
 		{
 			setTitle(this->title);

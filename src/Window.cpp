@@ -436,6 +436,10 @@ namespace april
 			{
 				this->running = false;
 			}
+			if (april::rendersys != NULL)
+			{
+				april::rendersys->update();
+			}
 			if (this->updateDelegate != NULL)
 			{
 				this->updateDelegate->onPresentFrame();

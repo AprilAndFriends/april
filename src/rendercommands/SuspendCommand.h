@@ -5,24 +5,26 @@
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+/// 
+/// @section DESCRIPTION
+/// 
+/// Defines a suspend command.
+
+#ifndef APRIL_SUSPEND_COMMAND_H
+#define APRIL_SUSPEND_COMMAND_H
 
 #include "RenderCommand.h"
-#include "RenderSystem.h"
 
 namespace april
 {
-	RenderCommand::RenderCommand(const RenderState& state)
+	class SuspendCommand : public RenderCommand
 	{
-		this->state = state;
-	}
-	
-	RenderCommand::~RenderCommand()
-	{
-	}
+	public:
+		SuspendCommand(const RenderState& state);
+		
+		void execute();
 
-	void RenderCommand::execute()
-	{
-		april::rendersys->_updateDeviceState(&this->state);
-	}
+	};
 	
 }
+#endif

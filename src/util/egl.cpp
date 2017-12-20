@@ -58,7 +58,7 @@ namespace april
 			this->display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 			if (this->display == EGL_NO_DISPLAY)
 			{
-				hlog::error(logTag, "Can't get EGL Display! Error: " + hstr((int)eglGetError()));
+				hlog::errorf(logTag, "Can't get EGL Display! Error: %X", eglGetError());
 				this->destroy();
 				return false;
 			}
@@ -66,19 +66,27 @@ namespace april
 			EGLint minorVersion;
 			if (!eglInitialize(this->display, &majorVersion, &minorVersion))
 			{
-				hlog::error(logTag, "Can't initialize EGL! Error: " + hstr((int)eglGetError()));
+				hlog::errorf(logTag, "Can't initialize EGL! Error: %X", eglGetError());
 				this->destroy();
 				return false;
+			}
+			hstr renderSystemName = april::rendersys->getName();
+			if (renderSystemName == april::RenderSystemType::OpenGLES2.getName())
+			{
+				if (!eglBindAPI(EGL_OPENGL_ES_API))
+				{
+					hlog::errorf(logTag, "Can't bind EGL OpenGLES API! Error: %X", eglGetError());
+					return false;
+				}
 			}
 			EGLint nConfigs = 0;
 			EGLBoolean result = eglGetConfigs(this->display, NULL, 0, &nConfigs);
 			if (!result || nConfigs == 0)
 			{
-				hlog::error(logTag, "There are no EGL configs! Error: " + hstr((int)eglGetError()));
+				hlog::errorf(logTag, "There are no EGL configs! Error: %X", eglGetError());
 				this->destroy();
 				return false;
 			}
-			hstr renderSystemName = april::rendersys->getName();
 			if (renderSystemName == april::RenderSystemType::OpenGLES1.getName())
 			{
 				this->pi32ConfigAttribs[4] = EGL_RENDERABLE_TYPE;
@@ -95,39 +103,34 @@ namespace april
 			result = eglChooseConfig(this->display, this->pi32ConfigAttribs, configs, nConfigs, &nConfigs);
 			if (!result || nConfigs == 0)
 			{
-				hlog::error(logTag, "Can't choose EGL config! Error: " + hstr((int)eglGetError()));
+				hlog::errorf(logTag, "Can't choose EGL config! Error: %X", eglGetError());
 				this->destroy();
 				return false;
 			}
-            // prefer RGB888, android chooses RGB565 by default
+            // prefer RGB888, Android chooses RGB565 by default
             this->config = configs[0];
-            for (EGLint i = 0; i < nConfigs; i++)
+			EGLint size[3] = { 0, 0, 0 };
+			for_iter (i, 0, nConfigs)
             {
-                EGLint size[3] = {0};
-                // A == 0
-                if (!eglGetConfigAttrib(this->display, configs[i], EGL_ALPHA_SIZE, &size[0]))
+				memset(&size, 0, 3 * sizeof(EGLint));
+#if !defined(_WIN32) || defined(_WINRT)
+                // alpha == 0
+                if (eglGetConfigAttrib(this->display, configs[i], EGL_ALPHA_SIZE, &size[0]) && size[0] == 0)
+#endif
                 {
-                    continue;
-                }
-                if (size[0] != 0)
-                {
-                    continue;
-                }
-                this->config = configs[i];
-                // RGB == 888
-                if (!eglGetConfigAttrib(this->display, configs[i], EGL_RED_SIZE,   &size[0]) ||
-                    !eglGetConfigAttrib(this->display, configs[i], EGL_GREEN_SIZE, &size[1]) ||
-                    !eglGetConfigAttrib(this->display, configs[i], EGL_BLUE_SIZE,  &size[2]))
-                {
-                    continue;
-                }
-
-                if (size[0] == 8 && size[1] == 8 && size[2] == 8)
-                {
-                    this->config = configs[i];
-                    hlog::write(logTag, "Found RGB888 EGL Config!");
-                    break;
-                }
+					this->config = configs[i];
+					// RGB == 888
+					if (eglGetConfigAttrib(this->display, configs[i], EGL_RED_SIZE, &size[0]) &&
+						eglGetConfigAttrib(this->display, configs[i], EGL_GREEN_SIZE, &size[1]) &&
+						eglGetConfigAttrib(this->display, configs[i], EGL_BLUE_SIZE, &size[2]))
+					{
+						if (size[0] == 8 && size[1] == 8 && size[2] == 8)
+						{
+							hlog::write(logTag, "Found RGB888 EGL Config!");
+							break;
+						}
+					}
+				}
             }
             delete [] configs;
         }
@@ -137,26 +140,23 @@ namespace april
 #if defined(_WIN32) && !defined(_WINRT)
 			this->hWnd = (EGLNativeWindowType)april::window->getBackendId();
 #endif
-			this->surface = eglCreateWindowSurface(this->display, this->config, this->hWnd, NULL);
+			EGLint surfaceAttributes[1] = { EGL_NONE };
+			this->surface = eglCreateWindowSurface(this->display, this->config, this->hWnd, surfaceAttributes);
 			if (this->surface == NULL)
 			{
-				this->surface = eglCreateWindowSurface(this->display, this->config, NULL, NULL);
+				hlog::writef(logTag, "Can't create EGL window surface with native window, attempting without. Error: %X", eglGetError());
+				this->surface = eglCreateWindowSurface(this->display, this->config, NULL, surfaceAttributes);
 			}
 		}
 		if (this->surface == NULL)
 		{
-			hlog::error(logTag, "Can't create EGL window surface! Error: " + hstr((int)eglGetError()));
+			hlog::errorf(logTag, "Can't create EGL window surface! Error: %X", eglGetError());
 			return false;
 		}
 		if (this->context == NULL)
 		{
 			if (april::rendersys->getName() == april::RenderSystemType::OpenGLES2.getName())
 			{
-				if (!eglBindAPI(EGL_OPENGL_ES_API))
-				{
-					hlog::error(logTag, "Can't bind EGL OpenGLES API! Error: " + hstr((int)eglGetError()));
-					return false;
-				}
 				EGLint contextAttributes[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
 				this->context = eglCreateContext(this->display, this->config, NULL, contextAttributes);
 			}
@@ -166,30 +166,35 @@ namespace april
 			}
 			if (this->context == NULL)
 			{
-				hlog::error(logTag, "Can't create EGL context! Error: " + hstr((int)eglGetError()));
+				hlog::errorf(logTag, "Can't create EGL context! Error: %X", eglGetError());
 				return false;
 			}
 			if (!eglMakeCurrent(this->display, this->surface, this->surface, this->context))
 			{
-				hlog::error(logTag, "Can't set current EGL context! Error: " + hstr((int)eglGetError()));
+				hlog::errorf(logTag, "Can't set current EGL context! Error: %X", eglGetError());
 				this->destroy();
 				return false;
 			}
+			EGLBoolean result = EGL_FALSE;
 			april::RenderSystem::Options options = april::rendersys->getOptions();
 			if (options.vSync)
 			{
 				if (options.tripleBuffering)
 				{
-					eglSwapInterval(this->display, 2);
+					result = eglSwapInterval(this->display, 2);
 				}
 				else
 				{
-					eglSwapInterval(this->display, 1);
+					result = eglSwapInterval(this->display, 1);
 				}
 			}
 			else
 			{
-				eglSwapInterval(this->display, 0);
+				result = eglSwapInterval(this->display, 0);
+			}
+			if (!result)
+			{
+				eglSwapInterval(this->display, 1);
 			}
 		}
 		return true;
