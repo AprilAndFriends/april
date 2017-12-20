@@ -13,10 +13,13 @@
 #ifndef APRIL_ASYNC_COMMANDS_H
 #define APRIL_ASYNC_COMMANDS_H
 
+#include "AssignWindowCommand.h"
 #include "AsyncCommandQueue.h"
 #include "ClearCommand.h"
 #include "ClearDepthCommand.h"
 #include "ClearColorCommand.h"
+#include "CreateCommand.h"
+#include "DestroyCommand.h"
 #include "PresentFrameCommand.h"
 #include "RenderCommand.h"
 #include "ResetCommand.h"

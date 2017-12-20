@@ -177,6 +177,7 @@ namespace april
 
 	void DirectX9_RenderSystem::_deviceReset()
 	{
+		RenderSystem::_deviceReset();
 		this->d3dDevice->EndScene();
 		foreach (Texture*, it, this->textures)
 		{

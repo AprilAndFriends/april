@@ -30,11 +30,14 @@
 
 namespace april
 {
+	class AssignWindowCommand;
 	class AsyncCommand;
 	class AsyncCommandQueue;
 	class ClearCommand;
 	class ClearColorCommand;
 	class ClearDepthCommand;
+	class CreateCommand;
+	class DestroyCommand;
 	class Image;
 	class PixelShader;
 	class PresentFrameCommand;
@@ -53,9 +56,12 @@ namespace april
 	class aprilExport RenderSystem
 	{
 	public:
+		friend class AssignWindowCommand;
 		friend class ClearCommand;
 		friend class ClearColorCommand;
 		friend class ClearDepthCommand;
+		friend class CreateCommand;
+		friend class DestroyCommand;
 		friend class PresentFrameCommand;
 		friend class RenderCommand;
 		friend class RenderHelper;
@@ -650,9 +656,19 @@ namespace april
 		/// @param[in] command The command to add.
 		void _addAsyncCommand(AsyncCommand* command);
 
+		/// @brief Routing method for async creation.
+		/// @param[in] options The options to use.
+		void _systemCreate(Options options);
+		/// @brief Routing method for async destruction.
+		void _systemDestroy();
+		/// @brief Routing method for async assignment of window.
+		/// @param[in] window The window instance.
+		void _systemAssignWindow(Window* window);
+
 		/// @brief Initializes everything internal for the RenderSystem
 		virtual void _deviceInit() = 0;
 		/// @brief Creates the internal device.
+		/// @param[in] options The options to use.
 		/// @return True if successful.
 		virtual bool _deviceCreate(Options options) = 0;
 		/// @brief Destroys the internal device.

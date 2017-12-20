@@ -359,6 +359,15 @@
     <ClCompile Include="..\..\src\async\SuspendCommand.cpp">
       <Filter>Source Files\async</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\async\DestroyCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\CreateCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\AssignWindowCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -596,6 +605,15 @@
       <Filter>Header Files\async</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\async\VertexRenderCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\CreateCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\DestroyCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\AssignWindowCommand.h">
       <Filter>Header Files\async</Filter>
     </ClInclude>
   </ItemGroup>

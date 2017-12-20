@@ -162,105 +162,118 @@ namespace april
 	{
 		if (!this->created)
 		{
-			hlog::writef(logTag, "Creating rendersystem: '%s' (options: %s)", this->name.cStr(), options.toString().cStr());
-			this->options = options;
-			this->state->reset();
-			this->deviceState->reset();
-			foreach (AsyncCommandQueue*, it, this->asyncCommandQueues)
-			{
-				delete (*it);
-			}
-			this->asyncCommandQueues.clear();
-			foreach (Texture*, it, this->destroyTexturesQueue)
-			{
-				delete (*it);
-			}
-			this->destroyTexturesQueue.clear();
-			this->statCurrentFrameRenderCalls = 0;
-			this->statLastFrameRenderCalls = 0;
-			this->statCurrentFrameTextureSwitches = 0;
-			this->statLastFrameTextureSwitches = 0;
-			this->statCurrentFrameVertexCount = 0;
-			this->statLastFrameVertexCount = 0;
-			this->statCurrentFrameTriangleCount = 0;
-			this->statLastFrameTriangleCount = 0;
-			this->statCurrentFrameLineCount = 0;
-			this->statLastFrameLineCount = 0;
-			// create the actual device
-			this->_deviceInit();
-			this->created = this->_deviceCreate(options);
-			if (!this->created)
-			{
-				this->destroy();
-			}
+			this->created = true;
+			this->_addAsyncCommand(new CreateCommand(options));
 		}
 		return this->created;
+	}
+
+	void RenderSystem::_systemCreate(Options options)
+	{
+		hlog::writef(logTag, "Creating rendersystem: '%s' (options: %s)", this->name.cStr(), options.toString().cStr());
+		this->options = options;
+		this->state->reset();
+		this->deviceState->reset();
+		foreach (AsyncCommandQueue*, it, this->asyncCommandQueues)
+		{
+			delete (*it);
+		}
+		this->asyncCommandQueues.clear();
+		foreach (Texture*, it, this->destroyTexturesQueue)
+		{
+			delete (*it);
+		}
+		this->destroyTexturesQueue.clear();
+		this->statCurrentFrameRenderCalls = 0;
+		this->statLastFrameRenderCalls = 0;
+		this->statCurrentFrameTextureSwitches = 0;
+		this->statLastFrameTextureSwitches = 0;
+		this->statCurrentFrameVertexCount = 0;
+		this->statLastFrameVertexCount = 0;
+		this->statCurrentFrameTriangleCount = 0;
+		this->statLastFrameTriangleCount = 0;
+		this->statCurrentFrameLineCount = 0;
+		this->statLastFrameLineCount = 0;
+		// create the actual device
+		this->_deviceInit();
+		if (!this->_deviceCreate(options))
+		{
+			this->created = false;
+			this->_systemDestroy();
+		}
 	}
 
 	bool RenderSystem::destroy()
 	{
 		if (this->created)
 		{
-			hlog::writef(logTag, "Destroying rendersystem '%s'.", this->name.cStr());
 			this->created = false;
-			this->renderMode = RenderMode::Normal;
-			if (this->renderHelper != NULL)
-			{
-				delete this->renderHelper;
-				this->renderHelper = NULL;
-			}
-			// first wait for queud textures to cancel
-			harray<Texture*> textures = this->getTextures();
-			if (this->hasAsyncTexturesQueued())
-			{
-				foreach (Texture*, it, textures)
-				{
-					if ((*it)->isAsyncLoadQueued())
-					{
-						(*it)->unload(); // to cancel all async loads
-					}
-				}
-				this->waitForAsyncTextures();
-			}
-			// creating a copy (again), because deleting a texture modifies this->textures
-			textures = this->getTextures();
-			foreach (Texture*, it, textures)
-			{
-				delete (*it);
-			}
-			this->state->reset();
-			this->deviceState->reset();
-			foreach (AsyncCommandQueue*, it, this->asyncCommandQueues)
-			{
-				delete (*it);
-			}
-			this->asyncCommandQueues.clear();
-			foreach (Texture*, it, this->destroyTexturesQueue)
-			{
-				delete (*it);
-			}
-			this->destroyTexturesQueue.clear();
-			this->statCurrentFrameRenderCalls = 0;
-			this->statLastFrameRenderCalls = 0;
-			this->statCurrentFrameTextureSwitches = 0;
-			this->statLastFrameTextureSwitches = 0;
-			this->statCurrentFrameVertexCount = 0;
-			this->statLastFrameVertexCount = 0;
-			this->statCurrentFrameTriangleCount = 0;
-			this->statLastFrameTriangleCount = 0;
-			this->statCurrentFrameLineCount = 0;
-			this->statLastFrameLineCount = 0;
-			if (!this->_deviceDestroy())
-			{
-				return false;
-			}
-			this->_deviceInit();
+			this->_addAsyncCommand(new DestroyCommand());
 			return true;
 		}
 		return false;
 	}
+
+	void RenderSystem::_systemDestroy()
+	{
+		hlog::writef(logTag, "Destroying rendersystem '%s'.", this->name.cStr());
+		this->renderMode = RenderMode::Normal;
+		if (this->renderHelper != NULL)
+		{
+			delete this->renderHelper;
+			this->renderHelper = NULL;
+		}
+		// first wait for queud textures to cancel
+		harray<Texture*> textures = this->getTextures();
+		if (this->hasAsyncTexturesQueued())
+		{
+			foreach (Texture*, it, textures)
+			{
+				if ((*it)->isAsyncLoadQueued())
+				{
+					(*it)->unload(); // to cancel all async loads
+				}
+			}
+			this->waitForAsyncTextures();
+		}
+		// creating a copy (again), because deleting a texture modifies this->textures
+		textures = this->getTextures();
+		foreach (Texture*, it, textures)
+		{
+			delete (*it);
+		}
+		this->state->reset();
+		this->deviceState->reset();
+		foreach (AsyncCommandQueue*, it, this->asyncCommandQueues)
+		{
+			delete (*it);
+		}
+		this->asyncCommandQueues.clear();
+		foreach (Texture*, it, this->destroyTexturesQueue)
+		{
+			delete (*it);
+		}
+		this->destroyTexturesQueue.clear();
+		this->statCurrentFrameRenderCalls = 0;
+		this->statLastFrameRenderCalls = 0;
+		this->statCurrentFrameTextureSwitches = 0;
+		this->statLastFrameTextureSwitches = 0;
+		this->statCurrentFrameVertexCount = 0;
+		this->statLastFrameVertexCount = 0;
+		this->statCurrentFrameTriangleCount = 0;
+		this->statLastFrameTriangleCount = 0;
+		this->statCurrentFrameLineCount = 0;
+		this->statLastFrameLineCount = 0;
+		this->_deviceDestroy();
+		this->_deviceInit();
+	}
 	
 	void RenderSystem::assignWindow(Window* window)
+	{
+		this->_addAsyncCommand(new AssignWindowCommand(window));
+	}
+
+	void RenderSystem::_systemAssignWindow(Window* window)
 	{
 		this->_deviceAssignWindow(window);
 		this->_deviceSetupCaps();
@@ -268,11 +281,16 @@ namespace april
 		grect viewport(0.0f, 0.0f, april::window->getSize());
 		this->setViewport(viewport);
 		this->setOrthoProjection(viewport);
-		this->_addAsyncCommand(new StateUpdateCommand(*this->state));
-		this->clear();
+		this->_updateDeviceState(this->state, true);
+		this->_deviceClear(true);
 	}
 
 	void RenderSystem::reset()
+	{
+		this->_addAsyncCommand(new ResetCommand(*this->state, april::window->getSize()));
+	}
+
+	void RenderSystem::_deviceReset()
 	{
 		hlog::write(logTag, "Resetting rendersystem.");
 		this->statCurrentFrameRenderCalls = 0;
@@ -285,21 +303,16 @@ namespace april
 		this->statLastFrameTriangleCount = 0;
 		this->statCurrentFrameLineCount = 0;
 		this->statLastFrameLineCount = 0;
-		this->_addAsyncCommand(new ResetCommand(*this->state, april::window->getSize()));
-	}
-
-	void RenderSystem::_deviceReset()
-	{
 	}
 
 	void RenderSystem::suspend()
 	{
-		hlog::write(logTag, "Suspending rendersystem.");
 		this->_addAsyncCommand(new SuspendCommand(*this->state));
 	}
 
 	void RenderSystem::_deviceSuspend()
 	{
+		hlog::write(logTag, "Suspending rendersystem.");
 	}
 
 	void RenderSystem::_deviceSetupDisplayModes()

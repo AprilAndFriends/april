@@ -513,11 +513,14 @@
   <Import Project="..\..\..\hltypes\msvc\vs2015\props-generic\build-defaults.props" />
   <Import Project="props\configuration.props" />
   <ItemGroup>
+    <ClCompile Include="..\..\src\async\AssignWindowCommand.cpp" />
     <ClCompile Include="..\..\src\async\AsyncCommand.cpp" />
     <ClCompile Include="..\..\src\async\AsyncCommandQueue.cpp" />
     <ClCompile Include="..\..\src\async\ClearColorCommand.cpp" />
     <ClCompile Include="..\..\src\async\ClearCommand.cpp" />
     <ClCompile Include="..\..\src\async\ClearDepthCommand.cpp" />
+    <ClCompile Include="..\..\src\async\CreateCommand.cpp" />
+    <ClCompile Include="..\..\src\async\DestroyCommand.cpp" />
     <ClCompile Include="..\..\src\async\PresentFrameCommand.cpp" />
     <ClCompile Include="..\..\src\async\RenderCommand.cpp" />
     <ClCompile Include="..\..\src\async\ResetCommand.cpp" />
@@ -628,12 +631,15 @@
     <ClInclude Include="..\..\include\april\VirtualKeyboard.h" />
     <ClInclude Include="..\..\include\april\Win32_main.h" />
     <ClInclude Include="..\..\include\april\Window.h" />
+    <ClInclude Include="..\..\src\async\AssignWindowCommand.h" />
     <ClInclude Include="..\..\src\async\AsyncCommand.h" />
     <ClInclude Include="..\..\src\async\AsyncCommandQueue.h" />
     <ClInclude Include="..\..\src\async\AsyncCommands.h" />
     <ClInclude Include="..\..\src\async\ClearColorCommand.h" />
     <ClInclude Include="..\..\src\async\ClearCommand.h" />
     <ClInclude Include="..\..\src\async\ClearDepthCommand.h" />
+    <ClInclude Include="..\..\src\async\CreateCommand.h" />
+    <ClInclude Include="..\..\src\async\DestroyCommand.h" />
     <ClInclude Include="..\..\src\async\PresentFrameCommand.h" />
     <ClInclude Include="..\..\src\async\RenderCommand.h" />
     <ClInclude Include="..\..\src\async\ResetCommand.h" />
