@@ -8,21 +8,23 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a present frame command.
+/// Defines a generic async command.
 
-#ifndef APRIL_PRESENT_FRAME_COMMAND_H
-#define APRIL_PRESENT_FRAME_COMMAND_H
-
-#include "RenderCommand.h"
+#ifndef APRIL_ASYNC_COMMAND_H
+#define APRIL_ASYNC_COMMAND_H
 
 namespace april
 {
-	class PresentFrameCommand : public RenderCommand
+	class AsyncCommand
 	{
 	public:
-		PresentFrameCommand(const RenderState& state);
+		AsyncCommand();
+		virtual ~AsyncCommand();
+
+		virtual bool isFinalizer() const { return false; }
+		virtual bool isUseState() const { return false; }
 		
-		void execute();
+		virtual void execute() = 0;
 
 	};
 	

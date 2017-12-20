@@ -13,17 +13,20 @@
 #ifndef APRIL_RENDER_COMMAND_H
 #define APRIL_RENDER_COMMAND_H
 
+#include "AsyncCommand.h"
 #include "RenderState.h"
 
 namespace april
 {
-	class RenderCommand
+	class RenderCommand : public AsyncCommand
 	{
 	public:
 		RenderCommand(const RenderState& state);
-		virtual ~RenderCommand();
+		~RenderCommand();
+
+		bool isUseState() const { return true; }
 		
-		virtual void execute();
+		void execute();
 
 	protected:
 		RenderState state;

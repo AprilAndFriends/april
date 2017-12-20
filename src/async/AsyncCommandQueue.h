@@ -8,24 +8,27 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a forced state update command.
+/// Defines a async command queue.
 
-#ifndef APRIL_STATE_UPDATE_COMMAND_H
-#define APRIL_STATE_UPDATE_COMMAND_H
+#ifndef APRIL_ASYNC_COMMAND_QUEUE_H
+#define APRIL_ASYNC_COMMAND_QUEUE_H
 
-#include <gtypes/Vector2.h>
+#include <hltypes/harray.h>
 
 #include "RenderCommand.h"
 
 namespace april
 {
-	class StateUpdateCommand : public RenderCommand
+	class AsyncCommand;
+
+	class AsyncCommandQueue
 	{
 	public:
-		StateUpdateCommand(const RenderState& state);
-		
-		void execute();
+		harray<AsyncCommand*> commands;
 
+		AsyncCommandQueue();
+		~AsyncCommandQueue();
+		
 	};
 	
 }

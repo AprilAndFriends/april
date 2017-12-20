@@ -161,7 +161,6 @@ namespace april
 		grect viewport(0.0f, 0.0f, (float)w, (float)h);
 		this->setViewport(viewport);
 		this->setOrthoProjection(viewport);
-		//this->_addRenderCommand(new RenderCommand(*this->state));
 		this->_updateDeviceState(this->state, true);
 		april::window->performUpdate(0.0f);
 		UpdateDelegate* updateDelegate = april::window->getUpdateDelegate();

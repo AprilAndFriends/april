@@ -22,8 +22,8 @@
 
 #include "april.h"
 #include "aprilUtil.h"
+#include "AsyncCommands.h"
 #include "Image.h"
-#include "RenderCommands.h"
 #include "RenderHelperLayered2D.h"
 #include "RenderSystem.h"
 #include "RenderState.h"
@@ -166,11 +166,11 @@ namespace april
 			this->options = options;
 			this->state->reset();
 			this->deviceState->reset();
-			foreach (RenderCommandQueue*, it, this->renderCommandsQueues)
+			foreach (AsyncCommandQueue*, it, this->asyncCommandQueues)
 			{
 				delete (*it);
 			}
-			this->renderCommandsQueues.clear();
+			this->asyncCommandQueues.clear();
 			foreach (Texture*, it, this->destroyTexturesQueue)
 			{
 				delete (*it);
@@ -230,11 +230,11 @@ namespace april
 			}
 			this->state->reset();
 			this->deviceState->reset();
-			foreach (RenderCommandQueue*, it, this->renderCommandsQueues)
+			foreach (AsyncCommandQueue*, it, this->asyncCommandQueues)
 			{
 				delete (*it);
 			}
-			this->renderCommandsQueues.clear();
+			this->asyncCommandQueues.clear();
 			foreach (Texture*, it, this->destroyTexturesQueue)
 			{
 				delete (*it);
@@ -268,7 +268,7 @@ namespace april
 		grect viewport(0.0f, 0.0f, april::window->getSize());
 		this->setViewport(viewport);
 		this->setOrthoProjection(viewport);
-		this->_addRenderCommand(new StateUpdateCommand(*this->state));
+		this->_addAsyncCommand(new StateUpdateCommand(*this->state));
 		this->clear();
 	}
 
@@ -285,7 +285,7 @@ namespace april
 		this->statLastFrameTriangleCount = 0;
 		this->statCurrentFrameLineCount = 0;
 		this->statLastFrameLineCount = 0;
-		this->_addRenderCommand(new ResetCommand(*this->state, april::window->getSize()), true);
+		this->_addAsyncCommand(new ResetCommand(*this->state, april::window->getSize()));
 	}
 
 	void RenderSystem::_deviceReset()
@@ -295,7 +295,7 @@ namespace april
 	void RenderSystem::suspend()
 	{
 		hlog::write(logTag, "Suspending rendersystem.");
-		this->_addRenderCommand(new SuspendCommand(*this->state), true);
+		this->_addAsyncCommand(new SuspendCommand(*this->state));
 	}
 
 	void RenderSystem::_deviceSuspend()
@@ -420,11 +420,11 @@ namespace april
 		harray<Texture*> destroyTexturesQueue = this->destroyTexturesQueue;
 		this->destroyTexturesQueue.clear();
 		lockTextures.release();
-		if (this->renderCommandsQueues.size() > 1)
+		if (this->asyncCommandQueues.size() > 1)
 		{
-			RenderCommandQueue* queue = this->renderCommandsQueues.removeFirst();
+			AsyncCommandQueue* queue = this->asyncCommandQueues.removeFirst();
 			lock.release();
-			foreach (RenderCommand*, it, queue->commands)
+			foreach (AsyncCommand*, it, queue->commands)
 			{
 				(*it)->execute();
 			}
@@ -853,22 +853,24 @@ namespace april
 		this->deviceState->useColor = state->useColor;
 	}
 
-	void RenderSystem::_addRenderCommand(RenderCommand* command, bool processAsap)
+	void RenderSystem::_addAsyncCommand(AsyncCommand* command)
 	{
+		if (command->isUseState())
+		{
+			this->state->viewportChanged = false;
+			this->state->modelviewMatrixChanged = false;
+			this->state->projectionMatrixChanged = false;
+		}
 		hmutex::ScopeLock lock(&this->renderMutex);
-		if (this->renderCommandsQueues.size() == 0)
+		if (this->asyncCommandQueues.size() == 0)
 		{
-			this->renderCommandsQueues += new RenderCommandQueue();
+			this->asyncCommandQueues += new AsyncCommandQueue();
 		}
-		this->renderCommandsQueues.last()->commands += command;
-		if (processAsap)
+		this->asyncCommandQueues.last()->commands += command;
+		if (command->isFinalizer())
 		{
-			this->renderCommandsQueues += new RenderCommandQueue();
+			this->asyncCommandQueues += new AsyncCommandQueue();
 		}
-		lock.release();
-		this->state->viewportChanged = false;
-		this->state->modelviewMatrixChanged = false;
-		this->state->projectionMatrixChanged = false;
 	}
 
 	void RenderSystem::clear(bool depth)
@@ -882,7 +884,7 @@ namespace april
 		{
 			depth = false;
 		}
-		this->_addRenderCommand(new ClearCommand(*this->state, depth));
+		this->_addAsyncCommand(new ClearCommand(*this->state, depth));
 	}
 
 	void RenderSystem::clear(Color color, bool depth)
@@ -891,14 +893,14 @@ namespace april
 		{
 			depth = false;
 		}
-		this->_addRenderCommand(new ClearColorCommand(*this->state, color, depth));
+		this->_addAsyncCommand(new ClearColorCommand(*this->state, color, depth));
 	}
 
 	void RenderSystem::clearDepth()
 	{
 		if (this->options.depthBuffer)
 		{
-			this->_addRenderCommand(new ClearDepthCommand(*this->state));
+			this->_addAsyncCommand(new ClearDepthCommand(*this->state));
 		}
 	}
 
@@ -1008,7 +1010,7 @@ namespace april
 		this->state->useTexture = false;
 		this->state->useColor = false;
 		this->state->systemColor = Color::White;
-		this->_addRenderCommand(new VertexRenderCommand<PlainVertex>(*this->state, renderOperation, vertices, count));
+		this->_addAsyncCommand(new VertexRenderCommand<PlainVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, const Color& color)
@@ -1021,7 +1023,7 @@ namespace april
 		this->state->useTexture = false;
 		this->state->useColor = false;
 		this->state->systemColor = color;
-		this->_addRenderCommand(new VertexRenderCommand<PlainVertex>(*this->state, renderOperation, vertices, count));
+		this->_addAsyncCommand(new VertexRenderCommand<PlainVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count)
@@ -1030,7 +1032,7 @@ namespace april
 		this->state->useTexture = true;
 		this->state->useColor = false;
 		this->state->systemColor = Color::White;
-		this->_addRenderCommand(new VertexRenderCommand<TexturedVertex>(*this->state, renderOperation, vertices, count));
+		this->_addAsyncCommand(new VertexRenderCommand<TexturedVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, const Color& color)
@@ -1043,7 +1045,7 @@ namespace april
 		this->state->useTexture = true;
 		this->state->useColor = false;
 		this->state->systemColor = color;
-		this->_addRenderCommand(new VertexRenderCommand<TexturedVertex>(*this->state, renderOperation, vertices, count));
+		this->_addAsyncCommand(new VertexRenderCommand<TexturedVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count)
@@ -1052,7 +1054,7 @@ namespace april
 		this->state->useTexture = false;
 		this->state->useColor = true;
 		this->state->systemColor = Color::White;
-		this->_addRenderCommand(new VertexRenderCommand<ColoredVertex>(*this->state, renderOperation, vertices, count));
+		this->_addAsyncCommand(new VertexRenderCommand<ColoredVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count)
@@ -1061,7 +1063,7 @@ namespace april
 		this->state->useTexture = true;
 		this->state->useColor = true;
 		this->state->systemColor = Color::White;
-		this->_addRenderCommand(new VertexRenderCommand<ColoredTexturedVertex>(*this->state, renderOperation, vertices, count));
+		this->_addAsyncCommand(new VertexRenderCommand<ColoredTexturedVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_drawRectInternal(cgrect rect, const Color& color)
@@ -1245,7 +1247,8 @@ namespace april
 
 	void RenderSystem::presentFrame()
 	{
-		this->_addRenderCommand(new PresentFrameCommand(*this->state), true);
+		this->_addAsyncCommand(new PresentFrameCommand(*this->state));
+		this->update(); // TODOx - remove this
 	}
 
 	void RenderSystem::_devicePresentFrame()

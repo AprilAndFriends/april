@@ -15,14 +15,16 @@
 
 #include <gtypes/Vector2.h>
 
-#include "RenderCommand.h"
+#include "StateUpdateCommand.h"
 
 namespace april
 {
-	class ResetCommand : public RenderCommand
+	class ResetCommand : public StateUpdateCommand
 	{
 	public:
 		ResetCommand(const RenderState& state, cgvec2 windowSize);
+
+		bool isFinalizer() const { return true; }
 		
 		void execute();
 

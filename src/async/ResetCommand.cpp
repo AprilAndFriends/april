@@ -15,7 +15,7 @@
 
 namespace april
 {
-	ResetCommand::ResetCommand(const RenderState& state, cgvec2 windowSize) : RenderCommand(state)
+	ResetCommand::ResetCommand(const RenderState& state, cgvec2 windowSize) : StateUpdateCommand(state)
 	{
 		this->windowSize = windowSize;
 	}
@@ -31,8 +31,8 @@ namespace april
 			april::rendersys->deviceState->texture->ensureLoaded();
 			april::rendersys->deviceState->texture->upload();
 		}
-		april::rendersys->setViewport(grect(0.0f, 0.0f, windowSize));
-		april::rendersys->_updateDeviceState(&this->state, true);
+		//april::rendersys->setViewport(grect(0.0f, 0.0f, this->windowSize));
+		StateUpdateCommand::execute();
 	}
 	
 }

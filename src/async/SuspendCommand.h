@@ -21,6 +21,8 @@ namespace april
 	{
 	public:
 		SuspendCommand(const RenderState& state);
+
+		bool isFinalizer() const { return true; }
 		
 		void execute();
 

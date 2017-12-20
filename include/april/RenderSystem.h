@@ -30,6 +30,8 @@
 
 namespace april
 {
+	class AsyncCommand;
+	class AsyncCommandQueue;
 	class ClearCommand;
 	class ClearColorCommand;
 	class ClearDepthCommand;
@@ -37,7 +39,6 @@ namespace april
 	class PixelShader;
 	class PresentFrameCommand;
 	class RenderCommand;
-	class RenderCommandQueue;
 	class RenderHelper;
 	class RenderState;
 	class ResetCommand;
@@ -591,8 +592,8 @@ namespace april
 		hmutex renderMutex;
 		/// @brief Special helper object that can handle rendering in a different way.
 		RenderHelper* renderHelper;
-		/// @brief Render command queue.
-		harray<RenderCommandQueue*> renderCommandsQueues;
+		/// @brief Async command queue.
+		harray<AsyncCommandQueue*> asyncCommandQueues;
 
 		/// @brief How many times a render call was called during this frame.
 		int statCurrentFrameRenderCalls;
@@ -647,8 +648,7 @@ namespace april
 		virtual void _updateDeviceState(RenderState* state, bool forceUpdate = false);
 		/// @brief Adds a render command to the queue.
 		/// @param[in] command The command to add.
-		/// @param[in] immediate Whether it needs to be processed ASAP rather than waiting for more commands to batch.
-		void _addRenderCommand(RenderCommand* command, bool processAsap = false);
+		void _addAsyncCommand(AsyncCommand* command);
 
 		/// @brief Initializes everything internal for the RenderSystem
 		virtual void _deviceInit() = 0;

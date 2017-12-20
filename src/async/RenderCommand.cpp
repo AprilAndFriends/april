@@ -6,23 +6,23 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#include <hltypes/harray.h>
-
 #include "RenderCommand.h"
-#include "RenderCommandQueue.h"
+#include "RenderSystem.h"
 
 namespace april
 {
-	RenderCommandQueue::RenderCommandQueue()
+	RenderCommand::RenderCommand(const RenderState& state) : AsyncCommand()
 	{
+		this->state = state;
 	}
 	
-	RenderCommandQueue::~RenderCommandQueue()
+	RenderCommand::~RenderCommand()
 	{
-		foreach (RenderCommand*, it, this->commands)
-		{
-			delete (*it);
-		}
+	}
+
+	void RenderCommand::execute()
+	{
+		april::rendersys->_updateDeviceState(&this->state);
 	}
 	
 }

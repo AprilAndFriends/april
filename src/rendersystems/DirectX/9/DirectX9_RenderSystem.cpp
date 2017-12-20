@@ -789,7 +789,6 @@ namespace april
 			this->_deviceSetup();
 			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 			this->d3dDevice->BeginScene();
-			this->_addRenderCommand(new RenderCommand(*this->state));
 			this->_updateDeviceState(this->state, true);
 			hlog::write(logTag, "Direct3D9 Device restored.");
 		}

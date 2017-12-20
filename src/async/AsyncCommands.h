@@ -8,17 +8,17 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Includes everything necessary for render commands.
+/// Includes everything necessary for async commands.
 
-#ifndef APRIL_RENDER_COMMANDS_H
-#define APRIL_RENDER_COMMANDS_H
+#ifndef APRIL_ASYNC_COMMANDS_H
+#define APRIL_ASYNC_COMMANDS_H
 
+#include "AsyncCommandQueue.h"
 #include "ClearCommand.h"
 #include "ClearDepthCommand.h"
 #include "ClearColorCommand.h"
 #include "PresentFrameCommand.h"
 #include "RenderCommand.h"
-#include "RenderCommandQueue.h"
 #include "ResetCommand.h"
 #include "StateUpdateCommand.h"
 #include "SuspendCommand.h"

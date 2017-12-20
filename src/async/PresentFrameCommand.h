@@ -8,27 +8,24 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a render command queue.
+/// Defines a present frame command.
 
-#ifndef APRIL_RENDER_COMMAND_QUEUE_H
-#define APRIL_RENDER_COMMAND_QUEUE_H
-
-#include <hltypes/harray.h>
+#ifndef APRIL_PRESENT_FRAME_COMMAND_H
+#define APRIL_PRESENT_FRAME_COMMAND_H
 
 #include "RenderCommand.h"
 
 namespace april
 {
-	class RenderCommand;
-
-	class RenderCommandQueue
+	class PresentFrameCommand : public RenderCommand
 	{
 	public:
-		harray<RenderCommand*> commands;
+		PresentFrameCommand(const RenderState& state);
 
-		RenderCommandQueue();
-		~RenderCommandQueue();
+		bool isFinalizer() const { return true; }
 		
+		void execute();
+
 	};
 	
 }

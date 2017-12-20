@@ -217,7 +217,7 @@ namespace april
 		const GLubyte* extensionsString = glGetString(GL_EXTENSIONS);
 		if (extensionsString != NULL)
 		{
-			hstr extensions = (const char*)extensionsString;
+			extensions = (const char*)extensionsString;
 		}
 		hlog::write(logTag, "Extensions supported: " + extensions);
 #if defined(_IOS) || defined(_WINRT) // iOS devices support limited NPOT textures as per device specification since iPhone 3G S

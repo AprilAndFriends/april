@@ -3,7 +3,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <PreprocessorDefinitions>BUILDING_APRIL;APRIL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../../include/april;../../src/util;../../src/rendercommands;../../src/windowsystems/WinUWP;../../src/rendersystems/DirectX;../../src/rendersystems/DirectX/12;../../src/rendersystems/OpenGL;../../src/rendersystems/OpenGL/GL;../../src/rendersystems/OpenGL/GL/ES1;../../src/rendersystems/OpenGL/GLES;../../src/rendersystems/OpenGL/GLES/2;../../../hltypes/include;../../../gtypes/include;../../lib/jpeg;../../lib/png;../../../hltypes/lib/zlib;../../../khronos;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../include/april;../../src/util;../../src/async;../../src/windowsystems/WinUWP;../../src/rendersystems/DirectX;../../src/rendersystems/DirectX/12;../../src/rendersystems/OpenGL;../../src/rendersystems/OpenGL/GL;../../src/rendersystems/OpenGL/GL/ES1;../../src/rendersystems/OpenGL/GLES;../../src/rendersystems/OpenGL/GLES/2;../../../hltypes/include;../../../gtypes/include;../../lib/jpeg;../../lib/png;../../../hltypes/lib/zlib;../../../khronos;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
