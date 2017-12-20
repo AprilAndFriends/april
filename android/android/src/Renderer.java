@@ -53,7 +53,7 @@ public class Renderer implements android.opengl.GLSurfaceView.Renderer
 	
 	public void onDrawFrame(GL10 unused)
 	{
-		if (!NativeInterface.render())
+		if (!NativeInterface.update())
 		{
 			NativeInterface.activity.finish();
 		}

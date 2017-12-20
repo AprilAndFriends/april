@@ -28,7 +28,7 @@
 extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)
 {
 	setlocale(LC_ALL, __APRIL_DEFAULT_LOCALE); // make sure the app uses a neutral locale that includes all specifics for all locales
-	return april::__JNI_OnLoad(&april_init, &april_destroy, vm, reserved);
+	return april::__JNI_OnLoad(&__aprilApplicationInit, &__aprilApplicationDestroy, vm, reserved);
 }
 #endif
 #endif

@@ -40,9 +40,9 @@
 
 /// @brief This function is called after the platform application has initialized. The developer implements this.
 /// @param[in] args An array of arguments.
-extern void april_init(const harray<hstr>& args);
+extern void __aprilApplicationInit();
 /// @brief This function is called before the platform application exits. The developer implements this.
-extern void april_destroy();
+extern void __aprilApplicationDestroy();
 
 namespace april
 {
@@ -57,23 +57,21 @@ namespace april
 	aprilFnExport void __unlockSingleInstanceMutex();
 #ifdef _ANDROID
 	/// @brief This function is called when the .so file is loaded.
-	/// @param[in] anAprilInit A pointer to april_init().
-	/// @param[in] anAprilDestroy A pointer to april_destroy().
+	/// @param[in] aprilApplicationInit A pointer to __aprilApplicationInit().
+	/// @param[in] aprilApplicationDestroy A pointer to __aprilApplicationDestroy().
 	/// @param[in] vm A pointer to the Java VM.
 	/// @param[in] reserved Reserved data.
 	/// @note This is used internally only.
-	aprilFnExport jint __JNI_OnLoad(void(*anAprilInit)(const harray<hstr>&), void(*anAprilDestroy)(), JavaVM* vm, void* reserved);
+	aprilFnExport jint __JNI_OnLoad(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)(), JavaVM* vm, void* reserved);
+#else
+	/// @brief A special main loop function that serves as general entry point.
+	/// @param[in] aprilApplicationInit A pointer to __aprilApplicationInit().
+	/// @param[in] aprilApplicationDestroy A pointer to __aprilApplicationDestroy().
+	/// @param[in] argc Number of arguments the application was run with.
+	/// @param[in] argv The arguments the application was run with.
+	/// @note This is used internally only.
+	aprilExport int __mainStandard(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)(), int argc, char** argv);
 #endif
 }
-
-#ifndef _ANDROID
-/// @brief A special main loop function that serves as general entry point.
-/// @param[in] anAprilInit Initialization function.
-/// @param[in] anAprilDestroy Cleanup function.
-/// @param[in] argc Number of arguments the application was run with.
-/// @param[in] argv The arguments the application was run with.
-/// @note This is used internally only.
-aprilExport int __april_main(void(*anAprilInit)(const harray<hstr>&), void(*anAprilDestroy)(), int argc, char** argv);
-#endif
 
 #endif

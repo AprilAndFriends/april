@@ -513,6 +513,7 @@
   <Import Project="..\..\..\hltypes\msvc\vs2015\props-generic\build-defaults.props" />
   <Import Project="props\configuration.props" />
   <ItemGroup>
+    <ClCompile Include="..\..\src\Application.cpp" />
     <ClCompile Include="..\..\src\async\AssignWindowCommand.cpp" />
     <ClCompile Include="..\..\src\async\AsyncCommand.cpp" />
     <ClCompile Include="..\..\src\async\AsyncCommandQueue.cpp" />
@@ -601,6 +602,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\april\androidUtilJNI.h" />
     <ClInclude Include="..\..\include\april\Android_main.h" />
+    <ClInclude Include="..\..\include\april\Application.h" />
     <ClInclude Include="..\..\include\april\april.h" />
     <ClInclude Include="..\..\include\april\aprilExport.h" />
     <ClInclude Include="..\..\include\april\aprilUtil.h" />

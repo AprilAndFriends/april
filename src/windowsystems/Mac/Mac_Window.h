@@ -43,8 +43,7 @@ namespace april
 		void setCursor(Cursor* value);
 		void setCursorVisible(bool visible);
 
-		void presentFrame();
-		bool updateOneFrame();
+		bool update(float timeDelta);
 		void terminateMainLoop();
 
 		void setResolution(int w, int h, bool fullscreen);
@@ -81,6 +80,8 @@ namespace april
 	protected:
 		Cursor* _createCursor(bool fromResource);
         harray<QueuedEvent*> queuedEvents;
+		
+		void _presentFrame();
 		
 	};
 	

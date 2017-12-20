@@ -127,6 +127,10 @@ namespace april
 		return 0;
 	}
 
+	void WinRT_Window::_presentFrame()
+	{
+	}
+
 	void WinRT_Window::setResolution(int w, int h, bool fullscreen)
 	{
 	}
@@ -141,10 +145,6 @@ namespace april
 		this->_setRenderSystemResolution();
 	}
 	
-	void WinRT_Window::presentFrame()
-	{
-	}
-
 	void WinRT_Window::terminateMainLoop()
 	{
 		this->running = false;

@@ -32,7 +32,7 @@ namespace april
 {
 	extern void* javaVM;
 
-	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), manualPresentFrameEnabled(true), forcedFocus(false)
+	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), forcedFocus(false)
 	{
 		this->name = april::WindowType::AndroidJNI.getName();
 		initAndroidKeyMap();
@@ -61,20 +61,7 @@ namespace april
 		return javaVM;
 	}
 
-	void AndroidJNI_Window::enterMainLoop()
-	{
-		hlog::error(logTag, "Using enterMainLoop() on Android JNI is not valid!");
-		exit(-1);
-	}
-	
-	void AndroidJNI_Window::presentFrame()
-	{
-		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodSwapBuffers, "swapBuffers", _JARGS(_JVOID, ));
-		env->CallStaticVoidMethod(classNativeInterface, methodSwapBuffers);
-		env->PopLocalFrame(NULL);
-	}
-
-	bool AndroidJNI_Window::updateOneFrame()
+	bool AndroidJNI_Window::update(float timeDelta)
 	{
 		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 		jmethodID methodSetSensorsEnabled = env->GetStaticMethodID(classNativeInterface, "setSensorsEnabled", _JARGS(_JVOID, _JBOOL _JBOOL _JBOOL _JBOOL _JBOOL));
@@ -96,7 +83,14 @@ namespace april
 			hlog::error(APRIL_JNI_LOG_TAG, "Could not find method, check definition: setSensorsEnabled");
 		}
 		env->PopLocalFrame(NULL);
-		return Window::updateOneFrame();
+		return Window::update(timeDelta);
+	}
+
+	void AndroidJNI_Window::_presentFrame()
+	{
+		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodSwapBuffers, "swapBuffers", _JARGS(_JVOID, ));
+		env->CallStaticVoidMethod(classNativeInterface, methodSwapBuffers);
+		env->PopLocalFrame(NULL);
 	}
 
 	void AndroidJNI_Window::queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index)
@@ -123,12 +117,9 @@ namespace april
 	
 	void AndroidJNI_Window::hideVirtualKeyboard()
 	{
-		if (this->manualPresentFrameEnabled)
-		{
-			APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodHideVirtualKeyboard, "hideVirtualKeyboard", _JARGS(_JVOID, ));
-			env->CallStaticVoidMethod(classNativeInterface, methodHideVirtualKeyboard);
-			env->PopLocalFrame(NULL);
-		}
+		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodHideVirtualKeyboard, "hideVirtualKeyboard", _JARGS(_JVOID, ));
+		env->CallStaticVoidMethod(classNativeInterface, methodHideVirtualKeyboard);
+		env->PopLocalFrame(NULL);
 	}
 
 	void AndroidJNI_Window::handleFocusChangeEvent(bool focused)

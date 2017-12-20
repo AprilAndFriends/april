@@ -275,13 +275,8 @@ namespace april
 		HL_DEFINE_IS(focused, Focused);
 		/// @brief Whether the Window is running.
 		HL_DEFINE_IS(running, Running);
-		/// @brief The current FPS.
-		HL_DEFINE_GETSET(int, fps, Fps);
-		/// @brief The FPS resolution.
-		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
-		/// @brief The maximum allowed time-delta between frames.
-		/// @note Limiting this makes sense, because on weak hardware configurations it allows that large frameskips don't result in too large time skips.
-		HL_DEFINE_GETSET(float, timeDeltaMaxLimit, TimeDeltaMaxLimit);
+		/// @brief Whether presentFrame() will do proper processing.
+		HL_DEFINE_ISSET(presentFrameEnabled, PresentFrameEnabled);
 		/// @brief The system cursor.
 		HL_DEFINE_GET(Cursor*, cursor, Cursor);
 		/// @brief The cursor position.
@@ -377,11 +372,12 @@ namespace april
 
 		/// @brief Flushes the currently rendered data to the backbuffer for display.
 		/// @note Usually this doesn't need to be called manually.
-		virtual void presentFrame() = 0;
+		void presentFrame();
 
 		/// @brief Updates the entire application by one frame.
+		/// @param[in] timeDelta Time since last frame.
 		/// @return True if the application should continue to run.
-		virtual bool updateOneFrame();
+		virtual bool update(float timeDelta);
 		/// @brief Processed queued system events.
 		virtual void checkEvents();
 		/// @brief Aborts execution and forces the application to exit after the current frame is complete.
@@ -514,12 +510,9 @@ namespace april
 		/// @note This is mostly used internally, but it can also be used to simulate input.
 		virtual void queueMotionEvent(MotionInputEvent::Type type, cgvec3 motionVector);
 
-		/// @brief Starts the main loop.
-		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april_main implementation is used.
-		virtual void enterMainLoop();
 		/// @brief Performs the update of one frame.
 		/// @param[in] timeDelta Time that has passed since the last frame.
-		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april_main implementation is used.
+		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.
 		virtual bool performUpdate(float timeDelta);
 		
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -558,23 +551,15 @@ namespace april
 		bool running;
 		/// @brief Whether execution is currently paused.
 		bool paused;
+		/// @brief Whether presentFrame() will do proper processing.
+		/// @note Usually used by Application since some OS implementations do this automatically.
+		bool presentFrameEnabled;
 		/// @brief Previous width.
 		/// @note Used when restoring the window size after switching from fullscreen to windowed.
 		int lastWidth;
 		/// @brief Previous height.
 		/// @note Used when restoring the window size after switching from fullscreen to windowed.
 		int lastHeight;
-		/// @brief FPS of the last mesaure.
-		int fps;
-		/// @brief Current counter for FPS calculation.
-		int fpsCount;
-		/// @brief Current timer for FPS calculation.
-		float fpsTimer;
-		/// @brief FPS update resolution.
-		float fpsResolution;
-		/// @brief Maximum allowed time-delta that are propagated into the UpdateDelegate.
-		/// @note Limiting this makes sense, because on weak hardware configurations it allows that large frameskips don't result in too large time skips.
-		float timeDeltaMaxLimit;
 		/// @brief Current cursor position.
 		gvec2 cursorPosition;
 		/// @brief Current system cursor.
@@ -605,8 +590,6 @@ namespace april
 		harray<ControllerInputEvent> controllerEvents;
 		/// @brief Queued motion events.
 		harray<MotionInputEvent> motionEvents;
-		/// @brief The Timer object used for timing purposes.
-		Timer timer;
 		/// @brief The controller emulation keys.
 		/// @note This is useful when testing controller input functionality without actually using a controller.
 		hmap<Key, Button> controllerEmulationKeys;
@@ -640,9 +623,6 @@ namespace april
 		/// @return The created Cursor object or NULL if failed.
 		Cursor* _createCursorFromSource(bool fromResource, chstr filename);
 
-		/// @brief Calculates the time passed since the render of the last frame using a Timer.
-		/// @return The time passed since the render of the last frame.
-		virtual float _calcTimeSinceLastFrame();
 		/// @brief Calls _setRenderSystemResolution() with the current Window parameters.
 		/// @see _setRenderSystemResolution(int w, int h, bool fullscreen)
 		void _setRenderSystemResolution();
@@ -658,6 +638,9 @@ namespace april
 		virtual Cursor* _createCursor(bool fromResource);
 		/// @brief Sets the internal system cursor.
 		virtual void _refreshCursor();
+
+		/// @brief Flushes the currently rendered data to the backbuffer for display.
+		virtual void _presentFrame() = 0;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 		// TODOaa - refactor or maybe even remove this

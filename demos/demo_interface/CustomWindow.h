@@ -25,8 +25,7 @@ public:
 	int getHeight() const;
 	void* getBackendId() const;
 
-	bool updateOneFrame();
-	void presentFrame();
+	bool update(float timeDelta);
 	void checkEvents();
 
 	static LRESULT CALLBACK _processCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -34,6 +33,7 @@ public:
 protected:
 	HWND hWnd;
 
+	void _presentFrame();
+	
 };
-
 #endif

@@ -41,8 +41,7 @@ namespace april
 		
 		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		// implementations
-		void enterMainLoop();
-		bool updateOneFrame();
+		bool update(float timeDelta);
 		void destroyWindow();
 		void setCursorVisible(bool value);
 		bool isCursorVisible() const;
@@ -50,7 +49,6 @@ namespace april
 		int getHeight() const;
 		void setTitle(chstr value);
 		gtypes::Vector2 getCursorPosition() const;
-		void presentFrame();
 		void* getBackendId() const;
 		void checkEvents();
 		bool isVirtualKeyboardVisible() const;
@@ -93,6 +91,8 @@ namespace april
 		void (*exitFunction)(int);
 		
 		void callTouchCallback();
+		
+		void _presentFrame();
 		
 	};
 	

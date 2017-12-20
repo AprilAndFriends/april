@@ -136,17 +136,17 @@ namespace april
 		this->_setRenderSystemResolution(w, h, fullscreen);
 	}
 
-	void WinUWP_Window::presentFrame()
-	{
-	}
-
-	bool WinUWP_Window::updateOneFrame()
+	bool WinUWP_Window::update(float timeDelta)
 	{
 		ID3D12CommandQueue* commandQueue = DX12_RENDERSYS->getCommandQueue();
-		PIXBeginEvent(commandQueue, 0, L"updateOneFrame()");
-		bool result = Window::updateOneFrame();
+		PIXBeginEvent(commandQueue, 0, L"update()");
+		bool result = Window::update(timeDelta);
 		PIXEndEvent(commandQueue);
 		return result;
+	}
+
+	void WinUWP_Window::_presentFrame()
+	{
 	}
 
 	void WinUWP_Window::checkEvents()

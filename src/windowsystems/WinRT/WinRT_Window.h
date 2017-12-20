@@ -49,7 +49,6 @@ namespace april
 		void* getBackendId() const;
 
 		void setResolution(int w, int h, bool fullscreen);
-		void presentFrame();
 		hstr findCursorFile(chstr filename) const;
 		
 		void terminateMainLoop();
@@ -67,9 +66,10 @@ namespace april
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor();
 
+		void _presentFrame();
+		
 	};
 	
 }
-
 #endif
 #endif

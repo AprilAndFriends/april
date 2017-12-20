@@ -151,13 +151,7 @@ namespace april
 		this->destroy();
 	}
 		
-	void iOS_Window::enterMainLoop()
-	{
-		hlog::write(april::logTag, "Fatal error: Using enterMainLoop on iOS!");
-		exit(-1);
-	}
-	
-	bool iOS_Window::updateOneFrame()
+	bool iOS_Window::update(float timeDelta)
 	{
 		// call input events
 		InputEvent* e;
@@ -180,7 +174,7 @@ namespace april
 			}
 			this->keyboardRequest = 0;
 		}
-		return Window::updateOneFrame();
+		return Window::update(timeDelta);
 	}
 
 	void iOS_Window::destroyWindow()
@@ -269,7 +263,12 @@ namespace april
 		// no effect on iOS
 	}
 	
-	void iOS_Window::presentFrame()
+	void* iOS_Window::getBackendId() const
+	{
+		return viewcontroller;
+	}
+
+	void iOS_Window::_presentFrame()
 	{
 		if (this->firstFrameDrawn)
 		{
@@ -284,11 +283,6 @@ namespace april
 			}
 			this->firstFrameDrawn = true;
 		}
-	}
-
-	void* iOS_Window::getBackendId() const
-	{
-		return viewcontroller;
 	}
 
 	void iOS_Window::checkEvents()

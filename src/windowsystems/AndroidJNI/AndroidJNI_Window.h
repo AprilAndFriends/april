@@ -37,12 +37,9 @@ namespace april
 		inline void setCursorVisible(bool value) { }
 		HL_DEFINE_GET(int, width, Width);
 		HL_DEFINE_GET(int, height, Height);
-		HL_DEFINE_ISSET(manualPresentFrameEnabled, ManualPresentFrameEnabled);
 		void* getBackendId() const;
 		
-		void enterMainLoop();
-		void presentFrame();
-		bool updateOneFrame();
+		bool update(float timeDelta);
 		
 		void queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index);
 		void queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
@@ -56,12 +53,13 @@ namespace april
 	protected:
 		int width;
 		int height;
-		bool manualPresentFrameEnabled;
 		bool forcedFocus;
 
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor() { }
 		
+		void _presentFrame();
+
 	};
 
 }

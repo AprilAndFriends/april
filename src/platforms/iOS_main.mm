@@ -14,29 +14,30 @@
 namespace april
 {
 	extern harray<hstr> args;
-}
 
-int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
-{	
-	if (argv != NULL && argv[0] != NULL)
-	{
-		for_iter (i, 0, argc)
+	int __mainStandard(void (*aprilApplicationInit)(const harray<hstr>&), void (*aprilApplicationDestroy)(), int argc, char** argv)
+	{	
+		if (argv != NULL && argv[0] != NULL)
 		{
-			april::args += argv[i];
+			for_iter (i, 0, argc)
+			{
+				april::args += argv[i];
+			}
 		}
+		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+		// limit GCD from spawning too much threads
+		[[NSOperationQueue mainQueue] setMaxConcurrentOperationCount:1];
+		[[NSOperationQueue currentQueue] setMaxConcurrentOperationCount:1];
+		
+		NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
+		NSString* appDelegateClassName = [userDefaults objectForKey:@"appDelegateClassName"];
+		if (appDelegateClassName == nil)
+		{
+			appDelegateClassName = NSStringFromClass([ApriliOSAppDelegate class]);
+		}
+		int result = UIApplicationMain(argc, argv, nil, appDelegateClassName);
+		[pool drain];
+		return result;
 	}
-	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-	// limit GCD from spawning too much threads
-	[[NSOperationQueue mainQueue] setMaxConcurrentOperationCount:1];
-	[[NSOperationQueue currentQueue] setMaxConcurrentOperationCount:1];
 	
-	NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString* appDelegateClassName = [userDefaults objectForKey:@"appDelegateClassName"];
-	if (appDelegateClassName == nil)
-	{
-		appDelegateClassName = NSStringFromClass([ApriliOSAppDelegate class]);
-	}
-	int result = UIApplicationMain(argc, argv, nil, appDelegateClassName);
-	[pool drain];
-	return result;
 }

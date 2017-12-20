@@ -20,6 +20,7 @@
 #include "AndroidJNI_Keys.h"
 #include "AndroidJNI_Window.h"
 #include "androidUtilJNI.h"
+#include "Application.h"
 #include "april.h"
 #include "Keys.h"
 #include "main_base.h"
@@ -44,10 +45,7 @@ namespace april
 {
 	extern void* javaVM;
 	extern void (*dialogCallback)(MessageBoxButton);
-	void (*aprilInit)(const harray<hstr>&) = NULL;
-	void (*aprilDestroy)() = NULL;
 	extern jobject classLoader;
-	extern harray<hstr> args;
 	
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jstring jDataPath, jstring jForcedArchivePath)
 	{
@@ -81,6 +79,7 @@ namespace april
 	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray jArgs)
 	{
 		int length = env->GetArrayLength(jArgs);
+		harray<hstr> args;
 		jstring string = NULL;
 		for_iter (i, 0, length)
 		{
@@ -93,39 +92,33 @@ namespace april
 		{
 			hlog::debug(logTag, "    " + (*it));
 		}
-		(*aprilInit)(args);
+		april::application->init(args);
 	}
 	
 	void JNICALL _JNI_destroy(JNIEnv* env, jclass classe)
 	{
-		(*aprilDestroy)();
+		april::application->destroy();
+		delete april::application;
+		april::application = NULL;
 	}
 	
-	bool JNICALL _JNI_render(JNIEnv* env, jclass classe)
+	bool JNICALL _JNI_update(JNIEnv* env, jclass classe)
 	{
-		bool result = true;
-		if (april::window != NULL)
+		if (april::application != NULL)
 		{
+			// using a try-catch block here just to make sure crashes are logged properly
 			try
 			{
-				result = april::window->updateOneFrame();
-				PROTECTED_RENDERSYS_CALL(update());
-				UpdateDelegate* updateDelegate = april::window->getUpdateDelegate();
-				if (updateDelegate != NULL)
-				{
-					// during this code the presentFrame() calls from the window must be ignored, but the render system still has to call them
-					ANDROID_WINDOW->setManualPresentFrameEnabled(false);
-					updateDelegate->onPresentFrame();
-					ANDROID_WINDOW->setManualPresentFrameEnabled(true);
-				}
+				april::application->update();
 			}
 			catch (hexception& e)
 			{
 				hlog::error("FATAL", e.getFullMessage());
 				throw e;
 			}
+			return april::application->isRunning();
 		}
-		return result;
+		return false;
 	}
 	
 	void JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
@@ -301,7 +294,7 @@ namespace april
 		{"setVariables",						_JARGS(_JVOID, _JSTR _JSTR),					(void*)&april::_JNI_setVariables				},
 		{"init",								_JARGS(_JVOID, _JARR(_JSTR)),					(void*)&april::_JNI_init						},
 		{"destroy",								_JARGS(_JVOID, ),								(void*)&april::_JNI_destroy						},
-		{"render",								_JARGS(_JBOOL, ),								(void*)&april::_JNI_render						},
+		{"update",								_JARGS(_JBOOL, ),								(void*)&april::_JNI_update						},
 		{"onKeyDown",							_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onKeyDown					},
 		{"onKeyUp",								_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onKeyUp						},
 		{"onChar",								_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onChar						},
@@ -332,11 +325,9 @@ namespace april
 		{"onDialogCancel",						_JARGS(_JVOID, ),								(void*)&april::_JNI_onDialogCancel				}
 	};
 	
-	jint __JNI_OnLoad(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), JavaVM* vm, void* reserved)
+	jint __JNI_OnLoad(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)(), JavaVM* vm, void* reserved)
 	{
 		april::javaVM = (void*)vm;
-		april::aprilInit = anAprilInit;
-		april::aprilDestroy = anAprilDestroy;
 		JNIEnv* env = NULL;
 		if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK)
 		{
@@ -347,6 +338,7 @@ namespace april
 		{
 			return -1;
 		}
+		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
 		jclass classClass = env->FindClass("java/lang/Class");
 		jmethodID methodGetClassLoader = env->GetMethodID(classClass, "getClassLoader", _JARGS(_JCLASS("java/lang/ClassLoader"), ));
 		jobject classLoader = env->CallObjectMethod(classNativeInterface, methodGetClassLoader);

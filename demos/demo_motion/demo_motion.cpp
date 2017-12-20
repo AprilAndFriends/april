@@ -163,7 +163,7 @@ static UpdateDelegate* updateDelegate = NULL;
 static SystemDelegate* systemDelegate = NULL;
 static MotionDelegate* motionDelegate = NULL;
 
-void april_init(const harray<hstr>& args)
+void __aprilApplicationInit()
 {
 #ifdef __APPLE__
 	// On MacOSX, the current working directory is not set by
@@ -234,7 +234,7 @@ void april_init(const harray<hstr>& args)
 	balls.add(Ball());
 }
 
-void april_destroy()
+void __aprilApplicationDestroy()
 {
 	april::window->setCursor(NULL);
 	april::window->destroyCursor(cursor);

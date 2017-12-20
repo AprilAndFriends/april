@@ -67,7 +67,7 @@ public class NativeInterface
 	
 	public static native void setVariables(String dataPath, String forcedArchivePath);
 	public static native void init(String[] args);
-	public static native boolean render();
+	public static native boolean update();
 	public static native void destroy();
 	public static native void onKeyDown(int keyCode, int charCode);
 	public static native void onKeyUp(int keyCode);

@@ -210,7 +210,7 @@ namespace april
 		SDL_SetWindowFullscreen(this->window, fullscreen ? 1 : 0);
 	}
 	
-	bool SDL_Window::updateOneFrame()
+	bool SDL_Window::update(timeDelta)
 	{
 		// check if we should quit...
 		if (gAprilShouldInvokeQuitCallback != 0)
@@ -222,9 +222,23 @@ namespace april
 		}
 		// first process sdl events
 		this->checkEvents();
-		return Window::updateOneFrame();
+		return Window::update(timeDelta);
 	}
 
+	void SDL_Window::_presentFrame()
+	{
+#if defined(_WIN32) && defined(_OPENGL)
+		harray<hstr> renderSystems;
+		renderSystems += april::RenderSystemType::OpenGL1.getName();
+		renderSystems += april::RenderSystemType::OpenGLES1.getName();
+		renderSystems += april::RenderSystemType::OpenGLES2.getName();
+		if (renderSystems.has(april::rendersys->getName()))
+		{
+			SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());
+		}
+#endif
+	}
+	
 	void SDL_Window::checkEvents()
 	{
 		SDL_Event sdlEvent;
@@ -312,20 +326,6 @@ namespace april
 		// TODO - is this still needed in SDL 2?
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
 		platform_cursorVisibilityUpdate();
-#endif
-	}
-	
-	void SDL_Window::presentFrame()
-	{
-#if defined(_WIN32) && defined(_OPENGL)
-		harray<hstr> renderSystems;
-		renderSystems += april::RenderSystemType::OpenGL1.getName();
-		renderSystems += april::RenderSystemType::OpenGLES1.getName();
-		renderSystems += april::RenderSystemType::OpenGLES2.getName();
-		if (renderSystems.has(april::rendersys->getName()))
-		{
-			SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());
-		}
 #endif
 	}
 	
@@ -508,22 +508,5 @@ namespace april
 		}
 	}
 	
-	float SDL_Window::_calcTimeSinceLastFrame()
-	{
-		static unsigned int x = SDL_GetTicks();
-		float timeDelta = (SDL_GetTicks() - x) * 0.001f;
-		x = SDL_GetTicks();
-		if (timeDelta > 0.5f)
-		{
-			timeDelta = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
-		}
-		if (!this->focused)
-		{
-			timeDelta = 0.0f;
-		}
-		return timeDelta;
-	}
-		
 }
-
 #endif

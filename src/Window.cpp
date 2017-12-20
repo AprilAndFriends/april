@@ -175,14 +175,10 @@ namespace april
 		this->fullscreen = true;
 		this->focused = true;
 		this->running = true;
+		this->presentFrameEnabled = true;
 		this->paused = false;
 		this->lastWidth = 0;
 		this->lastHeight = 0;
-		this->fps = 0;
-		this->fpsCount = 0;
-		this->fpsTimer = 0.0f;
-		this->fpsResolution = 0.5f;
-		this->timeDeltaMaxLimit = 0.1f;
 		this->cursor = NULL;
 		this->cursorVisible = false;
 		this->virtualKeyboardVisible = false;
@@ -229,10 +225,6 @@ namespace april
 					this->lastHeight = hround(info.displayResolution.y * 0.6666667f);
 				}
 			}
-			this->fps = 0;
-			this->fpsCount = 0;
-			this->fpsTimer = 0.0f;
-			this->fpsResolution = 0.5f;
 			this->multiTouchActive = false;
 			this->cursor = NULL;
 			this->virtualKeyboardVisible = false;
@@ -251,10 +243,6 @@ namespace april
 			this->setVirtualKeyboard(NULL);
 			this->created = false;
 			this->paused = false;
-			this->fps = 0;
-			this->fpsCount = 0;
-			this->fpsTimer = 0.0f;
-			this->fpsResolution = 0.5f;
 			this->multiTouchActive = false;
 			this->cursor = NULL;
 			this->virtualKeyboardVisible = false;
@@ -424,33 +412,16 @@ namespace april
 		}
 	}
 	
-	void Window::enterMainLoop()
+	void Window::presentFrame()
 	{
-		this->fps = 0;
-		this->fpsCount = 0;
-		this->fpsTimer = 0.0f;
-		this->running = true;
-		while (this->running)
+		if (this->presentFrameEnabled)
 		{
-			if (!this->updateOneFrame())
-			{
-				this->running = false;
-			}
-			if (april::rendersys != NULL)
-			{
-				april::rendersys->update();
-			}
-			if (this->updateDelegate != NULL)
-			{
-				this->updateDelegate->onPresentFrame();
-			}
+			this->_presentFrame();
 		}
 	}
 
-	bool Window::updateOneFrame()
+	bool Window::update(float timeDelta)
 	{
-		TextureAsync::update();
-		float timeDelta = this->_calcTimeSinceLastFrame();
 		if (!this->focused)
 		{
 			hthread::sleep(40.0f);
@@ -549,26 +520,6 @@ namespace april
 		if (this->paused)
 		{
 			timeDelta = 0.0f;
-		}
-		this->fpsTimer += timeDelta;
-		if (this->timeDeltaMaxLimit > 0.0f)
-		{
-			timeDelta = hmin(timeDelta, this->timeDeltaMaxLimit);
-		}
-		if (this->fpsTimer > 0.0f)
-		{
-			++this->fpsCount;
-			if (this->fpsTimer >= this->fpsResolution)
-			{
-				this->fps = hceil(this->fpsCount / this->fpsTimer);
-				this->fpsCount = 0;
-				this->fpsTimer = 0.0f;
-			}
-		}
-		else
-		{
-			this->fps = 0;
-			this->fpsCount = 0;
 		}
 		// returning true: continue execution
 		// returning false: abort execution
@@ -875,16 +826,6 @@ namespace april
 	void Window::queueMotionEvent(Window::MotionInputEvent::Type type, cgvec3 motionVector)
 	{
 		this->motionEvents += MotionInputEvent(type, motionVector);
-	}
-
-	float Window::_calcTimeSinceLastFrame()
-	{
-		float timeDelta = this->timer.diff(true);
-		if (!this->focused)
-		{
-			timeDelta = 0.0f;
-		}
-		return timeDelta;
 	}
 
 	hstr Window::findCursorResource(chstr filename) const

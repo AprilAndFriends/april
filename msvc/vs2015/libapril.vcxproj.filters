@@ -368,6 +368,9 @@
     <ClCompile Include="..\..\src\async\AssignWindowCommand.cpp">
       <Filter>Source Files\async</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -615,6 +618,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\async\AssignWindowCommand.h">
       <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\Application.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

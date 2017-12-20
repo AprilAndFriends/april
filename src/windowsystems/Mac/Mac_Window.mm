@@ -372,7 +372,7 @@ namespace april
 		this->title = title;
 	}
 	
-	bool Mac_Window::updateOneFrame()
+	bool Mac_Window::update(float timeDelta)
 	{
 		if (this->shouldIgnoreUpdate())
 		{
@@ -387,7 +387,7 @@ namespace april
 				[mWindow onWindowSizeChange];
 			}
 		}
-		bool result = Window::updateOneFrame();
+		bool result = Window::update(timeDelta);
 		if (result && mOverlayWindow != nil)
 		{
 			float timeDelta = this->timer.diff(false);
@@ -409,7 +409,7 @@ namespace april
 		return result;
 	}
 	
-	void Mac_Window::presentFrame()
+	void Mac_Window::_presentFrame()
 	{
 		// presentFrame() calls are always manually called, so let's make sure
 		// Mac can update the view contents before we continue.

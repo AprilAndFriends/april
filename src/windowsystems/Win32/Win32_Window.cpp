@@ -16,6 +16,7 @@
 
 #include <WindowsX.h>
 
+#include "Application.h"
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
@@ -165,7 +166,7 @@ namespace april
 	{
 		if (this->fpsCounter)
 		{
-			hstr t = title + hsprintf(" [FPS: %d]", this->fps);
+			hstr t = title + hsprintf(" [FPS: %d]", april::application->getFps());
 			// optimization to prevent setting title every frame
 			if (t == this->fpsTitle) return;
 			this->fpsTitle = t;
@@ -289,7 +290,7 @@ namespace april
 		this->_setRenderSystemResolution(this->getWidth(), this->getHeight(), this->fullscreen);
 	}
 	
-	bool Win32_Window::updateOneFrame()
+	bool Win32_Window::update(float timeDelta)
 	{
 		if (this->inputMode == InputMode::Mouse)
 		{
@@ -297,7 +298,7 @@ namespace april
 		}
 		this->checkEvents();
 		// rendering
-		bool result = Window::updateOneFrame();
+		bool result = Window::update(timeDelta);
 		if (this->fpsCounter)
 		{
 			this->setTitle(this->title); // has to come after Window::updateOneFrame(), otherwise FPS value in title would be late one frame
@@ -305,7 +306,7 @@ namespace april
 		return result;
 	}
 	
-	void Win32_Window::presentFrame()
+	void Win32_Window::_presentFrame()
 	{
 #ifdef _OPENGL
 		harray<hstr> renderSystems;

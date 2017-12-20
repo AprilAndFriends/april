@@ -24,7 +24,7 @@ namespace april
 	extern harray<hstr> args;
 }
 
-int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
+int __aprilMain(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)(), int argc, char** argv)
 {
 	if (argv != NULL && argv[0] != NULL)
 	{
@@ -33,8 +33,8 @@ int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy
 			april::args += argv[i];
 		}
 	}
-	april::WinUWP::Init = anAprilInit;
-	april::WinUWP::Destroy = anAprilDestroy;
+	april::WinUWP::Init = aprilApplicationInit;
+	april::WinUWP::Destroy = aprilApplicationDestroy;
 #ifdef _WINUWP_WINDOW
 	IFrameworkViewSource^ frameworkViewSource = ref new april::FrameworkViewSource();
 	//april::WinUWP::App = ;

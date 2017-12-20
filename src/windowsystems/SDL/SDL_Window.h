@@ -46,8 +46,7 @@ namespace april
 		void* getBackendId() const;
 		void setResolution(int w, int h, bool fullscreen);
 
-		bool updateOneFrame();
-		void presentFrame();
+		bool update(float timeDelta);
 		void checkEvents();
 		
 	protected:
@@ -63,9 +62,10 @@ namespace april
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor();
 
+		void _presentFrame();
+		
 		void _handleSDLKeyEvent(Window::KeyEventType type, SDL_Keycode keyCode, unsigned int unicode);
 		void _handleSDLMouseEvent(SDL_Event &evt);
-		float _calcTimeSinceLastFrame();
 
 	};
 

@@ -50,8 +50,7 @@ namespace april
 		void setResolution(int w, int h, bool fullscreen);
 		HCURSOR getCursorHandle() const;
 
-		bool updateOneFrame();
-		void presentFrame();
+		bool update(float timeDelta);
 		void checkEvents();
 
 		void queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
@@ -77,12 +76,13 @@ namespace april
 		void _adjustWindowSizeForClient(int x, int y, int& w, int& h, DWORD style, DWORD exstyle);
 		void _refreshCursor();
 		void _updateCursorPosition();
+		
+		void _presentFrame();
 
 		static LRESULT CALLBACK _mainProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	};
 
 }
-
 #endif
 #endif

@@ -120,7 +120,7 @@ void* CustomWindow::getBackendId() const
 	return this->hWnd;
 }
 
-bool CustomWindow::updateOneFrame()
+bool CustomWindow::update(float timeDelta)
 {
 	POINT w32_cursorPosition;
 	// mouse position
@@ -129,10 +129,10 @@ bool CustomWindow::updateOneFrame()
 	this->cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
 	this->checkEvents();
 	// rendering
-	return april::Window::updateOneFrame();
+	return april::Window::update(timeDelta);
 }
 
-void CustomWindow::presentFrame()
+void CustomWindow::_presentFrame()
 {
 	CustomRenderSystem* system = dynamic_cast<CustomRenderSystem*>(april::rendersys);
 	if (system != NULL)

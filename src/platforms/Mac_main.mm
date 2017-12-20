@@ -198,36 +198,39 @@ static void CustomApplicationMain(int argc, char **argv)
 	[pool release];
 }
 
-
-/* Main entry point to executable - should *not* be SDL_main! */
-int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
+namespace april
 {
-	/* Copy the arguments into a global variable */
-	/* This is passed if we are launched by double-clicking */
-	gAprilShouldInvokeQuitCallback = 0;
+	/* Main entry point to executable - should *not* be SDL_main! */
+	int __mainStandard(void (*aprilApplicationInit)(const harray<hstr>&), void (*aprilApplicationDestroy)(), int argc, char** argv)
+	{
+		/* Copy the arguments into a global variable */
+		/* This is passed if we are launched by double-clicking */
+		gAprilShouldInvokeQuitCallback = 0;
 
-	gAprilInit = anAprilInit;
-	gAprilDestroy = anAprilDestroy;
-	
-	if (argc >= 2 && strncmp(argv[1], "-psn", 4) == 0)
-	{
-		gArgv = (char**) malloc(sizeof(char*) * 2);
-		gArgv[0] = argv[0];
-		gArgv[1] = NULL;
-		gArgc = 1;
-		gFinderLaunch = YES;
-	}
-	else
-	{
-		int i;
-		gArgc = argc;
-		gArgv = (char**) malloc(sizeof(char*) * (argc + 1));
-		for (i = 0; i <= argc; ++i)
+		gAprilInit = aprilApplicationInit;
+		gAprilDestroy = aprilApplicationDestroy;
+		
+		if (argc >= 2 && strncmp(argv[1], "-psn", 4) == 0)
 		{
-			gArgv[i] = argv[i];
+			gArgv = (char**) malloc(sizeof(char*) * 2);
+			gArgv[0] = argv[0];
+			gArgv[1] = NULL;
+			gArgc = 1;
+			gFinderLaunch = YES;
 		}
-		gFinderLaunch = NO;
+		else
+		{
+			int i;
+			gArgc = argc;
+			gArgv = (char**) malloc(sizeof(char*) * (argc + 1));
+			for (i = 0; i <= argc; ++i)
+			{
+				gArgv[i] = argv[i];
+			}
+			gFinderLaunch = NO;
+		}
+		CustomApplicationMain(argc, argv);
+		return 0;
 	}
-	CustomApplicationMain(argc, argv);
-	return 0;
+	
 }

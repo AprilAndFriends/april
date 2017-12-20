@@ -388,7 +388,7 @@ void ObjCUtil_setCWD(const char* override_default_dir)
 }
 #endif
 
-void april_init(const harray<hstr>& args)
+void __aprilApplicationInit()
 {
 #ifdef __APPLE__
 	// On MacOSX, the current working directory is not set by
@@ -512,7 +512,7 @@ void april_init(const harray<hstr>& args)
 	}
 }
 
-void april_destroy()
+void __aprilApplicationDestroy()
 {
 	april::window->setCursor(NULL);
 	april::window->destroyCursor(cursor);
