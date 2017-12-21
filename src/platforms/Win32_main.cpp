@@ -22,9 +22,7 @@ int gAprilShouldInvokeQuitCallback = 0; // TODO - SDL depends on this, this hack
 
 namespace april
 {
-	extern harray<hstr> args;
-
-	int __mainStandard(void (*__aprilApplicationInit)(), void (*__aprilApplicationDestroy)(), int argc, char** argv)
+	int __mainStandard(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)(), int argc, char** argv)
 	{
 		harray<hstr> args;
 		if (argv != NULL && argv[0] != NULL)
@@ -34,8 +32,9 @@ namespace april
 				args += argv[i];
 			}
 		}
-		april::application = new Application(__aprilApplicationInit, __aprilApplicationDestroy);
-		april::application->init(args);
+		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
+		april::application->setArgs(args);
+		april::application->init();
 		if (april::window != NULL && april::rendersys != NULL)
 		{
 			april::application->enterMainLoop();

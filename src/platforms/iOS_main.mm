@@ -9,14 +9,14 @@
 #import <UIKit/UIKit.h>
 #include "ApriliOSAppDelegate.h"
 
-#import "main_base.h"
+#include "Application.h"
+#include "main_base.h"
 
 namespace april
 {
-	extern harray<hstr> args;
-
 	int __mainStandard(void (*aprilApplicationInit)(const harray<hstr>&), void (*aprilApplicationDestroy)(), int argc, char** argv)
 	{	
+		harray<hstr> args;
 		if (argv != NULL && argv[0] != NULL)
 		{
 			for_iter (i, 0, argc)
@@ -24,11 +24,12 @@ namespace april
 				april::args += argv[i];
 			}
 		}
+		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
+		april::application->setArgs(args);
 		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 		// limit GCD from spawning too much threads
 		[[NSOperationQueue mainQueue] setMaxConcurrentOperationCount:1];
 		[[NSOperationQueue currentQueue] setMaxConcurrentOperationCount:1];
-		
 		NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
 		NSString* appDelegateClassName = [userDefaults objectForKey:@"appDelegateClassName"];
 		if (appDelegateClassName == nil)
@@ -37,6 +38,8 @@ namespace april
 		}
 		int result = UIApplicationMain(argc, argv, nil, appDelegateClassName);
 		[pool drain];
+		delete april::application;
+		april::application = NULL;
 		return result;
 	}
 	

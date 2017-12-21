@@ -92,7 +92,8 @@ namespace april
 		{
 			hlog::debug(logTag, "    " + (*it));
 		}
-		april::application->init(args);
+		april::application->init();
+		april::application->setArgs(args);
 	}
 	
 	void JNICALL _JNI_destroy(JNIEnv* env, jclass classe)

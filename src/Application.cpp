@@ -33,9 +33,8 @@ namespace april
 	{
 	}
 
-	void Application::init(const harray<hstr>& args)
+	void Application::init()
 	{
-		this->args = args;
 		(*this->aprilApplicationInit)();
 	}
 

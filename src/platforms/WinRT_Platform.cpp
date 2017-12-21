@@ -6,7 +6,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#if defined(_WINRT) && !defined(_OPENKODE)
+#ifdef _WINRT
 #define __HL_INCLUDE_PLATFORM_HEADERS
 #include <gtypes/Vector2.h>
 #include <hltypes/hdir.h>

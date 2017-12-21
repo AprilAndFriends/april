@@ -10,7 +10,7 @@
 /// 
 /// Defines main for WinRT.
 
-#if defined(_WIN32) && defined(_WINRT) && !defined(_OPENKODE)
+#if defined(_WIN32) && defined(_WINRT)
 #ifndef APRIL_WINRT_MAIN_H
 #define APRIL_WINRT_MAIN_H
 

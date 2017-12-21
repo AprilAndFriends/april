@@ -34,7 +34,7 @@ namespace april
 		virtual ~Application();
 
 		/// @brief Get launch arguments.
-		HL_DEFINE_GET(harray<hstr>, args, Args);
+		HL_DEFINE_GETSET(harray<hstr>, args, Args);
 		/// @brief Get running flag.
 		HL_DEFINE_IS(running, Running);
 		/// @brief The current FPS.
@@ -47,7 +47,7 @@ namespace april
 
 		/// @brief Calls the initialization procedure defined by the user.
 		/// @param[in] args Launch arguments.
-		void init(const harray<hstr>& args);
+		void init();
 		/// @brief Calls the destruction procedure defined by the user.
 		void destroy();
 

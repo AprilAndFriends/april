@@ -10,6 +10,8 @@
 #import <AppKit/NSApplication.h>
 
 #include <hltypes/hlog.h>
+
+#include "Application.h"
 #include "april.h"
 #include "RenderSystem.h"
 #include "Window.h"
@@ -18,6 +20,7 @@
 #import "Mac_Window.h"
 #endif
 #import "Mac_AppDelegate.h"
+
 
 namespace april
 {
@@ -201,12 +204,11 @@ static void CustomApplicationMain(int argc, char **argv)
 namespace april
 {
 	/* Main entry point to executable - should *not* be SDL_main! */
-	int __mainStandard(void (*aprilApplicationInit)(const harray<hstr>&), void (*aprilApplicationDestroy)(), int argc, char** argv)
+	int __mainStandard(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)(), int argc, char** argv)
 	{
 		/* Copy the arguments into a global variable */
 		/* This is passed if we are launched by double-clicking */
 		gAprilShouldInvokeQuitCallback = 0;
-
 		gAprilInit = aprilApplicationInit;
 		gAprilDestroy = aprilApplicationDestroy;
 		
@@ -229,7 +231,11 @@ namespace april
 			}
 			gFinderLaunch = NO;
 		}
+		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
+		//april::application->setArgs(args); // TODO - implement this properly
 		CustomApplicationMain(argc, argv);
+		delete april::application;
+		april::application = NULL;
 		return 0;
 	}
 	

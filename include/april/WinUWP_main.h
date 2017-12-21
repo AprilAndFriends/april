@@ -10,7 +10,7 @@
 /// 
 /// Defines main for WinUWP.
 
-#if defined(_WIN32) && defined(_WINUWP) && !defined(_OPENKODE)
+#if defined(_WIN32) && defined(_WINUWP)
 #ifndef APRIL_WINUWP_MAIN_H
 #define APRIL_WINUWP_MAIN_H
 
