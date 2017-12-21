@@ -461,6 +461,7 @@ namespace april
 		}
 		if (april::rendersys != NULL)
 		{
+			april::rendersys->waitForAsyncCommands(true);
 			delete april::rendersys;
 			april::rendersys = NULL;
 		}
@@ -471,7 +472,6 @@ namespace april
 			april::egl = NULL;
 		}
 #endif
-		april::rendersys->waitForAsyncCommands(true);
 	}
 	
 	void addTextureExtension(chstr extension)

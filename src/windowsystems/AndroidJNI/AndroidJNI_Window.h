@@ -40,13 +40,13 @@ namespace april
 		
 		bool update(float timeDelta);
 		
-		void queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index);
-		void queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
+		void queueTouchEvent(const MouseEvent::Type& type, cgvec2 position, int index);
+		void queueControllerEvent(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue);
 
 		void showVirtualKeyboard();
 		void hideVirtualKeyboard();
 
-		void handleFocusChangeEvent(bool focused);
+		void handleFocusChange(bool focused);
 		void handleActivityChange(bool active);
 		
 	protected:

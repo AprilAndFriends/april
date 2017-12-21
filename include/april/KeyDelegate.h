@@ -8,24 +8,24 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a delegate for the keyboard input callbacks.
+/// Defines a delegate for the key input callbacks.
 
-#ifndef APRIL_KEYBOARD_DELEGATE_H
-#define APRIL_KEYBOARD_DELEGATE_H
+#ifndef APRIL_KEY_DELEGATE_H
+#define APRIL_KEY_DELEGATE_H
 
 #include "aprilExport.h"
 #include "Keys.h"
 
 namespace april
 {
-	/// @brief Defines a delegate for the keyboard input callbacks.
-	class aprilExport KeyboardDelegate
+	/// @brief Defines a delegate for the key input callbacks.
+	class aprilExport KeyDelegate
 	{
 	public:
 		/// @brief Basic constructor.
-		KeyboardDelegate();
+		KeyDelegate();
 		/// @brief Destructor.
-		virtual ~KeyboardDelegate();
+		virtual ~KeyDelegate();
 
 		/// @brief Called when a key is pressed.
 		/// @param[in] keyCode The key's number code.

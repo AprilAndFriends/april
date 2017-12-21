@@ -191,7 +191,7 @@ namespace april
 	{
 		bool focused = (jFocused != JNI_FALSE);
 		hlog::write(logTag, "onWindowFocusChanged(" + hstr(focused) + ")");
-		PROTECTED_WINDOW_CALL(handleFocusChangeEvent(focused));
+		PROTECTED_WINDOW_CALL(handleFocusChange(focused));
 	}
 	
 	void JNICALL _JNI_onVirtualKeyboardChanged(JNIEnv* env, jclass classe, jboolean jVisible, jfloat jHeightRatio)
@@ -199,13 +199,13 @@ namespace april
 		bool visible = (jVisible != JNI_FALSE);
 		float heightRatio = (float)jHeightRatio;
 		hlog::write(logTag, "onVirtualKeyboardChanged(" + hstr(visible) + "," + hstr(heightRatio) + ")");
-		PROTECTED_WINDOW_CALL(handleVirtualKeyboardChangeEvent(visible, heightRatio));
+		PROTECTED_WINDOW_CALL(handleVirtualKeyboardChange(visible, heightRatio));
 	}
 	
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "onLowMemoryWarning()");
-		PROTECTED_WINDOW_CALL(handleLowMemoryWarningEvent());
+		PROTECTED_WINDOW_CALL(handleLowMemoryWarning());
 	}
 	
 	void JNICALL _JNI_onSurfaceCreated(JNIEnv* env, jclass classe)

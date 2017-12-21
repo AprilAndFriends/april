@@ -15,7 +15,7 @@
 
 #include "aprilExport.h"
 #include "ControllerDelegate.h"
-#include "KeyboardDelegate.h"
+#include "KeyDelegate.h"
 #include "MotionDelegate.h"
 #include "MouseDelegate.h"
 #include "TouchDelegate.h"
@@ -23,7 +23,7 @@
 namespace april
 {
 	/// @brief Defines a delegate for all input callbacks.
-	class aprilExport InputDelegate : public KeyboardDelegate, public MouseDelegate, public TouchDelegate,
+	class aprilExport InputDelegate : public KeyDelegate, public MouseDelegate, public TouchDelegate,
 		public ControllerDelegate, public MotionDelegate
 	{
 	public:

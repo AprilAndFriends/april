@@ -114,6 +114,12 @@
     <Filter Include="Source Files\async">
       <UniqueIdentifier>{131cd70d-b6fb-478c-ad07-1cc4e12b9311}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\events">
+      <UniqueIdentifier>{9e7645e3-c63e-47e2-98b0-b5881b734d13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\events">
+      <UniqueIdentifier>{f276082f-b9c1-47ee-93ee-47e1c2e42537}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Color.cpp">
@@ -210,9 +216,6 @@
       <Filter>Source Files\delegates</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\delegates\InputDelegate.cpp">
-      <Filter>Source Files\delegates</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\delegates\KeyboardDelegate.cpp">
       <Filter>Source Files\delegates</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\delegates\MotionDelegate.cpp">
@@ -380,6 +383,27 @@
     <ClCompile Include="..\..\src\async\UnassignWindowCommand.cpp">
       <Filter>Source Files\async</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\events\KeyEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\events\MouseEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\events\TouchEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\events\ControllerEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\delegates\KeyDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\events\MotionEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\events\GenericEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -464,9 +488,6 @@
       <Filter>Header Files\delegates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\InputDelegate.h">
-      <Filter>Header Files\delegates</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\april\KeyboardDelegate.h">
       <Filter>Header Files\delegates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\MotionDelegate.h">
@@ -639,6 +660,30 @@
     </ClInclude>
     <ClInclude Include="..\..\src\async\CreateWindowCommand.h">
       <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\MouseEvent.h">
+      <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\TouchEvent.h">
+      <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\ControllerEvent.h">
+      <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\KeyEvent.h">
+      <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\KeyDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\MotionEvent.h">
+      <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\Events.h">
+      <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\GenericEvent.h">
+      <Filter>Header Files\events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -255,10 +255,10 @@ namespace april
 					this->_setRenderSystemResolution(sdlEvent.window.data1, sdlEvent.window.data2, this->fullscreen);
 					break;
 				case SDL_WINDOWEVENT_FOCUS_GAINED:
-					this->handleFocusChangeEvent(true);
+					this->queueFocusChangeEvent(true);
 					break;
 				case SDL_WINDOWEVENT_FOCUS_LOST:
-					this->handleFocusChangeEvent(false);
+					this->queueFocusChangeEvent(false);
 					break;
 				case SDL_WINDOWEVENT_ENTER:
 					if (this->isCursorVisible() && !this->cursorVisible)
@@ -275,7 +275,7 @@ namespace april
 				}
 				break;
 			case SDL_QUIT:
-				if (this->handleQuitRequestEvent(true))
+				if (this->handleQuitRequest(true))
 				{
 					this->running = false;
 				}
@@ -287,7 +287,7 @@ namespace april
 				// on mac os, we need to handle command+q
 				if (SDL_GetModState() & KMOD_META && (tolower(sdlEvent.key.keysym.unicode) == 'q' || sdlEvent.key.keysym.sym == SDLK_q))
 				{
-					if (this->handleQuitRequestEvent(true))
+					if (this->handleQuitRequest(true))
 					{
 						this->running = false;
 					}

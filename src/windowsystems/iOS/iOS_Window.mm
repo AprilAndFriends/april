@@ -472,7 +472,7 @@ namespace april
 	{
 		if (this->systemDelegate != NULL)
 		{
-			this->handleVirtualKeyboardChangeEvent(true, kbSize);
+			this->handleVirtualKeyboardChange(true, kbSize);
 		}
 	}
 	
@@ -480,7 +480,7 @@ namespace april
 	{
 		if (this->systemDelegate != NULL)
 		{
-			this->handleVirtualKeyboardChangeEvent(false, 0.0f);
+			this->handleVirtualKeyboardChange(false, 0.0f);
 		}
 	}
 	

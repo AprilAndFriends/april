@@ -10,29 +10,29 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
-#include "KeyboardDelegate.h"
+#include "KeyDelegate.h"
 
 namespace april
 {
-	KeyboardDelegate::KeyboardDelegate()
+	KeyDelegate::KeyDelegate()
 	{
 	}
 
-	KeyboardDelegate::~KeyboardDelegate()
+	KeyDelegate::~KeyDelegate()
 	{
 	}
 
-	void KeyboardDelegate::onKeyDown(Key keyCode)
+	void KeyDelegate::onKeyDown(Key keyCode)
 	{
 		hlog::debug(logTag, "Event onKeyDown() was not implemented.");
 	}
 
-	void KeyboardDelegate::onKeyUp(Key keyCode)
+	void KeyDelegate::onKeyUp(Key keyCode)
 	{
 		hlog::debug(logTag, "Event onKeyUp() was not implemented.");
 	}
 
-	void KeyboardDelegate::onChar(unsigned int charCode)
+	void KeyDelegate::onChar(unsigned int charCode)
 	{
 		hlog::debug(logTag, "Event onChar() was not implemented.");
 	}

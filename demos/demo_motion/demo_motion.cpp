@@ -22,7 +22,7 @@
 
 #include <april/april.h>
 #include <april/Cursor.h>
-#include <april/KeyboardDelegate.h>
+#include <april/KeyDelegate.h>
 #include <april/main.h>
 #include <april/MotionDelegate.h>
 #include <april/MouseDelegate.h>

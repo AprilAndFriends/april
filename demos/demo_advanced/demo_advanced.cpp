@@ -29,7 +29,7 @@
 #include <april/april.h>
 #include <april/Cursor.h>
 #include <april/main.h>
-#include <april/KeyboardDelegate.h>
+#include <april/KeyDelegate.h>
 #include <april/MouseDelegate.h>
 #include <april/Platform.h>
 #include <april/RenderSystem.h>
@@ -350,7 +350,7 @@ class MouseDelegate : public april::MouseDelegate
 	}
 };
 
-class KeyboardDelegate : public april::KeyboardDelegate
+class KeyDelegate : public april::KeyDelegate
 {
 	void onKeyUp(april::Key keyCode)
 	{
@@ -364,7 +364,7 @@ class KeyboardDelegate : public april::KeyboardDelegate
 static UpdateDelegate* updateDelegate = NULL;
 static SystemDelegate* systemDelegate = NULL;
 static MouseDelegate* mouseDelegate = NULL;
-static KeyboardDelegate* keyboardDelegate = NULL;
+static KeyDelegate* keyboardDelegate = NULL;
 
 #ifdef __APPLE__
 void ObjCUtil_setCWD(const char* override_default_dir)
@@ -400,7 +400,7 @@ void __aprilApplicationInit()
 	updateDelegate = new UpdateDelegate();
 	systemDelegate = new SystemDelegate();
 	mouseDelegate = new MouseDelegate();
-	keyboardDelegate = new KeyboardDelegate();
+	keyboardDelegate = new KeyDelegate();
 
 #if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
@@ -475,7 +475,7 @@ void __aprilApplicationInit()
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setSystemDelegate(systemDelegate);
 	april::window->setMouseDelegate(mouseDelegate);
-	april::window->setKeyboardDelegate(keyboardDelegate);
+	april::window->setKeyDelegate(keyboardDelegate);
 	cursor = april::window->createCursorFromResource(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
 

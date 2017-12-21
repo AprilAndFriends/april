@@ -58,6 +58,8 @@ namespace april
 		/// @brief Performs the update of one frame.
 		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.
 		virtual void update();
+		/// @brief Finishes the main loop.
+		void finish();
 
 	protected:
 		/// @brief Launch arguments.

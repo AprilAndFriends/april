@@ -22,6 +22,7 @@
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
+#include "Events.h"
 #include "InputMode.h"
 #include "Keys.h"
 #include "Timer.h"
@@ -32,7 +33,7 @@ namespace april
 	class ControllerDelegate;
 	class Cursor;
 	class DestroyWindowCommand;
-	class KeyboardDelegate;
+	class KeyDelegate;
 	class MotionDelegate;
 	class MouseDelegate;
 	class RenderSystem;
@@ -49,175 +50,6 @@ namespace april
 		friend class CreateWindowCommand;
 		friend class DestroyWindowCommand;
 		friend class UnassignWindowCommand;
-
-		/// @brief Defines mouse input event data.
-		struct aprilExport MouseInputEvent
-		{
-			/// @class Type
-			/// @brief Defines mouse event types.
-			HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, Type,
-			(
-				/// @var static const Type Type::Down
-				/// @brief Mouse button was pressed.
-				HL_ENUM_DECLARE(Type, Down);
-				/// @var static const Type Type::Up
-				/// @brief Mouse button was released.
-				HL_ENUM_DECLARE(Type, Up);
-				/// @var static const Type Type::Cancel
-				/// @brief Mouse button was canceled without an Up event.
-				HL_ENUM_DECLARE(Type, Cancel);
-				/// @var static const Type Type::Move
-				/// @brief Mouse was moved.
-				HL_ENUM_DECLARE(Type, Move);
-				/// @var static const Type Type::Scroll
-				/// @brief Mouse scroll was changed (usually a scroll wheel).
-				HL_ENUM_DECLARE(Type, Scroll);
-			));
-
-			/// @brief The event type.
-			Type type;
-			/// @brief The pointer position.
-			gvec2 position;
-			/// @brief The key code.
-			Key keyCode;
-			
-			/// @brief Basic constructor.
-			MouseInputEvent();
-			/// @brief Constructor.
-			/// @param[in] type The event type.
-			/// @param[in] position The pointer position.
-			/// @param[in] keyCode The key code.
-			MouseInputEvent(Type type, cgvec2 position, Key keyCode);
-		
-		};
-
-		/// @brief Defines keyboard input event data.
-		struct aprilExport KeyInputEvent
-		{
-			/// @class Type
-			/// @brief Defines keyboard key event types.
-			HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, Type,
-			(
-				/// @var static const Type Type::Down
-				/// @brief Key was pressed.
-				HL_ENUM_DECLARE(Type, Down);
-				/// @var static const Type Type::Up
-				/// @brief Key was released.
-				HL_ENUM_DECLARE(Type, Up);
-			));
-
-			/// @brief The event type.
-			Type type;
-			/// @brief The key code.
-			Key keyCode;
-			/// @brief The character Unicode value.
-			unsigned int charCode;
-			
-			/// @brief Basic constructor.
-			KeyInputEvent();
-			/// @brief Constructor.
-			/// @param[in] type The event type.
-			/// @param[in] keyCode The key code.
-			/// @param[in] charCode The character Unicode value.
-			KeyInputEvent(Type type, Key keyCode, unsigned int charCode);
-		
-		};
-
-		/// @brief Defines touch-interface input event data.
-		struct aprilExport TouchInputEvent
-		{
-			/// @brief Active touch pointers.
-			harray<gvec2> touches;
-			
-			/// @brief Basic constructor.
-			TouchInputEvent();
-			/// @brief Constructor.
-			/// @param[in] touches Active touch pointers.
-			TouchInputEvent(harray<gvec2>& touches);
-		
-		};
-
-		/// @brief Defines controller input event data.
-		struct aprilExport ControllerInputEvent
-		{
-			/// @class Type
-			/// @brief Defines controller input event types.
-			HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, Type,
-			(
-				/// @var static const Type Type::Down
-				/// @brief Controller button was pressed.
-				HL_ENUM_DECLARE(Type, Down);
-				/// @var static const Type Type::Up
-				/// @brief Controller button was released.
-				HL_ENUM_DECLARE(Type, Up);
-				/// @var static const Type Type::Axis
-				/// @brief Controller axis position was changed.
-				HL_ENUM_DECLARE(Type, Axis);
-				/// @var static const Type Type::Connected
-				/// @brief Controller connected.
-				HL_ENUM_DECLARE(Type, Connected);
-				/// @var static const Type Type::Disconnected
-				/// @brief Controller disconnected.
-				HL_ENUM_DECLARE(Type, Disconnected);
-			));
-
-			/// @brief The event type.
-			Type type;
-			/// @brief Index of the controller.
-			int controllerIndex;
-			/// @brief The button code.
-			Button buttonCode;
-			/// @brief axisValue The axis value.
-			float axisValue;
-			
-			/// @brief Basic constructor.
-			ControllerInputEvent();
-			/// @brief Constructor.
-			/// @param[in] type The event type.
-			/// @param[in] controllerIndex Index of the controller.
-			/// @param[in] buttonCode The button code.
-			/// @param[in] axisValue The axis value.
-			ControllerInputEvent(Type type, int controllerIndex, Button buttonCode, float axisValue);
-			
-		};
-
-		/// @brief Defines motion input event data.
-		struct aprilExport MotionInputEvent
-		{
-			/// @class Type
-			/// @brief Defines motion event types.
-			HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, Type,
-			(
-				/// @var static const Type Type::Accelerometer
-				/// @brief Accelerometer vector.
-				HL_ENUM_DECLARE(Type, Accelerometer);
-				/// @var static const Type Type::LinearAccelerometer
-				/// @brief Linear accelerometer vector.
-				HL_ENUM_DECLARE(Type, LinearAccelerometer);
-				/// @var static const Type Type::Gravity
-				/// @brief Gravity vector.
-				HL_ENUM_DECLARE(Type, Gravity);
-				/// @var static const Type Type::Rotation
-				/// @brief Device rotation.
-				HL_ENUM_DECLARE(Type, Rotation);
-				/// @var static const Type Type::Gyroscope
-				/// @brief Gyroscope vector.
-				HL_ENUM_DECLARE(Type, Gyroscope);
-			));
-
-			/// @brief The event type.
-			Type type;
-			/// @brief Motion data vector.
-			gvec3 motionVector;
-
-			/// @brief Basic constructor.
-			MotionInputEvent();
-			/// @brief Constructor.
-			/// @param[in] type The event type.
-			/// @param[in] motionVector Motion data vector.
-			MotionInputEvent(Type type, cgvec3 motionVector);
-
-		};
 
 		/// @brief Defines options for creation of the window.
 		struct aprilExport Options
@@ -328,7 +160,7 @@ namespace april
 		/// @brief The mouse input delegate.
 		HL_DEFINE_GETSET(MouseDelegate*, mouseDelegate, MouseDelegate);
 		/// @brief The keyboard input delegate.
-		HL_DEFINE_GETSET(KeyboardDelegate*, keyboardDelegate, KeyboardDelegate);
+		HL_DEFINE_GETSET(KeyDelegate*, keyboardDelegate, KeyDelegate);
 		/// @brief The touch input delegate.
 		HL_DEFINE_GETSET(TouchDelegate*, touchDelegate, TouchDelegate);
 		/// @brief The controller input delegate.
@@ -433,16 +265,39 @@ namespace april
 		// TODOaa - this should be refactored to have all parameters available in the header
 		virtual inline void setParam(chstr parameter, chstr value) { }
 		
+		/// @brief Handles a quit event and propagates it to the delegate.
+		/// @param[in] canCancel Whether the window quitting can be canceled.
+		/// @return True if the system is allowed to actually close the window.
+		virtual bool handleQuitRequest(bool canCancel);
+		/// @brief Handles a focus-change event and propagates it to the delegate.
+		/// @param[in] focused Whether the window is focused now.
+		virtual void handleFocusChange(bool focused);
+		/// @brief Handles a activity-change event.
+		/// @param[in] active Whether the window is active now.
+		/// @note This is a different concept from focus-change that is usually only used in certain implementations.
+		virtual void handleActivityChange(bool active);
+		/// @brief Handles a size-change event and propagates it to the delegate.
+		/// @param[in] size The new window size.
+		virtual void handleSizeChange(cgvec2 size);
+		/// @brief Handles a input-mode-change event and propagates it to the delegate.
+		/// @param[in] inputMode New input mode.
+		virtual void handleInputModeChange(const InputMode& inputMode);
+		/// @brief Handles a virtual-keyboard-change event and propagates it to the delegate.
+		/// @param[in] visible Whether the virtual keyboard is visible.
+		/// @param[in] heightRatio The ratio of the screen height that the keyboard takes up.
+		virtual void handleVirtualKeyboardChange(bool visible, float heightRatio);
+		/// @brief Handles a low memory warning event and propagates it to the delegate.
+		virtual void handleLowMemoryWarning();
 		/// @brief Handles a mouse event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] position The pointer position.
 		/// @param[in] keyCode The key code.
-		virtual void handleMouseEvent(MouseInputEvent::Type type, cgvec2 position, Key keyCode);
+		virtual void handleMouseEvent(MouseEvent::Type type, cgvec2 position, Key keyCode);
 		/// @brief Handles a keyboard event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] keyCode The key code.
 		/// @param[in] charCode The character Unicode value.
-		virtual void handleKeyEvent(KeyInputEvent::Type type, Key keyCode, unsigned int charCode);
+		virtual void handleKeyEvent(KeyEvent::Type type, Key keyCode, unsigned int charCode);
 		/// @brief Handles a touch event and propagates it to the delegate.
 		/// @param[in] touches Active touch pointers.
 		virtual void handleTouchEvent(const harray<gvec2>& touches);
@@ -451,72 +306,80 @@ namespace april
 		/// @param[in] controllerIndex Index of the controller.
 		/// @param[in] buttonCode The button code.
 		/// @param[in] axisValue The axis value.
-		virtual void handleControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
+		virtual void handleControllerEvent(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
 		/// @brief Handles a motion event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] motionVector Motion data vector.
-		virtual void handleMotionEvent(MotionInputEvent::Type type, cgvec3 motionVector);
-		/// @brief Handles a quit event and propagates it to the delegate.
-		/// @param[in] canCancel Whether the window quitting can be canceled.
-		/// @return True if the system is allowed to actually close the window.
-		virtual bool handleQuitRequestEvent(bool canCancel);
-		/// @brief Handles a focus-change event and propagates it to the delegate.
-		/// @param[in] focused Whether the window is focused now.
-		virtual void handleFocusChangeEvent(bool focused);
-		/// @brief Handles a virtual-keyboard-change event and propagates it to the delegate.
-		/// @param[in] visible Whether the virtual keyboard is visible.
-		/// @param[in] heightRatio The ratio of the screen height that the keyboard takes up.
-		virtual void handleVirtualKeyboardChangeEvent(bool visible, float heightRatio);
-		/// @brief Handles a low memory warning event and propagates it to the delegate.
-		virtual void handleLowMemoryWarningEvent();
+		virtual void handleMotionEvent(MotionEvent::Type type, cgvec3 motionVector);
 
 		/// @brief Handles a keyboard key press event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] keyCode The key code.
 		/// @note This is a utility function.
 		/// @see handleKeyEvent
-		void handleKeyOnlyEvent(KeyInputEvent::Type type, Key keyCode);
+		void handleKeyOnlyEvent(KeyEvent::Type type, Key keyCode);
 		/// @brief Handles a keyboard character event and propagates it to the delegate.
 		/// @param[in] charCode The character Unicode value.
 		/// @note This is a utility function.
 		/// @see handleKeyEvent
 		void handleCharOnlyEvent(unsigned int charCode);
 
-		/// @brief Handles a activity-change event.
-		/// @param[in] active Whether the window is active now.
-		/// @note This is a different concept from focus-change that is usually only used in certain implementations.
-		virtual void handleActivityChange(bool active);
-
+		/// @brief Queues a quit event and propagates it to the delegate.
+		/// @param[in] canCancel Whether the window quitting can be canceled.
+		/// @return True if the system is allowed to actually close the window.
+		virtual bool queueQuitRequestEvent(bool canCancel);
+		/// @brief Queues a focus change event for processing before the start of the next frame.
+		/// @param[in] focused Whether the window is focused now.
+		/// @note This is mostly used internally.
+		virtual void queueFocusChangeEvent(bool focused);
+		/// @brief Queues an activity change event for processing before the start of the next frame.
+		/// @param[in] active Whether the app is active now.
+		/// @note This is mostly used internally.
+		virtual void queueActivityChangeEvent(bool active);
+		/// @brief Queues a size change event for processing before the start of the next frame.
+		/// @param[in] size New window size.
+		/// @note This is mostly used internally.
+		virtual void queueSizeChangeEvent(cgvec2 size);
+		/// @brief Queues a size change event for processing before the start of the next frame.
+		/// @param[in] size New window size.
+		/// @note This is mostly used internally.
+		virtual void queueInputModeChangeEvent(const InputMode& inputMode);
+		/// @brief Queues a virtual-keyboard-change event and propagates it to the delegate.
+		/// @param[in] visible Whether the virtual keyboard is visible.
+		/// @param[in] heightRatio The ratio of the screen height that the keyboard takes up.
+		virtual void queueVirtualKeyboardChangeEvent(bool visible, float heightRatio);
+		/// @brief Queues a low memory warning event and propagates it to the delegate.
+		virtual void queueLowMemoryWarningEvent();
 		/// @brief Queues a mouse event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] position The pointer position.
 		/// @param[in] keyCode The key code.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueMouseEvent(MouseInputEvent::Type type, cgvec2 position, Key keyCode);
+		virtual void queueMouseEvent(MouseEvent::Type type, cgvec2 position, Key keyCode);
 		/// @brief Queues a keyboard event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] keyCode The key code.
 		/// @param[in] charCode The character Unicode value.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueKeyEvent(KeyInputEvent::Type type, Key keyCode, unsigned int charCode);
+		virtual void queueKeyEvent(KeyEvent::Type type, Key keyCode, unsigned int charCode);
 		/// @brief Queues a touch event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] position The pointer position.
 		/// @param[in] index The pointer index.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index);
+		virtual void queueTouchEvent(MouseEvent::Type type, cgvec2 position, int index);
 		/// @brief Queues a controller event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] controllerIndex Index of the controller.
 		/// @param[in] buttonCode The button code.
 		/// @param[in] axisValue The axis value.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
+		virtual void queueControllerEvent(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
 		/// @brief Queues a motion event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] motionVector Motion data vector.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueMotionEvent(MotionInputEvent::Type type, cgvec3 motionVector);
+		virtual void queueMotionEvent(MotionEvent::Type type, cgvec3 motionVector);
 
 		/// @brief Performs the update of one frame.
 		/// @param[in] timeDelta Time that has passed since the last frame.
@@ -591,15 +454,17 @@ namespace april
 		/// @brief The current active touch pointers.
 		harray<gvec2> touches;
 		/// @brief Queued mouse events.
-		harray<MouseInputEvent> mouseEvents;
+		harray<MouseEvent> mouseEvents;
 		/// @brief Queued keyboard events.
-		harray<KeyInputEvent> keyEvents;
+		harray<KeyEvent> keyEvents;
 		/// @brief Queued touch events.
-		harray<TouchInputEvent> touchEvents;
+		harray<TouchEvent> touchEvents;
 		/// @brief Queued controller events.
-		harray<ControllerInputEvent> controllerEvents;
+		harray<ControllerEvent> controllerEvents;
 		/// @brief Queued motion events.
-		harray<MotionInputEvent> motionEvents;
+		harray<MotionEvent> motionEvents;
+		/// @brief Queued generic events.
+		harray<GenericEvent> genericEvents;
 		/// @brief The controller emulation keys.
 		/// @note This is useful when testing controller input functionality without actually using a controller.
 		hmap<Key, Button> controllerEmulationKeys;
@@ -617,7 +482,7 @@ namespace april
 		/// @brief The current mouse delegate.
 		MouseDelegate* mouseDelegate;
 		/// @brief The current keyboard delegate.
-		KeyboardDelegate* keyboardDelegate;
+		KeyDelegate* keyboardDelegate;
 		/// @brief The current touch delegate.
 		TouchDelegate* touchDelegate;
 		/// @brief The current controller delegate.

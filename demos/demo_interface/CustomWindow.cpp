@@ -179,14 +179,14 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 			if (_doubleTapDown)
 			{
 				_doubleTapDown = false;
-				april::window->queueMouseEvent(MouseInputEvent::Type::Up, april::window->getCursorPosition(), april::Key::DoubleTap);
+				april::window->queueMouseEvent(april::MouseEvent::Type::Up, april::window->getCursorPosition(), april::Key::DoubleTap);
 			}
 			_touchDown = false;
 		}
 		else if (wParam == 6) // GID_TWOFINGERTAP
 		{
 			_doubleTapDown = true;
-			april::window->queueMouseEvent(MouseInputEvent::Type::Down, april::window->getCursorPosition(), april::Key::DoubleTap);
+			april::window->queueMouseEvent(april::MouseEvent::Type::Down, april::window->getCursorPosition(), april::Key::DoubleTap);
 		}
 		break;
 	case 0x011A: // WM_GESTURENOTIFY (win7+ only)
@@ -198,7 +198,7 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 		april::window->terminateMainLoop();
 		break;
 	case WM_CLOSE:
-		if (april::window->handleQuitRequestEvent(true))
+		if (april::window->handleQuitRequest(true))
 		{
 			PostQuitMessage(0);
 			april::window->terminateMainLoop();
@@ -215,7 +215,7 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 		{
 			if (wParam == VK_F4)
 			{
-				if (april::window->handleQuitRequestEvent(true))
+				if (april::window->handleQuitRequest(true))
 				{
 					PostQuitMessage(0);
 					april::window->terminateMainLoop();
@@ -228,7 +228,7 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 				return 0;
 			}
 		}
-		april::window->queueKeyEvent(KeyInputEvent::Type::Down, april::Key::fromInt(wParam), 0);
+		april::window->queueKeyEvent(april::KeyEvent::Type::Down, april::Key::fromInt(wParam), 0);
 		return 0;
 	case WM_SYSKEYUP:
 		if (wParam == VK_MENU)
@@ -237,15 +237,15 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 		}
 		// no break here, because this is still an input message that needs to be processed normally
 	case WM_KEYUP:
-		april::window->queueKeyEvent(KeyInputEvent::Type::Up, april::Key::fromInt((int)wParam), 0);
+		april::window->queueKeyEvent(april::KeyEvent::Type::Up, april::Key::fromInt((int)wParam), 0);
 		return 0;
 	case WM_CHAR:
-		april::window->queueKeyEvent(KeyInputEvent::Type::Down, april::Key::None, wParam);
+		april::window->queueKeyEvent(april::KeyEvent::Type::Down, april::Key::None, wParam);
 		break;
 	case WM_LBUTTONDOWN:
 		_touchDown = true;
 		_mouseMoveMessagesCount = 0;
-		april::window->queueMouseEvent(MouseInputEvent::Type::Down, april::window->getCursorPosition(), april::Key::MouseL);
+		april::window->queueMouseEvent(april::MouseEvent::Type::Down, april::window->getCursorPosition(), april::Key::MouseL);
 		if (!april::window->isFullscreen())
 		{
 			SetCapture((HWND)april::window->getBackendId());
@@ -254,7 +254,7 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 	case WM_RBUTTONDOWN:
 		_touchDown = true;
 		_mouseMoveMessagesCount = 0;
-		april::window->queueMouseEvent(MouseInputEvent::Type::Down, april::window->getCursorPosition(), april::Key::MouseR);
+		april::window->queueMouseEvent(april::MouseEvent::Type::Down, april::window->getCursorPosition(), april::Key::MouseR);
 		if (!april::window->isFullscreen())
 		{
 			SetCapture((HWND)april::window->getBackendId());
@@ -262,7 +262,7 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 		break;
 	case WM_LBUTTONUP:
 		_touchDown = false;
-		april::window->queueMouseEvent(MouseInputEvent::Type::Up, april::window->getCursorPosition(), april::Key::MouseL);
+		april::window->queueMouseEvent(april::MouseEvent::Type::Up, april::window->getCursorPosition(), april::Key::MouseL);
 		if (!april::window->isFullscreen())
 		{
 			ReleaseCapture();
@@ -270,7 +270,7 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 		break;
 	case WM_RBUTTONUP:
 		_touchDown = false;
-		april::window->queueMouseEvent(MouseInputEvent::Type::Up, april::window->getCursorPosition(), april::Key::MouseR);
+		april::window->queueMouseEvent(april::MouseEvent::Type::Up, april::window->getCursorPosition(), april::Key::MouseR);
 		if (!april::window->isFullscreen())
 		{
 			ReleaseCapture();
@@ -292,38 +292,38 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 		{
 			_mouseMoveMessagesCount = 0;
 		}
-		april::window->queueMouseEvent(MouseInputEvent::Type::Move, april::window->getCursorPosition(), april::Key::None);
+		april::window->queueMouseEvent(april::MouseEvent::Type::Move, april::window->getCursorPosition(), april::Key::None);
 		break;
 	case WM_MOUSEWHEEL:
 		_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 		if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 		{
-			april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), april::Key::None);
+			april::window->queueMouseEvent(april::MouseEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), april::Key::None);
 		}
 		else
 		{
-			april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), april::Key::None);
+			april::window->queueMouseEvent(april::MouseEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), april::Key::None);
 		}
 		break;
 	case WM_MOUSEHWHEEL:
 		_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 		if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 		{
-			april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), april::Key::None);
+			april::window->queueMouseEvent(april::MouseEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), april::Key::None);
 		}
 		else
 		{
-			april::window->queueMouseEvent(MouseInputEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), april::Key::None);
+			april::window->queueMouseEvent(april::MouseEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), april::Key::None);
 		}
 		break;
 	case WM_ACTIVATE:
 		if (wParam == WA_ACTIVE || wParam == WA_CLICKACTIVE)
 		{
-			april::window->handleFocusChangeEvent(true);
+			april::window->queueFocusChangeEvent(true);
 		}
 		else
 		{
-			april::window->handleFocusChangeEvent(false);
+			april::window->queueFocusChangeEvent(false);
 		}
 		break;
 	}

@@ -161,7 +161,7 @@ namespace april
 		args->Handled = true;
 		if (april::window != NULL)
 		{
-			april::window->handleQuitRequestEvent(false);
+			april::window->handleQuitRequest(false);
 		}
 	}
 
@@ -388,7 +388,7 @@ namespace april
 		args->Handled = true;
 		if (april::window != NULL)
 		{
-			april::window->handleQuitRequestEvent(false);
+			april::window->handleQuitRequest(false);
 		}
 	}
 
@@ -396,7 +396,7 @@ namespace april
 	{
 		if (april::window != NULL)
 		{
-			april::window->handleVirtualKeyboardChangeEvent(true, args->OccludedRect.Height / CoreWindow::GetForCurrentThread()->Bounds.Height);
+			april::window->handleVirtualKeyboardChange(true, args->OccludedRect.Height / CoreWindow::GetForCurrentThread()->Bounds.Height);
 		}
 		this->_resetTouches();
 	}
@@ -405,7 +405,7 @@ namespace april
 	{
 		if (april::window != NULL)
 		{
-			april::window->handleVirtualKeyboardChangeEvent(false, 0.0f);
+			april::window->handleVirtualKeyboardChange(false, 0.0f);
 		}
 		this->_resetTouches();
 	}

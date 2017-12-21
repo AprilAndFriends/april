@@ -49,7 +49,7 @@ namespace april
 
 	void Application::destroy()
 	{
-		this->started = false;
+		this->running = false;
 		this->updateThread.join();
 	}
 
@@ -96,7 +96,6 @@ namespace april
 		hmutex::ScopeLock lock(&this->updateMutex);
 		this->timeDelta += timeDelta;
 		lock.release();
-		//hlog::debug("OK", this->timeDelta);
 		april::window->checkEvents();
 		april::rendersys->update(timeDelta);
 		// this consumes the timeDelta after the frame is done
@@ -106,6 +105,11 @@ namespace april
 		}
 	}
 
+	void Application::finish()
+	{
+		this->running = false;
+	}
+
 	void Application::_asyncUpdate(hthread* thread)
 	{
 		(*april::application->aprilApplicationInit)();
@@ -113,13 +117,12 @@ namespace april
 		float timeDelta = 0.0f;
 		UpdateDelegate* updateDelegate = NULL;
 		hmutex::ScopeLock lock;
-		while (april::application->started && april::application->running)
+		while (april::application->running)
 		{
 			lock.acquire(&april::application->updateMutex);
 			timeDelta = april::application->timeDelta;
 			april::application->timeDelta = 0.0f;
 			lock.release();
-			//hlog::debug("OK", timeDelta);
 			if (!april::window->update(timeDelta))
 			{
 				april::application->running = false;

@@ -97,7 +97,7 @@ namespace april
     {
         lock.acquire(&aprilWindow->renderThreadSyncMutex);
     }
-	if (aprilWindow->handleQuitRequestEvent(true))
+	if (aprilWindow->handleQuitRequest(true))
 	{
         if (displayLink)
         {

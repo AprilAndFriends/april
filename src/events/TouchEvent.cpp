@@ -6,16 +6,17 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#include "InputDelegate.h"
+#include "TouchEvent.h"
 
 namespace april
 {
-	InputDelegate::InputDelegate() : KeyDelegate(), MouseDelegate(), TouchDelegate(), ControllerDelegate(), MotionDelegate()
+	TouchEvent::TouchEvent()
 	{
 	}
 
-	InputDelegate::~InputDelegate()
+	TouchEvent::TouchEvent(const harray<gvec2>& touches)
 	{
+		this->touches = touches;
 	}
 
 }

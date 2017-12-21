@@ -6,9 +6,8 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#include <stdlib.h>
-
 #ifdef _ANDROIDJNI_WINDOW
+#include <stdlib.h>
 #include <jni.h>
 
 #include <gtypes/Vector2.h>
@@ -93,18 +92,18 @@ namespace april
 		env->PopLocalFrame(NULL);
 	}
 
-	void AndroidJNI_Window::queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index)
+	void AndroidJNI_Window::queueTouchEvent(const MouseEvent::Type& type, cgvec2 position, int index)
 	{
-		if (type == MouseInputEvent::Type::Down || type == MouseInputEvent::Type::Up)
+		if (type == MouseEvent::Type::Down || type == MouseEvent::Type::Up)
 		{
-			this->setInputMode(InputMode::Touch);
+			this->queueInputModeChangeEvent(InputMode::Touch);
 		}
 		Window::queueTouchEvent(type, position, index);
 	}
 
-	void AndroidJNI_Window::queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
+	void AndroidJNI_Window::queueControllerEvent(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue)
 	{
-		this->setInputMode(InputMode::Controller);
+		this->queueInputModeChangeEvent(InputMode::Controller);
 		Window::queueControllerEvent(type, controllerIndex, buttonCode, axisValue);
 	}
 
@@ -122,10 +121,10 @@ namespace april
 		env->PopLocalFrame(NULL);
 	}
 
-	void AndroidJNI_Window::handleFocusChangeEvent(bool focused)
+	void AndroidJNI_Window::handleFocusChange(bool focused)
 	{
 		this->forcedFocus = false;
-		Window::handleFocusChangeEvent(focused);
+		Window::handleFocusChange(focused);
 	}
 
 	void AndroidJNI_Window::handleActivityChange(bool active)
@@ -135,14 +134,14 @@ namespace april
 			if (this->focused)
 			{
 				this->forcedFocus = true;
-				Window::handleFocusChangeEvent(false);
+				Window::handleFocusChange(false);
 			}
 		}
 		else if (this->forcedFocus)
 		{
 			// only return focus if previously lost focus through acitvity state change
 			this->forcedFocus = false;
-			Window::handleFocusChangeEvent(true);
+			Window::handleFocusChange(true);
 		}
 	}
 
