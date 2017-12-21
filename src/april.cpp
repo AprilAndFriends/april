@@ -246,6 +246,7 @@ namespace april
 		hstr renderSystemName = (april::rendersys != NULL ? april::rendersys->getName() : "NULL");
 		hstr windowName = (april::window != NULL ? april::window->getName() : "NULL");
 		hlog::writef(logTag, "Using: %s, %s", renderSystemName.cStr(), windowName.cStr());
+		april::rendersys->waitForAsyncCommands(true);
 	}
 
 	void _createRenderSystem(RenderSystemType renderSystemType)
@@ -422,6 +423,7 @@ namespace april
 	void createRenderSystem(RenderSystem::Options options)
 	{
 		april::rendersys->create(options);
+		april::rendersys->waitForAsyncCommands(true);
 	}
 	
 	void createWindow(int w, int h, bool fullscreen, chstr title, Window::Options options)
@@ -434,6 +436,7 @@ namespace april
 #endif
 		april::rendersys->getCaps(); // calling getCaps() is required here so it's initialized on certain platforms
 		april::rendersys->clear(); // initial clear backbuffer
+		april::rendersys->waitForAsyncCommands(true);
 	}
 
 	void destroy()
@@ -468,6 +471,7 @@ namespace april
 			april::egl = NULL;
 		}
 #endif
+		april::rendersys->waitForAsyncCommands(true);
 	}
 	
 	void addTextureExtension(chstr extension)

@@ -167,8 +167,8 @@ namespace april
 				surface->Release();
 			}
 		}
-		this->clear();
-		this->presentFrame();
+		this->_deviceClear(false);
+		this->_devicePresentFrame();
 		// device config
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
 		this->d3dDevice->BeginScene();

@@ -127,6 +127,8 @@ namespace april
 		this->pixelOffset = 0.0f;
 		this->state = new RenderState();
 		this->deviceState = new RenderState();
+		this->processingAsync = false;
+		this->frameAdvanceUpdates = 1;
 		this->statCurrentFrameRenderCalls = 0;
 		this->statLastFrameRenderCalls = 0;
 		this->statCurrentFrameTextureSwitches = 0;
@@ -171,19 +173,10 @@ namespace april
 	void RenderSystem::_systemCreate(Options options)
 	{
 		hlog::writef(logTag, "Creating rendersystem: '%s' (options: %s)", this->name.cStr(), options.toString().cStr());
+		hmutex::ScopeLock lock(&this->renderMutex);
 		this->options = options;
 		this->state->reset();
 		this->deviceState->reset();
-		foreach (AsyncCommandQueue*, it, this->asyncCommandQueues)
-		{
-			delete (*it);
-		}
-		this->asyncCommandQueues.clear();
-		foreach (Texture*, it, this->destroyTexturesQueue)
-		{
-			delete (*it);
-		}
-		this->destroyTexturesQueue.clear();
 		this->statCurrentFrameRenderCalls = 0;
 		this->statLastFrameRenderCalls = 0;
 		this->statCurrentFrameTextureSwitches = 0;
@@ -217,6 +210,7 @@ namespace april
 	void RenderSystem::_systemDestroy()
 	{
 		hlog::writef(logTag, "Destroying rendersystem '%s'.", this->name.cStr());
+		hmutex::ScopeLock lock(&this->renderMutex);
 		this->renderMode = RenderMode::Normal;
 		if (this->renderHelper != NULL)
 		{
@@ -275,6 +269,7 @@ namespace april
 
 	void RenderSystem::_systemAssignWindow(Window* window)
 	{
+		hmutex::ScopeLock lock(&this->renderMutex);
 		this->_deviceAssignWindow(window);
 		this->_deviceSetupCaps();
 		this->_deviceSetup();
@@ -338,6 +333,12 @@ namespace april
 				this->renderHelper->create();
 			}
 		}
+	}
+
+	int RenderSystem::getAsyncQueuesCount()
+	{
+		hmutex::ScopeLock lock(&this->renderMutex);
+		return hmax(this->asyncCommandQueues.size() - 1, 0);
 	}
 
 	harray<Texture*> RenderSystem::getTextures()
@@ -426,22 +427,28 @@ namespace april
 		this->state->projectionMatrixChanged = true;
 	}
 
-	void RenderSystem::update(float timeDelta)
+	bool RenderSystem::update(float timeDelta)
 	{
+		bool result = false;
 		hmutex::ScopeLock lock(&this->renderMutex);
 		hmutex::ScopeLock lockTextures(&this->texturesMutex);
 		harray<Texture*> destroyTexturesQueue = this->destroyTexturesQueue;
 		this->destroyTexturesQueue.clear();
 		lockTextures.release();
-		if (this->asyncCommandQueues.size() > 1)
+		if (this->asyncCommandQueues.size() >= 2)
 		{
 			AsyncCommandQueue* queue = this->asyncCommandQueues.removeFirst();
+			this->processingAsync = true;
 			lock.release();
 			foreach (AsyncCommand*, it, queue->commands)
 			{
 				(*it)->execute();
 			}
+			lock.acquire(&this->renderMutex);
+			this->processingAsync = false;
+			lock.release();
 			delete queue;
+			result = true;
 		}
 		else
 		{
@@ -452,8 +459,9 @@ namespace april
 		{
 			delete (*it);
 		}
+		return result;
 	}
-	
+
 	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, Texture::LoadMode loadMode)
 	{
 		return this->_createTextureFromSource(true, filename, type, loadMode);
@@ -886,6 +894,21 @@ namespace april
 		}
 	}
 
+	void RenderSystem::waitForAsyncCommands(bool forced)
+	{
+		hmutex::ScopeLock lock(&this->renderMutex);
+		if (forced && this->asyncCommandQueues.size() == 1 && this->asyncCommandQueues.first()->commands.size() > 0)
+		{
+			this->asyncCommandQueues += new AsyncCommandQueue();
+		}
+		while (this->asyncCommandQueues.size() > 1 || this->processingAsync)
+		{
+			lock.release();
+			hthread::sleep(0.01f);
+			lock.acquire(&this->renderMutex);
+		}
+	}
+
 	void RenderSystem::clear(bool depth)
 	{
 		if (this->renderHelper != NULL)
@@ -1261,7 +1284,6 @@ namespace april
 	void RenderSystem::presentFrame()
 	{
 		this->_addAsyncCommand(new PresentFrameCommand(*this->state));
-		this->update(); // TODOx - remove this
 	}
 
 	void RenderSystem::_devicePresentFrame()

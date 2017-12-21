@@ -81,9 +81,9 @@ namespace april
 		this->destroy();
 	}
 	
-	bool SDL_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	bool SDL_Window::_systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
-		if (!Window::create(w, h, fullscreen, title, options))
+		if (!Window::_systemCreate(w, h, fullscreen, title, options))
 		{
 			return false;
 		}
@@ -221,7 +221,7 @@ namespace april
 			gAprilShouldInvokeQuitCallback = 0;
 		}
 		// first process sdl events
-		this->checkEvents();
+		this->_processEvents();
 		return Window::update(timeDelta);
 	}
 

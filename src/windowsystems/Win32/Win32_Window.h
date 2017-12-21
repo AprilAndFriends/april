@@ -39,8 +39,6 @@ namespace april
 	public:
 		Win32_Window();
 		~Win32_Window();
-		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
-		bool destroy();
 
 		void setTitle(chstr title);
 		bool isCursorVisible() const;
@@ -67,6 +65,9 @@ namespace april
 		bool connectedControllers[XUSER_MAX_COUNT];
 #endif
 
+		void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		void _systemDestroy();
+		
 		Cursor* _createCursor(bool fromResource);
 
 #ifdef _WIN32_XINPUT

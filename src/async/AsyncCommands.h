@@ -19,12 +19,15 @@
 #include "ClearDepthCommand.h"
 #include "ClearColorCommand.h"
 #include "CreateCommand.h"
+#include "CreateWindowCommand.h"
 #include "DestroyCommand.h"
+#include "DestroyWindowCommand.h"
 #include "PresentFrameCommand.h"
 #include "RenderCommand.h"
 #include "ResetCommand.h"
 #include "StateUpdateCommand.h"
 #include "SuspendCommand.h"
+#include "UnassignWindowCommand.h"
 #include "VertexRenderCommand.h"
 
 #endif

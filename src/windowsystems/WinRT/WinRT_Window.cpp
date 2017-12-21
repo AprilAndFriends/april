@@ -39,7 +39,7 @@ namespace april
 		this->destroy();
 	}
 
-	bool WinRT_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	bool WinRT_Window::_systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
 		// WinRT window forces its own size
 		float dpiRatio = WinRT::getDpiRatio();
@@ -48,7 +48,7 @@ namespace april
 		h = hround(window->Bounds.Height * dpiRatio);
 		// WinRT 8.1 or earlier is always considered fullscreen
 		fullscreen = true;
-		if (!Window::create(w, h, fullscreen, title, options))
+		if (!Window::_systemCreate(w, h, fullscreen, title, options))
 		{
 			return false;
 		}

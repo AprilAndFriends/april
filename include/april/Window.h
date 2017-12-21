@@ -18,6 +18,7 @@
 #include <hltypes/henum.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hmap.h>
+#include <hltypes/hmutex.h>
 #include <hltypes/hstring.h>
 
 #include "aprilExport.h"
@@ -27,14 +28,17 @@
 
 namespace april
 {
-	class Cursor;
+	class CreateWindowCommand;
 	class ControllerDelegate;
+	class Cursor;
+	class DestroyWindowCommand;
 	class KeyboardDelegate;
 	class MotionDelegate;
 	class MouseDelegate;
 	class RenderSystem;
 	class SystemDelegate;
 	class TouchDelegate;
+	class UnassignWindowCommand;
 	class UpdateDelegate;
 	class VirtualKeyboard;
 
@@ -42,6 +46,10 @@ namespace april
 	class aprilExport Window
 	{
 	public:
+		friend class CreateWindowCommand;
+		friend class DestroyWindowCommand;
+		friend class UnassignWindowCommand;
+
 		/// @brief Defines mouse input event data.
 		struct aprilExport MouseInputEvent
 		{
@@ -250,13 +258,13 @@ namespace april
 		/// @param[in] title The title to be displayed on the window title bar.
 		/// @param[in] options The Options object.
 		/// @return True if successful.
-		virtual bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		/// @brief Destroys the Window.
 		/// @return True if successful.
-		virtual bool destroy();
+		bool destroy();
 		/// @brief Unassigns the Window from a RenderSystem.
 		/// @note This is usually used only internally and is needed for some internal call ordering purposes.
-		virtual void unassign();
+		void unassign();
 
 		/// @brief Window name.
 		HL_DEFINE_GET(hstr, name, Name);
@@ -382,7 +390,7 @@ namespace april
 		virtual void checkEvents();
 		/// @brief Aborts execution and forces the application to exit after the current frame is complete.
 		/// @note It is safer to return false in your implementation of UpdateDelegate::onUpdate().
-		virtual void terminateMainLoop();
+		virtual void terminateMainLoop(); // TODOx - move to Application class
 		/// @brief Displays a virtual keyboard if necessary.
 		/// @note Some systems don't support this while on other this is the only way to handle any kind of keyboard input.
 		virtual void showVirtualKeyboard();
@@ -576,6 +584,8 @@ namespace april
 		hmap<InputMode, InputMode> inputModeTranslations;
 		/// @brief The filename extensions supported for cursor image files.
 		harray<hstr> cursorExtensions;
+		/// @brief The mutex for event queueing.
+		hmutex eventMutex;
 		/// @brief Whether multi-touch mode is currently active.
 		bool multiTouchActive;
 		/// @brief The current active touch pointers.
@@ -616,6 +626,24 @@ namespace april
 		MotionDelegate* motionDelegate;
 		/// @brief The current system delegate.
 		SystemDelegate* systemDelegate;
+
+		/// @brief Creates the Window.
+		/// @param[in] w Width of the window's rendering area.
+		/// @param[in] h Height of the window's rendering area.
+		/// @param[in] fullscreen Whether the window should be created in fullscreen or not.
+		/// @param[in] title The title to be displayed on the window title bar.
+		/// @param[in] options The Options object.
+		/// @return True if successful.
+		virtual void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		/// @brief Destroys the Window.
+		/// @return True if successful.
+		virtual void _systemDestroy();
+		/// @brief Unassigns the Window from a RenderSystem.
+		/// @note This is usually used only internally and is needed for some internal call ordering purposes.
+		virtual void _systemUnassign();
+
+		/// @brief Processed queued events.
+		void _processEvents();
 
 		/// @brief Internally safe method for creating a Cursor object.
 		/// @param[in] fromResource Whether the Cursor should be created from a resource file or a normal file.

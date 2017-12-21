@@ -39,7 +39,6 @@ namespace april
 		iOS_Window();
 		~iOS_Window();
 		
-		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		// implementations
 		bool update(float timeDelta);
 		void destroyWindow();
@@ -89,6 +88,8 @@ namespace april
 		bool inputEventsMutex;
 		bool retainLoadingOverlay;
 		void (*exitFunction)(int);
+		
+		void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		
 		void callTouchCallback();
 		

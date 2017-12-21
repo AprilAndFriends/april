@@ -211,7 +211,7 @@ namespace april
 		[mWindow invalidateCursorRectsForView:mView];
 	}
 	
-	bool Mac_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	bool Mac_Window::_systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
 		hstr windowTitle;
 		if (title == "")
@@ -230,7 +230,7 @@ namespace april
 		{
 			windowTitle = title;
 		}
-		if (!Window::create(w, h, fullscreen, windowTitle, options))
+		if (!Window::_systemCreate(w, h, fullscreen, windowTitle, options))
 		{
 			return false;
 		}

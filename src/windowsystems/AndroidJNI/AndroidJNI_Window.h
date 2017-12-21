@@ -30,7 +30,6 @@ namespace april
 	public:
 		AndroidJNI_Window();
 		~AndroidJNI_Window();
-		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		
 		inline void setTitle(chstr title) { }
 		inline bool isCursorVisible() const { return false; }
@@ -55,6 +54,8 @@ namespace april
 		int height;
 		bool forcedFocus;
 
+		void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor() { }
 		

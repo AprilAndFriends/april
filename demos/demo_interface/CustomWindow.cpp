@@ -33,14 +33,14 @@ CustomWindow::~CustomWindow()
 	this->destroy();
 }
 
-bool CustomWindow::create(int w, int h, bool fullscreen, chstr title, april::Window::Options options)
+bool CustomWindow::_systemCreate(int w, int h, bool fullscreen, chstr title, april::Window::Options options)
 {
 	if (fullscreen)
 	{
 		hlog::warnf(LOG_TAG, "Window '%s' does not support fullscreen", this->name.cStr());
 		fullscreen = false;
 	}
-	if (!april::Window::create(w, h, fullscreen, title, options))
+	if (!april::Window::_systemCreate(w, h, fullscreen, title, options))
 	{
 		return false;
 	}
@@ -127,7 +127,6 @@ bool CustomWindow::update(float timeDelta)
 	GetCursorPos(&w32_cursorPosition);
 	ScreenToClient(this->hWnd, &w32_cursorPosition);
 	this->cursorPosition.set((float)w32_cursorPosition.x, (float)w32_cursorPosition.y);
-	this->checkEvents();
 	// rendering
 	return april::Window::update(timeDelta);
 }

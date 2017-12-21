@@ -19,8 +19,8 @@ namespace april
 {
 	Application* application = NULL;
 	
-	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : running(true), autoPresentFrame(false),
-		fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f)
+	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : running(true), started(false), autoPresentFrame(false),
+		timeDelta(0.0f), fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f), updateThread(&_asyncUpdate)
 	{
 		this->aprilApplicationInit = aprilApplicationInit;
 		this->aprilApplicationDestroy = aprilApplicationDestroy;
@@ -35,12 +35,22 @@ namespace april
 
 	void Application::init()
 	{
-		(*this->aprilApplicationInit)();
+		this->updateThread.start();
+		while (!this->started)
+		{
+			hthread::sleep(0.1f);
+			if (april::rendersys != NULL)
+			{
+				TextureAsync::update();
+				april::rendersys->update(0.0f); // might require some rendering
+			}
+		}
 	}
 
 	void Application::destroy()
 	{
-		(*this->aprilApplicationDestroy)();
+		this->started = false;
+		this->updateThread.join();
 	}
 
 	void Application::enterMainLoop()
@@ -83,27 +93,54 @@ namespace april
 			this->fps = 0;
 			this->fpsCount = 0;
 		}
-		if (!april::window->update(timeDelta))
-		{
-			this->running = false;
-		}
+		hmutex::ScopeLock lock(&this->updateMutex);
+		this->timeDelta += timeDelta;
+		lock.release();
+		//hlog::debug("OK", this->timeDelta);
+		april::window->checkEvents();
 		april::rendersys->update(timeDelta);
-		UpdateDelegate* updateDelegate = april::window->getUpdateDelegate();
-		if (updateDelegate != NULL)
-		{
-#ifndef _ANDROID
-			updateDelegate->onPresentFrame();
-#else // on AndroidJNI the backend does buffer swapping so this single call needs to be ignored
-			april::window->setPresentFrameEnabled(false);
-			updateDelegate->onPresentFrame();
-			april::window->setPresentFrameEnabled(true);
-#endif
-		}
 		// this consumes the timeDelta after the frame is done
 		if (!april::window->isFocused())
 		{
 			this->timer.diff(true);
 		}
+	}
+
+	void Application::_asyncUpdate(hthread* thread)
+	{
+		(*april::application->aprilApplicationInit)();
+		april::application->started = true;
+		float timeDelta = 0.0f;
+		UpdateDelegate* updateDelegate = NULL;
+		hmutex::ScopeLock lock;
+		while (april::application->started && april::application->running)
+		{
+			lock.acquire(&april::application->updateMutex);
+			timeDelta = april::application->timeDelta;
+			april::application->timeDelta = 0.0f;
+			lock.release();
+			//hlog::debug("OK", timeDelta);
+			if (!april::window->update(timeDelta))
+			{
+				april::application->running = false;
+			}
+			updateDelegate = april::window->getUpdateDelegate();
+			if (updateDelegate != NULL)
+			{
+#ifndef _ANDROID
+				updateDelegate->onPresentFrame();
+#else // on AndroidJNI the backend does buffer swapping so this single call needs to be ignored
+				april::window->setPresentFrameEnabled(false);
+				updateDelegate->onPresentFrame();
+				april::window->setPresentFrameEnabled(true);
+#endif
+			}
+			while (april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
+			{
+				hthread::sleep(0.01f);
+			}
+		}
+		(*april::application->aprilApplicationDestroy)();
 	}
 
 }

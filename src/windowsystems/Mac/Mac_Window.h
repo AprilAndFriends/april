@@ -31,9 +31,6 @@ namespace april
 		int getHeight() const;
 		void* getBackendId() const;
 		
-		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
-		bool destroy();
-		
 		void setTitle(chstr title);
 		hstr getParam(chstr param);
 		void setParam(chstr param, chstr value);
@@ -80,6 +77,9 @@ namespace april
 	protected:
 		Cursor* _createCursor(bool fromResource);
         harray<QueuedEvent*> queuedEvents;
+		
+		void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		void _systemDestroy();
 		
 		void _presentFrame();
 		

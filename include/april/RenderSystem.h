@@ -198,6 +198,8 @@ namespace april
 		HL_DEFINE_GET(Caps, caps, Caps);
 		/// @brief Gets the current RenderMode.
 		HL_DEFINE_GET(RenderMode, renderMode, RenderMode);
+		/// @brief Gets how frames in advance can be updated.
+		HL_DEFINE_GET(int, frameAdvanceUpdates, FrameAdvanceUpdates);
 		/// @brief Gets how many times a render call was called during this frame.
 		HL_DEFINE_GET(int, statCurrentFrameRenderCalls, StatCurrentFrameRenderCalls);
 		/// @brief Gets how many times a render call was called during the last frame.
@@ -218,6 +220,8 @@ namespace april
 		HL_DEFINE_GET(int, statCurrentFrameLineCount, StatCurrentFrameLineCount);
 		/// @brief Gets how many lines were rendered during the last frame.
 		HL_DEFINE_GET(int, statLastFrameLineCount, StatLastFrameLineCount);
+		/// @brief Gets how frames are queued for rendering.
+		int getAsyncQueuesCount();
 		/// @brief Gets all currently existing textures in the RenderSystem.
 		/// @return All currently existing textures in the RenderSystem.
 		harray<Texture*> getTextures();
@@ -263,7 +267,12 @@ namespace april
 
 		/// @brief Updates the RenderSystem.
 		/// @param[in] timeDelta Time since last frame.
-		void update(float timeDelta = 0.0f);
+		/// @return Whether a frame has been rendered.
+		bool update(float timeDelta);
+		/// @brief Waits for the currently async commands to be executed.
+		/// @param[in] forced Whether to force executing all commands so far.
+		/// @note This is primarily used to help with synchronization. Future refactoring might introduce completely thread-safe access and render this functionality obsolete.
+		void waitForAsyncCommands(bool forced = false);
 
 		/// @brief Sets the current RenderMode.
 		void setRenderMode(RenderMode renderMode, const hmap<hstr, hstr>& options = hmap<hstr, hstr>());
@@ -600,6 +609,10 @@ namespace april
 		RenderHelper* renderHelper;
 		/// @brief Async command queue.
 		harray<AsyncCommandQueue*> asyncCommandQueues;
+		/// @brief Whether async commands are being processed right now.
+		bool processingAsync;
+		/// @brief How many times a render call was called during this frame.
+		int frameAdvanceUpdates;
 
 		/// @brief How many times a render call was called during this frame.
 		int statCurrentFrameRenderCalls;

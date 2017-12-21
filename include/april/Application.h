@@ -16,6 +16,7 @@
 #include <hltypes/harray.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
+#include <hltypes/hthread.h>
 
 #include "aprilExport.h"
 #include "Timer.h"
@@ -67,10 +68,14 @@ namespace april
 		void (*aprilApplicationDestroy)();
 		/// @brief Running flag.
 		bool running;
+		/// @brief Running flag.
+		bool started;
 		/// @brief Whether automatic presentFrame() implementation is used by the underlying system.
 		bool autoPresentFrame;
 		/// @brief The Timer object used for timing purposes.
 		Timer timer;
+		/// @brief The current time since the last frame.
+		float timeDelta;
 		/// @brief FPS of the last mesaure.
 		int fps;
 		/// @brief Current counter for FPS calculation.
@@ -82,6 +87,14 @@ namespace april
 		/// @brief Maximum allowed time-delta that are propagated into the UpdateDelegate.
 		/// @note Limiting this makes sense, because on weak hardware configurations it allows that large frameskips don't result in too large time skips.
 		float timeDeltaMaxLimit;
+		/// @brief The update thread.
+		hthread updateThread;
+		/// @brief The update mutex.
+		hmutex updateMutex;
+
+		/// @brief Updates the application asynchronously.
+		/// @param[in] thread The thread on which the asynchronous update is running.
+		static void _asyncUpdate(hthread* thread);
 
 	};
 

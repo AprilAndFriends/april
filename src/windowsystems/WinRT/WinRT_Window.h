@@ -38,8 +38,6 @@ namespace april
 		WinRT_Window();
 		~WinRT_Window();
 		
-		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
-		
 		hstr getParam(chstr param);
 		void setParam(chstr param, chstr value);
 		
@@ -63,6 +61,8 @@ namespace april
 		bool backButtonSystemHandling;
 		hmap<hstr, unsigned int> cursorMappings;
 
+		void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor();
 

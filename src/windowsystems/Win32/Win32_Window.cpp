@@ -75,12 +75,9 @@ namespace april
 
 	// Considering that Iron Man and Batman's only real superpower is being
 	// super rich and smart, Bill Gates turned out to be a real disappointment.
-	bool Win32_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	void Win32_Window::_systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
-		if (!Window::create(w, h, fullscreen, title, options))
-		{
-			return false;
-		}
+		Window::_systemCreate(w, h, fullscreen, title, options);
 		this->inputMode = InputMode::Mouse;
 		// Win32
 		WNDCLASSEXW wc;
@@ -141,15 +138,11 @@ namespace april
 #ifdef _EGL
 		april::egl->create();
 #endif
-		return true;
 	}
 	
-	bool Win32_Window::destroy()
+	void Win32_Window::_systemDestroy()
 	{
-		if (!Window::destroy())
-		{
-			return false;
-		}
+		Window::_systemDestroy();
 		if (this->hWnd != 0)
 		{
 			DestroyWindow(this->hWnd);
@@ -159,7 +152,6 @@ namespace april
 #ifdef _EGL
 		april::egl->destroy();
 #endif
-		return true;
 	}
 
 	void Win32_Window::setTitle(chstr title)
@@ -296,7 +288,6 @@ namespace april
 		{
 			this->_updateCursorPosition();
 		}
-		this->checkEvents();
 		// rendering
 		bool result = Window::update(timeDelta);
 		if (this->fpsCounter)

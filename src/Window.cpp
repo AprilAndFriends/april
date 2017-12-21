@@ -15,6 +15,7 @@
 #include <hltypes/hthread.h>
 
 #include "april.h"
+#include "AsyncCommands.h"
 #include "ControllerDelegate.h"
 #include "Cursor.h"
 #include "KeyboardDelegate.h"
@@ -204,70 +205,85 @@ namespace april
 	{
 		if (!this->created)
 		{
-			hlog::writef(logTag, "Creating window: '%s' (%d, %d) %s, '%s', (options: %s)",
-				this->name.cStr(), w, h, fullscreen ? "fullscreen" : "windowed", title.cStr(), options.toString().cStr());
-			this->fullscreen = fullscreen;
-			this->title = title;
-			this->options = options;
 			this->created = true;
-			this->paused = false;
-			if (options.hotkeyFullscreen)
-			{
-				if (!fullscreen)
-				{
-					this->lastWidth = w;
-					this->lastHeight = h;
-				}
-				else
-				{
-					SystemInfo info = april::getSystemInfo();
-					this->lastWidth = hround(info.displayResolution.x * 0.6666667f);
-					this->lastHeight = hround(info.displayResolution.y * 0.6666667f);
-				}
-			}
-			this->multiTouchActive = false;
-			this->cursor = NULL;
-			this->virtualKeyboardVisible = false;
-			this->virtualKeyboardHeightRatio = 0.0f;
-			this->inputMode = InputMode::Mouse;
+			april::rendersys->_addAsyncCommand(new CreateWindowCommand(w, h, fullscreen, title, options));
 			return true;
 		}
 		return false;
 	}
 	
+	void Window::_systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	{
+		hlog::writef(logTag, "Creating window: '%s' (%d, %d) %s, '%s', (options: %s)",
+			this->name.cStr(), w, h, fullscreen ? "fullscreen" : "windowed", title.cStr(), options.toString().cStr());
+		this->fullscreen = fullscreen;
+		this->title = title;
+		this->options = options;
+		this->paused = false;
+		if (options.hotkeyFullscreen)
+		{
+			if (!fullscreen)
+			{
+				this->lastWidth = w;
+				this->lastHeight = h;
+			}
+			else
+			{
+				SystemInfo info = april::getSystemInfo();
+				this->lastWidth = hround(info.displayResolution.x * 0.6666667f);
+				this->lastHeight = hround(info.displayResolution.y * 0.6666667f);
+			}
+		}
+		this->multiTouchActive = false;
+		this->cursor = NULL;
+		this->virtualKeyboardVisible = false;
+		this->virtualKeyboardHeightRatio = 0.0f;
+		this->inputMode = InputMode::Mouse;
+	}
+
 	bool Window::destroy()
 	{
 		if (this->created)
 		{
-			hlog::writef(logTag, "Destroying window '%s'.", this->name.cStr());
-			this->setVirtualKeyboard(NULL);
 			this->created = false;
-			this->paused = false;
-			this->multiTouchActive = false;
-			this->cursor = NULL;
-			this->virtualKeyboardVisible = false;
-			this->virtualKeyboardHeightRatio = 0.0f;
-			this->inputMode = InputMode::Mouse;
-			this->virtualKeyboard = NULL;
-			this->updateDelegate = NULL;
-			this->mouseDelegate = NULL;
-			this->keyboardDelegate = NULL;
-			this->touchDelegate = NULL;
-			this->controllerDelegate = NULL;
-			this->motionDelegate = NULL;
-			this->systemDelegate = NULL;
-			this->mouseEvents.clear();
-			this->keyEvents.clear();
-			this->touchEvents.clear();
-			this->controllerEvents.clear();
-			this->touches.clear();
-			this->controllerEmulationKeys.clear();
+			april::rendersys->_addAsyncCommand(new DestroyWindowCommand());
 			return true;
 		}
 		return false;
 	}
 
+	void Window::_systemDestroy()
+	{
+		hlog::writef(logTag, "Destroying window '%s'.", this->name.cStr());
+		this->setVirtualKeyboard(NULL);
+		this->paused = false;
+		this->multiTouchActive = false;
+		this->cursor = NULL;
+		this->virtualKeyboardVisible = false;
+		this->virtualKeyboardHeightRatio = 0.0f;
+		this->inputMode = InputMode::Mouse;
+		this->virtualKeyboard = NULL;
+		this->updateDelegate = NULL;
+		this->mouseDelegate = NULL;
+		this->keyboardDelegate = NULL;
+		this->touchDelegate = NULL;
+		this->controllerDelegate = NULL;
+		this->motionDelegate = NULL;
+		this->systemDelegate = NULL;
+		this->mouseEvents.clear();
+		this->keyEvents.clear();
+		this->touchEvents.clear();
+		this->controllerEvents.clear();
+		this->touches.clear();
+		this->controllerEmulationKeys.clear();
+	}
+
 	void Window::unassign()
+	{
+		april::rendersys->_addAsyncCommand(new UnassignWindowCommand());
+	}
+
+	void Window::_systemUnassign()
 	{
 	}
 
@@ -422,22 +438,38 @@ namespace april
 
 	bool Window::update(float timeDelta)
 	{
+		this->_processEvents();
 		if (!this->focused)
 		{
 			hthread::sleep(40.0f);
 		}
-		this->checkEvents();
 		return (this->performUpdate(timeDelta) && this->running);
 	}
-	
+
 	void Window::checkEvents()
 	{
+	}
+
+	void Window::_processEvents()
+	{
+		hmutex::ScopeLock lock(&this->eventMutex);
+		harray<MouseInputEvent> mouseEvents = this->mouseEvents;
+		harray<KeyInputEvent> keyEvents = this->keyEvents;
+		harray<TouchInputEvent> touchEvents = this->touchEvents;
+		harray<ControllerInputEvent> controllerEvents = this->controllerEvents;
+		harray<MotionInputEvent> motionEvents = this->motionEvents;
+		this->mouseEvents.clear();
+		this->keyEvents.clear();
+		this->touchEvents.clear();
+		this->controllerEvents.clear();
+		this->motionEvents.clear();
+		lock.release();
 		// due to possible problems with multiple scroll events in one frame, consecutive scroll events are merged (and so are move events for convenience)
 		MouseInputEvent mouseEvent;
 		gvec2 cumulativeScroll;
-		while (this->mouseEvents.size() > 0) // required while instead of for, because this loop could modify this->mouseEvents when the event is propagated
+		while (mouseEvents.size() > 0) // required while instead of for, because this loop could modify this->mouseEvents when the event is propagated
 		{
-			mouseEvent = this->mouseEvents.removeFirst();
+			mouseEvent = mouseEvents.removeFirst();
 			if (mouseEvent.type != MouseInputEvent::Type::Cancel && mouseEvent.type != MouseInputEvent::Type::Scroll)
 			{
 				this->cursorPosition = mouseEvent.position;
@@ -445,7 +477,7 @@ namespace april
 			if (mouseEvent.type == MouseInputEvent::Type::Scroll)
 			{
 				cumulativeScroll += mouseEvent.position;
-				if (this->mouseEvents.size() == 0 || this->mouseEvents.first().type != MouseInputEvent::Type::Scroll)
+				if (mouseEvents.size() == 0 || mouseEvents.first().type != MouseInputEvent::Type::Scroll)
 				{
 					this->handleMouseEvent(mouseEvent.type, cumulativeScroll, mouseEvent.keyCode);
 					cumulativeScroll.set(0.0f, 0.0f);
@@ -453,33 +485,33 @@ namespace april
 			}
 			// if not a scroll event or final move event (because of merging)
 			else if (mouseEvent.type != MouseInputEvent::Type::Move || (mouseEvent.type == MouseInputEvent::Type::Move &&
-				(this->mouseEvents.size() == 0 || this->mouseEvents.first().type != MouseInputEvent::Type::Move)))
+				(mouseEvents.size() == 0 || mouseEvents.first().type != MouseInputEvent::Type::Move)))
 			{
 				this->handleMouseEvent(mouseEvent.type, mouseEvent.position, mouseEvent.keyCode);
 			}
 		}
 		KeyInputEvent keyEvent;
-		while (this->keyEvents.size() > 0) // required while instead of for, because this loop could modify this->keyEvents when the event is propagated
+		while (keyEvents.size() > 0) // required while instead of for, because this loop could modify this->keyEvents when the event is propagated
 		{
-			keyEvent = this->keyEvents.removeFirst();
+			keyEvent = keyEvents.removeFirst();
 			this->handleKeyEvent(keyEvent.type, keyEvent.keyCode, keyEvent.charCode);
 		}
 		TouchInputEvent touchEvent;
-		while (this->touchEvents.size() > 0) // required while instead of for, because this loop could modify this->touchEvents when the event is propagated
+		while (touchEvents.size() > 0) // required while instead of for, because this loop could modify this->touchEvents when the event is propagated
 		{
-			touchEvent = this->touchEvents.removeFirst();
+			touchEvent = touchEvents.removeFirst();
 			this->handleTouchEvent(touchEvent.touches);
 		}
 		ControllerInputEvent controllerEvent;
-		while (this->controllerEvents.size() > 0) // required while instead of for, because this loop could modify this->controllerEvents when the event is propagated
+		while (controllerEvents.size() > 0) // required while instead of for, because this loop could modify this->controllerEvents when the event is propagated
 		{
-			controllerEvent = this->controllerEvents.removeFirst();
+			controllerEvent = controllerEvents.removeFirst();
 			this->handleControllerEvent(controllerEvent.type, controllerEvent.controllerIndex, controllerEvent.buttonCode, controllerEvent.axisValue);
 		}
 		MotionInputEvent motionEvent;
-		while (this->motionEvents.size() > 0) // required while instead of for, because this loop could modify this->motionEvent when the event is propagated
+		while (motionEvents.size() > 0) // required while instead of for, because this loop could modify this->motionEvents when the event is propagated
 		{
-			motionEvent = this->motionEvents.removeFirst();
+			motionEvent = motionEvents.removeFirst();
 			this->handleMotionEvent(motionEvent.type, motionEvent.motionVector);
 		}
 	}
@@ -754,16 +786,19 @@ namespace april
 
 	void Window::queueMouseEvent(MouseInputEvent::Type type, cgvec2 position, Key keyCode)
 	{
+		hmutex::ScopeLock lock(&this->eventMutex);
 		this->mouseEvents += MouseInputEvent(type, position, keyCode);
 	}
 
 	void Window::queueKeyEvent(KeyInputEvent::Type type, Key keyCode, unsigned int charCode)
 	{
+		hmutex::ScopeLock lock(&this->eventMutex);
 		this->keyEvents += KeyInputEvent(type, keyCode, charCode);
 	}
 
 	void Window::queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index)
 	{
+		hmutex::ScopeLock lock(&this->eventMutex);
 		harray<gvec2> previousTouches = this->touches;
 		if (type == MouseInputEvent::Type::Down)
 		{
@@ -806,13 +841,13 @@ namespace april
 			if (!this->multiTouchActive && previousTouches.size() == 1)
 			{
 				// cancel (notify the app) that the previously called mouse-down event is canceled so multi-touch can be properly processed
-				this->queueMouseEvent(MouseInputEvent::Type::Cancel, previousTouches.first(), Key::MouseL);
+				this->mouseEvents += MouseInputEvent(MouseInputEvent::Type::Cancel, previousTouches.first(), Key::MouseL);
 			}
 			this->multiTouchActive = (this->touches.size() > 0);
 		}
 		else
 		{
-			this->queueMouseEvent(type, position, Key::MouseL);
+			this->mouseEvents += MouseInputEvent(type, position, Key::MouseL);
 		}
 		this->touchEvents.clear();
 		this->touchEvents += TouchInputEvent(this->touches);
@@ -820,11 +855,13 @@ namespace april
 
 	void Window::queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
 	{
+		hmutex::ScopeLock lock(&this->eventMutex);
 		this->controllerEvents += ControllerInputEvent(type, controllerIndex, buttonCode, axisValue);
 	}
 
 	void Window::queueMotionEvent(Window::MotionInputEvent::Type type, cgvec3 motionVector)
 	{
+		hmutex::ScopeLock lock(&this->eventMutex);
 		this->motionEvents += MotionInputEvent(type, motionVector);
 	}
 

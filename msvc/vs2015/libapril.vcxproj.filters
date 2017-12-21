@@ -371,6 +371,15 @@
     <ClCompile Include="..\..\src\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\async\CreateWindowCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\DestroyWindowCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\UnassignWindowCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -621,6 +630,15 @@
     </ClInclude>
     <ClInclude Include="..\..\include\april\Application.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\UnassignWindowCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\DestroyWindowCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\CreateWindowCommand.h">
+      <Filter>Header Files\async</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

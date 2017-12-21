@@ -34,8 +34,6 @@ namespace april
 	public:
 		SDL_Window();
 		~SDL_Window();
-		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
-		bool destroy();
 		
 		void setTitle(chstr title);
 		bool isCursorVisible() const;
@@ -59,6 +57,9 @@ namespace april
 		SDL_GLES_Context* glesContext;
 #endif
 
+		void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		void _systemDestroy();
+		
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor();
 

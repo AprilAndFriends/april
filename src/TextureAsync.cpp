@@ -37,6 +37,10 @@ namespace april
 
 	void TextureAsync::update()
 	{
+		if (april::rendersys == NULL)
+		{
+			return;
+		}
 		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
 		if (TextureAsync::readerRunning && !TextureAsync::readerThread.isRunning())
 		{

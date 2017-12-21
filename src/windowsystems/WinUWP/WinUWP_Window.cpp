@@ -44,13 +44,13 @@ namespace april
 		this->destroy();
 	}
 
-	bool WinUWP_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	bool WinUWP_Window::_systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
 		Rect rect = CoreWindow::GetForCurrentThread()->Bounds;
 		w = (int)rect.Width;
 		h = (int)rect.Height;
 		fullscreen = ApplicationView::GetForCurrentView()->IsFullScreenMode; // WinUWP is always fullscreen
-		if (!Window::create(w, h, fullscreen, title, options))
+		if (!Window::_systemCreate(w, h, fullscreen, title, options))
 		{
 			return false;
 		}

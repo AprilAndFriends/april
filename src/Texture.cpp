@@ -203,6 +203,9 @@ namespace april
 		}
 		this->dataAsync = NULL;
 		this->asyncLoadQueued = false;
+		hlog::write(logTag, "Registering texture: " + this->_getInternalName());
+		/*
+
 		hlog::write(logTag, "Creating texture: " + this->_getInternalName());
 		int maxTextureSize = april::rendersys->getCaps().maxTextureSize;
 		if (maxTextureSize > 0 && (this->width > maxTextureSize || this->height > maxTextureSize))
@@ -226,6 +229,7 @@ namespace april
 		this->type = type;
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		this->loaded = result;
+		*/
 		return true;
 	}
 
@@ -257,12 +261,14 @@ namespace april
 		}
 		this->dataAsync = NULL;
 		this->asyncLoadQueued = false;
-		hlog::write(logTag, "Creating texture: " + this->_getInternalName());
+		hlog::write(logTag, "Registering texture: " + this->_getInternalName());
 		int maxTextureSize = april::rendersys->getCaps().maxTextureSize;
 		if (maxTextureSize > 0 && (this->width > maxTextureSize || this->height > maxTextureSize))
 		{
 			hlog::warnf(logTag, "Texture size for '%s' is %d,%d while the reported system max texture size is %d!", this->_getInternalName().cStr(), this->width, this->height, maxTextureSize);
 		}
+		/*
+		hlog::write(logTag, "Creating texture: " + this->_getInternalName());
 		this->dataFormat = 0;
 		this->_assignFormat();
 		bool result = this->_deviceCreateTexture(this->data, size, type);
@@ -276,6 +282,7 @@ namespace april
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		this->loaded = result;
 		lock.release();
+		*/
 		return true;
 	}
 
@@ -708,7 +715,6 @@ namespace april
 				}
 				lock.release();
 				hthread::sleep(0.01f);
-				TextureAsync::update(); // TODOx - remove
 			}
 		}
 		return false;
