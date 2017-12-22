@@ -149,7 +149,7 @@ namespace april
 					stream = texture->_prepareAsyncStream();
 					lock.acquire(&TextureAsync::queueMutex);
 					index = TextureAsync::textures.indexOf(texture); // it's possible that the queue was rearranged in the meantime
-					if (stream != NULL)
+					if (stream != NULL || texture->getFilename() == "")
 					{
 						if (index >= TextureAsync::streams.size())
 						{
@@ -221,7 +221,10 @@ namespace april
 			{
 				foreach (hstream*, it, TextureAsync::streams)
 				{
-					delete (*it);
+					if ((*it) != NULL)
+					{
+						delete (*it);
+					}
 				}
 				TextureAsync::streams.clear();
 				break;
@@ -230,7 +233,10 @@ namespace april
 			stream = TextureAsync::streams.removeFirst();
 			lock.release();
 			texture->_decodeFromAsyncStream(stream);
-			delete stream;
+			if (stream != NULL)
+			{
+				delete stream;
+			}
 			lock.acquire(&TextureAsync::queueMutex);
 		}
 	}

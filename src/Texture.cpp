@@ -454,6 +454,7 @@ namespace april
 		lock.release();
 		this->loadMetaData();
 		return this->loadAsync();
+		// TODOx - remove this?
 		//return (this->loadAsync() && this->ensureLoaded());
 	}
 
@@ -595,30 +596,32 @@ namespace april
 		{
 			return false;
 		}
+		// TODOx - remove this?
+		/*
 		if (this->data != NULL || ((this->type == Type::Volatile || this->type == Type::RenderTarget) && this->width > 0 && this->height > 0))
 		{
-			hstr err = "This texture type does not support async loading! texture: '" + this->_getInternalName() + "', reasons:";
+			hstr error = "This texture type does not support async loading! texture: '" + this->_getInternalName() + "', reasons:";
 			if (this->data != NULL)
 			{
-				err += "\ndata isn't NULL.";
+				error += "\ndata isn't NULL.";
 			}
 			if (this->type == Type::Volatile)
 			{
-				err += "\ntype is 'volatile'.";
+				error += "\ntype is 'volatile'.";
 			}
 			if (this->type == Type::RenderTarget)
 			{
-				err += "\ntype is 'render target'.";
+				error += "\ntype is 'render target'.";
 			}
 			if (this->width > 0)
 			{
-				err += "\nwidth is larger than 0.";
+				error += "\nwidth is larger than 0.";
 			}
 			if (this->height > 0)
 			{
-				err += "\nheight is larger than 0.";
+				error += "\nheight is larger than 0.";
 			}
-			hlog::warn(logTag, err);
+			hlog::warn(logTag, error);
 			return false;
 		}
 		if (this->filename == "")
@@ -626,7 +629,14 @@ namespace april
 			hlog::error(logTag, "No filename for texture specified!");
 			return false;
 		}
+		*/
 		this->asyncLoadDiscarded = false;
+		if (this->filename == "")
+		{
+			this->dataAsync = this->data;
+			this->_assignFormat();
+			return true;
+		}
 		if (!this->asyncLoadQueued) // this check is down here to allow the upper error messages to be displayed
 		{
 			this->asyncLoadQueued = TextureAsync::queueLoad(this);
@@ -714,7 +724,32 @@ namespace april
 					return true;
 				}
 				lock.release();
-				hthread::sleep(0.01f);
+				hthread::sleep(0.001f);
+			}
+		}
+		return false;
+	}
+
+	bool Texture::_ensureInternalLoaded()
+	{
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		if (this->loaded)
+		{
+			return true;
+		}
+		if (this->asyncLoadQueued)
+		{
+			lock.release();
+			TextureAsync::prioritizeLoad(this);
+			while (true)
+			{
+				TextureAsync::update();
+				lock.acquire(&this->asyncLoadMutex);
+				if (this->loaded)
+				{
+					return true;
+				}
+				lock.release();
 			}
 		}
 		return false;
@@ -733,9 +768,8 @@ namespace april
 				break;
 			}
 			lock.release();
-			hthread::sleep(0.1f);
-			time -= 0.0001f;
-			TextureAsync::update();
+			hthread::sleep(0.001f);
+			time -= 0.000001f;
 		}
 	}
 
@@ -749,26 +783,33 @@ namespace april
 			return NULL;
 		}
 		lock.release();
-		hstream* stream = new hstream();
-		if (this->fromResource)
+		hstream* stream = NULL;
+		if (this->filename != "")
 		{
-			hresource file;
-			file.open(this->filename);
-			stream->writeRaw(file);
+			stream = new hstream();
+			if (this->fromResource)
+			{
+				hresource file;
+				file.open(this->filename);
+				stream->writeRaw(file);
+			}
+			else
+			{
+				hfile file;
+				file.open(this->filename);
+				stream->writeRaw(file);
+			}
+			stream->rewind();
 		}
-		else
-		{
-			hfile file;
-			file.open(this->filename);
-			stream->writeRaw(file);
-		}
-		stream->rewind();
 		lock.acquire(&this->asyncLoadMutex);
 		if (!this->asyncLoadQueued || this->asyncLoadDiscarded)
 		{
 			this->asyncLoadQueued = false;
 			this->asyncLoadDiscarded = false;
-			delete stream;
+			if (stream != NULL)
+			{
+				delete stream;
+			}
 			return NULL;
 		}
 		return stream;
@@ -785,6 +826,17 @@ namespace april
 		}
 		lock.release();
 		hlog::write(logTag, "Loading async texture: " + this->_getInternalName());
+		if (stream == NULL) // uses data in RAM
+		{
+			lock.acquire(&this->asyncLoadMutex);
+			if (this->asyncLoadQueued && !this->asyncLoadDiscarded)
+			{
+				this->_assignFormat();
+			}
+			this->asyncLoadQueued = false;
+			this->asyncLoadDiscarded = false;
+			return;
+		}
 		// must not call createFromStream() that converts automatically, because _processImageFormatSupport() needs to be called first
 		Image* image = Image::createFromStream(*(hsbase*)stream, "." + hfile::extensionOf(this->filename));
 		if (image != NULL)

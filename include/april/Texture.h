@@ -806,6 +806,13 @@ namespace april
 		/// @note This is usually used for debugging and logging purposes.
 		hstr _getInternalName() const;
 
+		/// @brief Makes sure the texture is loaded and handles Texture update.
+		/// @see load
+		/// @see ensureLoaded
+		/// @see waitForAsyncLoad
+		/// @return True if successful or already loaded.
+		bool _ensureInternalLoaded();
+
 		/// @brief Clears the entire image and sets all image data to zeroes without safety checks. Used internally only.
 		/// @return True if successful.
 		bool _rawClear();

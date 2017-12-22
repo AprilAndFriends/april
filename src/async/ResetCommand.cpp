@@ -22,7 +22,6 @@ namespace april
 	
 	void ResetCommand::execute()
 	{
-		hlog::error("OK", "Vertex");
 		april::rendersys->_deviceReset();
 		april::rendersys->_deviceSetup();
 		if (april::rendersys->deviceState->texture != NULL)
@@ -31,6 +30,7 @@ namespace april
 			april::rendersys->deviceState->texture->ensureLoaded();
 			april::rendersys->deviceState->texture->upload();
 		}
+		// TODOx - is this still needed?
 		//april::rendersys->setViewport(grect(0.0f, 0.0f, this->windowSize));
 		StateUpdateCommand::execute();
 	}

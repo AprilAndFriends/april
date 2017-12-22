@@ -72,7 +72,8 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->setOrthoProjection(drawRect);
 		/// some general texture testing
 		april::rendersys->drawFilledRect(drawRect, april::Color(96, 96, 96));
-		manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
+		// TODOx - re-enable and implement
+		//manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
 		april::rendersys->setTexture(manualTexture);
 		april::rendersys->render(april::RenderOperation::TriangleStrip, dv, 4);
 		april::rendersys->setTexture(texture);

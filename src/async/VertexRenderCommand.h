@@ -33,7 +33,6 @@ namespace april
 
 		void execute()
 		{
-			hlog::error("OK", "Vertex");
 			RenderCommand::execute();
 			april::rendersys->_deviceRender(this->renderOperation, (T*)this->vertices, this->vertices.size());
 		}

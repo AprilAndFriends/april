@@ -20,7 +20,6 @@ namespace april
 	
 	void ClearCommand::execute()
 	{
-		hlog::error("OK", "Clear");
 		RenderCommand::execute();
 		april::rendersys->_deviceClear(this->useDepth);
 	}

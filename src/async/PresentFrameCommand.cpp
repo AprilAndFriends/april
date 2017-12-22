@@ -20,7 +20,6 @@ namespace april
 	void PresentFrameCommand::execute()
 	{
 		RenderCommand::execute();
-		hlog::warn("OK", "PRESENT");
 		april::rendersys->_devicePresentFrame();
 		april::rendersys->_updateDeviceState(&this->state, true);
 	}

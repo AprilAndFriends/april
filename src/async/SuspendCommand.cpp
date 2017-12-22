@@ -19,7 +19,6 @@ namespace april
 	
 	void SuspendCommand::execute()
 	{
-		hlog::error("OK", "Suspend");
 		april::rendersys->_deviceSuspend();
 	}
 	

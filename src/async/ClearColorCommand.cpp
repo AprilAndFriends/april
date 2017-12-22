@@ -21,7 +21,6 @@ namespace april
 	
 	void ClearColorCommand::execute()
 	{
-		hlog::error("OK", "Clear Color");
 		RenderCommand::execute();
 		april::rendersys->_deviceClear(this->color, this->useDepth);
 	}
