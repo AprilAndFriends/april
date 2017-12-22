@@ -166,9 +166,9 @@ namespace april
 			lock.release();
 			if (!april::window->update(timeDelta))
 			{
-				break;
+				april::application->finish();
 			}
-			updateDelegate = april::window->getUpdateDelegate();
+			updateDelegate = april::window->getUpdateDelegate(); // constantly getting to make sure not to use an outdated object
 			if (updateDelegate != NULL)
 			{
 #ifndef _ANDROID
