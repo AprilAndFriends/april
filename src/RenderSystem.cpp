@@ -887,7 +887,7 @@ namespace april
 		while (this->asyncCommandQueues.size() > 1 || this->processingAsync)
 		{
 			lock.release();
-			hthread::sleep(0.01f);
+			hthread::sleep(0.001f);
 			lock.acquire(&this->renderMutex);
 		}
 	}
