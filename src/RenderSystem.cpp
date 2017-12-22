@@ -823,9 +823,8 @@ namespace april
 			{
 				++this->statCurrentFrameTextureSwitches;
 				state->texture->loadAsync();
-				state->texture->ensureLoaded();
+				state->texture->_ensureInternalLoaded();
 				state->texture->upload();
-				state->texture->unlock();
 				this->_setDeviceTexture(state->texture);
 				this->_setDeviceTextureFilter(state->texture->getFilter());
 				this->_setDeviceTextureAddressMode(state->texture->getAddressMode());
