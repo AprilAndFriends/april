@@ -6,6 +6,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
+#include <april/Application.h>
 #include <april/april.h>
 #include <april/Keys.h>
 #include <april/Platform.h>
@@ -195,15 +196,11 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
-		april::window->terminateMainLoop();
+		april::application->finish();
 		break;
 	case WM_CLOSE:
-		if (april::window->handleQuitRequest(true))
-		{
-			PostQuitMessage(0);
-			april::window->terminateMainLoop();
-		}
-		return 0;
+		april::window->handleQuitRequest(true);
+		break;
 	case WM_SYSKEYDOWN:
 		if (wParam == VK_MENU)
 		{

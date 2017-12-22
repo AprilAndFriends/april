@@ -404,6 +404,9 @@
     <ClCompile Include="..\..\src\events\GenericEvent.cpp">
       <Filter>Source Files\events</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\async\DestroyTextureCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -684,6 +687,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\april\GenericEvent.h">
       <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\DestroyTextureCommand.h">
+      <Filter>Header Files\async</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

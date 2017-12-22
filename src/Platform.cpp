@@ -13,6 +13,7 @@
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
+#include "Application.h"
 #include "april.h"
 #include "main_base.h"
 #include "Platform.h"
@@ -183,16 +184,16 @@ namespace april
 	{
 		if (terminateOnDisplay)
 		{
+#if !defined(_IOS) && !defined(_COCOA_WINDOW)
+			april::application->finish();
+#endif
+			// TODOx - this is likely very unsafe and needs refactoring
+#if !defined(_IOS) || defined(_COCOA_WINDOW)
 			if (window != NULL)
 			{
-#if !defined(_IOS) && !defined(_COCOA_WINDOW)
-				window->terminateMainLoop();
 				window->destroy();
-#endif
-#ifdef _COCOA_WINDOW
-				window->destroy();
-#endif
 			}
+#endif
 			modal = true;
 		}
 		if (_showMessageBox != NULL)

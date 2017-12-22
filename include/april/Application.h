@@ -14,6 +14,7 @@
 #define APRIL_APPLICATION_H
 
 #include <hltypes/harray.h>
+#include <hltypes/henum.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 #include <hltypes/hthread.h>
@@ -27,17 +28,38 @@ namespace april
 	class aprilExport Application
 	{
 	public:
+		/// @class State
+		/// @brief Defines application states.
+		HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, State,
+		(
+			/// @var static const Type Type::Idle
+			/// @brief Initial state.
+			HL_ENUM_DECLARE(State, Idle);
+			/// @var static const Type Type::Starting
+			/// @brief Launching process is in progress.
+			HL_ENUM_DECLARE(State, Starting);
+			/// @var static const Type Type::Running
+			/// @brief While the applications is running.
+			HL_ENUM_DECLARE(State, Running);
+			/// @var static const Type Type::Stopping
+			/// @brief Stopping process in progress.
+			HL_ENUM_DECLARE(State, Stopping);
+			/// @var static const Type Type::Stopped
+			/// @brief Stopping process has finished.
+			HL_ENUM_DECLARE(State, Stopped);
+		));
+
 		/// @brief Basic constructor.
 		/// @param[in] aprilApplicationInit Initialization callback.
 		/// @param[in] aprilApplicationDestroy Destruction callback.
 		Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)());
 		/// @brief Destructor.
-		virtual ~Application();
+		~Application();
 
 		/// @brief Get launch arguments.
 		HL_DEFINE_GETSET(harray<hstr>, args, Args);
 		/// @brief Get running flag.
-		HL_DEFINE_IS(running, Running);
+		HL_DEFINE_GET(State, state, State);
 		/// @brief The current FPS.
 		HL_DEFINE_GETSET(int, fps, Fps);
 		/// @brief The FPS resolution.
@@ -60,6 +82,8 @@ namespace april
 		virtual void update();
 		/// @brief Finishes the main loop.
 		void finish();
+		/// @brief Finalizes the application process so all threads can finish up.
+		void finalize();
 
 	protected:
 		/// @brief Launch arguments.
@@ -68,10 +92,8 @@ namespace april
 		void (*aprilApplicationInit)();
 		/// @brief Destruction callback.
 		void (*aprilApplicationDestroy)();
-		/// @brief Running flag.
-		bool running;
-		/// @brief Running flag.
-		bool started;
+		/// @brief The current application state.
+		State state;
 		/// @brief Whether automatic presentFrame() implementation is used by the underlying system.
 		bool autoPresentFrame;
 		/// @brief The Timer object used for timing purposes.

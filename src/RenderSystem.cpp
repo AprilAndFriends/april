@@ -243,11 +243,6 @@ namespace april
 			delete (*it);
 		}
 		this->asyncCommandQueues.clear();
-		foreach (Texture*, it, this->destroyTexturesQueue)
-		{
-			delete (*it);
-		}
-		this->destroyTexturesQueue.clear();
 		this->statCurrentFrameRenderCalls = 0;
 		this->statLastFrameRenderCalls = 0;
 		this->statCurrentFrameTextureSwitches = 0;
@@ -431,10 +426,6 @@ namespace april
 	{
 		bool result = false;
 		hmutex::ScopeLock lock(&this->renderMutex);
-		hmutex::ScopeLock lockTextures(&this->texturesMutex);
-		harray<Texture*> destroyTexturesQueue = this->destroyTexturesQueue;
-		this->destroyTexturesQueue.clear();
-		lockTextures.release();
 		if (this->asyncCommandQueues.size() >= 2)
 		{
 			AsyncCommandQueue* queue = this->asyncCommandQueues.removeFirst();
@@ -453,11 +444,6 @@ namespace april
 		else
 		{
 			lock.release();
-		}
-		// textures may now be safely destroyed
-		foreach (Texture*, it, destroyTexturesQueue)
-		{
-			delete (*it);
 		}
 		return result;
 	}
@@ -549,12 +535,10 @@ namespace april
 		{
 			this->renderHelper->flush();
 		}
-		texture->unload();
-		texture->waitForAsyncLoad(); // waiting for all async stuff to finish
 		hmutex::ScopeLock lock(&this->texturesMutex);
 		this->textures -= texture;
-		this->destroyTexturesQueue += texture;
 		lock.release();
+		this->_addAsyncCommand(new DestroyTextureCommand(texture));
 	}
 
 	PixelShader* RenderSystem::createPixelShaderFromResource(chstr filename)

@@ -81,7 +81,6 @@ namespace april
 		this->created = false;
 		this->fullscreen = true;
 		this->focused = true;
-		this->running = true;
 		this->presentFrameEnabled = true;
 		this->paused = false;
 		this->lastWidth = 0;
@@ -341,7 +340,7 @@ namespace april
 		{
 			hthread::sleep(40.0f);
 		}
-		return (this->performUpdate(timeDelta) && this->running);
+		return (this->performUpdate(timeDelta) && april::application->getState() == Application::State::Running);
 	}
 
 	void Window::checkEvents()
@@ -454,7 +453,7 @@ namespace april
 
 	void Window::terminateMainLoop()
 	{
-		this->running = false;
+		april::application->finish();
 	}
 
 	void Window::showVirtualKeyboard()

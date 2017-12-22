@@ -113,8 +113,6 @@ namespace april
 		void setFullscreen(bool value);
 		/// @brief Whether the Window is focused.
 		HL_DEFINE_IS(focused, Focused);
-		/// @brief Whether the Window is running.
-		HL_DEFINE_IS(running, Running);
 		/// @brief Whether presentFrame() will do proper processing.
 		HL_DEFINE_ISSET(presentFrameEnabled, PresentFrameEnabled);
 		/// @brief The system cursor.
@@ -222,6 +220,7 @@ namespace april
 		virtual void checkEvents();
 		/// @brief Aborts execution and forces the application to exit after the current frame is complete.
 		/// @note It is safer to return false in your implementation of UpdateDelegate::onUpdate().
+		HL_DEPRECATED("Deprecated API. Use Application::finish() instead.")
 		virtual void terminateMainLoop(); // TODOx - move to Application class
 		/// @brief Displays a virtual keyboard if necessary.
 		/// @note Some systems don't support this while on other this is the only way to handle any kind of keyboard input.
@@ -418,8 +417,6 @@ namespace april
 		Options options;
 		/// @brief Whether the Window is focused.
 		bool focused;
-		/// @brief Whether the Window system is running.
-		bool running;
 		/// @brief Whether execution is currently paused.
 		bool paused;
 		/// @brief Whether presentFrame() will do proper processing.

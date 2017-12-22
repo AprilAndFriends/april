@@ -28,6 +28,7 @@
 
 namespace april
 {
+	class DestroyTextureCommand;
 	class Image;
 	class RenderSystem;
 	class TextureAsync;
@@ -36,6 +37,7 @@ namespace april
 	class aprilExport Texture
 	{
 	public:
+		friend class DestroyTextureCommand;
 		friend class RenderSystem;
 		friend class TextureAsync;
 

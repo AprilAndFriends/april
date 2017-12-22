@@ -21,6 +21,7 @@
 #include "CreateCommand.h"
 #include "CreateWindowCommand.h"
 #include "DestroyCommand.h"
+#include "DestroyTextureCommand.h"
 #include "DestroyWindowCommand.h"
 #include "PresentFrameCommand.h"
 #include "RenderCommand.h"

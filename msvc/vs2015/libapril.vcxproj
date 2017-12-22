@@ -523,6 +523,7 @@
     <ClCompile Include="..\..\src\async\CreateCommand.cpp" />
     <ClCompile Include="..\..\src\async\CreateWindowCommand.cpp" />
     <ClCompile Include="..\..\src\async\DestroyCommand.cpp" />
+    <ClCompile Include="..\..\src\async\DestroyTextureCommand.cpp" />
     <ClCompile Include="..\..\src\async\DestroyWindowCommand.cpp" />
     <ClCompile Include="..\..\src\async\PresentFrameCommand.cpp" />
     <ClCompile Include="..\..\src\async\RenderCommand.cpp" />
@@ -659,6 +660,7 @@
     <ClInclude Include="..\..\src\async\CreateCommand.h" />
     <ClInclude Include="..\..\src\async\CreateWindowCommand.h" />
     <ClInclude Include="..\..\src\async\DestroyCommand.h" />
+    <ClInclude Include="..\..\src\async\DestroyTextureCommand.h" />
     <ClInclude Include="..\..\src\async\DestroyWindowCommand.h" />
     <ClInclude Include="..\..\src\async\PresentFrameCommand.h" />
     <ClInclude Include="..\..\src\async\RenderCommand.h" />

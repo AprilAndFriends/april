@@ -21,6 +21,7 @@
 #include <hltypes/hstring.h>
 #include <hltypes/hversion.h>
 
+#include "Application.h"
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
@@ -445,6 +446,11 @@ namespace april
 		{
 			hlog::write(logTag, "Destroying APRIL.");
 		}
+		april::application->finish(); // make sure the application finishes up
+		if (april::rendersys != NULL)
+		{
+			april::rendersys->waitForAsyncCommands(true); // first make sure everything has been rendered
+		}
 		if (april::window != NULL)
 		{
 			april::window->unassign();
@@ -454,6 +460,11 @@ namespace april
 			april::rendersys->destroy();
 			april::window->destroy();
 		}
+		april::application->finalize();
+		if (april::rendersys != NULL)
+		{
+			april::rendersys->waitForAsyncCommands(true); // process the last remaining commands
+		}
 		if (april::window != NULL)
 		{
 			delete april::window;
@@ -461,7 +472,6 @@ namespace april
 		}
 		if (april::rendersys != NULL)
 		{
-			april::rendersys->waitForAsyncCommands(true);
 			delete april::rendersys;
 			april::rendersys = NULL;
 		}

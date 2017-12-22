@@ -7,7 +7,9 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #include <hltypes/hlog.h>
+#include <hltypes/hstring.h>
 
+#include "april.h"
 #include "Application.h"
 #include "main_base.h"
 #include "RenderSystem.h"
@@ -17,10 +19,19 @@
 
 namespace april
 {
+	HL_ENUM_CLASS_DEFINE(Application::State,
+	(
+		HL_ENUM_DEFINE(Application::State, Idle);
+		HL_ENUM_DEFINE(Application::State, Starting);
+		HL_ENUM_DEFINE(Application::State, Running);
+		HL_ENUM_DEFINE(Application::State, Stopping);
+		HL_ENUM_DEFINE(Application::State, Stopped);
+	));
+
 	Application* application = NULL;
 	
-	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : running(true), started(false), autoPresentFrame(false),
-		timeDelta(0.0f), fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f), updateThread(&_asyncUpdate)
+	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : state(State::Idle),
+		autoPresentFrame(false), timeDelta(0.0f), fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f), updateThread(&_asyncUpdate)
 	{
 		this->aprilApplicationInit = aprilApplicationInit;
 		this->aprilApplicationDestroy = aprilApplicationDestroy;
@@ -35,8 +46,9 @@ namespace april
 
 	void Application::init()
 	{
+		this->state = State::Starting;
 		this->updateThread.start();
-		while (!this->started)
+		while (this->state == State::Starting)
 		{
 			hthread::sleep(0.1f);
 			if (april::rendersys != NULL)
@@ -49,7 +61,7 @@ namespace april
 
 	void Application::destroy()
 	{
-		this->running = false;
+		this->state = State::Stopped;
 		this->updateThread.join();
 	}
 
@@ -58,11 +70,27 @@ namespace april
 		this->fps = 0;
 		this->fpsCount = 0;
 		this->fpsTimer = 0.0f;
-		this->running = true;
-		while (this->running)
+		//this->state = State::Running; // safety call even though the actual one is done in the other thread.
+		while (this->state == State::Running)// || this->state == State::Stopping)
 		{
 			this->update();
 		}
+		while (this->state == State::Stopping)// || this->state == State::Stopping)
+		{
+			april::window->checkEvents();
+			april::rendersys->update(0.0f);
+		}
+		april::window->checkEvents();
+		april::rendersys->update(0.0f);
+		/*
+		while (this->state == State::Stopping)
+		{
+			april::window->checkEvents();
+			april::rendersys->update(0.0f);
+			hthread::sleep(0.01f);
+		}
+		*/
+		//april::application->state = State::Stopped;
 	}
 
 	void Application::update()
@@ -107,17 +135,52 @@ namespace april
 
 	void Application::finish()
 	{
-		this->running = false;
+		if (this->state != State::Stopped)
+		{
+			this->state = State::Stopping;
+			/*
+			while (this->state == State::Stopping)
+			{
+				hthread::sleep(0.01f);
+			}
+			*/
+		}
+		/*
+		else
+		{
+			hlog::warn(logTag, "Initiated Application::finish(), but application state is not set to running.");
+		}
+		*/
+	}
+
+	void Application::finalize()
+	{
+		if (this->state == State::Stopping)
+		{
+			this->state = State::Stopped;
+			/*
+			while (this->state == State::Stopping)
+			{
+				hthread::sleep(0.01f);
+			}
+			*/
+		}
+		/*
+		else
+		{
+			hlog::warn(logTag, "Initiated Application::finish(), but application state is not set to running.");
+		}
+		*/
 	}
 
 	void Application::_asyncUpdate(hthread* thread)
 	{
 		(*april::application->aprilApplicationInit)();
-		april::application->started = true;
+		april::application->state = State::Running;
 		float timeDelta = 0.0f;
 		UpdateDelegate* updateDelegate = NULL;
 		hmutex::ScopeLock lock;
-		while (april::application->running)
+		while (april::application->state == State::Running)
 		{
 			lock.acquire(&april::application->updateMutex);
 			timeDelta = april::application->timeDelta;
@@ -125,7 +188,7 @@ namespace april
 			lock.release();
 			if (!april::window->update(timeDelta))
 			{
-				april::application->running = false;
+				break;
 			}
 			updateDelegate = april::window->getUpdateDelegate();
 			if (updateDelegate != NULL)
@@ -138,10 +201,18 @@ namespace april
 				april::window->setPresentFrameEnabled(true);
 #endif
 			}
-			while (april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
+			while (april::application->state == State::Running && april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
 			{
 				hthread::sleep(0.01f);
 			}
+		}
+		//april::rendersys->waitForAsyncCommands(true);
+		//april::application->state = State::Stopping;
+		//april::application->running = false;
+		//april::application->stopping = true;
+		//while (april::application->stopping)
+		{
+			//hthread::sleep(0.01f);
 		}
 		(*april::application->aprilApplicationDestroy)();
 	}

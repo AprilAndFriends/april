@@ -16,6 +16,7 @@
 #include <hltypes/hplatform.h>
 #include <hltypes/hthread.h>
 
+#include "Application.h"
 #include "april.h"
 #include "DirectX9_PixelShader.h"
 #include "DirectX9_RenderSystem.h"
@@ -186,7 +187,7 @@ namespace april
 		this->backBuffer->Release();
 		this->backBuffer = NULL;
 		HRESULT hr;
-		while (april::window->isRunning())
+		while (april::application->getState() == Application::State::Running)
 		{
 			hlog::write(logTag, "Resetting device...");
 			if (this->d3dpp->BackBufferWidth <= 0 || this->d3dpp->BackBufferHeight <= 0)
@@ -741,7 +742,7 @@ namespace april
 			}
 			this->backBuffer->Release();
 			this->backBuffer = NULL;
-			while (april::window->isRunning())
+			while (april::application->getState() == Application::State::Running)
 			{
 				hr = this->d3dDevice->TestCooperativeLevel();
 				if (!FAILED(hr))

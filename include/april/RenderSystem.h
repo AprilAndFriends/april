@@ -593,8 +593,6 @@ namespace april
 		float pixelOffset;
 		/// @brief All currently existing textures.
 		harray<Texture*> textures;
-		/// @brief All currently queued textures for deletion.
-		harray<Texture*> destroyTexturesQueue;
 		/// @brief All supported display modes.
 		harray<DisplayMode> displayModes;
 		/// @brief The current state of the RenderSystem.
