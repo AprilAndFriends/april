@@ -241,6 +241,7 @@ void __aprilApplicationDestroy()
 	cursor = NULL;
 	april::rendersys->destroyTexture(ball);
 	ball = NULL;
+	april::destroy();
 	delete motionDelegate;
 	motionDelegate = NULL;
 	delete systemDelegate;
