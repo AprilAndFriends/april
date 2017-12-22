@@ -15,6 +15,7 @@
 
 #include <hltypes/harray.h>
 #include <hltypes/henum.h>
+#include <hltypes/hmutex.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 #include <hltypes/hthread.h>

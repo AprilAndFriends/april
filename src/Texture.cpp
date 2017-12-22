@@ -204,32 +204,6 @@ namespace april
 		this->dataAsync = NULL;
 		this->asyncLoadQueued = false;
 		hlog::write(logTag, "Registering texture: " + this->_getInternalName());
-		/*
-
-		hlog::write(logTag, "Creating texture: " + this->_getInternalName());
-		int maxTextureSize = april::rendersys->getCaps().maxTextureSize;
-		if (maxTextureSize > 0 && (this->width > maxTextureSize || this->height > maxTextureSize))
-		{
-			hlog::warnf(logTag, "Texture size for '%s' is %d,%d while the reported system max texture size is %d!", this->_getInternalName().cStr(), this->width, this->height, maxTextureSize);
-		}
-		this->dataFormat = 0;
-		this->_assignFormat();
-		bool result = this->_deviceCreateTexture(data, size, type);
-		if (!result)
-		{
-			this->type = type;
-			hmutex::ScopeLock lock(&this->asyncLoadMutex);
-			this->loaded = result;
-			return false;
-		}
-		if (this->firstUpload)
-		{
-			this->_rawWrite(0, 0, this->width, this->height, 0, 0, data, this->width, this->height, format);
-		}
-		this->type = type;
-		hmutex::ScopeLock lock(&this->asyncLoadMutex);
-		this->loaded = result;
-		*/
 		return true;
 	}
 
@@ -251,6 +225,7 @@ namespace april
 			this->format = format;
 			size = this->getByteSize();
 			this->data = new unsigned char[size];
+			Image::fillRect(0, 0, this->width, this->height, color, this->data, this->width, this->height, this->format);
 			this->type = Type::Managed;
 		}
 		else
@@ -267,22 +242,6 @@ namespace april
 		{
 			hlog::warnf(logTag, "Texture size for '%s' is %d,%d while the reported system max texture size is %d!", this->_getInternalName().cStr(), this->width, this->height, maxTextureSize);
 		}
-		/*
-		hlog::write(logTag, "Creating texture: " + this->_getInternalName());
-		this->dataFormat = 0;
-		this->_assignFormat();
-		bool result = this->_deviceCreateTexture(this->data, size, type);
-		if (!result)
-		{
-			this->type = type;
-			return false;
-		}
-		this->_rawFillRect(0, 0, this->width, this->height, color);
-		this->type = type;
-		hmutex::ScopeLock lock(&this->asyncLoadMutex);
-		this->loaded = result;
-		lock.release();
-		*/
 		return true;
 	}
 
@@ -388,7 +347,7 @@ namespace april
 	bool Texture::isLoadedAsync()
 	{
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
-		return (!this->asyncLoadQueued && this->dataAsync != NULL && !this->loaded);
+		return (!this->asyncLoadQueued && (this->dataAsync != NULL || this->filename == "" && this->data != NULL) && !this->loaded);
 	}
 
 	bool Texture::isAsyncLoadQueued()
@@ -633,8 +592,8 @@ namespace april
 		this->asyncLoadDiscarded = false;
 		if (this->filename == "")
 		{
-			this->dataAsync = this->data;
 			this->_assignFormat();
+			this->asyncLoadQueued = true;
 			return true;
 		}
 		if (!this->asyncLoadQueued) // this check is down here to allow the upper error messages to be displayed
@@ -712,7 +671,21 @@ namespace april
 		{
 			return true;
 		}
-		if (this->asyncLoadQueued)
+		if (this->filename == "")
+		{
+			lock.release();
+			while (true)
+			{
+				lock.acquire(&this->asyncLoadMutex);
+				if (this->loaded)
+				{
+					return true;
+				}
+				lock.release();
+				hthread::sleep(0.001f);
+			}
+		}
+		else if (this->asyncLoadQueued)
 		{
 			lock.release();
 			TextureAsync::prioritizeLoad(this);
@@ -735,9 +708,24 @@ namespace april
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->loaded)
 		{
+			this->unlock();
 			return true;
 		}
-		if (this->asyncLoadQueued)
+		if (this->filename == "")
+		{
+			lock.release();
+			while (true)
+			{
+				TextureAsync::update();
+				lock.acquire(&this->asyncLoadMutex);
+				if (this->loaded)
+				{
+					return true;
+				}
+				lock.release();
+			}
+		}
+		else if (this->asyncLoadQueued)
 		{
 			lock.release();
 			TextureAsync::prioritizeLoad(this);
@@ -1658,7 +1646,8 @@ namespace april
 		}
 		else
 		{
-			this->load();
+			this->loadAsync();
+			this->ensureLoaded();
 			lock = this->_tryLockSystem(x, y, w, h);
 		}
 		return lock;

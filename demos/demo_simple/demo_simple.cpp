@@ -147,6 +147,7 @@ static UpdateDelegate* updateDelegate = NULL;
 static SystemDelegate* systemDelegate = NULL;
 static MouseDelegate* mouseDelegate = NULL;
 
+// TODOx - should be moved into april
 #ifdef __APPLE__
 void ObjCUtil_setCWD(const char* override_default_dir)
 {
