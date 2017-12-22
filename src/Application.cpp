@@ -50,18 +50,17 @@ namespace april
 		this->updateThread.start();
 		while (this->state == State::Starting)
 		{
-			hthread::sleep(0.1f);
-			if (april::rendersys != NULL)
+			if (april::window != NULL && april::rendersys != NULL)
 			{
-				TextureAsync::update();
-				april::rendersys->update(0.0f); // might require some rendering
+				this->updateWaiting();
 			}
+			hthread::sleep(0.001f);
 		}
 	}
 
 	void Application::destroy()
 	{
-		this->state = State::Stopped;
+		this->state = State::Idle;
 		this->updateThread.join();
 	}
 
@@ -70,27 +69,19 @@ namespace april
 		this->fps = 0;
 		this->fpsCount = 0;
 		this->fpsTimer = 0.0f;
-		//this->state = State::Running; // safety call even though the actual one is done in the other thread.
-		while (this->state == State::Running)// || this->state == State::Stopping)
+		while (this->state == State::Running)
 		{
 			this->update();
 		}
-		while (this->state == State::Stopping)// || this->state == State::Stopping)
-		{
-			april::window->checkEvents();
-			april::rendersys->update(0.0f);
-		}
-		april::window->checkEvents();
-		april::rendersys->update(0.0f);
-		/*
+		// processing remaining commands from other thread
 		while (this->state == State::Stopping)
 		{
-			april::window->checkEvents();
-			april::rendersys->update(0.0f);
-			hthread::sleep(0.01f);
+			this->updateWaiting();
 		}
-		*/
-		//april::application->state = State::Stopped;
+		// finish everything up
+		this->updateWaiting();
+		// done
+		this->state = State::Idle;
 	}
 
 	void Application::update()
@@ -133,24 +124,19 @@ namespace april
 		}
 	}
 
+	void Application::updateWaiting()
+	{
+		TextureAsync::update();
+		april::window->checkEvents();
+		april::rendersys->update(0.0f); // might require some rendering
+	}
+
 	void Application::finish()
 	{
 		if (this->state != State::Stopped)
 		{
 			this->state = State::Stopping;
-			/*
-			while (this->state == State::Stopping)
-			{
-				hthread::sleep(0.01f);
-			}
-			*/
 		}
-		/*
-		else
-		{
-			hlog::warn(logTag, "Initiated Application::finish(), but application state is not set to running.");
-		}
-		*/
 	}
 
 	void Application::finalize()
@@ -158,19 +144,11 @@ namespace april
 		if (this->state == State::Stopping)
 		{
 			this->state = State::Stopped;
-			/*
-			while (this->state == State::Stopping)
+			while (this->state == State::Stopped)
 			{
-				hthread::sleep(0.01f);
+				hthread::sleep(0.001f);
 			}
-			*/
 		}
-		/*
-		else
-		{
-			hlog::warn(logTag, "Initiated Application::finish(), but application state is not set to running.");
-		}
-		*/
 	}
 
 	void Application::_asyncUpdate(hthread* thread)
@@ -203,16 +181,8 @@ namespace april
 			}
 			while (april::application->state == State::Running && april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
 			{
-				hthread::sleep(0.01f);
+				hthread::sleep(0.001f);
 			}
-		}
-		//april::rendersys->waitForAsyncCommands(true);
-		//april::application->state = State::Stopping;
-		//april::application->running = false;
-		//april::application->stopping = true;
-		//while (april::application->stopping)
-		{
-			//hthread::sleep(0.01f);
 		}
 		(*april::application->aprilApplicationDestroy)();
 	}

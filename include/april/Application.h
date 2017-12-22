@@ -79,7 +79,7 @@ namespace april
 		void enterMainLoop();
 		/// @brief Performs the update of one frame.
 		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.
-		virtual void update();
+		void update();
 		/// @brief Finishes the main loop.
 		void finish();
 		/// @brief Finalizes the application process so all threads can finish up.
@@ -115,6 +115,10 @@ namespace april
 		hthread updateThread;
 		/// @brief The update mutex.
 		hmutex updateMutex;
+
+		/// @brief Performs the update of one frame, but without any timer.
+		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.
+		void updateWaiting();
 
 		/// @brief Updates the application asynchronously.
 		/// @param[in] thread The thread on which the asynchronous update is running.

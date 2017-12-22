@@ -43,6 +43,8 @@
 #define EXSTYLE_FULLSCREEN WS_EX_TOPMOST
 #define EXSTYLE_WINDOWED WS_EX_LEFT
 
+#define WIN32_WINDOW ((Win32_Window*)april::window)
+
 namespace april
 {
 	// this workaround is required to properly support WinXP
@@ -668,7 +670,7 @@ namespace april
 					_systemCursorPosition.x = TOUCH_COORD_TO_PIXEL(touches[0].x);
 					_systemCursorPosition.y = TOUCH_COORD_TO_PIXEL(touches[0].y);
 					ScreenToClient(hWnd, &_systemCursorPosition);
-					((Win32_Window*)april::window)->cursorPosition.set((float)_systemCursorPosition.x, (float)_systemCursorPosition.y);
+					WIN32_WINDOW->cursorPosition.set((float)_systemCursorPosition.x, (float)_systemCursorPosition.y);
 					if ((touches[0].dwFlags & TOUCHEVENTF_DOWN) == TOUCHEVENTF_DOWN)
 					{
 						if (!april::window->isFullscreen())
@@ -699,7 +701,7 @@ namespace april
 			break;
 		case WM_CLOSE:
 			april::window->queueQuitRequestEvent(true);
-			break;
+			return 0;
 		case WM_SYSKEYDOWN:
 			if (wParam == VK_MENU)
 			{
@@ -711,11 +713,7 @@ namespace april
 			{
 				if (wParam == VK_F4)
 				{
-					if (april::window->handleQuitRequest(true))
-					{
-						PostQuitMessage(0);
-						april::window->terminateMainLoop();
-					}
+					april::window->queueQuitRequestEvent(true);
 					return 0;
 				}
 				if (wParam == VK_RETURN)
@@ -749,11 +747,11 @@ namespace april
 				{
 					SetCapture((HWND)april::window->getBackendId());
 				}
-				april::window->setInputMode(InputMode::Mouse);
+				april::window->queueInputModeChangeEvent(InputMode::Mouse);
 				// some sort of touch simulation going on, update cursor position
 				if (april::window->getInputMode() == InputMode::Touch)
 				{
-					((Win32_Window*)april::window)->_updateCursorPosition();
+					WIN32_WINDOW->_updateCursorPosition();
 				}
 				april::window->queueMouseEvent(MouseEvent::Type::Down, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), _getKeyFromMessage(message));
 			}
@@ -768,11 +766,11 @@ namespace april
 				{
 					ReleaseCapture();
 				}
-				april::window->setInputMode(InputMode::Mouse);
+				april::window->queueInputModeChangeEvent(InputMode::Mouse);
 				// some sort of touch simulation going on, update cursor position
 				if (april::window->getInputMode() == InputMode::Touch)
 				{
-					((Win32_Window*)april::window)->_updateCursorPosition();
+					WIN32_WINDOW->_updateCursorPosition();
 				}
 				april::window->queueMouseEvent(MouseEvent::Type::Up, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), _getKeyFromMessage(message));
 			}
@@ -786,11 +784,11 @@ namespace april
 				}
 				if (_mouseMessages == 0)
 				{
-					april::window->setInputMode(InputMode::Mouse);
+					april::window->queueInputModeChangeEvent(InputMode::Mouse);
 					// some sort of touch simulation going on, update cursor position
 					if (april::window->getInputMode() == InputMode::Mouse)
 					{
-						((Win32_Window*)april::window)->_updateCursorPosition();
+						WIN32_WINDOW->_updateCursorPosition();
 					}
 					april::window->queueMouseEvent(MouseEvent::Type::Move, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), Key::None);
 				}
@@ -832,7 +830,7 @@ namespace april
 			}
 			if (april::window->isCursorInside())
 			{
-				HCURSOR cursor = ((Win32_Window*)april::window)->getCursorHandle();
+				HCURSOR cursor = WIN32_WINDOW->getCursorHandle();
 				if (cursor != GetCursor())
 				{
 					SetCursor(cursor);

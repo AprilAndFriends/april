@@ -460,11 +460,11 @@ namespace april
 			april::rendersys->destroy();
 			april::window->destroy();
 		}
-		april::application->finalize();
 		if (april::rendersys != NULL)
 		{
 			april::rendersys->waitForAsyncCommands(true); // process the last remaining commands
 		}
+		april::application->finalize();
 		if (april::window != NULL)
 		{
 			delete april::window;
