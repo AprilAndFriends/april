@@ -30,8 +30,8 @@ namespace april
 
 	Application* application = NULL;
 	
-	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : state(State::Idle), autoPresentFrame(false),
-		timeDelta(0.0f), fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f), updateThread(&_asyncUpdate, "APRIL Async Update")
+	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : state(State::Idle), autoPresentFrame(false), timeDelta(0.0f),
+		fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f), updateThread(&_asyncUpdate, "APRIL Async Update")
 	{
 		this->aprilApplicationInit = aprilApplicationInit;
 		this->aprilApplicationDestroy = aprilApplicationDestroy;
@@ -98,7 +98,7 @@ namespace april
 		{
 			timeDelta = hmin(timeDelta, this->timeDeltaMaxLimit);
 		}
-		hmutex::ScopeLock lock(&this->updateMutex);
+		hmutex::ScopeLock lock(&this->timeDeltaMutex);
 		this->timeDelta += timeDelta;
 		lock.release();
 		april::rendersys->update(timeDelta);
@@ -161,13 +161,14 @@ namespace april
 		april::application->state = State::Running;
 		float timeDelta = 0.0f;
 		UpdateDelegate* updateDelegate = NULL;
-		hmutex::ScopeLock lock;
+		hmutex::ScopeLock lock(&april::application->updateMutex);
+		hmutex::ScopeLock lockTimeDelta;
 		while (april::application->state == State::Running)
 		{
-			lock.acquire(&april::application->updateMutex);
+			lockTimeDelta.acquire(&april::application->timeDeltaMutex);
 			timeDelta = april::application->timeDelta;
 			april::application->timeDelta = 0.0f;
-			lock.release();
+			lockTimeDelta.release();
 			if (!april::window->update(timeDelta))
 			{
 				april::application->finish();
@@ -183,14 +184,23 @@ namespace april
 				april::window->setPresentFrameEnabled(true);
 #endif
 			}
-			/*
+			lock.release();
 			while (april::application->state == State::Running && april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
 			{
 				hthread::sleep(0.001f);
 			}
-			*/
+			lock.acquire(&april::application->updateMutex);
 		}
+		lock.release();
 		(*april::application->aprilApplicationDestroy)();
+	}
+
+	void Application::renderFrameSync()
+	{
+		hmutex::ScopeLock lock(&april::application->updateMutex);
+		april::window->update(0.0f);
+		april::rendersys->presentFrame();
+		april::rendersys->update(0.0f);
 	}
 
 }

@@ -420,11 +420,14 @@ namespace april
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->loaded)
 		{
+			lock.release();
+			this->unlock();
 			return true;
 		}
 		this->asyncLoadDiscarded = false; // a possible previous unload call must be canceled
 		if (this->asyncLoadQueued)
 		{
+			// TODOx - this could be a hazard for deadlocks
 			lock.release();
 			this->waitForAsyncLoad();
 			return true; // will already call this method again through TextureAsync::update() so it does not need to continue
@@ -709,8 +712,6 @@ namespace april
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->loaded)
 		{
-			lock.release();
-			this->unlock();
 			return true;
 		}
 		if (this->asyncLoadQueued || this->dataAsync != NULL || this->filename == "" && this->data != NULL)

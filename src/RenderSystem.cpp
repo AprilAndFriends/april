@@ -428,18 +428,39 @@ namespace april
 		hmutex::ScopeLock lock(&this->renderMutex);
 		if (this->asyncCommandQueues.size() >= 2)
 		{
-			AsyncCommandQueue* queue = this->asyncCommandQueues.removeFirst();
-			this->processingAsync = true;
-			lock.release();
-			foreach (AsyncCommand*, it, queue->commands)
+			if (false)//timeDelta > 0.0f)
 			{
-				(*it)->execute();
+				AsyncCommandQueue* queue = this->asyncCommandQueues.removeFirst();
+				this->processingAsync = true;
+				lock.release();
+				foreach (AsyncCommand*, it, queue->commands)
+				{
+					(*it)->execute();
+				}
+				delete queue;
+				lock.acquire(&this->renderMutex);
+				this->processingAsync = false;
+				lock.release();
+				result = true;
 			}
-			lock.acquire(&this->renderMutex);
-			this->processingAsync = false;
-			lock.release();
-			delete queue;
-			result = true;
+			else
+			{
+				harray<AsyncCommandQueue*> queues = this->asyncCommandQueues.removeFirst(this->asyncCommandQueues.size() - 1);
+				this->processingAsync = true;
+				lock.release();
+				foreach (AsyncCommandQueue*, it, queues)
+				{
+					foreach (AsyncCommand*, it2, (*it)->commands)
+					{
+						(*it2)->execute();
+					}
+					delete (*it);
+				}
+				lock.acquire(&this->renderMutex);
+				this->processingAsync = false;
+				lock.release();
+				result = true;
+			}
 		}
 		else
 		{

@@ -89,6 +89,9 @@ namespace april
 		void finish();
 		/// @brief Finalizes the application process so all threads can finish up.
 		void finalize();
+		/// @brief Processes and render a single frame.
+		/// @note This is usually called internally in some implementations, due to specific OS limitations.
+		void renderFrameSync();
 
 	protected:
 		/// @brief Launch arguments.
@@ -120,6 +123,8 @@ namespace april
 		hthread updateThread;
 		/// @brief The update mutex.
 		hmutex updateMutex;
+		/// @brief The time-delta mutex.
+		hmutex timeDeltaMutex;
 
 		/// @brief Performs the update of one frame, but without any timer.
 		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.

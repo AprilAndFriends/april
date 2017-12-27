@@ -315,16 +315,16 @@ namespace april
 	
 	void Win32_Window::checkEvents()
 	{
-		MSG msg;
+		MSG message;
 		// limiting to 100 events per frame just to be safe
 		for_iter (i, 0, 100)
 		{
-			if (!PeekMessageW(&msg, this->hWnd, 0, 0, PM_REMOVE))
+			if (!PeekMessageW(&message, this->hWnd, 0, 0, PM_REMOVE))
 			{
 				break;
 			}
-			TranslateMessage(&msg);
-			DispatchMessageW(&msg);
+			TranslateMessage(&message);
+			DispatchMessageW(&message);
 		}
 #ifdef _WIN32_XINPUT
 		this->_checkXInputControllerStates();
@@ -581,11 +581,9 @@ namespace april
 
 	void Win32_Window::handleSizeChange(int width, int height, bool fullscreen)
 	{
-		this->_setRenderSystemResolution(width, height, fullscreen);
-		UpdateWindow(this->hWnd);
 		Window::handleSizeChange(width, height, fullscreen);
-		this->performUpdate(0.0f);
-		april::rendersys->presentFrame();
+		//this->performUpdate(0.0f);
+		//april::rendersys->presentFrame();
 	}
 
 	void Win32_Window::queueControllerEvent(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue)
@@ -618,11 +616,10 @@ namespace april
 			if (!april::window->isFullscreen() &&
 				(_sizeChanging || wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED && !_initialSize))
 			{
+				WIN32_WINDOW->_setRenderSystemResolution(april::window->getWidth(), april::window->getHeight(), april::window->isFullscreen());
+				UpdateWindow(WIN32_WINDOW->hWnd);
 				april::window->queueSizeChangeEvent(april::window->getWidth(), april::window->getHeight(), april::window->isFullscreen());
-				april::rendersys->update(0.0f);
-				// TODOx - remove this?
-				//april::window->performUpdate(0.0f);
-				//april::rendersys->presentFrame();
+				april::application->renderFrameSync();
 			}
 			_initialSize = false;
 			break;
