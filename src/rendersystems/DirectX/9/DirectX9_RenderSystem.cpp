@@ -239,6 +239,11 @@ namespace april
 		bool nonPow2conditional = ((d3dCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) != 0);
 		this->caps.npotTextures = (!pow2 && !nonPow2conditional); // this is how the docs say it is defined
 		this->caps.npotTexturesLimited = (this->caps.npotTextures || pow2 && nonPow2conditional);
+		if (!this->_supportsA8Surface)
+		{
+			this->caps.textureFormats /= Image::Format::Alpha;
+			this->caps.textureFormats /= Image::Format::Greyscale;
+		}
 	}
 
 	void DirectX9_RenderSystem::_deviceSetup()

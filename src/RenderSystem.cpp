@@ -505,6 +505,16 @@ namespace april
 
 	Texture* RenderSystem::createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type)
 	{
+		if (format != Image::Format::Invalid && !this->getCaps().textureFormats.has(format))
+		{
+#ifdef _WIN32
+			hstr address = hsprintf("<0x%p>", data);
+#else
+			hstr address = hsprintf("<%p>", data); // on Unix %p adds the 0x
+#endif
+			hlog::errorf(logTag, "Cannot create texture with data %s, the texture format '%s' is not supported!", address.cStr(), format.getName().cStr());
+			return NULL;
+		}
 		Texture* texture = this->_deviceCreateTexture(true);
 		if (!texture->_create(w, h, data, format, type))
 		{
@@ -518,6 +528,11 @@ namespace april
 
 	Texture* RenderSystem::createTexture(int w, int h, Color color, Image::Format format, Texture::Type type)
 	{
+		if (format != Image::Format::Invalid && !this->getCaps().textureFormats.has(format))
+		{
+			hlog::errorf(logTag, "Cannot create texture with color '%s', the texture format '%s' is not supported!", color.hex().cStr(), format.getName().cStr());
+			return NULL;
+		}
 		Texture* texture = this->_deviceCreateTexture(true);
 		if (!texture->_create(w, h, color, format, type))
 		{

@@ -570,12 +570,6 @@ namespace april
 		/// @note Usually this doesn't need to be called manually. Calls flushFrame().
 		/// @see flushFrame
 		void presentFrame();
-		/*
-		/// @brief Flushes all.
-		/// @note Usually this doesn't need to be called manually. This is needed for some implemenations that don't call presentFrame() within C++ at all.
-		/// @see presentFrame
-		virtual void flushRenderQueue();
-		*/
 
 	protected:
 		/// @brief The RenderSystem's name.

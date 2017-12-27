@@ -204,7 +204,7 @@ namespace april
 		this->dataAsync = NULL;
 		this->asyncLoadQueued = false;
 		hlog::write(logTag, "Registering texture: " + this->_getInternalName());
-		return true;
+		return this->loadAsync();
 	}
 
 	bool Texture::_create(int w, int h, const Color& color, Image::Format format, Texture::Type type)
@@ -242,7 +242,7 @@ namespace april
 		{
 			hlog::warnf(logTag, "Texture size for '%s' is %d,%d while the reported system max texture size is %d!", this->_getInternalName().cStr(), this->width, this->height, maxTextureSize);
 		}
-		return true;
+		return this->loadAsync();
 	}
 
 	Texture::~Texture()
@@ -413,8 +413,6 @@ namespace april
 		lock.release();
 		this->loadMetaData();
 		return this->loadAsync();
-		// TODOx - remove this?
-		//return (this->loadAsync() && this->ensureLoaded());
 	}
 
 	bool Texture::upload()
@@ -541,6 +539,7 @@ namespace april
 		{
 			this->_rawClear();
 		}
+		this->unlock(); // finalize the upload
 		lock.acquire(&this->asyncLoadMutex);
 		this->dataAsync = NULL; // not needed anymore and makes isLoadedAsync() return false now
 		this->loaded = result;
@@ -590,14 +589,12 @@ namespace april
 		}
 		*/
 		this->asyncLoadDiscarded = false;
-		if (this->filename == "")
-		{
-			this->_assignFormat();
-			this->asyncLoadQueued = true;
-			return true;
-		}
 		if (!this->asyncLoadQueued) // this check is down here to allow the upper error messages to be displayed
 		{
+			if (this->filename == "")
+			{
+				this->_assignFormat();
+			}
 			this->asyncLoadQueued = TextureAsync::queueLoad(this);
 		}
 		return this->asyncLoadQueued;
@@ -671,21 +668,7 @@ namespace april
 		{
 			return true;
 		}
-		if (this->filename == "")
-		{
-			lock.release();
-			while (true)
-			{
-				lock.acquire(&this->asyncLoadMutex);
-				if (this->loaded)
-				{
-					return true;
-				}
-				lock.release();
-				hthread::sleep(0.001f);
-			}
-		}
-		else if (this->asyncLoadQueued)
+		if (this->asyncLoadQueued)
 		{
 			lock.release();
 			TextureAsync::prioritizeLoad(this);
@@ -708,24 +691,11 @@ namespace april
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->loaded)
 		{
+			lock.release();
 			this->unlock();
 			return true;
 		}
-		if (this->filename == "")
-		{
-			lock.release();
-			while (true)
-			{
-				TextureAsync::update();
-				lock.acquire(&this->asyncLoadMutex);
-				if (this->loaded)
-				{
-					return true;
-				}
-				lock.release();
-			}
-		}
-		else if (this->asyncLoadQueued)
+		if (this->asyncLoadQueued)
 		{
 			lock.release();
 			TextureAsync::prioritizeLoad(this);
@@ -1650,6 +1620,10 @@ namespace april
 			this->ensureLoaded();
 			lock = this->_tryLockSystem(x, y, w, h);
 		}
+		if (!lock.failed)
+		{
+			this->locked = true;
+		}
 		return lock;
 	}
 
@@ -1660,16 +1634,10 @@ namespace april
 
 	bool Texture::_unlock(Texture::Lock lock, bool update)
 	{
-		if (!this->_unlockSystem(lock, update) && !lock.failed && update)
+		// never upload to GPU when using this method as it's called from the update thread
+		if (!this->_unlockSystem(lock, false) && !lock.failed && update)
 		{
-			if (!this->locked)
-			{
-				update = this->_uploadDataToGpu(lock.dx, lock.dy, lock.w, lock.h);
-			}
-			else
-			{
-				this->dirty = true;
-			}
+			this->dirty = true;
 		}
 		return update;
 	}

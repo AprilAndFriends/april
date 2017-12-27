@@ -78,8 +78,8 @@ namespace april
 				if (!FAILED(hr) && data != NULL)
 				{
 					unsigned char* newData = this->_createPotData(w, h, data);
-					this->type = Type::Volatile; // so the write() call right below goes through
-					this->write(0, 0, w, h, 0, 0, newData, w, h, this->format);
+					this->type = Type::Volatile; // so the _rawWrite() call right below goes through
+					this->_rawWrite(0, 0, w, h, 0, 0, newData, w, h, this->format);
 					this->type = type;
 					delete[] newData;
 					this->firstUpload = false;
@@ -209,30 +209,27 @@ namespace april
 				texture->UnlockRect(0);
 			}
 		}
-		else
+		else if (update)
 		{
 			IDirect3DSurface9* surface = (IDirect3DSurface9*)lock.systemBuffer;
 			if (lock.locked)
 			{
 				surface->UnlockRect();
-				if (update)
+				if (!lock.renderTarget)
 				{
-					if (!lock.renderTarget)
-					{
-						RECT rect;
-						rect.left = lock.x;
-						rect.top = lock.y;
-						rect.right = lock.x + lock.w;
-						rect.bottom = lock.y + lock.h;
-						POINT dest;
-						dest.x = lock.dx;
-						dest.y = lock.dy;
-						APRIL_D3D_DEVICE->UpdateSurface(surface, &rect, this->_getSurface(), &dest);
-					}
-					else
-					{
-						APRIL_D3D_DEVICE->UpdateSurface(surface, NULL, this->_getSurface(), NULL);
-					}
+					RECT rect;
+					rect.left = lock.x;
+					rect.top = lock.y;
+					rect.right = lock.x + lock.w;
+					rect.bottom = lock.y + lock.h;
+					POINT dest;
+					dest.x = lock.dx;
+					dest.y = lock.dy;
+					APRIL_D3D_DEVICE->UpdateSurface(surface, &rect, this->_getSurface(), &dest);
+				}
+				else
+				{
+					APRIL_D3D_DEVICE->UpdateSurface(surface, NULL, this->_getSurface(), NULL);
 				}
 			}
 			surface->Release();
