@@ -25,10 +25,14 @@
 
 namespace april
 {
+	class Window;
+
 	/// @brief Defines a generic application.
 	class aprilExport Application
 	{
 	public:
+		friend class Window;
+
 		/// @class State
 		/// @brief Defines application states.
 		HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, State,
@@ -119,7 +123,10 @@ namespace april
 
 		/// @brief Performs the update of one frame, but without any timer.
 		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.
-		void updateWaiting();
+		void _updateSystem();
+		/// @brief Performs FPS counter update.
+		/// @note This is usually called internally.
+		void _updateFps();
 
 		/// @brief Updates the application asynchronously.
 		/// @param[in] thread The thread on which the asynchronous update is running.

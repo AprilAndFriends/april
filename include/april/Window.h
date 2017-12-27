@@ -276,8 +276,10 @@ namespace april
 		/// @note This is a different concept from focus-change that is usually only used in certain implementations.
 		virtual void handleActivityChange(bool active);
 		/// @brief Handles a size-change event and propagates it to the delegate.
-		/// @param[in] size The new window size.
-		virtual void handleSizeChange(cgvec2 size);
+		/// @param[in] w New width of the resolutin.
+		/// @param[in] h New height of the resolutin.
+		/// @param[in] fullscreen Whether the display is now fullscreen or windowed.
+		virtual void handleSizeChange(int width, int height, bool fullscreen);
 		/// @brief Handles a input-mode-change event and propagates it to the delegate.
 		/// @param[in] inputMode New input mode.
 		virtual void handleInputModeChange(const InputMode& inputMode);
@@ -336,9 +338,11 @@ namespace april
 		/// @note This is mostly used internally.
 		virtual void queueActivityChangeEvent(bool active);
 		/// @brief Queues a size change event for processing before the start of the next frame.
-		/// @param[in] size New window size.
+		/// @param[in] w New width of the resolutin.
+		/// @param[in] h New height of the resolutin.
+		/// @param[in] fullscreen Whether the display is now fullscreen or windowed.
 		/// @note This is mostly used internally.
-		virtual void queueSizeChangeEvent(cgvec2 size);
+		virtual void queueSizeChangeEvent(int width, int height, bool fullscreen);
 		/// @brief Queues a size change event for processing before the start of the next frame.
 		/// @param[in] size New window size.
 		/// @note This is mostly used internally.

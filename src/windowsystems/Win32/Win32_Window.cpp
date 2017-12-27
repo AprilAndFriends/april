@@ -281,7 +281,7 @@ namespace april
 		ShowWindow(this->hWnd, SW_SHOW);
 		UpdateWindow(this->hWnd);
 		this->fullscreen = fullscreen;
-		this->_setRenderSystemResolution(this->getWidth(), this->getHeight(), this->fullscreen);
+		this->handleSizeChange(this->getWidth(), this->getHeight(), this->fullscreen);
 	}
 	
 	bool Win32_Window::update(float timeDelta)
@@ -579,11 +579,13 @@ namespace april
 
 	static int _mouseMessages = 0;
 
-	void Win32_Window::handleSizeChange(cgvec2 size)
+	void Win32_Window::handleSizeChange(int width, int height, bool fullscreen)
 	{
-		this->_setRenderSystemResolution();
+		this->_setRenderSystemResolution(width, height, fullscreen);
 		UpdateWindow(this->hWnd);
-		Window::handleSizeChange(this->getSize());
+		Window::handleSizeChange(width, height, fullscreen);
+		this->performUpdate(0.0f);
+		april::rendersys->presentFrame();
 	}
 
 	void Win32_Window::queueControllerEvent(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue)
@@ -616,12 +618,11 @@ namespace april
 			if (!april::window->isFullscreen() &&
 				(_sizeChanging || wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED && !_initialSize))
 			{
-				april::window->queueSizeChangeEvent(gvec2()); // Win32 doesn't get the actual size until later
+				april::window->queueSizeChangeEvent(april::window->getWidth(), april::window->getHeight(), april::window->isFullscreen());
+				april::rendersys->update(0.0f);
 				// TODOx - remove this?
-				/*
-				april::window->performUpdate(0.0f);
-				april::rendersys->presentFrame();
-				*/
+				//april::window->performUpdate(0.0f);
+				//april::rendersys->presentFrame();
 			}
 			_initialSize = false;
 			break;

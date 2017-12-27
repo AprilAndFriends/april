@@ -431,6 +431,7 @@ namespace april
 		}
 		int size = 0;
 		unsigned char* currentData = NULL;
+		// no lock required since it only checks for existence, not for manipulation of data
 		if (this->data != NULL) // reload from memory
 		{
 			hlog::write(logTag, "Loading texture: " + this->_getInternalName());
@@ -499,6 +500,7 @@ namespace april
 		bool result = this->_deviceCreateTexture(currentData, size, this->type);
 		if (!result)
 		{
+			// no lock required since it only checks for existence, not for manipulation of data
 			if (currentData != NULL && this->data != currentData)
 			{
 				delete[] currentData;
@@ -510,15 +512,25 @@ namespace april
 		}
 		if (currentData != NULL)
 		{
+			lock.acquire(&this->asyncDataMutex);
+			this->dirty = false;
 			if (this->firstUpload)
 			{
-				Type type = this->type;
-				this->type = Type::Volatile; // so the write() call right below goes through
-				this->_rawWrite(0, 0, this->width, this->height, 0, 0, currentData, this->width, this->height, format);
-				this->type = type;
+				if (Image::needsConversion(this->format, april::rendersys->getNativeTextureFormat(this->format)) ||
+					!this->_uploadToGpu(0, 0, this->width, this->height, 0, 0, currentData, this->width, this->height, format))
+				{
+					Lock lock = this->_tryLockSystem(0, 0, this->width, this->height);
+					if (!lock.failed)
+					{
+						Image::write(0, 0, this->width, this->height, 0, 0, currentData, this->width, this->height, format, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
+						this->_unlockSystem(lock, true);
+					}
+				}
 			}
-			if (this->type != Type::Volatile && this->type != Type::RenderTarget && (this->type != Type::Immutable || this->filename == ""))
+			// TODOx - remove condition
+			if (/*this->type != Type::Volatile && this->type != Type::RenderTarget &&*/ (this->type != Type::Immutable || this->filename == ""))
 			{
+				lock.acquire(&this->asyncDataMutex);
 				if (this->data != currentData)
 				{
 					if (this->data != NULL)
@@ -534,12 +546,16 @@ namespace april
 				// the used format will be the native format, because there is no intermediate data
 				this->format = april::rendersys->getNativeTextureFormat(this->format);
 			}
+			lock.release();
 		}
+		// TODOx - remove this code?
+		/*
 		else if (this->type == Type::Volatile) // when recreating a texture, it is important that it is created empty to avoid problems (e.g. DX9 creates a white initial texture)
 		{
 			this->_rawClear();
 		}
-		this->unlock(); // finalize the upload
+		*/
+		this->unlock(); // upload any additional changes
 		lock.acquire(&this->asyncLoadMutex);
 		this->dataAsync = NULL; // not needed anymore and makes isLoadedAsync() return false now
 		this->loaded = result;
@@ -606,6 +622,7 @@ namespace april
 		{
 			hlog::write(logTag, "Unloading texture: " + this->_getInternalName());
 		}
+		hmutex::ScopeLock lockData(&this->asyncDataMutex);
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		this->loaded = false;
 		if (this->asyncLoadQueued)
@@ -618,18 +635,19 @@ namespace april
 			this->dataAsync = NULL;
 		}
 		this->firstUpload = true;
-		lock.release();
-		this->unlock();
+		this->dirty = false;
 	}
 
 	bool Texture::loadMetaData()
 	{
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		hmutex::ScopeLock lockData(&this->asyncDataMutex);
 		if (this->loaded)
 		{
 			return true;
 		}
 		bool hasData = (this->data != NULL || this->dataAsync != NULL);
+		lockData.release();
 		lock.release();
 		if (!hasData && this->type != Type::Volatile && this->type != Type::RenderTarget && (this->width == 0 || this->height == 0))
 		{
@@ -668,7 +686,7 @@ namespace april
 		{
 			return true;
 		}
-		if (this->asyncLoadQueued)
+		if (this->asyncLoadQueued || this->dataAsync != NULL || this->filename == "" && this->data != NULL)
 		{
 			lock.release();
 			TextureAsync::prioritizeLoad(this);
@@ -695,7 +713,7 @@ namespace april
 			this->unlock();
 			return true;
 		}
-		if (this->asyncLoadQueued)
+		if (this->asyncLoadQueued || this->dataAsync != NULL || this->filename == "" && this->data != NULL)
 		{
 			lock.release();
 			TextureAsync::prioritizeLoad(this);
@@ -883,6 +901,8 @@ namespace april
 
 	bool Texture::lock()
 	{
+		// TODOx - remove
+		/*
 		if (!this->_isAlterable())
 		{
 			hlog::warn(logTag, "Cannot use locking, texture is not alterable: " + this->_getInternalName());
@@ -894,10 +914,14 @@ namespace april
 		}
 		this->locked = true;
 		return true;
+		*/
+		return false;
 	}
 
 	bool Texture::unlock()
 	{
+		// TODOx - remove
+		/*
 		if (!this->locked)
 		{
 			return false;
@@ -909,6 +933,14 @@ namespace april
 		}
 		this->dirty = false;
 		return true;
+		*/
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		if (this->dirty)
+		{
+			this->dirty = false;
+			this->_uploadDataToGpu(0, 0, this->width, this->height);
+		}
+		return false;
 	}
 
 	bool Texture::clear()
@@ -928,13 +960,10 @@ namespace april
 
 	bool Texture::_rawClear()
 	{
-		Lock lock = this->_tryLock();
-		if (lock.failed)
-		{
-			return false;
-		}
-		memset(lock.data, 0, this->getByteSize());
-		return this->_unlock(lock, true);
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		memset(this->data, 0, this->getByteSize());
+		this->dirty = true;
+		return true;
 	}
 
 	Color Texture::getPixel(int x, int y)
@@ -969,12 +998,10 @@ namespace april
 
 	bool Texture::_rawSetPixel(int x, int y, const Color& color)
 	{
-		Lock lock = this->_tryLock(x, y, 1, 1);
-		if (lock.failed)
-		{
-			return false;
-		}
-		return this->_unlock(lock, Image::setPixel(lock.x, lock.y, color, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		bool result = Image::setPixel(x, y, color, this->data, this->width, this->height, this->format);
+		this->dirty |= result;
+		return result;
 	}
 
 	Color Texture::getInterpolatedPixel(float x, float y)
@@ -1013,12 +1040,10 @@ namespace april
 		{
 			return this->_rawSetPixel(x, y, color);
 		}
-		Lock lock = this->_tryLock(x, y, w, h);
-		if (lock.failed)
-		{
-			return false;
-		}
-		return this->_unlock(lock, Image::fillRect(lock.x, lock.y, lock.w, lock.h, color, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		bool result = Image::fillRect(x, y, w, h, color, this->data, this->width, this->height, this->format);
+		this->dirty |= result;
+		return result;
 	}
 
 	bool Texture::copyPixelData(unsigned char** output, Image::Format format)
@@ -1028,18 +1053,12 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + this->_getInternalName());
 			return false;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			return false;
 		}
-		Lock lock = this->_tryLock(); // will use this->data, no need for native format checking and direct copying
-		if (lock.failed)
-		{
-			return false;
-		}
-		bool result = Image::convertToFormat(lock.dataWidth, lock.dataHeight, lock.data, lock.format, output, format, false);
-		this->_unlock(lock, false);
-		return result;
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		return Image::convertToFormat(this->width, this->height, this->data, this->format, output, format, false);
 	}
 
 	Image* Texture::createImage(Image::Format format)
@@ -1049,23 +1068,18 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + this->_getInternalName());
 			return NULL;
 		}
-		if (!this->isLoaded())
+		if (!this->ensureLoaded())
 		{
 			return NULL;
 		}
-		Lock lock = this->_tryLock(); // will use this->data, no need for native format checking and direct copying
-		if (lock.failed)
-		{
-			return NULL;
-		}
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		unsigned char* data = NULL;
 		Image* image = NULL;
-		if (Image::convertToFormat(lock.dataWidth, lock.dataHeight, lock.data, lock.format, &data, format, false))
+		if (Image::convertToFormat(this->width, this->height, this->data, this->format, &data, format, false))
 		{
-			image = Image::create(lock.dataWidth, lock.dataHeight, data, format);
-			delete[] data;
+			image = Image::create(this->width, this->height, NULL, format);
+			image->data = data;
 		}
-		this->_unlock(lock, false);
 		return image;
 	}
 
@@ -1086,18 +1100,10 @@ namespace april
 
 	bool Texture::_rawWrite(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		if ((this->type == Type::Volatile || this->type == Type::RenderTarget) &&
-			!Image::needsConversion(srcFormat, april::rendersys->getNativeTextureFormat(this->format)) &&
-			!this->locked && this->_uploadToGpu(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat))
-		{
-			return true;
-		}
-		Lock lock = this->_tryLock(dx, dy, sw, sh);
-		if (lock.failed)
-		{
-			return false;
-		}
-		return this->_unlock(lock, Image::write(sx, sy, sw, sh, lock.x, lock.y, srcData, srcWidth, srcHeight, srcFormat, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		bool result = Image::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format);
+		this->dirty |= result;
+		return result;
 	}
 
 	bool Texture::write(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture)
@@ -1127,14 +1133,8 @@ namespace april
 			hlog::errorf(logTag, "Cannot read texture '%s', not loaded!", texture->_getInternalName().cStr());
 			return false;
 		}
-		Lock lock = texture->_tryLock(sx, sy, sw, sh);
-		if (lock.failed)
-		{
-			return false;
-		}
-		bool result = this->write(lock.dx, lock.dy, lock.w, lock.h, dx, dy, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
-		texture->_unlock(lock, false);
-		return result;
+		hmutex::ScopeLock lock(&texture->asyncDataMutex);
+		return this->write(sx, sy, sw, sh, dx, dy, texture->data, texture->width, texture->height, texture->format);
 	}
 
 	bool Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
@@ -1149,12 +1149,10 @@ namespace april
 			hlog::errorf(logTag, "Cannot write texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
-		Lock lock = this->_tryLock(dx, dy, dw, dh);
-		if (lock.failed)
-		{
-			return false;
-		}
-		return this->_unlock(lock, Image::writeStretch(sx, sy, sw, sh, lock.x, lock.y, lock.w, lock.h, srcData, srcWidth, srcHeight, srcFormat, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		bool result = Image::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format);
+		this->dirty |= result;
+		return result;
 	}
 
 	bool Texture::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture)
@@ -1184,14 +1182,8 @@ namespace april
 			hlog::errorf(logTag, "Cannot read texture '%s', not loaded!", texture->_getInternalName().cStr());
 			return false;
 		}
-		Lock lock = texture->_tryLock(sx, sy, sw, sh);
-		if (lock.failed)
-		{
-			return false;
-		}
-		bool result = this->writeStretch(lock.dx, lock.dy, lock.w, lock.h, dx, dy, dw, dh, lock.data, lock.dataWidth, lock.dataHeight, lock.format);
-		texture->_unlock(lock, false);
-		return result;
+		hmutex::ScopeLock lock(&texture->asyncDataMutex);
+		return this->writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, texture->data, texture->width, texture->height, texture->format);
 	}
 
 	bool Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
@@ -1206,12 +1198,10 @@ namespace april
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
-		Lock lock = this->_tryLock(dx, dy, sw, sh);
-		if (lock.failed)
-		{
-			return false;
-		}
-		return this->_unlock(lock, Image::blit(sx, sy, sw, sh, lock.x, lock.y, srcData, srcWidth, srcHeight, srcFormat, lock.data, lock.dataWidth, lock.dataHeight, lock.format, alpha));
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		bool result = Image::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format);
+		this->dirty |= result;
+		return result;
 	}
 
 	bool Texture::blit(int sx, int sy, int sw, int sh, int dx, int dy, Texture* texture, unsigned char alpha)
@@ -1241,14 +1231,8 @@ namespace april
 			hlog::errorf(logTag, "Cannot read texture '%s', not loaded!", texture->_getInternalName().cStr());
 			return false;
 		}
-		Lock lock = texture->_tryLock(sx, sy, sw, sh);
-		if (lock.failed)
-		{
-			return false;
-		}
-		bool result = this->blit(lock.dx, lock.dy, lock.w, lock.h, dx, dy, lock.data, lock.dataWidth, lock.dataHeight, lock.format, alpha);
-		texture->_unlock(lock, false);
-		return result;
+		hmutex::ScopeLock lock(&texture->asyncDataMutex);
+		return this->blit(sx, sy, sw, sh, dx, dy, texture->data, texture->width, texture->height, texture->format);
 	}
 
 	bool Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
@@ -1263,12 +1247,10 @@ namespace april
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
-		Lock lock = this->_tryLock(dx, dy, dw, dh);
-		if (lock.failed)
-		{
-			return false;
-		}
-		return this->_unlock(lock, Image::blitStretch(sx, sy, sw, sh, lock.x, lock.y, lock.w, lock.h, srcData, srcWidth, srcHeight, srcFormat, lock.data, lock.dataWidth, lock.dataHeight, lock.format, alpha));
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		bool result = Image::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format);
+		this->dirty |= result;
+		return result;
 	}
 
 	bool Texture::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Texture* texture, unsigned char alpha)
@@ -1298,14 +1280,8 @@ namespace april
 			hlog::errorf(logTag, "Cannot read texture '%s', not loaded!", texture->_getInternalName().cStr());
 			return false;
 		}
-		Lock lock = texture->_tryLock(sx, sy, sw, sh);
-		if (lock.failed)
-		{
-			return false;
-		}
-		bool result = this->blitStretch(lock.dx, lock.dy, lock.w, lock.h, dx, dy, dw, dh, lock.data, lock.dataWidth, lock.dataHeight, lock.format, alpha);
-		texture->_unlock(lock, false);
-		return result;
+		hmutex::ScopeLock lock(&texture->asyncDataMutex);
+		return this->blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, texture->data, texture->width, texture->height, texture->format);
 	}
 
 	bool Texture::rotateHue(int x, int y, int w, int h, float degrees)
@@ -1320,12 +1296,10 @@ namespace april
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
-		Lock lock = this->_tryLock(x, y, w, h);
-		if (lock.failed)
-		{
-			return false;
-		}
-		return this->_unlock(lock, Image::rotateHue(lock.x, lock.y, lock.w, lock.h, degrees, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		bool result = Image::rotateHue(x, y, w, h, degrees, this->data, this->width, this->height, this->format);
+		this->dirty |= result;
+		return result;
 	}
 
 	bool Texture::saturate(int x, int y, int w, int h, float factor)
@@ -1340,12 +1314,10 @@ namespace april
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
-		Lock lock = this->_tryLock(x, y, w, h);
-		if (lock.failed)
-		{
-			return false;
-		}
-		return this->_unlock(lock, Image::saturate(lock.x, lock.y, lock.w, lock.h, factor, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		bool result = Image::saturate(x, y, w, h, factor, this->data, this->width, this->height, this->format);
+		this->dirty |= result;
+		return result;
 	}
 
 	bool Texture::invert(int x, int y, int w, int h)
@@ -1360,12 +1332,10 @@ namespace april
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
-		Lock lock = this->_tryLock(x, y, w, h);
-		if (lock.failed)
-		{
-			return false;
-		}
-		return this->_unlock(lock, Image::invert(lock.x, lock.y, lock.w, lock.h, lock.data, lock.dataWidth, lock.dataHeight, lock.format));
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		bool result = Image::invert(x, y, w, h, this->data, this->width, this->height, this->format);
+		this->dirty |= result;
+		return result;
 	}
 
 	bool Texture::insertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity)
@@ -1380,12 +1350,11 @@ namespace april
 			hlog::errorf(logTag, "Cannot alter texture '%s', not loaded!", this->_getInternalName().cStr());
 			return false;
 		}
-		Lock lock = this->_tryLock();
-		if (lock.failed)
-		{
-			return false;
-		}
-		return this->_unlock(lock, Image::insertAlphaMap(lock.dataWidth, lock.dataHeight, srcData, srcFormat, lock.data, lock.format, median, ambiguity));
+		
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		bool result = Image::insertAlphaMap(this->width, this->height, srcData, srcFormat, this->data, this->format, median, ambiguity);
+		this->dirty |= result;
+		return result;
 	}
 
 	bool Texture::insertAlphaMap(Texture* texture, unsigned char median, int ambiguity)
@@ -1421,14 +1390,8 @@ namespace april
 				this->_getInternalName().cStr(), this->width, this->height, texture->_getInternalName().cStr(), texture->width, texture->height);
 			return false;
 		}
-		Lock lock = texture->_tryLock();
-		if (lock.failed)
-		{
-			return false;
-		}
-		bool result = this->insertAlphaMap(lock.data, lock.format, median, ambiguity);
-		texture->_unlock(lock, false);
-		return result;
+		hmutex::ScopeLock lock(&texture->asyncDataMutex);
+		return this->insertAlphaMap(texture->data, texture->format, median, ambiguity);
 	}
 
 	// overloads
@@ -1610,6 +1573,8 @@ namespace april
 	Texture::Lock Texture::_tryLock(int x, int y, int w, int h)
 	{
 		Lock lock;
+		// TODOx - remove
+		/*
 		if (this->data != NULL)
 		{
 			lock.activateLock(x, y, w, h, x, y, this->data, this->width, this->height, this->format);
@@ -1624,6 +1589,7 @@ namespace april
 		{
 			this->locked = true;
 		}
+		*/
 		return lock;
 	}
 
@@ -1634,18 +1600,20 @@ namespace april
 
 	bool Texture::_unlock(Texture::Lock lock, bool update)
 	{
-		// never upload to GPU when using this method as it's called from the update thread
-		if (!this->_unlockSystem(lock, false) && !lock.failed && update)
+		// TODOx - remove
+		/*
+		if (!this->_unlockSystem(lock, update) && !lock.failed && update)
 		{
 			this->dirty = true;
 		}
+		*/
 		return update;
 	}
 
 	bool Texture::_uploadDataToGpu(int x, int y, int w, int h)
 	{
 		if ((!Image::needsConversion(this->format, april::rendersys->getNativeTextureFormat(this->format)) &&
-			this->_uploadToGpu(x, y, w, h, x, y, this->data, this->width, this->height, this->format)) || this->locked)
+			this->_uploadToGpu(x, y, w, h, x, y, this->data, this->width, this->height, this->format)) || this->dirty)
 		{
 			return true;
 		}

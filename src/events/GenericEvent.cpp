@@ -21,35 +21,43 @@ namespace april
 		HL_ENUM_DEFINE(GenericEvent::Type, LowMemoryWarning);
 	));
 
-	GenericEvent::GenericEvent() : intValue(0), floatValue(0.0f), boolValue(false)
+	GenericEvent::GenericEvent() : intValue(0), intValueOther(0), floatValue(0.0f), boolValue(false)
 	{
 	}
 
-	GenericEvent::GenericEvent(Type type) : intValue(0), floatValue(0.0f), boolValue(false)
+	GenericEvent::GenericEvent(Type type) : intValue(0), intValueOther(0), floatValue(0.0f), boolValue(false)
 	{
 		this->type = type;
 	}
 
-	GenericEvent::GenericEvent(Type type, int intValue) : intValue(0), floatValue(0.0f), boolValue(false)
+	GenericEvent::GenericEvent(Type type, int intValue) : intValue(0), intValueOther(0), floatValue(0.0f), boolValue(false)
 	{
 		this->type = type;
 		this->intValue = intValue;
 	}
 
-	GenericEvent::GenericEvent(Type type, bool boolValue) : intValue(0), floatValue(0.0f), boolValue(false)
+	GenericEvent::GenericEvent(Type type, int intValue, int intValueOther, int boolValue) : intValue(0), intValueOther(0), floatValue(0.0f), boolValue(false)
+	{
+		this->type = type;
+		this->intValue = intValue;
+		this->intValueOther = intValueOther;
+		this->boolValue = boolValue;
+	}
+
+	GenericEvent::GenericEvent(Type type, bool boolValue) : intValue(0), intValueOther(0), floatValue(0.0f), boolValue(false)
 	{
 		this->type = type;
 		this->boolValue = boolValue;
 	}
 
-	GenericEvent::GenericEvent(Type type, bool boolValue, float floatValue) : intValue(0), floatValue(0.0f), boolValue(false)
+	GenericEvent::GenericEvent(Type type, bool boolValue, float floatValue) : intValue(0), intValueOther(0), floatValue(0.0f), boolValue(false)
 	{
 		this->type = type;
 		this->boolValue = boolValue;
 		this->floatValue = floatValue;
 	}
 
-	GenericEvent::GenericEvent(Type type, cgvec2 gvec2Value) : intValue(0), floatValue(0.0f), boolValue(false)
+	GenericEvent::GenericEvent(Type type, cgvec2 gvec2Value) : intValue(0), intValueOther(0), floatValue(0.0f), boolValue(false)
 	{
 		this->type = type;
 		this->gvec2Value = gvec2Value;

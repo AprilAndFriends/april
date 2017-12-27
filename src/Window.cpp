@@ -315,18 +315,14 @@ namespace april
 		this->_setRenderSystemResolution(this->getWidth(), this->getHeight(), this->fullscreen);
 	}
 	
-	void Window::_setRenderSystemResolution(int w, int h, bool fullscreen)
+	void Window::_setRenderSystemResolution(int width, int height, bool fullscreen)
 	{
-		hlog::writef(logTag, "Setting window resolution: (%d,%d); fullscreen: %s", w, h, fullscreen ? "yes" : "no");
-		april::rendersys->_deviceChangeResolution(w, h, fullscreen);
-		if (this->systemDelegate != NULL)
-		{
-			this->systemDelegate->onWindowSizeChanged(w, h, fullscreen);
-		}
+		april::rendersys->_deviceChangeResolution(width, height, fullscreen);
 	}
 	
 	void Window::presentFrame()
 	{
+		april::application->_updateFps();
 		if (this->presentFrameEnabled)
 		{
 			this->_presentFrame();
@@ -384,7 +380,7 @@ namespace april
 			}
 			else if (genericEvent.type == GenericEvent::Type::SizeChange)
 			{
-				this->handleSizeChange(genericEvent.gvec2Value);
+				this->handleSizeChange(genericEvent.intValue, genericEvent.intValueOther, genericEvent.boolValue);
 			}
 			else if (genericEvent.type == GenericEvent::Type::InputModeChange)
 			{
@@ -527,15 +523,13 @@ namespace april
 		hlog::warn(logTag, this->name + " does not implement activity change events!");
 	}
 
-	void Window::handleSizeChange(cgvec2 size)
+	void Window::handleSizeChange(int width, int height, bool fullscreen)
 	{
-		/*
-		((Win32_Window*)april::window)->_setRenderSystemResolution();
-		UpdateWindow(hWnd);
-		april::window->performUpdate(0.0f);
-		april::rendersys->presentFrame();
-		*/
-		// TODOx - needs implementation
+		hlog::writef(logTag, "Setting window resolution: (%d,%d); fullscreen: %s", width, height, fullscreen ? "yes" : "no");
+		if (this->systemDelegate != NULL)
+		{
+			this->systemDelegate->onWindowSizeChanged(width, height, fullscreen);
+		}
 	}
 
 	void Window::handleInputModeChange(const InputMode& inputMode)
@@ -771,10 +765,10 @@ namespace april
 		this->genericEvents += GenericEvent(GenericEvent::Type::ActivityChange, active);
 	}
 
-	void Window::queueSizeChangeEvent(cgvec2 size)
+	void Window::queueSizeChangeEvent(int width, int height, bool fullscreen)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
-		this->genericEvents += GenericEvent(GenericEvent::Type::SizeChange, size);
+		this->genericEvents += GenericEvent(GenericEvent::Type::SizeChange, width, height, fullscreen);
 	}
 
 	void Window::queueInputModeChangeEvent(const InputMode& inputMode)

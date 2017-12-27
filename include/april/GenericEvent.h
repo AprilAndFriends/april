@@ -57,6 +57,8 @@ namespace april
 		Type type;
 		/// @brief An int value related to the event.
 		int intValue;
+		/// @brief Another int value related to the event.
+		int intValueOther;
 		/// @brief A float value related to the event.
 		float floatValue;
 		/// @brief A bool value related to the event.
@@ -73,6 +75,12 @@ namespace april
 		/// @param[in] type The event type.
 		/// @param[in] intValue An in value related to the event.
 		GenericEvent(Type type, int intValue);
+		/// @brief Constructor.
+		/// @param[in] type The event type.
+		/// @param[in] intValue An int value related to the event.
+		/// @param[in] intValueOther Another int value related to the event.
+		/// @param[in] boolValue A bool value related to the event.
+		GenericEvent(Type type, int intValue, int intValueOther, int boolValue);
 		/// @brief Constructor.
 		/// @param[in] type The event type.
 		/// @param[in] boolValue A bool value related to the event.

@@ -30,8 +30,8 @@ namespace april
 
 	Application* application = NULL;
 	
-	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : state(State::Idle),
-		autoPresentFrame(false), timeDelta(0.0f), fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f), updateThread(&_asyncUpdate)
+	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : state(State::Idle), autoPresentFrame(false),
+		timeDelta(0.0f), fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f), updateThread(&_asyncUpdate, "APRIL Async Update")
 	{
 		this->aprilApplicationInit = aprilApplicationInit;
 		this->aprilApplicationDestroy = aprilApplicationDestroy;
@@ -52,7 +52,7 @@ namespace april
 		{
 			if (april::window != NULL && april::rendersys != NULL)
 			{
-				this->updateWaiting();
+				this->_updateSystem();
 			}
 			hthread::sleep(0.001f);
 		}
@@ -76,10 +76,10 @@ namespace april
 		// processing remaining commands from other thread
 		while (this->state == State::Stopping)
 		{
-			this->updateWaiting();
+			this->_updateSystem();
 		}
 		// finish everything up
-		this->updateWaiting();
+		this->_updateSystem();
 		// done
 		this->state = State::Idle;
 	}
@@ -98,21 +98,6 @@ namespace april
 		{
 			timeDelta = hmin(timeDelta, this->timeDeltaMaxLimit);
 		}
-		if (this->fpsTimer > 0.0f)
-		{
-			++this->fpsCount;
-			if (this->fpsTimer >= this->fpsResolution)
-			{
-				this->fps = hceil(this->fpsCount / this->fpsTimer);
-				this->fpsCount = 0;
-				this->fpsTimer = 0.0f;
-			}
-		}
-		else
-		{
-			this->fps = 0;
-			this->fpsCount = 0;
-		}
 		hmutex::ScopeLock lock(&this->updateMutex);
 		this->timeDelta += timeDelta;
 		lock.release();
@@ -124,11 +109,30 @@ namespace april
 		}
 	}
 
-	void Application::updateWaiting()
+	void Application::_updateSystem()
 	{
 		TextureAsync::update();
 		april::window->checkEvents();
 		april::rendersys->update(0.0f); // might require some rendering
+	}
+
+	void Application::_updateFps()
+	{
+		if (this->fpsTimer > 0.0f)
+		{
+			++this->fpsCount;
+			if (this->fpsTimer >= this->fpsResolution)
+			{
+				this->fps = hceil(this->fpsCount / this->fpsTimer);
+				this->fpsCount = 0;
+				this->fpsTimer -= this->fpsResolution;
+			}
+		}
+		else
+		{
+			this->fps = 0;
+			this->fpsCount = 0;
+		}
 	}
 
 	void Application::finish()
@@ -179,10 +183,12 @@ namespace april
 				april::window->setPresentFrameEnabled(true);
 #endif
 			}
+			/*
 			while (april::application->state == State::Running && april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
 			{
 				hthread::sleep(0.001f);
 			}
+			*/
 		}
 		(*april::application->aprilApplicationDestroy)();
 	}

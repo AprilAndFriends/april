@@ -51,7 +51,7 @@ namespace april
 		bool update(float timeDelta);
 		void checkEvents();
 
-		void handleSizeChange(cgvec2 size);
+		void handleSizeChange(int width, int height, bool fullscreen);
 		void queueControllerEvent(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue);
 
 		static LRESULT CALLBACK childProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

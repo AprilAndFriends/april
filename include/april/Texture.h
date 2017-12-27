@@ -714,6 +714,8 @@ namespace april
 		bool dirty;
 		/// @brief The raw image data.
 		unsigned char* data;
+		/// @brief Mutex used for thread synchronization when using asynchronous loading.
+		hmutex asyncDataMutex;
 		/// @brief The raw image data that was loaded asynchronously and is waiting to be uploaded to the GPU.
 		unsigned char* dataAsync;
 		/// @brief Whether asynchronous loading was queued.
