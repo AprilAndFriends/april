@@ -40,8 +40,8 @@ namespace april
 		
 		bool update(float timeDelta);
 		
-		void queueTouchEvent(const MouseEvent::Type& type, cgvec2 position, int index);
-		void queueControllerEvent(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue);
+		void queueTouchInput(const MouseEvent::Type& type, cgvec2 position, int index);
+		void queueControllerInput(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue);
 
 		void showVirtualKeyboard();
 		void hideVirtualKeyboard();
@@ -54,7 +54,7 @@ namespace april
 		int height;
 		bool forcedFocus;
 
-		void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		void _systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options);
 		
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor() { }

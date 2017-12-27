@@ -31,6 +31,7 @@ namespace april
 	class DestroyTextureCommand;
 	class Image;
 	class RenderSystem;
+	class ResetCommand;
 	class TextureAsync;
 	
 	/// @brief Defines a generic texture.
@@ -39,6 +40,7 @@ namespace april
 	public:
 		friend class DestroyTextureCommand;
 		friend class RenderSystem;
+		friend class ResetCommand;
 		friend class TextureAsync;
 
 		/// @class Type

@@ -16,10 +16,6 @@ namespace april
 		this->options = options;
 	}
 
-	CreateCommand::~CreateCommand()
-	{
-	}
-
 	void CreateCommand::execute()
 	{
 		april::rendersys->_systemCreate(this->options);

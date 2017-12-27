@@ -241,7 +241,7 @@ namespace april
 			this->virtualKeyboard->hideKeyboard(true);
 			if (visible && !this->virtualKeyboard->isVisible())
 			{
-				this->queueVirtualKeyboardChangeEvent(false, 0.0f);
+				this->queueVirtualKeyboardChange(false, 0.0f);
 			}
 		}
 		this->virtualKeyboard = value;
@@ -359,91 +359,80 @@ namespace april
 		this->controllerEvents.clear();
 		this->motionEvents.clear();
 		lock.release();
-		GenericEvent& genericEvent = GenericEvent();
-		while (genericEvents.size() > 0) // required while instead of for, because this loop could modify this->motionEvents when the event is propagated
+		for_iter(i, 0, genericEvents.size())
 		{
-			genericEvent = genericEvents.removeFirst();
-			if (genericEvent.type == GenericEvent::Type::QuitRequest)
+			if (genericEvents[i].type == GenericEvent::Type::QuitRequest)
 			{
-				if (this->handleQuitRequest(genericEvent.boolValue))
+				if (this->handleQuitRequest(genericEvents[i].boolValue))
 				{
 					april::application->finish();
 				}
 			}
-			else if (genericEvent.type == GenericEvent::Type::FocusChange)
+			else if (genericEvents[i].type == GenericEvent::Type::FocusChange)
 			{
-				this->handleFocusChange(genericEvent.boolValue);
+				this->handleFocusChange(genericEvents[i].boolValue);
 			}
-			else if (genericEvent.type == GenericEvent::Type::ActivityChange)
+			else if (genericEvents[i].type == GenericEvent::Type::ActivityChange)
 			{
-				this->handleActivityChange(genericEvent.boolValue);
+				this->handleActivityChange(genericEvents[i].boolValue);
 			}
-			else if (genericEvent.type == GenericEvent::Type::SizeChange)
+			else if (genericEvents[i].type == GenericEvent::Type::SizeChange)
 			{
-				this->handleSizeChange(genericEvent.intValue, genericEvent.intValueOther, genericEvent.boolValue);
+				this->handleSizeChange(genericEvents[i].intValue, genericEvents[i].intValueOther, genericEvents[i].boolValue);
 			}
-			else if (genericEvent.type == GenericEvent::Type::InputModeChange)
+			else if (genericEvents[i].type == GenericEvent::Type::InputModeChange)
 			{
-				this->handleInputModeChange(InputMode::fromInt(genericEvent.intValue));
+				this->handleInputModeChange(InputMode::fromInt(genericEvents[i].intValue));
 			}
-			else if (genericEvent.type == GenericEvent::Type::VirtualKeyboardChange)
+			else if (genericEvents[i].type == GenericEvent::Type::VirtualKeyboardChange)
 			{
-				this->handleVirtualKeyboardChange(genericEvent.boolValue, genericEvent.floatValue);
+				this->handleVirtualKeyboardChange(genericEvents[i].boolValue, genericEvents[i].floatValue);
 			}
-			else if (genericEvent.type == GenericEvent::Type::LowMemoryWarning)
+			else if (genericEvents[i].type == GenericEvent::Type::LowMemoryWarning)
 			{
 				this->handleLowMemoryWarning();
 			}
 		}
 		// due to possible problems with multiple scroll events in one frame, consecutive scroll events are merged (and so are move events for convenience)
-		MouseEvent& mouseEvent = MouseEvent();
 		gvec2 cumulativeScroll;
-		while (mouseEvents.size() > 0) // required while instead of for, because this loop could modify this->mouseEvents when the event is propagated
+		for_iter (i, 0, mouseEvents.size())
 		{
-			mouseEvent = mouseEvents.removeFirst();
-			if (mouseEvent.type != MouseEvent::Type::Cancel && mouseEvent.type != MouseEvent::Type::Scroll)
+			if (mouseEvents[i].type != MouseEvent::Type::Cancel && mouseEvents[i].type != MouseEvent::Type::Scroll)
 			{
-				this->cursorPosition = mouseEvent.position;
+				this->cursorPosition = mouseEvents[i].position;
 			}
-			if (mouseEvent.type == MouseEvent::Type::Scroll)
+			if (mouseEvents[i].type == MouseEvent::Type::Scroll)
 			{
-				cumulativeScroll += mouseEvent.position;
-				if (mouseEvents.size() == 0 || mouseEvents.first().type != MouseEvent::Type::Scroll)
+				cumulativeScroll += mouseEvents[i].position;
+				// if final event or next event is not a scroll event (because of merging)
+				if (i == mouseEvents.size() - 1 || mouseEvents[i + 1].type != MouseEvent::Type::Scroll)
 				{
-					this->handleMouseEvent(mouseEvent.type, cumulativeScroll, mouseEvent.keyCode);
+					this->handleMouseInput(mouseEvents[i].type, cumulativeScroll, mouseEvents[i].keyCode);
 					cumulativeScroll.set(0.0f, 0.0f);
 				}
 			}
-			// if not a scroll event or final move event (because of merging)
-			else if (mouseEvent.type != MouseEvent::Type::Move || (mouseEvent.type == MouseEvent::Type::Move &&
-				(mouseEvents.size() == 0 || mouseEvents.first().type != MouseEvent::Type::Move)))
+			// if not a move event at all or final move event or next event is not a move event (because of merging)
+			else if (mouseEvents[i].type != MouseEvent::Type::Move || (mouseEvents[i].type == MouseEvent::Type::Move &&
+				(i == mouseEvents.size() - 1 || mouseEvents[i + 1].type != MouseEvent::Type::Move)))
 			{
-				this->handleMouseEvent(mouseEvent.type, mouseEvent.position, mouseEvent.keyCode);
+				this->handleMouseInput(mouseEvents[i].type, mouseEvents[i].position, mouseEvents[i].keyCode);
 			}
 		}
-		KeyEvent& keyEvent = KeyEvent();
-		while (keyEvents.size() > 0) // required while instead of for, because this loop could modify this->keyEvents when the event is propagated
+		for_iter (i, 0, keyEvents.size())
 		{
-			keyEvent = keyEvents.removeFirst();
-			this->handleKeyEvent(keyEvent.type, keyEvent.keyCode, keyEvent.charCode);
+			this->handleKeyInput(keyEvents[i].type, keyEvents[i].keyCode, keyEvents[i].charCode);
 		}
-		TouchEvent& touchEvent = TouchEvent();
-		while (touchEvents.size() > 0) // required while instead of for, because this loop could modify this->touchEvents when the event is propagated
+		for_iter (i, 0, touchEvents.size())
 		{
-			touchEvent = touchEvents.removeFirst();
-			this->handleTouchEvent(touchEvent.touches);
+			this->handleTouchInput(touchEvents[i].touches);
 		}
-		ControllerEvent& controllerEvent = ControllerEvent();
-		while (controllerEvents.size() > 0) // required while instead of for, because this loop could modify this->controllerEvents when the event is propagated
+		for_iter (i, 0, controllerEvents.size())
 		{
-			controllerEvent = controllerEvents.removeFirst();
-			this->handleControllerEvent(controllerEvent.type, controllerEvent.controllerIndex, controllerEvent.buttonCode, controllerEvent.axisValue);
+			this->handleControllerInput(controllerEvents[i].type, controllerEvents[i].controllerIndex, controllerEvents[i].buttonCode, controllerEvents[i].axisValue);
 		}
-		MotionEvent& motionEvent = MotionEvent();
-		while (motionEvents.size() > 0) // required while instead of for, because this loop could modify this->motionEvents when the event is propagated
+		for_iter (i, 0, motionEvents.size())
 		{
-			motionEvent = motionEvents.removeFirst();
-			this->handleMotionEvent(motionEvent.type, motionEvent.motionVector);
+			this->handleMotionInput(motionEvents[i].type, motionEvents[i].motionVector);
 		}
 	}
 
@@ -460,7 +449,7 @@ namespace april
 			this->virtualKeyboard->showKeyboard(false);
 			if (!visible && this->virtualKeyboard->isVisible())
 			{
-				this->queueVirtualKeyboardChangeEvent(true, this->virtualKeyboard->getHeightRatio());
+				this->queueVirtualKeyboardChange(true, this->virtualKeyboard->getHeightRatio());
 			}
 		}
 	}
@@ -473,7 +462,7 @@ namespace april
 			this->virtualKeyboard->hideKeyboard(false);
 			if (visible && !this->virtualKeyboard->isVisible())
 			{
-				this->queueVirtualKeyboardChangeEvent(false, 0.0f);
+				this->queueVirtualKeyboardChange(false, 0.0f);
 			}
 		}
 	}
@@ -574,7 +563,7 @@ namespace april
 		}
 	}
 
-	void Window::handleMouseEvent(MouseEvent::Type type, cgvec2 position, Key keyCode)
+	void Window::handleMouseInput(MouseEvent::Type type, cgvec2 position, Key keyCode)
 	{
 		if (this->mouseDelegate != NULL)
 		{
@@ -605,9 +594,9 @@ namespace april
 		}
 	}
 	
-	void Window::handleKeyEvent(KeyEvent::Type type, Key keyCode, unsigned int charCode)
+	void Window::handleKeyInput(KeyEvent::Type type, Key keyCode, unsigned int charCode)
 	{
-		this->handleKeyOnlyEvent(type, keyCode); // doesn't do anything if keyCode is Key::None
+		this->handleKeyOnlyInput(type, keyCode); // doesn't do anything if keyCode is Key::None
 		if (type == KeyEvent::Type::Down && charCode > 0) // ignores invalid chars
 		{
 			// according to the unicode standard, this range is undefined and reserved for system codes
@@ -615,12 +604,12 @@ namespace april
 			// source: http://en.wikibooks.org/wiki/Unicode/Character_reference/F000-FFFF
 			if (charCode < 0xE000 || charCode > 0xF8FF)
 			{
-				this->handleCharOnlyEvent(charCode);
+				this->handleCharOnlyInput(charCode);
 			}
 		}
 	}
 
-	void Window::handleKeyOnlyEvent(KeyEvent::Type type, Key keyCode)
+	void Window::handleKeyOnlyInput(KeyEvent::Type type, Key keyCode)
 	{
 		if (this->keyboardDelegate != NULL && keyCode != Key::None)
 		{
@@ -643,7 +632,7 @@ namespace april
 				Button button = this->controllerEmulationKeys[keyCode];
 				if (button != Button::AxisLX && button != Button::AxisLY && button != Button::AxisRX && button != Button::AxisRY && button != Button::TriggerL && button != Button::TriggerR)
 				{
-					this->handleControllerEvent((type == KeyEvent::Type::Down ? ControllerEvent::Type::Down : ControllerEvent::Type::Up), 0, button, 0.0f);
+					this->handleControllerInput((type == KeyEvent::Type::Down ? ControllerEvent::Type::Down : ControllerEvent::Type::Up), 0, button, 0.0f);
 					processed = true;
 				}
 			}
@@ -653,7 +642,7 @@ namespace april
 				Button button = this->controllerEmulationAxisesPositive[keyCode];
 				if (button == Button::AxisLX || button == Button::AxisLY || button == Button::AxisRX || button == Button::AxisRY || button == Button::TriggerL || button == Button::TriggerR)
 				{
-					this->handleControllerEvent(ControllerEvent::Type::Axis, 0, button, (type == KeyEvent::Type::Down ? 1.0f : 0.0f));
+					this->handleControllerInput(ControllerEvent::Type::Axis, 0, button, (type == KeyEvent::Type::Down ? 1.0f : 0.0f));
 					processed = true;
 				}
 			}
@@ -663,14 +652,14 @@ namespace april
 				Button button = this->controllerEmulationAxisesNegative[keyCode];
 				if (button == Button::AxisLX || button == Button::AxisLY || button == Button::AxisRX || button == Button::AxisRY)
 				{
-					this->handleControllerEvent(ControllerEvent::Type::Axis, 0, button, (type == KeyEvent::Type::Down ? -1.0f : 0.0f));
+					this->handleControllerInput(ControllerEvent::Type::Axis, 0, button, (type == KeyEvent::Type::Down ? -1.0f : 0.0f));
 					processed = true;
 				}
 			}
 		}
 	}
 
-	void Window::handleCharOnlyEvent(unsigned int charCode)
+	void Window::handleCharOnlyInput(unsigned int charCode)
 	{
 		if (this->keyboardDelegate != NULL && charCode >= 32 && charCode != 127) // special hack, backspace induces a character in some implementations
 		{
@@ -678,7 +667,7 @@ namespace april
 		}
 	}
 
-	void Window::handleTouchEvent(const harray<gvec2>& touches)
+	void Window::handleTouchInput(const harray<gvec2>& touches)
 	{
 		if (this->touchDelegate != NULL)
 		{
@@ -686,7 +675,7 @@ namespace april
 		}
 	}
 
-	void Window::handleControllerEvent(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
+	void Window::handleControllerInput(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
 	{
 		if (this->controllerDelegate != NULL)
 		{
@@ -719,7 +708,7 @@ namespace april
 		}
 	}
 
-	void Window::handleMotionEvent(MotionEvent::Type type, cgvec3 motionVector)
+	void Window::handleMotionInput(MotionEvent::Type type, cgvec3 motionVector)
 	{
 		if (this->motionDelegate != NULL)
 		{
@@ -746,62 +735,62 @@ namespace april
 		}
 	}
 
-	bool Window::queueQuitRequestEvent(bool canCancel)
+	bool Window::queueQuitRequest(bool canCancel)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		this->genericEvents += GenericEvent(GenericEvent::Type::QuitRequest, canCancel);
 		return false; // always return false, the app needs to make a decision whether to terminate or not
 	}
 
-	void Window::queueFocusChangeEvent(bool focused)
+	void Window::queueFocusChange(bool focused)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		this->genericEvents += GenericEvent(GenericEvent::Type::FocusChange, focused);
 	}
 
-	void Window::queueActivityChangeEvent(bool active)
+	void Window::queueActivityChange(bool active)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		this->genericEvents += GenericEvent(GenericEvent::Type::ActivityChange, active);
 	}
 
-	void Window::queueSizeChangeEvent(int width, int height, bool fullscreen)
+	void Window::queueSizeChange(int width, int height, bool fullscreen)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		this->genericEvents += GenericEvent(GenericEvent::Type::SizeChange, width, height, fullscreen);
 	}
 
-	void Window::queueInputModeChangeEvent(const InputMode& inputMode)
+	void Window::queueInputModeChange(const InputMode& inputMode)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		this->genericEvents += GenericEvent(GenericEvent::Type::InputModeChange, (int)inputMode.value);
 	}
 
-	void Window::queueVirtualKeyboardChangeEvent(bool visible, float heightRatio)
+	void Window::queueVirtualKeyboardChange(bool visible, float heightRatio)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		this->genericEvents += GenericEvent(GenericEvent::Type::VirtualKeyboardChange, visible, heightRatio);
 	}
 
-	void Window::queueLowMemoryWarningEvent()
+	void Window::queueLowMemoryWarning()
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		this->genericEvents += GenericEvent(GenericEvent::Type::LowMemoryWarning);
 	}
 
-	void Window::queueMouseEvent(MouseEvent::Type type, cgvec2 position, Key keyCode)
+	void Window::queueMouseInput(MouseEvent::Type type, cgvec2 position, Key keyCode)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		this->mouseEvents += MouseEvent(type, position, keyCode);
 	}
 
-	void Window::queueKeyEvent(KeyEvent::Type type, Key keyCode, unsigned int charCode)
+	void Window::queueKeyInput(KeyEvent::Type type, Key keyCode, unsigned int charCode)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		this->keyEvents += KeyEvent(type, keyCode, charCode);
 	}
 
-	void Window::queueTouchEvent(MouseEvent::Type type, cgvec2 position, int index)
+	void Window::queueTouchInput(MouseEvent::Type type, cgvec2 position, int index)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		harray<gvec2> previousTouches = this->touches;
@@ -858,13 +847,13 @@ namespace april
 		this->touchEvents += TouchEvent(this->touches);
 	}
 
-	void Window::queueControllerEvent(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
+	void Window::queueControllerInput(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		this->controllerEvents += ControllerEvent(type, controllerIndex, buttonCode, axisValue);
 	}
 
-	void Window::queueMotionEvent(MotionEvent::Type type, cgvec3 motionVector)
+	void Window::queueMotionInput(MotionEvent::Type type, cgvec3 motionVector)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		this->motionEvents += MotionEvent(type, motionVector);

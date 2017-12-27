@@ -15,10 +15,6 @@ namespace april
 	{
 	}
 	
-	DestroyCommand::~DestroyCommand()
-	{
-	}
-
 	void DestroyCommand::execute()
 	{
 		april::rendersys->_systemDestroy();

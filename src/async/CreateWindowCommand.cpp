@@ -20,10 +20,6 @@ namespace april
 		this->options = options;
 	}
 
-	CreateWindowCommand::~CreateWindowCommand()
-	{
-	}
-
 	void CreateWindowCommand::execute()
 	{
 		april::window->_systemCreate(w, h, fullscreen, title, options);

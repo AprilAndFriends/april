@@ -428,7 +428,8 @@ namespace april
 		hmutex::ScopeLock lock(&this->renderMutex);
 		if (this->asyncCommandQueues.size() >= 2)
 		{
-			if (false)//timeDelta > 0.0f)
+			// TODOx - maybe the other block can take care of everything
+			//if (timeDelta > 0.0f)
 			{
 				AsyncCommandQueue* queue = this->asyncCommandQueues.removeFirst();
 				this->processingAsync = true;
@@ -443,6 +444,7 @@ namespace april
 				lock.release();
 				result = true;
 			}
+			/*
 			else
 			{
 				harray<AsyncCommandQueue*> queues = this->asyncCommandQueues.removeFirst(this->asyncCommandQueues.size() - 1);
@@ -461,10 +463,7 @@ namespace april
 				lock.release();
 				result = true;
 			}
-		}
-		else
-		{
-			lock.release();
+			*/
 		}
 		return result;
 	}
@@ -910,6 +909,25 @@ namespace april
 		if (command->isFinalizer())
 		{
 			this->asyncCommandQueues += new AsyncCommandQueue();
+		}
+	}
+
+	void RenderSystem::_flushAsyncCommands()
+	{
+		hmutex::ScopeLock lock(&this->renderMutex);
+		harray<AsyncCommandQueue*> queues = this->asyncCommandQueues;
+		this->asyncCommandQueues.clear();
+		lock.release();
+		foreach (AsyncCommandQueue*, it, queues)
+		{
+			foreach (AsyncCommand*, it2, (*it)->commands)
+			{
+				if ((*it2)->isSystemCommand())
+				{
+					(*it2)->execute();
+				}
+			}
+			delete (*it);
 		}
 	}
 

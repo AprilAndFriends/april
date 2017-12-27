@@ -24,7 +24,8 @@ namespace april
 		StateUpdateCommand(const RenderState& state);
 
 		bool isUseState() const { return true; }
-		
+		bool isSystemCommand() const { return true; }
+
 		void execute();
 
 	protected:

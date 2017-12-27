@@ -80,7 +80,7 @@ namespace april
 		/// @param[in] intValue An int value related to the event.
 		/// @param[in] intValueOther Another int value related to the event.
 		/// @param[in] boolValue A bool value related to the event.
-		GenericEvent(Type type, int intValue, int intValueOther, int boolValue);
+		GenericEvent(Type type, int intValue, int intValueOther, bool boolValue);
 		/// @brief Constructor.
 		/// @param[in] type The event type.
 		/// @param[in] boolValue A bool value related to the event.

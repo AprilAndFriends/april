@@ -15,10 +15,6 @@ namespace april
 	{
 	}
 
-	DestroyWindowCommand::~DestroyWindowCommand()
-	{
-	}
-
 	void DestroyWindowCommand::execute()
 	{
 		april::window->_systemDestroy();

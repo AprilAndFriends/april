@@ -25,7 +25,8 @@ namespace april
 		ResetCommand(const RenderState& state, cgvec2 windowSize);
 
 		bool isFinalizer() const { return true; }
-		
+		bool isSystemCommand() const { return true; }
+
 		void execute();
 
 	protected:

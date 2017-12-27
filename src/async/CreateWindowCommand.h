@@ -22,7 +22,8 @@ namespace april
 	{
 	public:
 		CreateWindowCommand(int w, int h, bool fullscreen, chstr title, Window::Options options);
-		~CreateWindowCommand();
+
+		bool isSystemCommand() const { return true; }
 
 		void execute();
 

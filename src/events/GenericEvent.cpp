@@ -36,7 +36,7 @@ namespace april
 		this->intValue = intValue;
 	}
 
-	GenericEvent::GenericEvent(Type type, int intValue, int intValueOther, int boolValue) : intValue(0), intValueOther(0), floatValue(0.0f), boolValue(false)
+	GenericEvent::GenericEvent(Type type, int intValue, int intValueOther, bool boolValue) : intValue(0), intValueOther(0), floatValue(0.0f), boolValue(false)
 	{
 		this->type = type;
 		this->intValue = intValue;

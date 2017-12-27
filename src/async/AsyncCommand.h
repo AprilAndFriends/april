@@ -23,7 +23,8 @@ namespace april
 
 		virtual bool isFinalizer() const { return false; }
 		virtual bool isUseState() const { return false; }
-		
+		virtual bool isSystemCommand() const { return false; }
+
 		virtual void execute() = 0;
 
 	};

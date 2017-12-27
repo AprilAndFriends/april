@@ -21,7 +21,8 @@ namespace april
 	{
 	public:
 		DestroyWindowCommand();
-		~DestroyWindowCommand();
+
+		bool isSystemCommand() const { return true; }
 
 		void execute();
 

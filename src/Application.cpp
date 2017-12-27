@@ -30,8 +30,8 @@ namespace april
 
 	Application* application = NULL;
 	
-	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : state(State::Idle), autoPresentFrame(false), timeDelta(0.0f),
-		fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f), updateThread(&_asyncUpdate, "APRIL Async Update")
+	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : state(State::Idle), autoPresentFrame(false), suspended(false),
+		timeDelta(0.0f), fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f), updateThread(&_asyncUpdate, "APRIL Async Update")
 	{
 		this->aprilApplicationInit = aprilApplicationInit;
 		this->aprilApplicationDestroy = aprilApplicationDestroy;
@@ -60,8 +60,17 @@ namespace april
 
 	void Application::destroy()
 	{
+		// processing remaining commands from other thread
+		while (this->state == State::Stopping)
+		{
+			this->_updateSystem();
+		}
+		// finish everything up
+		this->_updateSystem();
+		// done
 		this->state = State::Idle;
 		this->updateThread.join();
+		april::rendersys->_flushAsyncCommands();
 	}
 
 	void Application::enterMainLoop()
@@ -73,21 +82,10 @@ namespace april
 		{
 			this->update();
 		}
-		// processing remaining commands from other thread
-		while (this->state == State::Stopping)
-		{
-			this->_updateSystem();
-		}
-		// finish everything up
-		this->_updateSystem();
-		// done
-		this->state = State::Idle;
 	}
 
 	void Application::update()
 	{
-		TextureAsync::update();
-		april::window->checkEvents();
 		float timeDelta = this->timer.diff(true);
 		if (!april::window->isFocused())
 		{
@@ -98,6 +96,8 @@ namespace april
 		{
 			timeDelta = hmin(timeDelta, this->timeDeltaMaxLimit);
 		}
+		TextureAsync::update();
+		april::window->checkEvents();
 		hmutex::ScopeLock lock(&this->timeDeltaMutex);
 		this->timeDelta += timeDelta;
 		lock.release();
@@ -161,10 +161,11 @@ namespace april
 		april::application->state = State::Running;
 		float timeDelta = 0.0f;
 		UpdateDelegate* updateDelegate = NULL;
-		hmutex::ScopeLock lock(&april::application->updateMutex);
+		hmutex::ScopeLock lock;
 		hmutex::ScopeLock lockTimeDelta;
 		while (april::application->state == State::Running)
 		{
+			lock.acquire(&april::application->updateMutex);
 			lockTimeDelta.acquire(&april::application->timeDeltaMutex);
 			timeDelta = april::application->timeDelta;
 			april::application->timeDelta = 0.0f;
@@ -189,15 +190,32 @@ namespace april
 			{
 				hthread::sleep(0.001f);
 			}
-			lock.acquire(&april::application->updateMutex);
 		}
-		lock.release();
 		(*april::application->aprilApplicationDestroy)();
+	}
+
+	void Application::suspend()
+	{
+		if (!this->suspended)
+		{
+			this->updateMutex.lock();
+			this->suspended = true;
+			april::rendersys->_flushAsyncCommands();
+		}
+	}
+
+	void Application::resume()
+	{
+		if (this->suspended)
+		{
+			this->suspended = false;
+			this->updateMutex.unlock();
+		}
 	}
 
 	void Application::renderFrameSync()
 	{
-		hmutex::ScopeLock lock(&april::application->updateMutex);
+		hmutex::ScopeLock lock(&this->updateMutex);
 		april::window->update(0.0f);
 		april::rendersys->presentFrame();
 		april::rendersys->update(0.0f);

@@ -23,7 +23,8 @@ namespace april
 	{
 	public:
 		AssignWindowCommand(Window* window);
-		~AssignWindowCommand();
+
+		bool isSystemCommand() const { return true; }
 
 		void execute();
 

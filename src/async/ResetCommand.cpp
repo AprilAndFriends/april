@@ -24,14 +24,16 @@ namespace april
 	{
 		april::rendersys->_deviceReset();
 		april::rendersys->_deviceSetup();
+		// TODOx - is this still needed? (Win32 and Android confirmed that it's not)
+		/*
 		if (april::rendersys->deviceState->texture != NULL)
 		{
 			april::rendersys->deviceState->texture->loadAsync();
-			april::rendersys->deviceState->texture->ensureLoaded();
+			april::rendersys->deviceState->texture->_ensureInternalLoaded();
 			april::rendersys->deviceState->texture->upload();
 		}
-		// TODOx - is this still needed?
-		//april::rendersys->setViewport(grect(0.0f, 0.0f, this->windowSize));
+		april::rendersys->setViewport(grect(0.0f, 0.0f, this->windowSize));
+		*/
 		StateUpdateCommand::execute();
 	}
 	

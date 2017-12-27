@@ -52,7 +52,7 @@ namespace april
 		void checkEvents();
 
 		void handleSizeChange(int width, int height, bool fullscreen);
-		void queueControllerEvent(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue);
+		void queueControllerInput(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue);
 
 		static LRESULT CALLBACK childProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 		

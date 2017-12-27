@@ -16,10 +16,6 @@ namespace april
 		this->window = window;
 	}
 
-	AssignWindowCommand::~AssignWindowCommand()
-	{
-	}
-
 	void AssignWindowCommand::execute()
 	{
 		april::rendersys->_systemAssignWindow(this->window);

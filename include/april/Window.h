@@ -293,96 +293,96 @@ namespace april
 		/// @param[in] type The event type.
 		/// @param[in] position The pointer position.
 		/// @param[in] keyCode The key code.
-		virtual void handleMouseEvent(MouseEvent::Type type, cgvec2 position, Key keyCode);
+		virtual void handleMouseInput(MouseEvent::Type type, cgvec2 position, Key keyCode);
 		/// @brief Handles a keyboard event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] keyCode The key code.
 		/// @param[in] charCode The character Unicode value.
-		virtual void handleKeyEvent(KeyEvent::Type type, Key keyCode, unsigned int charCode);
+		virtual void handleKeyInput(KeyEvent::Type type, Key keyCode, unsigned int charCode);
 		/// @brief Handles a touch event and propagates it to the delegate.
 		/// @param[in] touches Active touch pointers.
-		virtual void handleTouchEvent(const harray<gvec2>& touches);
+		virtual void handleTouchInput(const harray<gvec2>& touches);
 		/// @brief Handles a controller event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] controllerIndex Index of the controller.
 		/// @param[in] buttonCode The button code.
 		/// @param[in] axisValue The axis value.
-		virtual void handleControllerEvent(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
+		virtual void handleControllerInput(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
 		/// @brief Handles a motion event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] motionVector Motion data vector.
-		virtual void handleMotionEvent(MotionEvent::Type type, cgvec3 motionVector);
+		virtual void handleMotionInput(MotionEvent::Type type, cgvec3 motionVector);
 
 		/// @brief Handles a keyboard key press event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] keyCode The key code.
 		/// @note This is a utility function.
 		/// @see handleKeyEvent
-		void handleKeyOnlyEvent(KeyEvent::Type type, Key keyCode);
+		void handleKeyOnlyInput(KeyEvent::Type type, Key keyCode);
 		/// @brief Handles a keyboard character event and propagates it to the delegate.
 		/// @param[in] charCode The character Unicode value.
 		/// @note This is a utility function.
 		/// @see handleKeyEvent
-		void handleCharOnlyEvent(unsigned int charCode);
+		void handleCharOnlyInput(unsigned int charCode);
 
 		/// @brief Queues a quit event and propagates it to the delegate.
 		/// @param[in] canCancel Whether the window quitting can be canceled.
 		/// @return True if the system is allowed to actually close the window.
-		virtual bool queueQuitRequestEvent(bool canCancel);
+		virtual bool queueQuitRequest(bool canCancel);
 		/// @brief Queues a focus change event for processing before the start of the next frame.
 		/// @param[in] focused Whether the window is focused now.
 		/// @note This is mostly used internally.
-		virtual void queueFocusChangeEvent(bool focused);
+		virtual void queueFocusChange(bool focused);
 		/// @brief Queues an activity change event for processing before the start of the next frame.
 		/// @param[in] active Whether the app is active now.
 		/// @note This is mostly used internally.
-		virtual void queueActivityChangeEvent(bool active);
+		virtual void queueActivityChange(bool active);
 		/// @brief Queues a size change event for processing before the start of the next frame.
 		/// @param[in] w New width of the resolutin.
 		/// @param[in] h New height of the resolutin.
 		/// @param[in] fullscreen Whether the display is now fullscreen or windowed.
 		/// @note This is mostly used internally.
-		virtual void queueSizeChangeEvent(int width, int height, bool fullscreen);
+		virtual void queueSizeChange(int width, int height, bool fullscreen);
 		/// @brief Queues a size change event for processing before the start of the next frame.
 		/// @param[in] size New window size.
 		/// @note This is mostly used internally.
-		virtual void queueInputModeChangeEvent(const InputMode& inputMode);
+		virtual void queueInputModeChange(const InputMode& inputMode);
 		/// @brief Queues a virtual-keyboard-change event and propagates it to the delegate.
 		/// @param[in] visible Whether the virtual keyboard is visible.
 		/// @param[in] heightRatio The ratio of the screen height that the keyboard takes up.
-		virtual void queueVirtualKeyboardChangeEvent(bool visible, float heightRatio);
+		virtual void queueVirtualKeyboardChange(bool visible, float heightRatio);
 		/// @brief Queues a low memory warning event and propagates it to the delegate.
-		virtual void queueLowMemoryWarningEvent();
+		virtual void queueLowMemoryWarning();
 		/// @brief Queues a mouse event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] position The pointer position.
 		/// @param[in] keyCode The key code.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueMouseEvent(MouseEvent::Type type, cgvec2 position, Key keyCode);
+		virtual void queueMouseInput(MouseEvent::Type type, cgvec2 position, Key keyCode);
 		/// @brief Queues a keyboard event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] keyCode The key code.
 		/// @param[in] charCode The character Unicode value.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueKeyEvent(KeyEvent::Type type, Key keyCode, unsigned int charCode);
+		virtual void queueKeyInput(KeyEvent::Type type, Key keyCode, unsigned int charCode);
 		/// @brief Queues a touch event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] position The pointer position.
 		/// @param[in] index The pointer index.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueTouchEvent(MouseEvent::Type type, cgvec2 position, int index);
+		virtual void queueTouchInput(MouseEvent::Type type, cgvec2 position, int index);
 		/// @brief Queues a controller event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] controllerIndex Index of the controller.
 		/// @param[in] buttonCode The button code.
 		/// @param[in] axisValue The axis value.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueControllerEvent(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
+		virtual void queueControllerInput(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
 		/// @brief Queues a motion event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] motionVector Motion data vector.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueMotionEvent(MotionEvent::Type type, cgvec3 motionVector);
+		virtual void queueMotionInput(MotionEvent::Type type, cgvec3 motionVector);
 
 		/// @brief Performs the update of one frame.
 		/// @param[in] timeDelta Time that has passed since the last frame.

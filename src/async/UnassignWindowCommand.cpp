@@ -15,10 +15,6 @@ namespace april
 	{
 	}
 
-	UnassignWindowCommand::~UnassignWindowCommand()
-	{
-	}
-
 	void UnassignWindowCommand::execute()
 	{
 		april::window->_systemUnassign();

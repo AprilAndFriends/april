@@ -42,17 +42,13 @@ namespace april
 		this->destroy();
 	}
 
-	bool AndroidJNI_Window::_systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	void AndroidJNI_Window::_systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options)
 	{
-		if (!Window::_systemCreate(w, h, true, title, options))
-		{
-			return false;
-		}
-		this->width = w;
-		this->height = h;
+		Window::_systemCreate(width, height, true, title, options);
+		this->width = width;
+		this->height = height;
 		this->inputMode = InputMode::Touch;
 		this->forcedFocus = false;
-		return true;
 	}
 	
 	void* AndroidJNI_Window::getBackendId() const
@@ -92,19 +88,19 @@ namespace april
 		env->PopLocalFrame(NULL);
 	}
 
-	void AndroidJNI_Window::queueTouchEvent(const MouseEvent::Type& type, cgvec2 position, int index)
+	void AndroidJNI_Window::queueTouchInput(const MouseEvent::Type& type, cgvec2 position, int index)
 	{
 		if (type == MouseEvent::Type::Down || type == MouseEvent::Type::Up)
 		{
-			this->queueInputModeChangeEvent(InputMode::Touch);
+			this->queueInputModeChange(InputMode::Touch);
 		}
-		Window::queueTouchEvent(type, position, index);
+		Window::queueTouchInput(type, position, index);
 	}
 
-	void AndroidJNI_Window::queueControllerEvent(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue)
+	void AndroidJNI_Window::queueControllerInput(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue)
 	{
-		this->queueInputModeChangeEvent(InputMode::Controller);
-		Window::queueControllerEvent(type, controllerIndex, buttonCode, axisValue);
+		this->queueInputModeChange(InputMode::Controller);
+		Window::queueControllerInput(type, controllerIndex, buttonCode, axisValue);
 	}
 
 	void AndroidJNI_Window::showVirtualKeyboard()

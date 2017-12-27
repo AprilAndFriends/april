@@ -89,6 +89,12 @@ namespace april
 		void finish();
 		/// @brief Finalizes the application process so all threads can finish up.
 		void finalize();
+		/// @brief Suspends application.
+		/// @note This is usually called internally in some implementations.
+		void suspend();
+		/// @brief Resumes application.
+		/// @note This is usually called internally in some implementations.
+		void resume();
 		/// @brief Processes and render a single frame.
 		/// @note This is usually called internally in some implementations, due to specific OS limitations.
 		void renderFrameSync();
@@ -104,6 +110,8 @@ namespace april
 		State state;
 		/// @brief Whether automatic presentFrame() implementation is used by the underlying system.
 		bool autoPresentFrame;
+		/// @brief Whether the application has been suspended. Required by some OSes.
+		bool suspended;
 		/// @brief The Timer object used for timing purposes.
 		Timer timer;
 		/// @brief The current time since the last frame.

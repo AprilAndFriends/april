@@ -22,7 +22,8 @@ namespace april
 	{
 	public:
 		CreateCommand(const RenderSystem::Options& options);
-		~CreateCommand();
+
+		bool isSystemCommand() const { return true; }
 
 		void execute();
 

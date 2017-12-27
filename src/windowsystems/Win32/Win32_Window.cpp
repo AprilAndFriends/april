@@ -586,14 +586,14 @@ namespace april
 		//april::rendersys->presentFrame();
 	}
 
-	void Win32_Window::queueControllerEvent(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue)
+	void Win32_Window::queueControllerInput(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue)
 	{
 		if (type != ControllerEvent::Type::Connected && type != ControllerEvent::Type::Disconnected)
 		{
 			_mouseMessages = 5;
-			this->queueInputModeChangeEvent(InputMode::Controller);
+			this->queueInputModeChange(InputMode::Controller);
 		}
-		Window::queueControllerEvent(type, controllerIndex, buttonCode, axisValue);
+		Window::queueControllerInput(type, controllerIndex, buttonCode, axisValue);
 	}
 
 	LRESULT CALLBACK Win32_Window::_mainProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -618,7 +618,7 @@ namespace april
 			{
 				WIN32_WINDOW->_setRenderSystemResolution(april::window->getWidth(), april::window->getHeight(), april::window->isFullscreen());
 				UpdateWindow(WIN32_WINDOW->hWnd);
-				april::window->queueSizeChangeEvent(april::window->getWidth(), april::window->getHeight(), april::window->isFullscreen());
+				april::window->queueSizeChange(april::window->getWidth(), april::window->getHeight(), april::window->isFullscreen());
 				april::application->renderFrameSync();
 			}
 			_initialSize = false;
@@ -661,7 +661,7 @@ namespace april
 		case WM_TOUCH: // (Win7+ only)
 			if (wParam > 0 && _getTouchInputInfo != NULL && _closeTouchInputHandle != NULL)
 			{
-				april::window->queueInputModeChangeEvent(InputMode::Touch);
+				april::window->queueInputModeChange(InputMode::Touch);
 				_mouseMessages = 5;
 				if (_getTouchInputInfo((HTOUCHINPUT)lParam, wParam, touches, sizeof(TOUCHINPUT)))
 				{
@@ -675,7 +675,7 @@ namespace april
 						{
 							SetCapture((HWND)april::window->getBackendId());
 						}
-						april::window->queueMouseEvent(MouseEvent::Type::Down, april::window->getCursorPosition(), Key::MouseL);
+						april::window->queueMouseInput(MouseEvent::Type::Down, april::window->getCursorPosition(), Key::MouseL);
 					}
 					else if ((touches[0].dwFlags & TOUCHEVENTF_UP) == TOUCHEVENTF_UP)
 					{
@@ -683,11 +683,11 @@ namespace april
 						{
 							ReleaseCapture();
 						}
-						april::window->queueMouseEvent(MouseEvent::Type::Up, april::window->getCursorPosition(), Key::MouseL);
+						april::window->queueMouseInput(MouseEvent::Type::Up, april::window->getCursorPosition(), Key::MouseL);
 					}
 					else if ((touches[0].dwFlags & TOUCHEVENTF_MOVE) == TOUCHEVENTF_MOVE)
 					{
-						april::window->queueMouseEvent(MouseEvent::Type::Move, april::window->getCursorPosition(), Key::None);
+						april::window->queueMouseInput(MouseEvent::Type::Move, april::window->getCursorPosition(), Key::None);
 					}
 				}
 				_closeTouchInputHandle((HTOUCHINPUT)lParam);
@@ -698,7 +698,7 @@ namespace april
 			april::application->finish();
 			break;
 		case WM_CLOSE:
-			april::window->queueQuitRequestEvent(true);
+			april::window->queueQuitRequest(true);
 			return 0;
 		case WM_SYSKEYDOWN:
 			if (wParam == VK_MENU)
@@ -711,7 +711,7 @@ namespace april
 			{
 				if (wParam == VK_F4)
 				{
-					april::window->queueQuitRequestEvent(true);
+					april::window->queueQuitRequest(true);
 					return 0;
 				}
 				if (wParam == VK_RETURN)
@@ -720,7 +720,7 @@ namespace april
 					return 0;
 				}
 			}
-			april::window->queueKeyEvent(KeyEvent::Type::Down, april::Key::fromInt((int)wParam), 0);
+			april::window->queueKeyInput(KeyEvent::Type::Down, april::Key::fromInt((int)wParam), 0);
 			return 0;
 		case WM_SYSKEYUP:
 			if (wParam == VK_MENU || wParam == VK_RETURN || wParam == VK_F4)
@@ -729,10 +729,10 @@ namespace april
 			}
 			// no break here, because this is still an input message that needs to be processed normally
 		case WM_KEYUP:
-			april::window->queueKeyEvent(KeyEvent::Type::Up, april::Key::fromInt((int)wParam), 0);
+			april::window->queueKeyInput(KeyEvent::Type::Up, april::Key::fromInt((int)wParam), 0);
 			return 0;
 		case WM_CHAR:
-			april::window->queueKeyEvent(KeyEvent::Type::Down, Key::None, wParam);
+			april::window->queueKeyInput(KeyEvent::Type::Down, Key::None, wParam);
 			break;
 			// oh no, it's LMR!
 		case WM_LBUTTONDOWN:
@@ -745,13 +745,13 @@ namespace april
 				{
 					SetCapture((HWND)april::window->getBackendId());
 				}
-				april::window->queueInputModeChangeEvent(InputMode::Mouse);
+				april::window->queueInputModeChange(InputMode::Mouse);
 				// some sort of touch simulation going on, update cursor position
 				if (april::window->getInputMode() == InputMode::Touch)
 				{
 					WIN32_WINDOW->_updateCursorPosition();
 				}
-				april::window->queueMouseEvent(MouseEvent::Type::Down, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), _getKeyFromMessage(message));
+				april::window->queueMouseInput(MouseEvent::Type::Down, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), _getKeyFromMessage(message));
 			}
 			break;
 		case WM_LBUTTONUP:
@@ -764,13 +764,13 @@ namespace april
 				{
 					ReleaseCapture();
 				}
-				april::window->queueInputModeChangeEvent(InputMode::Mouse);
+				april::window->queueInputModeChange(InputMode::Mouse);
 				// some sort of touch simulation going on, update cursor position
 				if (april::window->getInputMode() == InputMode::Touch)
 				{
 					WIN32_WINDOW->_updateCursorPosition();
 				}
-				april::window->queueMouseEvent(MouseEvent::Type::Up, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), _getKeyFromMessage(message));
+				april::window->queueMouseInput(MouseEvent::Type::Up, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), _getKeyFromMessage(message));
 			}
 			break;
 		case WM_MOUSEMOVE:
@@ -782,13 +782,13 @@ namespace april
 				}
 				if (_mouseMessages == 0)
 				{
-					april::window->queueInputModeChangeEvent(InputMode::Mouse);
+					april::window->queueInputModeChange(InputMode::Mouse);
 					// some sort of touch simulation going on, update cursor position
 					if (april::window->getInputMode() == InputMode::Mouse)
 					{
 						WIN32_WINDOW->_updateCursorPosition();
 					}
-					april::window->queueMouseEvent(MouseEvent::Type::Move, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), Key::None);
+					april::window->queueMouseInput(MouseEvent::Type::Move, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), Key::None);
 				}
 			}
 			break;
@@ -798,11 +798,11 @@ namespace april
 				_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 				if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 				{
-					april::window->queueMouseEvent(MouseEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), Key::None);
+					april::window->queueMouseInput(MouseEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), Key::None);
 				}
 				else
 				{
-					april::window->queueMouseEvent(MouseEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), Key::None);
+					april::window->queueMouseInput(MouseEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), Key::None);
 				}
 			}
 			break;
@@ -812,11 +812,11 @@ namespace april
 				_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 				if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 				{
-					april::window->queueMouseEvent(MouseEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), Key::None);
+					april::window->queueMouseInput(MouseEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), Key::None);
 				}
 				else
 				{
-					april::window->queueMouseEvent(MouseEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), Key::None);
+					april::window->queueMouseInput(MouseEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), Key::None);
 				}
 			}
 			break;
@@ -844,13 +844,13 @@ namespace april
 			{
 				if ((wParam & 0xFFFF0000) == 0) // only respond to activation if window is not minimized
 				{
-					april::window->queueFocusChangeEvent(true);
+					april::window->queueFocusChange(true);
 				}
 			}
 			else
 			{
 				_altKeyDown = false; // because ALT keyup isn't processed when alt-tab-ing for some reason.
-				april::window->queueFocusChangeEvent(false);
+				april::window->queueFocusChange(false);
 			}
 			break;
 		}

@@ -21,7 +21,8 @@ namespace april
 	{
 	public:
 		UnassignWindowCommand();
-		~UnassignWindowCommand();
+
+		bool isSystemCommand() const { return true; }
 
 		void execute();
 

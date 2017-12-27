@@ -30,6 +30,7 @@
 
 namespace april
 {
+	class Application;
 	class AssignWindowCommand;
 	class AsyncCommand;
 	class AsyncCommandQueue;
@@ -56,6 +57,7 @@ namespace april
 	class aprilExport RenderSystem
 	{
 	public:
+		friend class Application;
 		friend class AssignWindowCommand;
 		friend class ClearCommand;
 		friend class ClearColorCommand;
@@ -660,6 +662,8 @@ namespace april
 		/// @brief Adds a render command to the queue.
 		/// @param[in] command The command to add.
 		void _addAsyncCommand(AsyncCommand* command);
+		/// @brief Flushes all remaining async commands.
+		void _flushAsyncCommands();
 
 		/// @brief Routing method for async creation.
 		/// @param[in] options The options to use.
