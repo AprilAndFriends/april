@@ -90,6 +90,95 @@ namespace april
 		}
 	}
 	
+	void Mac_Window::_systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options)
+	{
+		hstr windowTitle = title;
+		if (title == "")
+		{
+			NSString* nsTitle = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
+			if (nsTitle == nil)
+			{
+				windowTitle = "UNDEFINED TITLE";
+			}
+			else
+			{
+				windowTitle = [nsTitle UTF8String];
+			}
+		}
+		Window::_systemCreate(width, height, fullscreen, windowTitle, options);
+		NSRect frame;
+		NSRect defaultWndFrame;
+		NSUInteger styleMask;
+		bool lionFullscreen = isLionOrNewer();
+		this->fpsCounter = options.fpsCounter;
+		this->inputMode = InputMode::Mouse;
+		this->displayLinkIgnoreSystemRedraw = options.mac_displayLinkIgnoreSystemRedraw;
+		if (fullscreen)
+		{
+			frame = [[NSScreen mainScreen] frame];
+			styleMask = NSBorderlessWindowMask;
+			float factor = options.defaultWindowModeResolutionFactor;
+			float tw = frame.size.width * factor, th = frame.size.height * factor;
+			defaultWndFrame = NSMakeRect(frame.origin.x + (frame.size.width - tw) / 2.0f, frame.origin.y + (frame.size.height - th) / 2.0f, tw, th);
+		}
+		else
+		{
+			frame = NSMakeRect(0, 0, width / this->scalingFactor, height / this->scalingFactor);
+			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
+			if (options.resizable)
+			{
+				styleMask |= NSResizableWindowMask;
+			}
+		}
+		gWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
+		[gWindow configure];
+		setTitle(windowTitle);
+		createLoadingOverlay(gWindow);
+		if (fullscreen)
+		{
+			gWindow->mWindowedRect = defaultWndFrame;
+			gWindow->mCustomFullscreenExitAnimation = true;
+		}
+		else
+		{
+			[gWindow center];
+			gWindow->mWindowedRect = gWindow.frame;
+		}
+		if (lionFullscreen)
+		{
+			[gWindow setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
+		}
+		[gWindow makeKeyAndOrderFront:gWindow];
+		[gWindow setOpaque:YES];
+		[gWindow display];
+		// A trick to force the window to display as early as possible while we continue with initialization
+		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
+		if (fullscreen)
+		{
+			if (lionFullscreen)
+			{
+				[gWindow toggleFullScreen:nil];
+				[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
+			}
+			else
+			{
+				[gWindow enterFullScreen];
+			}
+		}
+		gView = [[AprilMacOpenGLView alloc] init];
+		[gView initOpenGL];
+		if (NSAppKitVersionNumber >= NSAppKitVersionNumber10_7)
+		{
+			[gView setWantsBestResolutionOpenGLSurface:YES];
+		}
+		gView.frame = frame;
+		[gWindow setOpenGLView: gView];
+		if (!isUsingCVDisplayLink())
+		{
+			[gWindow startRenderLoop];
+		}
+	}
+	
 	void Mac_Window::_systemDestroy()
 	{
 		if (gView != NULL)
@@ -196,11 +285,6 @@ namespace april
 		}
 	}
 	
-	void Mac_Window::updateCursorPosition(gvec2& pos)
-	{
-		this->cursorPosition = pos * this->scalingFactor;
-	}
-
 	bool Mac_Window::isCursorVisible() const
 	{
 		return (gView == NULL || !gView->mUseBlankCursor);
@@ -226,96 +310,6 @@ namespace april
 		{
 			[gView setUseBlankCursor:!value];
 			[gWindow invalidateCursorRectsForView:gView];
-		}
-	}
-	
-	void Mac_Window::_systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options)
-	{
-		hstr windowTitle;
-		if (title == "")
-		{
-			NSString* nsTitle = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
-			if (nsTitle == nil)
-			{
-				windowTitle = "UNDEFINED TITLE";
-			}
-			else
-			{
-				windowTitle = [nsTitle UTF8String];
-			}
-		}
-		else
-		{
-			windowTitle = title;
-		}
-		Window::_systemCreate(width, height, fullscreen, windowTitle, options);
-		NSRect frame;
-		NSRect defaultWndFrame;
-		NSUInteger styleMask;
-		bool lionFullscreen = isLionOrNewer();
-		this->fpsCounter = options.fpsCounter;
-		this->inputMode = InputMode::Mouse;
-		this->displayLinkIgnoreSystemRedraw = options.mac_displayLinkIgnoreSystemRedraw;
-		if (fullscreen)
-		{
-			frame = [[NSScreen mainScreen] frame];
-			styleMask = NSBorderlessWindowMask;
-			float factor = options.defaultWindowModeResolutionFactor;
-			float tw = frame.size.width * factor, th = frame.size.height * factor;
-			defaultWndFrame = NSMakeRect(frame.origin.x + (frame.size.width - tw) / 2.0f, frame.origin.y + (frame.size.height - th) / 2.0f, tw, th);
-		}
-		else
-		{
-			frame = NSMakeRect(0, 0, width / this->scalingFactor, height / this->scalingFactor);
-			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
-			if (options.resizable) styleMask |= NSResizableWindowMask;
-		}
-		gWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
-		[gWindow configure];
-		setTitle(windowTitle);
-		createLoadingOverlay(gWindow);
-		if (fullscreen)
-		{
-			gWindow->mWindowedRect = defaultWndFrame;
-			gWindow->mCustomFullscreenExitAnimation = true;
-		}
-		else
-		{
-			[gWindow center];
-			gWindow->mWindowedRect = gWindow.frame;
-		}
-		if (lionFullscreen)
-		{
-			[gWindow setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
-		}
-		[gWindow makeKeyAndOrderFront:gWindow];
-		[gWindow setOpaque:YES];
-		[gWindow display];
-		// A trick to force the window to display as early as possible while we continue with initialization
-		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
-		if (fullscreen)
-		{
-			if (lionFullscreen)
-			{
-				[gWindow toggleFullScreen:nil];
-				[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
-			}
-			else
-			{
-				[gWindow enterFullScreen];
-			}
-		}
-		gView = [[AprilMacOpenGLView alloc] init];
-		[gView initOpenGL];
-		if (NSAppKitVersionNumber >= NSAppKitVersionNumber10_7)
-		{
-			[gView setWantsBestResolutionOpenGLSurface:YES];
-		}
- 		gView.frame = frame;
-		[gWindow setOpenGLView: gView];
-		if (!isUsingCVDisplayLink())
-		{
-			[gWindow startRenderLoop];
 		}
 	}
 	
@@ -364,11 +358,13 @@ namespace april
 	{
 		if (this->fpsCounter)
 		{
-			hstr t = title + hsprintf(" [FPS: %d]", april::application->getFps());
+			hstr fpsTitle = title + hsprintf(" [FPS: %d]", april::application->getFps());
 			// optimization to prevent setting title every frame
-			if (t == this->fpsTitle) return;
-			this->fpsTitle = t;
-			[gWindow _setTitle:[NSString stringWithUTF8String:t.cStr()]];
+			if (this->fpsTitle != fpsTitle)
+			{
+				this->fpsTitle = fpsTitle;
+				[gWindow _setTitle:[NSString stringWithUTF8String:this->fpsTitle.cStr()]];
+			}
 		}
 		else
 		{
@@ -404,7 +400,7 @@ namespace april
 		}
 		if (this->fpsCounter)
 		{
-			setTitle(this->title);
+			this->setTitle(this->title);
 		}
 		return result;
 	}

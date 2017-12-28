@@ -58,6 +58,7 @@ bool g_WindowFocusedBeforeSleep = false;
 {
 	NSLog(@"april::applicationDidFinishLaunching");
 	mAppFocused = true;	// register for sleep/wake notifications, needed for proper handling
+	april::application->init();
 	// of focus/unfocus events
 	if (april::window == NULL)
 	{
@@ -82,6 +83,7 @@ bool g_WindowFocusedBeforeSleep = false;
 		gAppStarted = false;
 	}
 	april::application->updateFinishing();
+	april::application->destroy();
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)aNotification
@@ -98,6 +100,7 @@ bool g_WindowFocusedBeforeSleep = false;
 	{
 		// TODOx - if this is not a system required name, it should be changed to properly follow the convention
 		MAC_WINDOW->OnAppGainedFocus();
+		april::application->resume();
 	}
 }
 
@@ -115,6 +118,7 @@ bool g_WindowFocusedBeforeSleep = false;
 	{
 		// TODOx - if this is not a system required name, it should be changed to properly follow the convention
 		MAC_WINDOW->OnAppLostFocus();
+		april::application->suspend();
 	}
 }
 

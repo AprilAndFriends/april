@@ -208,9 +208,7 @@ namespace april
 		}
 		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
 		april::application->setArgs(args);
-		april::application->init();
 		CustomApplicationMain();
-		april::application->destroy();
 		delete april::application;
 		april::application = NULL;
 		return 0;

@@ -74,8 +74,6 @@ namespace april
 	[mMetadataQuery setDelegate:self];
 	[mMetadataQuery setPredicate:[NSPredicate predicateWithFormat:@"kMDItemIsScreenCapture = 1"]];
 	[mMetadataQuery startQuery];
-	gvec2 pos = gvec2(self.frame.size.width / 2, self.frame.size.height / 2);
-	MAC_WINDOW->updateCursorPosition(pos);
 }
 
 - (void)startRenderLoop
@@ -268,7 +266,6 @@ namespace april
 - (void)mouseDown:(NSEvent*) event
 {
 	gvec2 position = [self transformCocoaPoint:[event locationInWindow]];
-	//MAC_WINDOW->updateCursorPosition(pos);
 	april::window->queueMouseInput(april::MouseEvent::Type::Down, position * MAC_WINDOW->scalingFactor, [self getMouseButtonCode:event]);
 }
 
@@ -285,7 +282,6 @@ namespace april
 - (void)mouseUp:(NSEvent*) event
 {
 	gvec2 position = [self transformCocoaPoint:[event locationInWindow]];
-	//MAC_WINDOW->updateCursorPosition(pos);
 	april::window->queueMouseInput(april::MouseEvent::Type::Up, position * MAC_WINDOW->scalingFactor, [self getMouseButtonCode:event]);
 }
 
@@ -302,7 +298,6 @@ namespace april
 - (void)mouseMoved:(NSEvent*) event
 {
 	gvec2 position = [self transformCocoaPoint:[event locationInWindow]];
-	//MAC_WINDOW->updateCursorPosition(pos);
 	april::window->queueMouseInput(april::MouseEvent::Type::Move, position * MAC_WINDOW->scalingFactor, april::Key::None);
 	// Hack for Lion fullscreen bug, when the user moves the cursor quickly to and from the dock area,
 	// the cursor gets reset to the default arrow, this hack counters that.
@@ -468,7 +463,7 @@ NSString* translateInputForKeyDown(NSEvent* event)
 - (void)scrollWheel:(NSEvent*) event
 {
 	gvec2 position(-[event deltaX], -[event deltaY]);
-	if (position.x > 0.0f || position.y > 0.0f)
+	if (position.x != 0.0f || position.y != 0.0f)
 	{
 		april::window->queueMouseInput(april::MouseEvent::Type::Scroll, position, april::Key::None);
 	}

@@ -142,7 +142,6 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 -(void)draw
 {
 	bool displayLink = april::isUsingCVDisplayLink();
-	hmutex::ScopeLock lock;
 	if (displayLink)
 	{
 		if (MAC_WINDOW->shouldIgnoreUpdate())
@@ -153,17 +152,13 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 		unsigned int t1, t2;
 		t1 = htickCount();
 #endif
-		lock.acquire(&MAC_WINDOW->renderThreadSyncMutex);
+		hmutex::ScopeLock lock(&MAC_WINDOW->renderThreadSyncMutex);
 		if (gAppStarted)
 		{
 			NSOpenGLContext* context = [gView openGLContext];
 			[context makeCurrentContext];
 			CGLLockContext([context CGLContextObj]);
 			april::application->update();
-			if (april::application->getState() != april::Application::State::Running)
-			{
-				[gWindow terminateMainLoop];
-			}
 #ifdef  _OVERDRAW_DEBUG
 			t2 = htickCount();
 			if (t2 - t1 > 16) // 16 is max render time for 60 FPS
@@ -175,6 +170,10 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 			//april::rendersys->flushFrame(true);
 			CGLFlushDrawable([context CGLContextObj]);
 			CGLUnlockContext([context CGLContextObj]);
+			if (april::application->getState() != april::Application::State::Running)
+			{
+				[gWindow terminateMainLoop];
+			}
 		}
 	}
 	else
@@ -190,6 +189,10 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 		{
 			april::application->update();
 			[context flushBuffer];
+			if (april::application->getState() != april::Application::State::Running)
+			{
+				[gWindow terminateMainLoop];
+			}
 		}
 		mStartedDrawing = false;
 	}

@@ -35,7 +35,6 @@ namespace april
 		hstr getParam(chstr param);
 		void setParam(chstr param, chstr value);
 		
-		void updateCursorPosition(gvec2& pos);
 		bool isCursorVisible() const;
 		void setCursor(Cursor* value);
 		void setCursorVisible(bool visible);
