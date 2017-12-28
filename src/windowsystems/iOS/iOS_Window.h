@@ -20,19 +20,6 @@ struct CGRect;
 
 namespace april
 {
-	// We're using input event queuing so we can dispatch them on the main thread
-	class InputEvent
-	{
-	public:
-		Window* window;
-		
-		InputEvent();
-		virtual ~InputEvent();
-		InputEvent(Window* wnd);
-		virtual void execute() = 0;
-		
-	};
-	
 	class iOS_Window : public Window
 	{
 	public:
@@ -49,7 +36,6 @@ namespace april
 		void setTitle(chstr value);
 		gtypes::Vector2 getCursorPosition() const;
 		void* getBackendId() const;
-		void checkEvents();
 		bool isVirtualKeyboardVisible() const;
 		
 		void showVirtualKeyboard();
@@ -68,8 +54,6 @@ namespace april
 		void touchesEnded_withEvent_(void* nssetTouches, void* uieventEvent);
 		void touchesMoved_withEvent_(void* nssetTouches, void* uieventEvent);
 		void touchesCancelled_withEvent_(void* nssetTouches, void* uieventEvent);
-		void addInputEvent(InputEvent* event);
-		InputEvent* popInputEvent();
 		
 		void injectiOSChar(unsigned int inputChar);
 		
@@ -84,14 +68,13 @@ namespace april
 	protected:
 		int keyboardRequest;
 		bool firstFrameDrawn;
-		harray<InputEvent*> inputEvents;
 		bool inputEventsMutex;
 		bool retainLoadingOverlay;
 		void (*exitFunction)(int);
 		
-		void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		void _systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options);
 		
-		void callTouchCallback();
+		void _processEvents();
 		
 		void _presentFrame();
 		
@@ -99,7 +82,6 @@ namespace april
 	
 }
 
-bool isiOS8OrNewer();
 CGRect getScreenBounds();
 
 #endif

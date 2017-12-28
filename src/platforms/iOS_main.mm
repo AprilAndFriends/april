@@ -14,14 +14,14 @@
 
 namespace april
 {
-	int __mainStandard(void (*aprilApplicationInit)(const harray<hstr>&), void (*aprilApplicationDestroy)(), int argc, char** argv)
+	int __mainStandard(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)(), int argc, char** argv)
 	{	
 		harray<hstr> args;
 		if (argv != NULL && argv[0] != NULL)
 		{
 			for_iter (i, 0, argc)
 			{
-				april::args += argv[i];
+				args += argv[i];
 			}
 		}
 		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);

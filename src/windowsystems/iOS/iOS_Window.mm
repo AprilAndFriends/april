@@ -8,18 +8,19 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/CAEAGLLayer.h>
-#import <hltypes/hexception.h>
-#import <hltypes/hlog.h>
+
+#include <hltypes/hexception.h>
+#include <hltypes/hlog.h>
 
 #import "AprilViewController.h"
 #import "EAGLView.h"
-#include "iOS_Window.h"
-#import "RenderSystem.h"
 #import "ApriliOSAppDelegate.h"
 
-#include "EventDelegate.h"
-
+#include "Application.h"
 #include "april.h"
+#include "EventDelegate.h"
+#include "iOS_Window.h"
+#include "RenderSystem.h"
 
 static ApriliOSAppDelegate* appDelegate;
 static UIWindow* uiwindow = NULL;
@@ -30,9 +31,10 @@ extern bool g_wnd_rotating;
 
 namespace april
 {
-	// TODO - convert to gvec2 so it can be included in the class
+	// TODOx - convert to gvec2 so it can be included in the class
 	static harray<UITouch*> g_touches;
 	
+	// TODOx - probably not needed anymore
 	void updateCursorPosition(gvec2 touch)
 	{
 		float scale = ((iOS_Window*) window)->_getTouchScale();
@@ -48,87 +50,22 @@ namespace april
 		harray<UITouch*> coordinates;
 		NSSet* touches = (NSSet*)nssetTouches;
 		UITouch* touch;
-
 		for (touch in touches)
 		{
 			coordinates += touch;
 		}
-		
 		return coordinates;
 	}
-	
-	InputEvent::InputEvent()
-	{
-	
-	}
-	
-	InputEvent::~InputEvent()
-	{
-	
-	}
 
-	InputEvent::InputEvent(Window* window)
-	{
-		this->window = window;
-	}
-
-	class iOS_MouseInputEvent : public InputEvent
-	{
-	public:
-		iOS_MouseInputEvent(Window* window, Window::MouseInputEvent::Type type, gvec2 position, april::Key button) : InputEvent(window)
-		{
-			this->type = type;
-			this->position = position;
-			this->button = button;
-		}
-		
-		void execute()
-		{
-			if (this->type != Window::MouseInputEvent::Type::Cancel) updateCursorPosition(this->position);
-			this->window->handleMouseEvent(this->type, this->position * ((iOS_Window*) window)->_getTouchScale(), this->button);
-		}
-		
-	protected:
-		Window::MouseInputEvent::Type type;
-		gvec2 position;
-		april::Key button;
-		
-	};
-	
-	class iOS_TouchInputEvent : public InputEvent
-	{
-	public:
-		iOS_TouchInputEvent(Window* window, harray<gvec2>& touches) : InputEvent(window)
-		{
-			float scale = ((iOS_Window*)window)->_getTouchScale();
-			foreach (gvec2, it, touches)
-			{
-				this->touches += (*it) * scale;
-			}
-		}
-		
-		void execute()
-		{
-			this->window->handleTouchEvent(this->touches);
-		}
-		
-	protected:
-		harray<gvec2> touches;
-		
-	};
-	
 	iOS_Window::iOS_Window() : Window()
 	{
 		this->name = april::WindowType::iOS.getName();
 		this->exitFunction = NULL;
 	}
 	
-	bool iOS_Window::_systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	void iOS_Window::_systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options)
 	{
-		if (!Window::_systemCreate(w, h, fullscreen, title, options))
-		{
-			return false;
-		}
+		Window::_systemCreate(width, height, fullscreen, title, options);
 		this->firstFrameDrawn = false; // show window after drawing first frame
 		this->keyboardRequest = 0;
 		this->retainLoadingOverlay = false;
@@ -142,8 +79,6 @@ namespace april
 		[UIApplication sharedApplication].statusBarHidden = fullscreen ? YES : NO;		
 		this->fullscreen = true; // iOS apps are always fullscreen
 		this->firstFrameDrawn = false; // show window after drawing first frame
-		this->running = true;
-		return true;
 	}
 	
 	iOS_Window::~iOS_Window()
@@ -153,13 +88,6 @@ namespace april
 		
 	bool iOS_Window::update(float timeDelta)
 	{
-		// call input events
-		InputEvent* e;
-		while ((e = this->popInputEvent()) != 0)
-		{
-			e->execute();
-			delete e;
-		}	
 		bool visible = this->isVirtualKeyboardVisible();
 		this->virtualKeyboardVisible = visible;
 		if (this->keyboardRequest != 0 && g_touches.size() == 0) // only process keyboard when there is no interaction with the screen
@@ -188,29 +116,6 @@ namespace april
 		// no effect on iOS
 	}
 	
-	void iOS_Window::addInputEvent(InputEvent* event)
-	{
-		// TODO - use a real mutex, this is unsafe
-		while (this->inputEventsMutex); // wait it out
-		this->inputEventsMutex = true;
-		this->inputEvents += event;
-		this->inputEventsMutex = false;
-	}
-
-	InputEvent* iOS_Window::popInputEvent()
-	{
-		// TODO - use a real mutex, this is unsafe
-		while (this->inputEventsMutex); // wait it out
-		if (this->inputEvents.size() == 0)
-		{
-			return NULL;
-		}
-		this->inputEventsMutex = true;
-		InputEvent* e = this->inputEvents.removeFirst();
-		this->inputEventsMutex = false;
-		return e;
-	}
-
 	void iOS_Window::_setCursorPosition(float x, float y)
 	{
 		this->cursorPosition.set(x, y);
@@ -235,11 +140,7 @@ namespace april
 			scale = caeagllayer.contentsScale;
 		}
 		CGRect bounds = uiwindow.bounds;
-		if (isiOS8OrNewer() || UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
-		{
-			return bounds.size.width * scale;
-		}
-		return bounds.size.height * scale;
+		return bounds.size.width * scale;
 	}
 
 	int iOS_Window::getHeight() const
@@ -251,11 +152,7 @@ namespace april
 			scale = caeagllayer.contentsScale;
 		}
 		CGRect bounds = uiwindow.bounds;
-		if (isiOS8OrNewer() || UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
-		{
-			return bounds.size.height * scale;
-		}
-		return bounds.size.width * scale;
+		return bounds.size.height * scale;
 	}
 
 	void iOS_Window::setTitle(chstr value)
@@ -276,7 +173,7 @@ namespace april
 		}
 		else
 		{
-			this->checkEvents();
+			this->_processEvents();
 			if (!this->retainLoadingOverlay)
 			{
 				[viewcontroller removeImageView:false];
@@ -285,35 +182,19 @@ namespace april
 		}
 	}
 
-	void iOS_Window::checkEvents()
+	void iOS_Window::_processEvents()
 	{
-		// TODO - handling is done manually somewhere else, needs refactoring
-		//Window::checkEvents();
-	}
-	
-	void iOS_Window::callTouchCallback()
-	{
-		if (this->touchDelegate == NULL)
-		{
-			return;
-		}
-		harray<gvec2> coordinates;
-		gvec2 position;
-		CGPoint point;
+		// TODOx - implement proper cursor update
+		/*
 		float scale = this->_getTouchScale();
-		
-		foreach (UITouch*, it, g_touches)
-		{
-			point = [*it locationInView:glview];
-			position.x = point.x * scale;
-			position.y = point.y * scale;
-			coordinates += position;
-		}
-		this->inputEvents += new iOS_TouchInputEvent(this, coordinates);
+		this->_setCursorPosition(touch.x * scale, touch.y * scale);
+		*/
+		Window::_processEvents();
 	}
 	
 	bool iOS_Window::isRotating() const
 	{
+		// TODOx - should be a member
 		return g_wnd_rotating;
 	}
 	
@@ -352,8 +233,8 @@ namespace april
 	float iOS_Window::_getTouchScale() const
 	{
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
-		static float scale = -1;
-		if (scale == -1)
+		static float scale = -1.0f;
+		if (scale < 0.0f)
 		{
 			CAEAGLLayer* caeagllayer = (CAEAGLLayer*)[glview layer];
 			if ([caeagllayer respondsToSelector:@selector(contentsScale)])
@@ -362,74 +243,71 @@ namespace april
 			}
 			else
 			{
-				scale = 1; // prior to ios 3.2
+				scale = 1.0f; // prior to ios 3.2
 			}
 		}
 		return scale;
 #else
-		return 1;
+		return 1.0f;
 #endif
 	}
 	
 	void iOS_Window::touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
 		harray<UITouch*> touches = _convertTouchesToCoordinates(nssetTouches);
-		
-		int prev_len = g_touches.size();
+		int previousSize = g_touches.size();
 		g_touches += touches;
-		if (g_touches.size() > 1)
+		CGPoint point;
+		for_iter (i, 0, touches.size())
 		{
-			if (!this->multiTouchActive && prev_len == 1)
-			{
-				// cancel (notify the app) the previously called mousedown event so we can begin the multi touch event properly
-				this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Cancel, gvec2(), april::Key::MouseL));
-			}
-			this->multiTouchActive = true;
+			point = [touches[i] locationInView:glview];
+			this->queueTouchInput(MouseEvent::Type::Down, gvec2(point.x, point.y), previousSize + i);
 		}
-		else
-		{
-			CGPoint pt = [g_touches[0] locationInView:glview];
-			this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Down, gvec2(pt.x, pt.y), april::Key::MouseL));
-		}
-		this->callTouchCallback();
 	}
 
 	void iOS_Window::touchesEnded_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
 		harray<UITouch*> touches = _convertTouchesToCoordinates(nssetTouches);
-		int num_touches = g_touches.size();
-		g_touches /= touches;
-		
-		if (this->multiTouchActive)
+		harray<int> indices;
+		for_iter (i, 0, g_touches.size())
 		{
-			if (num_touches == touches.size())
+			if (touches.has(g_touches[i]))
 			{
-				this->multiTouchActive = false;
+				indices += i;
 			}
 		}
-		else
+		g_touches /= touches;
+		CGPoint point;
+		for_iter (i, 0, touches.size())
 		{
-			CGPoint pt = [touches[0] locationInView:glview];
-			this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Up, gvec2(pt.x, pt.y), april::Key::MouseL));
+			point = [touches[i] locationInView:glview];
+			this->queueTouchInput(MouseEvent::Type::Up, gvec2(point.x, point.y), indices[i]);
 		}
-		this->callTouchCallback();
 	}
 	
 	void iOS_Window::touchesCancelled_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		// FIXME needs to cancel touches, not treat them as "release"
+		// TODOx - still needs to be implemented properly
 		this->touchesEnded_withEvent_(nssetTouches, uieventEvent);
 	}
 	
 	void iOS_Window::touchesMoved_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		if (!this->multiTouchActive)
+		harray<UITouch*> touches = _convertTouchesToCoordinates(nssetTouches);
+		harray<int> indices;
+		for_iter (i, 0, g_touches.size())
 		{
-			UITouch* touch = [[(NSSet*) nssetTouches allObjects] objectAtIndex:0];
-			CGPoint pt = [touch locationInView:glview];			
-			this->addInputEvent(new iOS_MouseInputEvent(this, Window::MouseInputEvent::Type::Move, gvec2(pt.x, pt.y), april::Key::None));
+			if (touches.has(g_touches[i]))
+			{
+				indices += i;
+			}
 		}
-		this->callTouchCallback();
+		CGPoint point;
+		for_iter (i, 0, touches.size())
+		{
+			point = [touches[i] locationInView:glview];
+			this->queueTouchInput(MouseEvent::Type::Move, gvec2(point.x, point.y), indices[i]);
+		}
 	}
 	
 	// TODOa - maybe this should be handle here and instead the Window superclass should keep handling this like in other implementations
@@ -453,18 +331,13 @@ namespace april
 		if (inputChar == 0)
 		{
 			// deploy backspace
-			this->handleKeyEvent(Window::KeyInputEvent::Type::Down, april::Key::Backspace, 8);
-			this->handleKeyEvent(Window::KeyInputEvent::Type::Up, april::Key::Backspace, 8);
+			this->queueKeyInput(KeyEvent::Type::Down, Key::Backspace, 8);
+			this->queueKeyInput(KeyEvent::Type::Up, Key::Backspace, 8);
 		}
-		if (inputChar >= 32)
+		else if (inputChar >= 32)
 		{
-			// deploy keypress
-			april::Key keycode = april::Key::None; // TODO - FIXME incorrect, might cause a nasty bug.
-											       // however, writing a translation table atm
-											       // isn't the priority.
-		
-			this->handleKeyEvent(Window::KeyInputEvent::Type::Down, keycode, inputChar);
-			this->handleKeyEvent(Window::KeyInputEvent::Type::Up, keycode, inputChar);
+			this->queueKeyInput(KeyEvent::Type::Down, Key::None, inputChar);
+			this->queueKeyInput(KeyEvent::Type::Up, Key::None, inputChar);
 		}
 	}
 	
@@ -486,18 +359,13 @@ namespace april
 	
 	void iOS_Window::handleDisplayAndUpdate()
 	{
-		bool result = this->updateOneFrame();
-		if (april::rendersys != NULL)
+		if (april::application != NULL)
 		{
-			april::rendersys->update();
-		}
-		if (this->updateDelegate != NULL)
-		{
-			this->updateDelegate->onPresentFrame();
-		}
-		if (!result)
-		{
-			this->terminateMainLoop();
+			april::application->update();
+			if (april::application->getState() != Application::State::Running)
+			{
+				april::application->finish();
+			}
 		}
 	}
 
@@ -506,46 +374,35 @@ namespace april
 		if (!this->firstFrameDrawn)
 		{
 			hlog::warn(logTag, "iOS Window: received app suspend request before first frame was drawn");
-
 			// commenting this code, not relevant on iOS4.3+
 			//hlog::write(logTag, "iOS Window: received app suspend request before first frame was drawn, quitting app.");
 			//this->destroy();
 			//exit(0);
 		}
-		if (this->focused)
+		// TODOx - is this "if" required?
+		//if (this->focused)
 		{
-			this->focused = false;
-			if (this->systemDelegate != NULL)
-			{
-				this->systemDelegate->onWindowFocusChanged(false);
-			}
+			this->queueFocusChange(false);
 			[glview stopAnimation];
 		}
 	}
 	
 	void iOS_Window::applicationDidBecomeActive()
 	{
-		if (!this->focused)
+		// TODOx - is this "if" required?
+		//if (!this->focused)
 		{
-			this->focused = true;
-			if (g_touches.size() > 0) // in some situations, on older iOS versions (happend on iOS4), touchesEnded will not be called, causing problems, so this counters it.
-			{
-				g_touches.clear();
-				multiTouchActive = false;
-			}
+			this->queueFocusChange(true);
 			if (glview != NULL)
 			{
 				[glview startAnimation];
-			}
-			if (this->systemDelegate != NULL)
-			{
-				this->systemDelegate->onWindowFocusChanged(true);
 			}
 		}
 	}
 
 	void iOS_Window::terminateMainLoop()
 	{
+		// TODOx - should be removed completely probably
 		// apple doesn't approve apps exiting via exit() so we have to camoufluage it if we want to use it
 		if (this->exitFunction)
 		{
@@ -573,12 +430,4 @@ CGRect getScreenBounds()
 	return frame;
 }
 
-bool isiOS8OrNewer()
-{
-	static int value = -1;
-	if (value == -1)
-	{
-		value = [[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] != NSOrderedAscending;
-	}
-	return value == 1;
-}
+

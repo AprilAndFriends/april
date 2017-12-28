@@ -160,7 +160,7 @@
 		// create ios window object
 		april::init(april::RenderSystemType::Default, april::WindowType::Default);
 		april::createRenderSystem();
-		april::createWindow(0, 0, 1, "iOS Window");
+		april::createWindow(0, 0, true, "iOS Window");
 		april::rendersys->assignWindow(april::window);
 	}
 	
@@ -170,10 +170,10 @@
 - (BOOL)textFieldShouldReturn:(UITextField*)aTextField
 {
 	[textField resignFirstResponder];
-	if (april::window)
+	if (april::window != NULL)
 	{
-		aprilWindow->handleKeyEvent(april::Window::KeyInputEvent::Type::Down, april::Key::Return, 0);
-		aprilWindow->handleKeyEvent(april::Window::KeyInputEvent::Type::Up, april::Key::Return, 0);
+		aprilWindow->queueKeyInput(april::KeyEvent::Type::Down, april::Key::Return, 0);
+		aprilWindow->queueKeyInput(april::KeyEvent::Type::Up, april::Key::Return, 0);
 	}
 	return YES;
 }
@@ -254,12 +254,12 @@
 			if (gravity)
 			{
 				CMAcceleration motionVector = self.sensorManager.deviceMotion.gravity;
-				april::window->handleMotionEvent(april::Window::MotionInputEvent::Type::Gravity, gvec3(motionVector.x * GRAVITY, motionVector.y * GRAVITY, motionVector.z * GRAVITY));
+				april::window->queueMotionInput(april::MotionEvent::Type::Gravity, gvec3(motionVector.x * GRAVITY, motionVector.y * GRAVITY, motionVector.z * GRAVITY));
 			}
 			if (rotation)
 			{
 				CMRotationRate motionVector = self.sensorManager.deviceMotion.rotationRate;
-				april::window->handleMotionEvent(april::Window::MotionInputEvent::Type::Rotation, gvec3(motionVector.x, motionVector.y, motionVector.z));
+				april::window->queueMotionInput(april::MotionEvent::Type::Rotation, gvec3(motionVector.x, motionVector.y, motionVector.z));
 			}
 		}
 	}
@@ -276,7 +276,7 @@
 				[self.sensorManager startAccelerometerUpdates];
 			}
 			CMAcceleration motionVector = self.sensorManager.accelerometerData.acceleration;
-			april::window->handleMotionEvent(april::Window::MotionInputEvent::Type::LinearAccelerometer, gvec3(motionVector.x, motionVector.y, motionVector.z));
+			april::window->queueMotionInput(april::MotionEvent::Type::LinearAccelerometer, gvec3(motionVector.x, motionVector.y, motionVector.z));
 		}
 	}
 	else if (self.sensorManager != NULL && self.sensorManager.isAccelerometerActive)
@@ -292,7 +292,7 @@
 				[self.sensorManager startGyroUpdates];
 			}
 			CMRotationRate motionVector = self.sensorManager.gyroData.rotationRate;
-			april::window->handleMotionEvent(april::Window::MotionInputEvent::Type::Gyroscope, gvec3(motionVector.x, motionVector.y, motionVector.z));
+			april::window->queueMotionInput(april::MotionEvent::Type::Gyroscope, gvec3(motionVector.x, motionVector.y, motionVector.z));
 		}
 	}
 	else if (self.sensorManager != NULL && self.sensorManager.isGyroActive)

@@ -18,6 +18,7 @@
 #import "AprilViewController.h"
 #import "EAGLView.h"
 
+#include "Application.h"
 #include "april.h"
 #include "iOS_Window.h"
 #include "RenderSystem.h"
@@ -116,17 +117,17 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 	//NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	harray<hstr> args;
 	args += ""; // unable to determine executable name, but due to convention, leave one argument filled
-	april_init(args);
+	april::application->setArgs(args);
+	april::application->init();
 	[pool drain];
-
-	((EAGLView*) viewController.view)->app_started = 1;
+	((EAGLView*)viewController.view)->app_started = 1;
 	[(EAGLView*)viewController.view startAnimation];
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
 	hlog::write(april::logTag, "Received iOS memory warning!");
-	april::window->handleLowMemoryWarning();
+	april::window->queueLowMemoryWarning();
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -135,9 +136,7 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 	{
 		return;
 	}
-	
-	april::window->handleFocusChangeEvent(0);
-	
+	april::window->queueFocusChange(false);
 	for (EAGLView *glview in [viewController.view subviews])
 	{
 		if ([glview isKindOfClass:[EAGLView class]]) 
@@ -146,40 +145,31 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 			return;
 		}
 	}
-	april_destroy();
+	april::application->finish();
+	april::application->updateFinishing();
+	april::application->destroy();
+	delete april::application;
+	april::application = NULL;
 }
 
 - (NSUInteger)application:(UIApplication*)application supportedInterfaceOrientationsForWindow:(UIWindow*)window
 {
-    if (isiOS8OrNewer())
-	{
-        return gSupportedOrientations;
-	}
-    if (gSupportedOrientations == UIInterfaceOrientationMaskLandscape)
-    {
-        // this is a needed Hack to fix an iOS6 bug
-        // more info: http://stackoverflow.com/questions/12488838/game-center-login-lock-in-landscape-only-in-i-os-6/12560069#12560069
-        return UIInterfaceOrientationMaskAllButUpsideDown;
-    }
-    return gSupportedOrientations;
+	return gSupportedOrientations;
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
 	NSString* str = [url absoluteString];
 	hstr urlstr = [str UTF8String], srcAppStr = [sourceApplication UTF8String];
-	
-	BOOL ret = NO;
-	bool r;
+	BOOL result = NO;
 	foreach (iOSUrlCallback, it, gUrlCallbacks)
 	{
-		r = (*it)(urlstr, srcAppStr, annotation);
-		if (r)
+		if ((*it)(urlstr, srcAppStr, annotation))
 		{
-			ret = YES;
+			result = YES;
 		}
 	}
-	return ret;
+	return result;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -188,14 +178,11 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 	{
 		return;
 	}
-
 	if ([viewController.view isKindOfClass:[EAGLView class]]) 
 	{
 		EAGLView *glview = (EAGLView*)viewController.view;
-		
 		[glview applicationWillResignActive:application];
 		[glview stopAnimation];
-
 	}
 	if ([[viewController.view subviews] count]) 
 	{
@@ -224,11 +211,9 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 	{
 		return;
 	}
-	
 	if ([viewController.view isKindOfClass:[EAGLView class]]) 
 	{
 		EAGLView *glview = (EAGLView*)viewController.view;
-		
 		[glview applicationDidBecomeActive:application];
 		[glview startAnimation];
 	}

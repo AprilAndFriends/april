@@ -270,14 +270,7 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 	}
 	
 	mImageView = [[UIImageView alloc] initWithImage:image];
-	if (isiOS8OrNewer() || UIInterfaceOrientationIsPortrait([self getDeviceOrientation]))
-	{
-		mImageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-	}
-	else
-	{
-		mImageView.frame = CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width);
-	}
+	mImageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
 	[self.view addSubview:mImageView];
 	mImageView.layer.zPosition = 1;
 }
