@@ -51,7 +51,6 @@
 	return [CAEAGLLayer class];
 }
 
-
 // Handles the start of a touch
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
@@ -99,15 +98,14 @@
 		displayLinkAttached = false;
 		// Get the layer
 		CAEAGLLayer* eaglLayer = (CAEAGLLayer*) self.layer;
-#if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		if ([eaglLayer respondsToSelector:@selector(setContentsScale:)])
 		{
+			// iPhone 4
 			if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
-			{ // iphone 4
+			{
 				eaglLayer.contentsScale = [[UIScreen mainScreen] scale];
 			}
 		}
-#endif
 		self.multipleTouchEnabled = YES;
 		eaglLayer.opaque = YES;
 		eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -122,7 +120,6 @@
 			[self release];
 			return nil;
 		}
-		
 		// fake textbox
 		CGRect textFrame = frame;
 		textFrame.origin.x += frame.size.width;
@@ -161,11 +158,6 @@
 		self.sensorManager.deviceMotionUpdateInterval = 0.016666667f;
 		self.sensorManager.accelerometerUpdateInterval = 0.016666667f;
 		self.sensorManager.gyroUpdateInterval = 0.016666667f;
-		// create ios window object
-		april::init(april::RenderSystemType::Default, april::WindowType::Default);
-		april::createRenderSystem();
-		april::createWindow(0, 0, true, "iOS Window");
-		april::rendersys->update(0.0f);
 	}
 	return self;
 }
@@ -181,9 +173,7 @@
 	return YES;
 }
 
-// we'll also use this objc class for getting notifications
-// on virtual keyboard's appearance and disappearance
-
+// we'll also use this objc class for getting notifications on virtual keyboard's appearance and disappearance
 - (void)keyboardWasShown:(NSNotification*)notification
 {
 	if (april::window != NULL)

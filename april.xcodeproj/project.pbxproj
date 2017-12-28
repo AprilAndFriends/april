@@ -1028,6 +1028,7 @@
 		843208EA1FF4EE23003A0539 /* async */ = {
 			isa = PBXGroup;
 			children = (
+				843208EB1FF4EE42003A0539 /* AssignWindowCommand.cpp */,
 				843208ED1FF4EE5A003A0539 /* AssignWindowCommand.h */,
 				843208EE1FF4EE5A003A0539 /* AsyncCommand.cpp */,
 				843208EF1FF4EE5A003A0539 /* AsyncCommand.h */,
@@ -1063,7 +1064,6 @@
 				8432090D1FF4EE5A003A0539 /* UnassignWindowCommand.cpp */,
 				8432090E1FF4EE5A003A0539 /* UnassignWindowCommand.h */,
 				8432090F1FF4EE5A003A0539 /* VertexRenderCommand.h */,
-				843208EB1FF4EE42003A0539 /* AssignWindowCommand.cpp */,
 			);
 			name = async;
 			sourceTree = "<group>";

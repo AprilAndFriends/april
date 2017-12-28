@@ -36,7 +36,7 @@ namespace april
 		{
 			appDelegateClassName = NSStringFromClass([ApriliOSAppDelegate class]);
 		}
-		april::application->init();
+		//april::application->init();
 		int result = UIApplicationMain(argc, argv, nil, appDelegateClassName);
 		april::application->destroy();
 		delete april::application;

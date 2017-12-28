@@ -204,7 +204,7 @@ namespace april
 		{
 			return this->retainLoadingOverlay ? "1" : "0";
 		}
-		return "";
+		return Window::getParam(param);
 	}
 	
 	void iOS_Window::setParam(chstr param, chstr value)
@@ -213,26 +213,29 @@ namespace april
 		{
 			bool prev = this->retainLoadingOverlay;
 			this->retainLoadingOverlay = (value == "1");
-			if (!this->retainLoadingOverlay && prev && this->firstFrameDrawn)
+			if (!this->retainLoadingOverlay && prev)// && this->firstFrameDrawn)
 			{
 				[viewcontroller removeImageView:(value == "0" ? false : true)];
 			}
 		}
-		if (param == "exit_function")
+		else if (param == "exit_function")
 		{
 			unsigned long ptr;
 			sscanf(value.cStr(), "%lu", &ptr);
 			this->exitFunction = (void (*)(int)) ptr;
 		}
-		if (param == "CADisplayLink::updateInterval" && glview != nil)
+		else if (param == "CADisplayLink::updateInterval" && glview != nil)
 		{
 			[glview setUpdateInterval:(int)value];
+		}
+		else
+		{
+			Window::setParam(param, value);
 		}
 	}
 
 	float iOS_Window::_getTouchScale() const
 	{
-#if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		static float scale = -1.0f;
 		if (scale < 0.0f)
 		{
@@ -247,9 +250,6 @@ namespace april
 			}
 		}
 		return scale;
-#else
-		return 1.0f;
-#endif
 	}
 	
 	void iOS_Window::touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent)
@@ -357,18 +357,6 @@ namespace april
 		}
 	}
 	
-	void iOS_Window::handleDisplayAndUpdate()
-	{
-		if (april::application != NULL)
-		{
-			april::application->update();
-			if (april::application->getState() != Application::State::Running)
-			{
-				april::application->finish();
-			}
-		}
-	}
-
 	void iOS_Window::applicationWillResignActive()
 	{
 		if (!this->firstFrameDrawn)

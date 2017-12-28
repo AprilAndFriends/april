@@ -48,8 +48,6 @@ namespace april
 		hstr getParam(chstr param);
 		void setParam(chstr param, chstr value);
 		
-		void handleDisplayAndUpdate();
-		
 		void touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent);
 		void touchesEnded_withEvent_(void* nssetTouches, void* uieventEvent);
 		void touchesMoved_withEvent_(void* nssetTouches, void* uieventEvent);

@@ -109,6 +109,7 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 {
 	((EAGLView*)viewController.view)->app_started = 1;
 	[(EAGLView*)viewController.view startAnimation];
+	april::application->init();
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
