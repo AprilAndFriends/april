@@ -121,10 +121,7 @@ namespace april
 			try
 			{
 				april::application->update();
-				if (april::application->getState() == april::Application::State::Running)
-				{
-					return true;
-				}
+				return (april::application->getState() == april::Application::State::Running);
 			}
 			catch (hexception& e)
 			{

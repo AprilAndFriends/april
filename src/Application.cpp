@@ -173,7 +173,7 @@ namespace april
 	{
 		(*april::application->aprilApplicationInit)();
 #ifdef _ANDROID
-		getJNIEnv(); // attaches thread to Java VM;
+		getJNIEnv(); // attaches thread to Java VM
 #endif
 		april::application->state = State::Running;
 		float timeDelta = 0.0f;
