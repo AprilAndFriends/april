@@ -598,7 +598,7 @@ namespace april
 		/// @brief Mutex required for registering and unregistering of textures that allows for multi-threaded access.
 		hmutex texturesMutex;
 		/// @brief Mutex required for async update/rendering.
-		hmutex renderMutex;
+		hmutex asyncMutex;
 		/// @brief Special helper object that can handle rendering in a different way.
 		RenderHelper* renderHelper;
 		/// @brief Async command queue.

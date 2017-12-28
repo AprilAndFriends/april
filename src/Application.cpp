@@ -100,6 +100,8 @@ namespace april
 
 	void Application::update()
 	{
+		TextureAsync::update();
+		april::window->checkEvents();
 		float timeDelta = this->timer.diff(true);
 		if (!april::window->isFocused())
 		{
@@ -110,17 +112,10 @@ namespace april
 		{
 			timeDelta = hmin(timeDelta, this->timeDeltaMaxLimit);
 		}
-		TextureAsync::update();
-		april::window->checkEvents();
 		hmutex::ScopeLock lock(&this->timeDeltaMutex);
 		this->timeDelta += timeDelta;
 		lock.release();
 		april::rendersys->update(timeDelta);
-		// this consumes the timeDelta after the frame is done
-		if (!april::window->isFocused())
-		{
-			this->timer.diff(true);
-		}
 	}
 
 	void Application::_updateSystem()

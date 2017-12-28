@@ -24,6 +24,7 @@ namespace april
 	public:
 		AssignWindowCommand(Window* window);
 
+		bool isFinalizer() const { return true; }
 		bool isSystemCommand() const { return true; }
 
 		void execute();

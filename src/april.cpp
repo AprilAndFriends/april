@@ -217,7 +217,6 @@ namespace april
 		hlog::writef(logTag, "Platform: %s %s, %d bit", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
 		// symbolic colors
 		resetSymbolicColors();
-        
 		// extensions
 		if (extensions.size() == 0)
 		{
@@ -435,8 +434,8 @@ namespace april
 #ifdef _WINUWP
 		april::rendersys->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
 #endif
-		april::rendersys->getCaps(); // calling getCaps() is required here so it's initialized on certain platforms
-		april::rendersys->clear(); // initial clear backbuffer
+		april::rendersys->getCaps(); // calling getCaps() here is required here so it's initialized on certain platforms
+		april::rendersys->clear(); // make sure the backbuffer is clear after initialization
 		april::rendersys->waitForAsyncCommands(true);
 	}
 

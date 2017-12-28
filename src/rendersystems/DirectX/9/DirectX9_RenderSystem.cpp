@@ -168,12 +168,12 @@ namespace april
 				surface->Release();
 			}
 		}
-		this->_deviceClear(false);
-		this->_devicePresentFrame();
 		// device config
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
+		this->_deviceClear(false);
 		this->d3dDevice->BeginScene();
 		this->renderTarget = NULL;
+		this->_devicePresentFrame();
 	}
 
 	void DirectX9_RenderSystem::_deviceReset()
@@ -741,7 +741,8 @@ namespace april
 		if (hr == D3DERR_DEVICELOST)
 		{
 			hlog::write(logTag, "Direct3D9 Device lost, attempting to restore...");
-			foreach (Texture*, it, this->textures)
+			harray<Texture*> textures = this->getTextures(); // using this approach to make sure no race condition happens
+			foreach (Texture*, it, textures)
 			{
 				(*it)->unload();
 			}

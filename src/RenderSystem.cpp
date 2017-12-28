@@ -173,7 +173,7 @@ namespace april
 	void RenderSystem::_systemCreate(Options options)
 	{
 		hlog::writef(logTag, "Creating rendersystem: '%s' (options: %s)", this->name.cStr(), options.toString().cStr());
-		hmutex::ScopeLock lock(&this->renderMutex);
+		hmutex::ScopeLock lock(&this->asyncMutex);
 		this->options = options;
 		this->state->reset();
 		this->deviceState->reset();
@@ -210,7 +210,7 @@ namespace april
 	void RenderSystem::_systemDestroy()
 	{
 		hlog::writef(logTag, "Destroying rendersystem '%s'.", this->name.cStr());
-		hmutex::ScopeLock lock(&this->renderMutex);
+		hmutex::ScopeLock lock(&this->asyncMutex);
 		this->renderMode = RenderMode::Normal;
 		if (this->renderHelper != NULL)
 		{
@@ -264,12 +264,13 @@ namespace april
 
 	void RenderSystem::_systemAssignWindow(Window* window)
 	{
-		hmutex::ScopeLock lock(&this->renderMutex);
+		hmutex::ScopeLock lock(&this->asyncMutex);
 		this->_deviceAssignWindow(window);
 		this->_deviceSetupCaps();
 		this->_deviceSetup();
 		grect viewport(0.0f, 0.0f, april::window->getSize());
 		this->setViewport(viewport);
+		this->setIdentityTransform();
 		this->setOrthoProjection(viewport);
 		this->_updateDeviceState(this->state, true);
 		this->_deviceClear(true);
@@ -332,7 +333,7 @@ namespace april
 
 	int RenderSystem::getAsyncQueuesCount()
 	{
-		hmutex::ScopeLock lock(&this->renderMutex);
+		hmutex::ScopeLock lock(&this->asyncMutex);
 		return hmax(this->asyncCommandQueues.size() - 1, 0);
 	}
 
@@ -425,7 +426,7 @@ namespace april
 	bool RenderSystem::update(float timeDelta)
 	{
 		bool result = false;
-		hmutex::ScopeLock lock(&this->renderMutex);
+		hmutex::ScopeLock lock(&this->asyncMutex);
 		if (this->asyncCommandQueues.size() >= 2)
 		{
 			// TODOx - maybe the other block can take care of everything
@@ -439,7 +440,7 @@ namespace april
 					(*it)->execute();
 				}
 				delete queue;
-				lock.acquire(&this->renderMutex);
+				lock.acquire(&this->asyncMutex);
 				this->processingAsync = false;
 				lock.release();
 				result = true;
@@ -458,7 +459,7 @@ namespace april
 					}
 					delete (*it);
 				}
-				lock.acquire(&this->renderMutex);
+				lock.acquire(&this->asyncMutex);
 				this->processingAsync = false;
 				lock.release();
 				result = true;
@@ -904,7 +905,7 @@ namespace april
 			this->state->modelviewMatrixChanged = false;
 			this->state->projectionMatrixChanged = false;
 		}
-		hmutex::ScopeLock lock(&this->renderMutex);
+		hmutex::ScopeLock lock(&this->asyncMutex);
 		if (this->asyncCommandQueues.size() == 0)
 		{
 			this->asyncCommandQueues += new AsyncCommandQueue();
@@ -918,7 +919,7 @@ namespace april
 
 	void RenderSystem::_flushAsyncCommands()
 	{
-		hmutex::ScopeLock lock(&this->renderMutex);
+		hmutex::ScopeLock lock(&this->asyncMutex);
 		harray<AsyncCommandQueue*> queues = this->asyncCommandQueues;
 		this->asyncCommandQueues.clear();
 		lock.release();
@@ -937,7 +938,7 @@ namespace april
 
 	void RenderSystem::waitForAsyncCommands(bool forced)
 	{
-		hmutex::ScopeLock lock(&this->renderMutex);
+		hmutex::ScopeLock lock(&this->asyncMutex);
 		if (forced && this->asyncCommandQueues.size() == 1 && this->asyncCommandQueues.first()->commands.size() > 0)
 		{
 			this->asyncCommandQueues += new AsyncCommandQueue();
@@ -946,7 +947,7 @@ namespace april
 		{
 			lock.release();
 			hthread::sleep(0.001f);
-			lock.acquire(&this->renderMutex);
+			lock.acquire(&this->asyncMutex);
 		}
 	}
 
