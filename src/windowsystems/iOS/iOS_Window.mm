@@ -258,10 +258,11 @@ namespace april
 		int previousSize = g_touches.size();
 		g_touches += touches;
 		CGPoint point;
+		float scale = this->_getTouchScale();
 		for_iter (i, 0, touches.size())
 		{
 			point = [touches[i] locationInView:glview];
-			this->queueTouchInput(MouseEvent::Type::Down, gvec2(point.x, point.y), previousSize + i);
+			this->queueTouchInput(MouseEvent::Type::Down, gvec2(point.x * scale, point.y * scale), previousSize + i);
 		}
 	}
 
@@ -278,10 +279,11 @@ namespace april
 		}
 		g_touches /= touches;
 		CGPoint point;
+		float scale = this->_getTouchScale();
 		for_iter (i, 0, touches.size())
 		{
 			point = [touches[i] locationInView:glview];
-			this->queueTouchInput(MouseEvent::Type::Up, gvec2(point.x, point.y), indices[i]);
+			this->queueTouchInput(MouseEvent::Type::Up, gvec2(point.x * scale, point.y * scale), indices[i]);
 		}
 	}
 	
@@ -303,10 +305,11 @@ namespace april
 			}
 		}
 		CGPoint point;
+		float scale = this->_getTouchScale();
 		for_iter (i, 0, touches.size())
 		{
 			point = [touches[i] locationInView:glview];
-			this->queueTouchInput(MouseEvent::Type::Move, gvec2(point.x, point.y), indices[i]);
+			this->queueTouchInput(MouseEvent::Type::Move, gvec2(point.x * scale, point.y * scale), indices[i]);
 		}
 	}
 	
