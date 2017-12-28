@@ -29,14 +29,11 @@ namespace april
 		{
 			for_iter (i, 0, argc)
 			{
-				april::args += argv[i];
+				args += argv[i];
 			}
 		}
 		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
 		april::application->setArgs(args);
-		// TODOx - remove
-		april::WinUWP::Init = aprilApplicationInit;
-		april::WinUWP::Destroy = aprilApplicationDestroy;
 #ifdef _WINUWP_WINDOW
 		IFrameworkViewSource^ frameworkViewSource = ref new april::FrameworkViewSource();
 		//april::WinUWP::App = ;
