@@ -9,7 +9,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.text.InputType;
-import com.april.Touch;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -95,21 +94,10 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		}
 		if (type >= 0)
 		{
-			final ArrayList<Touch> touches = new ArrayList<Touch>();
 			for (int i = 0; i < event.getPointerCount(); i++)
 			{
-				touches.add(new Touch(type, event.getX(i), event.getY(i)));
+				NativeInterface.onTouch(type, event.getX(i), event.getY(i), i);
 			}
-			this.queueEvent(new Runnable()
-			{
-				public void run()
-				{
-					for (int i = 0; i < touches.size(); i++)
-					{
-						NativeInterface.onTouch(touches.get(i).type, touches.get(i).x, touches.get(i).y, i);
-					}
-				}
-			});
 			return true;
 		}
 		return false;
