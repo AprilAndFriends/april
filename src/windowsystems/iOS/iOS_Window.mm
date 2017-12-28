@@ -373,6 +373,7 @@ namespace april
 		// TODOx - is this "if" required?
 		//if (this->focused)
 		{
+			april::application->suspend();
 			this->queueFocusChange(false);
 			[glview stopAnimation];
 		}
@@ -383,6 +384,7 @@ namespace april
 		// TODOx - is this "if" required?
 		//if (!this->focused)
 		{
+			april::application->resume();
 			this->queueFocusChange(true);
 			if (glview != NULL)
 			{
