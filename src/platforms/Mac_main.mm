@@ -21,16 +21,8 @@
 #endif
 #import "Mac_AppDelegate.h"
 
+#define MAC_WINDOW ((april::Mac_Window*)april::window)
 
-namespace april
-{
-	extern harray<hstr> args;
-}
-
-int gArgc = 0;
-char** gArgv;
-void (*gAprilInit)(const harray<hstr>&);
-void (*gAprilDestroy)();
 static BOOL gFinderLaunch = NO;
 
 int gAprilShouldInvokeQuitCallback = 0;
@@ -52,6 +44,7 @@ static NSString* getLocalizedString(NSString* key, NSString* fallback)
 @end
 
 @implementation AprilApplication
+
 - (void)terminate:(id)sender
 {
 #ifdef _SDL
@@ -61,10 +54,10 @@ static NSString* getLocalizedString(NSString* key, NSString* fallback)
 	{
 		[super terminate:sender];
 	}
-    bool result;
+    bool result = true;
     if (april::isUsingCVDisplayLink())
     {
-        hmutex::ScopeLock lock(&aprilWindow->renderThreadSyncMutex);
+		hmutex::ScopeLock lock(&MAC_WINDOW->renderThreadSyncMutex);
         result = april::window->handleQuitRequest(true);
         lock.release();
     }
@@ -72,7 +65,6 @@ static NSString* getLocalizedString(NSString* key, NSString* fallback)
     {
         result = april::window->handleQuitRequest(true);
     }
-    
     if (result)
 	{
 		[super terminate:sender];
@@ -84,12 +76,11 @@ static NSString* getLocalizedString(NSString* key, NSString* fallback)
 #endif
 }
 
-- (void)showAprilAboutMenu
+-(void)showAprilAboutMenu
 {
 	NSString* copyright;
 	copyright = getLocalizedString(@"MenuCopyright", @"");
 	NSDictionary* aboutOptions = @{ @"Copyright": copyright };
-	
 	[NSApp orderFrontStandardAboutPanelWithOptions:aboutOptions];
 }
 
@@ -99,17 +90,19 @@ NSString* getApplicationName()
 {
 	NSDictionary* dict;
 	NSString* appName = 0;
-	
 	/* Determine the application name */
 	appName = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
 	if (!appName || [appName length] == 0)
 	{
 		dict = (NSDictionary*) CFBundleGetInfoDictionary(CFBundleGetMainBundle());
 		if (dict)
+		{
 			appName = [dict objectForKey: @"CFBundleName"];
-		
+		}
 		if (![appName length])
+		{
 			appName = [[NSProcessInfo processInfo] processName];
+		}
 	}
 	return appName;
 }
@@ -121,82 +114,69 @@ static void setApplicationMenu()
 	NSMenuItem* menuItem;
 	NSString* title;
 	NSString* appName;
-	
 	appName = getApplicationName();
 	appleMenu = [[NSMenu alloc] initWithTitle:@""];
-	
 	/* Add menu items */
 //	[NSApp showAprilAboutMenu];
 	title = [getLocalizedString(@"MenuAbout", @"About ") stringByAppendingString:appName];
 	[appleMenu addItemWithTitle:title action:@selector(showAprilAboutMenu) keyEquivalent:@""];
-
-	
 	[appleMenu addItem:[NSMenuItem separatorItem]];
-	
 	title = [getLocalizedString(@"MenuHide", @"Hide ") stringByAppendingString:appName];
 	[appleMenu addItemWithTitle:title action:@selector(hide:) keyEquivalent:@"h"];
-	
 	title = getLocalizedString(@"MenuHideOthers", @"Hide Others");
 	menuItem = (NSMenuItem *)[appleMenu addItemWithTitle:title action:@selector(hideOtherApplications:) keyEquivalent:@"h"];
 	[menuItem setKeyEquivalentModifierMask:(NSAlternateKeyMask|NSCommandKeyMask)];
-	
 	title = getLocalizedString(@"MenuShowAll", @"Show All");
 	[appleMenu addItemWithTitle:title action:@selector(unhideAllApplications:) keyEquivalent:@""];
-	
 	[appleMenu addItem:[NSMenuItem separatorItem]];
-	
 	title = [getLocalizedString(@"MenuQuit", @"Quit ") stringByAppendingString:appName];
 	[appleMenu addItemWithTitle:title action:@selector(terminate:) keyEquivalent:@"q"];
-	
-	
 	/* Put menu into the menubar */
 	menuItem = [[NSMenuItem alloc] initWithTitle:@"" action:nil keyEquivalent:@""];
 	[menuItem setSubmenu:appleMenu];
 	[[NSApp mainMenu] addItem:menuItem];
-	
 	/* Tell the application object that this is now the application menu */
 	[NSApp setAppleMenu:appleMenu];
-	
 	/* Finally give up our references to the objects */
 	[appleMenu release];
 	[menuItem release];
 }
 
 /* Replacement for NSApplicationMain */
-static void CustomApplicationMain(int argc, char **argv)
+static void CustomApplicationMain()
 {
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	AprilAppDelegate* appDelegate;
-
 	// limit GCD from spawning too much threads
 	[[NSOperationQueue mainQueue] setMaxConcurrentOperationCount:1];
 	[[NSOperationQueue currentQueue] setMaxConcurrentOperationCount:1];
 	/* Ensure the application object is initialised */
 	[AprilApplication sharedApplication];
-
 #ifdef SDL_USE_CPS
 	{
 		CPSProcessSerNum PSN;
 		/* Tell the dock about us */
 		if (!CPSGetCurrentProcess(&PSN))
-			if (!CPSEnableForegroundOperation(&PSN,0x03,0x3C,0x2C,0x1103))
+		{
+			if (!CPSEnableForegroundOperation(&PSN, 0x03, 0x3C, 0x2C, 0x1103))
+			{
 				if (!CPSSetFrontProcess(&PSN))
+				{
 					[SDLApplication sharedApplication];
+				}
+			}
+		}
 	}
 #endif /* SDL_USE_CPS */
-	
 	/* Set up the menubar */
 	[NSApp setMainMenu:[[NSMenu alloc] init]];
 	setApplicationMenu();
-	
 	/* Create AprilAppDelegate and make it the app delegate */
 	appDelegate = [[AprilAppDelegate alloc] init];
 	[NSApplication sharedApplication].delegate = appDelegate;
 	[NSApp activateIgnoringOtherApps:YES];
-	
 	/* Start the main event loop */
 	[NSApp run];
-	
 	[appDelegate release];
 	[pool release];
 }
@@ -209,31 +189,28 @@ namespace april
 		/* Copy the arguments into a global variable */
 		/* This is passed if we are launched by double-clicking */
 		gAprilShouldInvokeQuitCallback = 0;
-		gAprilInit = aprilApplicationInit;
-		gAprilDestroy = aprilApplicationDestroy;
-		
+		harray<hstr> args;
 		if (argc >= 2 && strncmp(argv[1], "-psn", 4) == 0)
 		{
-			gArgv = (char**) malloc(sizeof(char*) * 2);
-			gArgv[0] = argv[0];
-			gArgv[1] = NULL;
-			gArgc = 1;
+			args += argv[0];
 			gFinderLaunch = YES;
 		}
 		else
 		{
-			int i;
-			gArgc = argc;
-			gArgv = (char**) malloc(sizeof(char*) * (argc + 1));
-			for (i = 0; i <= argc; ++i)
+			if (argv != NULL && argv[0] != NULL)
 			{
-				gArgv[i] = argv[i];
+				for_iter (i, 0, argc)
+				{
+					args += argv[i];
+				}
 			}
 			gFinderLaunch = NO;
 		}
 		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
-		//april::application->setArgs(args); // TODO - implement this properly
-		CustomApplicationMain(argc, argv);
+		april::application->setArgs(args);
+		april::application->init();
+		CustomApplicationMain();
+		april::application->destroy();
 		delete april::application;
 		april::application = NULL;
 		return 0;

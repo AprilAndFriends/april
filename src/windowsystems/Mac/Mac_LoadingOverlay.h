@@ -18,6 +18,6 @@ void createLoadingOverlay(NSWindow* parent);
 void updateLoadingOverlay(float timeDelta);
 void reattachLoadingOverlay();
 
-extern NSWindow* mOverlayWindow;
+extern NSWindow* gOverlayWindow;
 
 #endif

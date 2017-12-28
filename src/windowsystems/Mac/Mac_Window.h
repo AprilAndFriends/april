@@ -40,10 +40,10 @@ namespace april
 		void setCursor(Cursor* value);
 		void setCursorVisible(bool visible);
 
+		void checkEvents();
 		bool update(float timeDelta);
-		void terminateMainLoop();
 
-		void setResolution(int w, int h, bool fullscreen);
+		void setResolution(int width, int height, bool fullscreen);
 		void setFullscreenFlag(bool value);
 
 		void OnAppGainedFocus();
@@ -54,10 +54,6 @@ namespace april
 		bool shouldIgnoreUpdate();
 		void setIgnoreUpdateFlag(bool value);
 		
-        void dispatchQueuedEvents();
-        void queueWindowSizeChanged(int w, int h, bool fullscreen);
-        void queueFocusChanged(bool focused);
-        void dispatchWindowSizeChanged(int w, int h, bool fullscreen);
         void queueMessageBox(chstr title, harray<hstr> argButtons, harray<MessageBoxButton> argButtonTypes, chstr text, void (*callback)(MessageBoxButton));
         
 		bool displayLinkIgnoreSystemRedraw;
@@ -76,9 +72,7 @@ namespace april
 		
 	protected:
 		Cursor* _createCursor(bool fromResource);
-        harray<QueuedEvent*> queuedEvents;
-		
-		void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		void _systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options);
 		void _systemDestroy();
 		
 		void _presentFrame();
@@ -87,7 +81,6 @@ namespace april
 	
     bool isUsingCVDisplayLink();
 }
-extern april::Mac_Window* aprilWindow;
 
 bool isPreLion();
 bool isLionOrNewer();

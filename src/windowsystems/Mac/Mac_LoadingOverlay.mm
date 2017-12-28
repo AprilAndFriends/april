@@ -6,25 +6,25 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#include <hltypes/hthread.h>
 #import <Cocoa/Cocoa.h>
-#import "Mac_LoadingOverlay.h"
-#include "Mac_Window.h"
 
-NSWindow* mOverlayWindow = nil;
-NSImageView* mImageView = nil;
+#include <hltypes/hthread.h>
+
+#import "Mac_LoadingOverlay.h"
+#include "Window.h"
+
+NSWindow* gOverlayWindow = nil;
+NSImageView* gImageView = nil;
 static float fadeOutDelay = -1;
 
 static void updateLoadingOverlaySize(NSWindow* parent, bool check)
 {
 	NSRect windowFrame = parent.frame;
 	NSRect frame = [parent.contentView bounds];
-	
-	if (!check || !NSEqualSizes(frame.size, mOverlayWindow.frame.size))
+	if (!check || !NSEqualSizes(frame.size, gOverlayWindow.frame.size))
 	{
 		frame.origin = windowFrame.origin;
-
-		NSSize imgSize = [mImageView image].size;
+		NSSize imgSize = [gImageView image].size;
 		NSRect imgFrame = frame;
 		if ((float) imgSize.width / imgSize.height > (float) frame.size.width / frame.size.height)
 		{
@@ -37,8 +37,8 @@ static void updateLoadingOverlaySize(NSWindow* parent, bool check)
 		{
 			imgFrame.origin.x = imgFrame.origin.y = 0;
 		}
-		[mImageView setFrame:imgFrame];
-		[mOverlayWindow setFrame:frame display:YES];
+		[gImageView setFrame:imgFrame];
+		[gOverlayWindow setFrame:frame display:YES];
 	}
 }
 
@@ -46,41 +46,34 @@ void createLoadingOverlay(NSWindow* parent)
 {
 	float scalingFactor = [NSScreen mainScreen].backingScaleFactor;
 	NSString* imgName = scalingFactor > 1 ? @"Default@2x" : @"Default";
-	
 	NSString* path = [[NSBundle mainBundle] pathForResource:imgName ofType:@"png"];
 	bool found = [[NSFileManager defaultManager] fileExistsAtPath:path];
-
 	if (found)
 	{
 		NSRect windowFrame = parent.frame;
 		NSRect frame = [parent.contentView bounds];
-
 		frame.origin = windowFrame.origin;
-		mOverlayWindow = [[NSWindow alloc] initWithContentRect:frame styleMask:NSBorderlessWindowMask backing: NSBackingStoreBuffered defer:false];
-		[mOverlayWindow setBackgroundColor:[NSColor blackColor]];
-		[mOverlayWindow setOpaque:YES];
-
+		gOverlayWindow = [[NSWindow alloc] initWithContentRect:frame styleMask:NSBorderlessWindowMask backing: NSBackingStoreBuffered defer:false];
+		[gOverlayWindow setBackgroundColor:[NSColor blackColor]];
+		[gOverlayWindow setOpaque:YES];
 		NSImage* image = [[NSImage alloc] initWithContentsOfFile:path];
-		mImageView = [[NSImageView alloc] init];
-		[mImageView setImage:image];
-
+		gImageView = [[NSImageView alloc] init];
+		[gImageView setImage:image];
 		updateLoadingOverlaySize(parent, 0);
-
-		[mImageView setImageScaling:NSImageScaleAxesIndependently];
-
-		[mOverlayWindow.contentView addSubview: mImageView];
-		[parent addChildWindow:mOverlayWindow ordered:NSWindowAbove];
-		[mOverlayWindow makeKeyWindow];
+		[gImageView setImageScaling:NSImageScaleAxesIndependently];
+		[gOverlayWindow.contentView addSubview: gImageView];
+		[parent addChildWindow:gOverlayWindow ordered:NSWindowAbove];
+		[gOverlayWindow makeKeyWindow];
 	}
 }
 
 void reattachLoadingOverlay()
 {
-	if (mOverlayWindow != nil)
+	if (gOverlayWindow != nil)
 	{
-		NSWindow* wnd = mOverlayWindow.parentWindow;
-		[wnd removeChildWindow:mOverlayWindow];
-		[wnd addChildWindow:mOverlayWindow ordered:NSWindowAbove];
+		NSWindow* wnd = gOverlayWindow.parentWindow;
+		[wnd removeChildWindow:gOverlayWindow];
+		[wnd addChildWindow:gOverlayWindow ordered:NSWindowAbove];
 	}
 }
 
@@ -98,7 +91,7 @@ void updateLoadingOverlay(float timeDelta)
 	}
 	else if (fadeOutDelay == -1)
 	{
-		hstr delay = aprilWindow->getParam("delay_splash");
+		hstr delay = april::window->getParam("delay_splash");
 		if (delay != "")
 		{
 			fadeOutDelay = delay;
@@ -107,30 +100,36 @@ void updateLoadingOverlay(float timeDelta)
 	}
 	if (alpha == 505)
 	{
-		alpha = aprilWindow->getParam("splashscreen_fadeout") == "0" ? -1 : 1.5f;
+		alpha = april::window->getParam("splashscreen_fadeout") == "0" ? -1 : 1.5f;
 	}
-	if (mOverlayWindow)
+	if (gOverlayWindow)
 	{
-		if (aprilWindow->getParam("fasthide_loading_overlay") == "1")
-			alpha -= timeDelta * 3; // If you don't want to wait for the loading overlay every time, set this param. eg on debug mode
-		else
-			alpha -= timeDelta;
-
-		if (aprilWindow->getParam("retain_loading_overlay") == "1") alpha = 1.5f;
-
-		if (alpha < 0)
+		if (april::window->getParam("fasthide_loading_overlay") == "1")
 		{
-			[mImageView removeFromSuperview];
-			[mImageView release];
-			mImageView = nil;
-			[mOverlayWindow.parentWindow removeChildWindow:mOverlayWindow];
-			[mOverlayWindow release];
-			mOverlayWindow = nil;
+			alpha -= timeDelta * 3; // If you don't want to wait for the loading overlay every time, set this param. eg on debug mode
 		}
 		else
 		{
-			mOverlayWindow.alphaValue = alpha;
-			updateLoadingOverlaySize([mOverlayWindow parentWindow], 1);
+			alpha -= timeDelta;
+		}
+		if (april::window->getParam("retain_loading_overlay") == "1")
+		{
+			alpha = 1.5f;
+		}
+		if (alpha < 0.0f)
+		{
+			[gImageView removeFromSuperview];
+			[gImageView release];
+			gImageView = nil;
+			[gOverlayWindow.parentWindow removeChildWindow:gOverlayWindow];
+			[gOverlayWindow release];
+			gOverlayWindow = nil;
+		}
+		else
+		{
+			gOverlayWindow.alphaValue = alpha;
+			updateLoadingOverlaySize([gOverlayWindow parentWindow], 1);
 		}
 	}
+	
 }

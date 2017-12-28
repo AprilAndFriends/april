@@ -187,6 +187,14 @@
 		84320A031FF4F1A1003A0539 /* KeyDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A011FF4F19F003A0539 /* KeyDelegate.cpp */; };
 		84320A041FF4F1A2003A0539 /* KeyDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A011FF4F19F003A0539 /* KeyDelegate.cpp */; };
 		84320A051FF4F1A3003A0539 /* KeyDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A011FF4F19F003A0539 /* KeyDelegate.cpp */; };
+		84320A2D1FF524AE003A0539 /* WinUWP_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2B1FF524AE003A0539 /* WinUWP_main.cpp */; };
+		84320A2E1FF524AE003A0539 /* WinUWP_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */; };
+		84320A2F1FF524B2003A0539 /* WinUWP_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2B1FF524AE003A0539 /* WinUWP_main.cpp */; };
+		84320A301FF524B3003A0539 /* WinUWP_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2B1FF524AE003A0539 /* WinUWP_main.cpp */; };
+		84320A311FF524B3003A0539 /* WinUWP_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2B1FF524AE003A0539 /* WinUWP_main.cpp */; };
+		84320A321FF524B6003A0539 /* WinUWP_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */; };
+		84320A331FF524B6003A0539 /* WinUWP_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */; };
+		84320A341FF524B7003A0539 /* WinUWP_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */; };
 		B4046B361ECDCA3C00F85550 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B321ECDCA3C00F85550 /* egl.cpp */; };
 		B4046B371ECDCA3C00F85550 /* egl.h in Headers */ = {isa = PBXBuildFile; fileRef = B4046B331ECDCA3C00F85550 /* egl.h */; };
 		B4046B381ECDCA3C00F85550 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */; };
@@ -500,9 +508,6 @@
 		D1B4873919337479004674EB /* Mac_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873319337479004674EB /* Mac_Platform.mm */; };
 		D1B4873A19337479004674EB /* Mac_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873319337479004674EB /* Mac_Platform.mm */; };
 		D1CB6B6515CA905900B927BC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1CB6B6415CA905900B927BC /* Foundation.framework */; };
-		D1E2447A1A3104C300586FAC /* Mac_QueuedEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E244781A3104C300586FAC /* Mac_QueuedEvents.h */; };
-		D1E2447B1A3104C300586FAC /* Mac_QueuedEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1E244791A3104C300586FAC /* Mac_QueuedEvents.mm */; };
-		D1E2447C1A3104C300586FAC /* Mac_QueuedEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1E244791A3104C300586FAC /* Mac_QueuedEvents.mm */; };
 		D1E7203916D37B2700B9C9AD /* EventDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E7203116D37B2700B9C9AD /* EventDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1E7203A16D37B2700B9C9AD /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E7203216D37B2700B9C9AD /* Image.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1E7203B16D37B2700B9C9AD /* InputDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E7203316D37B2700B9C9AD /* InputDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -602,6 +607,8 @@
 		843209B31FF4EF76003A0539 /* MouseEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MouseEvent.cpp; path = src/events/MouseEvent.cpp; sourceTree = "<group>"; };
 		843209B41FF4EF76003A0539 /* TouchEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TouchEvent.cpp; path = src/events/TouchEvent.cpp; sourceTree = "<group>"; };
 		84320A011FF4F19F003A0539 /* KeyDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KeyDelegate.cpp; path = src/delegates/KeyDelegate.cpp; sourceTree = "<group>"; };
+		84320A2B1FF524AE003A0539 /* WinUWP_main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WinUWP_main.cpp; path = src/platforms/WinUWP_main.cpp; sourceTree = "<group>"; };
+		84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WinUWP_Platform.cpp; path = src/platforms/WinUWP_Platform.cpp; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* april.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4046B321ECDCA3C00F85550 /* egl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egl.cpp; path = src/util/egl.cpp; sourceTree = "<group>"; };
@@ -794,8 +801,6 @@
 		D1B4873D19337483004674EB /* iOS_main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_main.mm; path = src/platforms/iOS_main.mm; sourceTree = "<group>"; };
 		D1B4873E19337483004674EB /* iOS_Platform.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_Platform.mm; path = src/platforms/iOS_Platform.mm; sourceTree = "<group>"; };
 		D1CB6B6415CA905900B927BC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		D1E244781A3104C300586FAC /* Mac_QueuedEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mac_QueuedEvents.h; path = src/windowsystems/Mac/Mac_QueuedEvents.h; sourceTree = "<group>"; };
-		D1E244791A3104C300586FAC /* Mac_QueuedEvents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_QueuedEvents.mm; path = src/windowsystems/Mac/Mac_QueuedEvents.mm; sourceTree = "<group>"; };
 		D1E7203116D37B2700B9C9AD /* EventDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventDelegate.h; path = include/april/EventDelegate.h; sourceTree = "<group>"; };
 		D1E7203216D37B2700B9C9AD /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Image.h; path = include/april/Image.h; sourceTree = "<group>"; };
 		D1E7203316D37B2700B9C9AD /* InputDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputDelegate.h; path = include/april/InputDelegate.h; sourceTree = "<group>"; };
@@ -1096,6 +1101,15 @@
 			name = events;
 			sourceTree = "<group>";
 		};
+		84320A2A1FF5248E003A0539 /* UWP */ = {
+			isa = PBXGroup;
+			children = (
+				84320A2B1FF524AE003A0539 /* WinUWP_main.cpp */,
+				84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */,
+			);
+			name = UWP;
+			sourceTree = "<group>";
+		};
 		B4046B311ECDCA1800F85550 /* util */ = {
 			isa = PBXGroup;
 			children = (
@@ -1190,6 +1204,7 @@
 		C9E60986150518D500EB077F /* Platforms */ = {
 			isa = PBXGroup;
 			children = (
+				84320A2A1FF5248E003A0539 /* UWP */,
 				D10B73AE1982472E00A9352D /* Posix */,
 				D1BCC5851615A2BD0049CEA9 /* Android */,
 				C9E60988150518E200EB077F /* iOS */,
@@ -1278,8 +1293,6 @@
 				D1B4869A19337389004674EB /* Mac_AppDelegate.mm */,
 				D1B4869B19337389004674EB /* Mac_CocoaWindow.h */,
 				D1B4869C19337389004674EB /* Mac_CocoaWindow.mm */,
-				D1E244781A3104C300586FAC /* Mac_QueuedEvents.h */,
-				D1E244791A3104C300586FAC /* Mac_QueuedEvents.mm */,
 				D1B4869D19337389004674EB /* Mac_Cursor.h */,
 				D1B4869E19337389004674EB /* Mac_Cursor.mm */,
 				D1B4869F19337389004674EB /* Mac_Keys.h */,
@@ -1589,7 +1602,6 @@
 				D17F3E961D79D5010045F39D /* VirtualKeyboard.h in Headers */,
 				D1AF66C5170B1E5900A43743 /* Timer.h in Headers */,
 				8432099B1FF4EF27003A0539 /* Events.h in Headers */,
-				D1E2447A1A3104C300586FAC /* Mac_QueuedEvents.h in Headers */,
 				D11FB8FB1E6866DD001A7E9A /* InputMode.h in Headers */,
 				843209A01FF4EF27003A0539 /* MouseEvent.h in Headers */,
 				D1AF66C7170B1E5900A43743 /* PixelShader.h in Headers */,
@@ -1773,6 +1785,7 @@
 				B436D2E21D05AE9100DA2C15 /* RenderHelperLayered2D.cpp in Sources */,
 				7F1B523012E4713600E958D8 /* Color.cpp in Sources */,
 				B45500F61BD7A7BA00E75E43 /* OpenGL1_Texture.cpp in Sources */,
+				84320A2F1FF524B2003A0539 /* WinUWP_main.cpp in Sources */,
 				7F1B523112E4713600E958D8 /* Texture.cpp in Sources */,
 				B45501521BD7A80400E75E43 /* OpenGLES_RenderSystem.cpp in Sources */,
 				C9C04F8B14BB106F005BD333 /* PixelShader.cpp in Sources */,
@@ -1819,6 +1832,7 @@
 				843209871FF4EEC3003A0539 /* SuspendCommand.cpp in Sources */,
 				D1E7206A16D37C5600B9C9AD /* ImageJpt.cpp in Sources */,
 				843209BB1FF4EF7A003A0539 /* ControllerEvent.cpp in Sources */,
+				84320A321FF524B6003A0539 /* WinUWP_Platform.cpp in Sources */,
 				8432097B1FF4EEC3003A0539 /* ClearColorCommand.cpp in Sources */,
 				843209891FF4EEC3003A0539 /* AssignWindowCommand.cpp in Sources */,
 				B436D2E11D05AE9100DA2C15 /* RenderHelper.cpp in Sources */,
@@ -1853,8 +1867,10 @@
 				8432094E1FF4EE72003A0539 /* PresentFrameCommand.cpp in Sources */,
 				B4046B3C1ECDCB8900F85550 /* egl.cpp in Sources */,
 				B44FBD8E1BE0E44A00DD8995 /* iOS_main.mm in Sources */,
+				84320A341FF524B7003A0539 /* WinUWP_Platform.cpp in Sources */,
 				B4E4CE0E1E69A1D700DB4C31 /* Keys.cpp in Sources */,
 				B44FBD8F1BE0E44A00DD8995 /* Color.cpp in Sources */,
+				84320A311FF524B3003A0539 /* WinUWP_main.cpp in Sources */,
 				B44FBD901BE0E44A00DD8995 /* Texture.cpp in Sources */,
 				B44FBD911BE0E44A00DD8995 /* OpenGLES_PixelShader.cpp in Sources */,
 				843209C71FF4EF7B003A0539 /* ControllerEvent.cpp in Sources */,
@@ -1988,7 +2004,7 @@
 				B436D2E41D05AE9100DA2C15 /* RenderHelperLayered2D.cpp in Sources */,
 				843209351FF4EE71003A0539 /* ClearColorCommand.cpp in Sources */,
 				B455011F1BD7A7D100E75E43 /* OpenGLC_Texture.cpp in Sources */,
-				D1E2447C1A3104C300586FAC /* Mac_QueuedEvents.mm in Sources */,
+				84320A331FF524B6003A0539 /* WinUWP_Platform.cpp in Sources */,
 				84320A041FF4F1A2003A0539 /* KeyDelegate.cpp in Sources */,
 				843209431FF4EE71003A0539 /* AssignWindowCommand.cpp in Sources */,
 				843209C61FF4EF7A003A0539 /* TouchEvent.cpp in Sources */,
@@ -2015,6 +2031,7 @@
 				D1534764178AD62A00151D1A /* ImageJpt.cpp in Sources */,
 				D1534765178AD62A00151D1A /* ImagePng.cpp in Sources */,
 				B45500EF1BD7A7BA00E75E43 /* OpenGL1_RenderSystem.cpp in Sources */,
+				84320A301FF524B3003A0539 /* WinUWP_main.cpp in Sources */,
 				D1534766178AD62A00151D1A /* TimerPosix.cpp in Sources */,
 				D1B486A919337389004674EB /* Mac_AppDelegate.mm in Sources */,
 				D153476A178AD62A00151D1A /* ControllerDelegate.cpp in Sources */,
@@ -2082,8 +2099,8 @@
 				D136818E187BFB3E00E66E32 /* main_base.cpp in Sources */,
 				8432096A1FF4EEC2003A0539 /* ClearColorCommand.cpp in Sources */,
 				B455011D1BD7A7D100E75E43 /* OpenGLC_Texture.cpp in Sources */,
+				84320A2E1FF524AE003A0539 /* WinUWP_Platform.cpp in Sources */,
 				84320A021FF4F19F003A0539 /* KeyDelegate.cpp in Sources */,
-				D1E2447B1A3104C300586FAC /* Mac_QueuedEvents.mm in Sources */,
 				843209781FF4EEC2003A0539 /* AssignWindowCommand.cpp in Sources */,
 				843209BA1FF4EF76003A0539 /* TouchEvent.cpp in Sources */,
 				B45501351BD7A7DE00E75E43 /* OpenGLES2_RenderSystem.cpp in Sources */,
@@ -2108,6 +2125,7 @@
 				D1AF66B6170B1E5900A43743 /* ImageJpg.cpp in Sources */,
 				B45500ED1BD7A7BA00E75E43 /* OpenGL1_RenderSystem.cpp in Sources */,
 				D1B486A819337389004674EB /* Mac_AppDelegate.mm in Sources */,
+				84320A2D1FF524AE003A0539 /* WinUWP_main.cpp in Sources */,
 				D1AF66B7170B1E5900A43743 /* ImageJpt.cpp in Sources */,
 				D1AF66B8170B1E5900A43743 /* ImagePng.cpp in Sources */,
 				D1FED158192A3B5F00BE6A6D /* Cursor.cpp in Sources */,

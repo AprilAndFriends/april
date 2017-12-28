@@ -29,6 +29,8 @@
 #include "RenderSystem.h"
 #include "Mac_Window.h"
 
+#define MAC_WINDOW ((april::Mac_Window*)april::window)
+
 namespace april
 {
 	static hversion _getMaxOsVersion()
@@ -38,15 +40,15 @@ namespace april
 #endif
 		hversion result;
 		SInt32 major, minor, bugfix;
-		if (Gestalt(gestaltSystemVersionMajor, &major)   == noErr &&
-			Gestalt(gestaltSystemVersionMinor, &minor)   == noErr &&
+		if (Gestalt(gestaltSystemVersionMajor, &major) == noErr &&
+			Gestalt(gestaltSystemVersionMinor, &minor) == noErr &&
 			Gestalt(gestaltSystemVersionBugFix, &bugfix) == noErr)
 		{
 			result.set(major, minor, bugfix);
 		}
 		else
 		{
-			result.set(10, 3); // just in case. < 10.4 is not supported.
+			result.set(10, 4); // just in case, < 10.4 is not supported.
 		}
 		return result;
 	}
@@ -64,17 +66,14 @@ namespace april
 			info.name = "mac";
 			info.deviceName = "unnamedMacDevice";
 			info.osVersion = _getMaxOsVersion();
-			
 			float scalingFactor = 1.0f;
 			if ([mainScreen respondsToSelector:@selector(backingScaleFactor)])
 			{
 				scalingFactor = [NSScreen mainScreen].backingScaleFactor;
 			}
-
 			int mib [] = { CTL_HW, HW_MEMSIZE };
 			int64_t value = 0;
 			size_t length = sizeof(value);
-
 			if (sysctl(mib, 2, &value, &length, NULL, 0) == -1)
 			{
 				info.ram = 2048;
@@ -83,14 +82,12 @@ namespace april
 			{
 				info.ram = (int)(value / (1024 * 1024));
 			}
-
 			// display resolution
 			NSRect rect = [mainScreen frame];
 			info.displayResolution.set((float)rect.size.width * scalingFactor, (float)rect.size.height * scalingFactor);
 			// display DPI
 			CGSize screenSize = CGDisplayScreenSize(CGMainDisplayID());
 			info.displayDpi = 25.4f * info.displayResolution.y / screenSize.height;
-
 			// locale
 			// This code gets the prefered locale based on user's list of prefered languages against the supported languages
 			// in the app bundle (the .lproj folders in the bundle)
@@ -158,16 +155,15 @@ namespace april
 		// * prioritize buttons and automatically assign slots
 		// * use constants for button captions
 		// * use an array with constants for button captions etc
-		
 		NSString *nsButtons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[3] = {MessageBoxButton::Ok, MessageBoxButton::Ok, MessageBoxButton::Ok};
-		
-		int i0 = 0, i1 = 1, i2 = 2;
+		int i0 = 0;
+		int i1 = 1;
+		int i2 = 2;
 		//		if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_7_0)
 		//		{
 		//			i0 = 1, i1 = 0; // we want to bold the "OK" button, but in ios7 and up, the cancel button is bolded by default
 		//		}
-		
 		if (buttons == MessageBoxButton::OkCancel)
 		{
 			nsButtons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
@@ -211,7 +207,6 @@ namespace april
 			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
 			buttonTypes[i0] = MessageBoxButton::No;
 		}
-		
         harray<hstr> argButtons;
         harray<MessageBoxButton> argButtonTypes;
         argButtons += [nsButtons[i0] UTF8String];
@@ -220,12 +215,12 @@ namespace april
         argButtonTypes += buttonTypes[i0];
         argButtonTypes += buttonTypes[i1];
         argButtonTypes += buttonTypes[i2];
-		if (aprilWindow == NULL)
+		if (april::window == NULL)
 		{
 			printf("ERROR: %s\n", text.cStr());
 			exit(1);
 		}
-        aprilWindow->queueMessageBox(title, argButtons, argButtonTypes, text, callback);
+        MAC_WINDOW->queueMessageBox(title, argButtons, argButtonTypes, text, callback);
 	}
 	
 }
