@@ -6,18 +6,16 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
+#import <AVFoundation/AVFoundation.h>
+#import <TargetConditionals.h>
 #include <locale.h>
 
 #include <hltypes/hlog.h>
-
-#import <AVFoundation/AVFoundation.h>
-#import <TargetConditionals.h>
 
 #import "ApriliOSAppDelegate.h"
 #import "main_base.h"
 #import "AprilViewController.h"
 #import "EAGLView.h"
-
 #include "Application.h"
 #include "april.h"
 #include "iOS_Window.h"
@@ -52,7 +50,6 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 	NSLog(@"[april] iOS Simulator document location: %@",[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject]);
 #endif
 	[[NSFileManager defaultManager] changeCurrentDirectoryPath: [[NSBundle mainBundle] resourcePath]];
-
     // figure out prefered app orientations
     NSArray* orientations = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UISupportedInterfaceOrientations"];
     if (orientations != nil)
@@ -84,42 +81,32 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 	CGRect frame = getScreenBounds();
 	uiwnd = [[UIWindow alloc] initWithFrame:frame];
 	uiwnd.autoresizesSubviews = YES;
-
 	// viewcontroller will automatically add imageview
 	viewController = [[AprilViewController alloc] init];
-
 	if ([uiwnd respondsToSelector: @selector(rootViewController)])
+	{
 		uiwnd.rootViewController = viewController; // only available on iOS4+, required on iOS6+
+	}
 	else
+	{
 		[uiwnd addSubview:viewController.view];
-
+	}
 	// set window color
 	[uiwnd setBackgroundColor:[UIColor blackColor]];
-	
 	april::Window::handleLaunchCallback(viewController);
-	
 	// display the window
 	[uiwnd makeKeyAndVisible];
-
 	//////////
 	// thanks to Kyle Poole for this trick
 	// also used in latest SDL
 	// quote:
 	// KP: using a selector gets around the "failed to launch application in time" if the startup code takes too long
 	[self performSelector:@selector(performInit:) withObject:nil afterDelay:0.2f];
-	
     return YES;
 }
 
 - (void)performInit:(id)object
 {
-	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-	//NSAutoreleasePool *pool = [NSAutoreleasePool new];
-	harray<hstr> args;
-	args += ""; // unable to determine executable name, but due to convention, leave one argument filled
-	april::application->setArgs(args);
-	april::application->init();
-	[pool drain];
 	((EAGLView*)viewController.view)->app_started = 1;
 	[(EAGLView*)viewController.view startAnimation];
 }
@@ -147,9 +134,6 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 	}
 	april::application->finish();
 	april::application->updateFinishing();
-	april::application->destroy();
-	delete april::application;
-	april::application = NULL;
 }
 
 - (NSUInteger)application:(UIApplication*)application supportedInterfaceOrientationsForWindow:(UIWindow*)window
@@ -195,7 +179,6 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 			}
 		}
 	}
-	
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application

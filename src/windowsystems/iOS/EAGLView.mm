@@ -13,10 +13,10 @@
 #import <QuartzCore/QuartzCore.h>
 #import <OpenGLES/EAGLDrawable.h>
 
-#import "EAGLView.h"
-
 #include <hltypes/hlog.h>
 
+#import "EAGLView.h"
+#include "Application.h"
 #include "april.h"
 #include "iOS_Window.h"
 #include "Keys.h"
@@ -55,30 +55,38 @@
 // Handles the start of a touch
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	if (april::window)
+	if (april::window != NULL)
+	{
 		aprilWindow->touchesBegan_withEvent_(touches, event);
+	}
 }
 
 // Handles the end of a touch event when the touch is a tap.
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	if (april::window)
+	if (april::window != NULL)
+	{
 		aprilWindow->touchesEnded_withEvent_(touches, event);
+	}
 }
 
 // Called if touches are cancelled and need to be undone. 
 // On iPhone, happens when 5 fingers are pressed.
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	if (april::window)
+	if (april::window != NULL)
+	{
 		aprilWindow->touchesCancelled_withEvent_(touches, event);
+	}
 }
 
 // Handles the movement of a touch event. 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	if (april::window)
+	if (april::window != NULL)
+	{
 		aprilWindow->touchesMoved_withEvent_(touches, event);
+	}
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -91,7 +99,6 @@
 		displayLinkAttached = false;
 		// Get the layer
 		CAEAGLLayer* eaglLayer = (CAEAGLLayer*) self.layer;
-		
 #if __IPHONE_3_2 //__IPHONE_OS_VERSION_MIN_REQUIRED >= 30200
 		if ([eaglLayer respondsToSelector:@selector(setContentsScale:)])
 		{
@@ -132,12 +139,10 @@
 		textField.returnKeyType = UIReturnKeyDone;
 		textField.secureTextEntry = NO;
 		[self addSubview:textField];
-
 		// tracking of keyboard appearance/disappearance
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(keyboardWasShown:)
 													 name:UIKeyboardDidShowNotification object:nil];
-		
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(keyboardWasHidden:)
 													 name:UIKeyboardDidHideNotification object:nil];
@@ -148,10 +153,9 @@
 												 selector:@selector(deviceOrientationDidChange:)
 													 name:UIDeviceOrientationDidChangeNotification 
 												   object:nil];
-		
 		[textField addTarget:self
-						   action:@selector(textFieldFinished:)
-							forControlEvents:UIControlEventEditingDidEndOnExit];
+					  action:@selector(textFieldFinished:)
+			forControlEvents:UIControlEventEditingDidEndOnExit];
 		self.sensorManager = [[CMMotionManager alloc] init];
 		// 60 FPS
 		self.sensorManager.deviceMotionUpdateInterval = 0.016666667f;
@@ -161,9 +165,8 @@
 		april::init(april::RenderSystemType::Default, april::WindowType::Default);
 		april::createRenderSystem();
 		april::createWindow(0, 0, true, "iOS Window");
-		april::rendersys->assignWindow(april::window);
+		april::rendersys->update(0.0f);
 	}
-	
 	return self;
 }
 
@@ -183,7 +186,7 @@
 
 - (void)keyboardWasShown:(NSNotification*)notification
 {
-	if (april::window)
+	if (april::window != NULL)
 	{
 		NSDictionary* info = [notification userInfo];
 		CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
@@ -197,13 +200,14 @@
 
 - (void)keyboardWasHidden:(id)sender
 {
-	if (april::window)
+	if (april::window != NULL)
+	{
 		aprilWindow->keyboardWasHidden();
+	}
 }
 
 -(void)deviceOrientationDidChange:(id)sender
 {
-
 }
 
 - (void)drawView:(CADisplayLink*) link
@@ -215,14 +219,16 @@
 #endif
         return;
     }
-
     [EAGLContext setCurrentContext:context];
-	
-	if (april::window != NULL)
-    {
+	if (april::application != NULL)
+	{
 		[self updateSensors];
-        aprilWindow->handleDisplayAndUpdate();
-    }
+		april::application->update();
+		if (april::application->getState() != april::Application::State::Running)
+		{
+			april::application->finish();
+		}
+	}
 	if (frameInterval != link.frameInterval)
 	{
 		[link setFrameInterval:frameInterval];
@@ -303,9 +309,7 @@
 
 - (void)_paintRect:(GLfloat[])vertices
 {
-	
 }
-
 
 - (void)swapBuffers
 {
@@ -325,7 +329,6 @@
 	CGRect textFrame = textField.frame;
 	textFrame.origin.x += textFrame.size.width;
 	textField.frame = textFrame;
-	
 	[EAGLContext setCurrentContext:context];
 	[self destroyFramebuffer];
 	[self createFramebuffer];
@@ -335,18 +338,13 @@
 {
 	glGenFramebuffersOES(1, &viewFramebuffer);
 	glGenRenderbuffersOES(1, &viewRenderbuffer);
-	
 	glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
 	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
 	[context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:(CAEAGLLayer*)self.layer];
 	glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, viewRenderbuffer);
-	
 	glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
 	glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
-	
-	
 	NSString* depth = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"april_depth_buffer"];
-	
 	if (depth != nil)
 	{
 		glGenRenderbuffersOES(1, &depthRenderbuffer);
@@ -354,8 +352,7 @@
 		glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
 		glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
 	}
-	
-	if(glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
+	if (glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
 	{
 		hlog::writef(april::logTag, "failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
 		return NO;
@@ -374,8 +371,7 @@
 	viewFramebuffer = 0;
 	glDeleteRenderbuffersOES(1, &viewRenderbuffer);
 	viewRenderbuffer = 0;
-	
-	if(depthRenderbuffer)
+	if (depthRenderbuffer)
 	{
 		glDeleteRenderbuffersOES(1, &depthRenderbuffer);
 		depthRenderbuffer = 0;
@@ -384,8 +380,10 @@
 
 - (void)startAnimation
 {
-	if (!app_started) return;
-
+	if (!app_started)
+	{
+		return;
+	}
 	if (self.displayLink == nil)
 	{
 		self.displayLink = [[CADisplayLink displayLinkWithTarget:self selector:@selector(drawView:)] retain];
@@ -410,20 +408,17 @@
 - (void)dealloc
 {
 	[self stopAnimation];
-
 	if (self.displayLink != nil)
 	{
 		[self.displayLink invalidate];
 		[self.displayLink release];
 		self.displayLink = nil;
 	}
-
 	if ([EAGLContext currentContext] == context)
 	{
 		[EAGLContext setCurrentContext:nil];
 	}
-	
-	[context release];  
+	[context release];
 	[super dealloc];
 }
 
@@ -444,31 +439,43 @@
 
 - (BOOL)textField:(UITextField *)_textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string   // return NO to not change text
 {
-	if (april::window == NULL) return NO;
+	if (april::window == NULL)
+	{
+		return NO;
+	}
 	hstr str = chstr([string UTF8String]);
-	if (range.length == 1 && str.size() == 0) aprilWindow->injectiOSChar(0); // backspace indicator
-	else if (str.size() == 0) return NO;
+	if (range.length == 1 && str.size() == 0)
+	{
+		aprilWindow->injectChar(0); // backspace indicator
+	}
+	else if (str.size() == 0)
+	{
+		return NO;
+	}
 	unichar chars[256];
 	[string getCharacters:chars];
-	int len = (int)[string length];
-	
-	for (int i = 0; i < len; i++)
+	int size = (int)[string length];
+	for_iter (i, 0, size)
 	{
-		aprilWindow->injectiOSChar(chars[i]);
+		aprilWindow->injectChar(chars[i]);
 	}
 	return NO;
 }
 
 -(void)applicationDidBecomeActive:(UIApplication*)app
 {
-	if (april::window)
+	if (april::window != NULL)
+	{
 		aprilWindow->applicationDidBecomeActive();
+	}
 }
 
 -(void)applicationWillResignActive:(UIApplication*)app
 {
-	if (april::window)
+	if (april::window != NULL)
+	{
 		aprilWindow->applicationWillResignActive();
+	}
 }
 
 - (void)setUpdateInterval:(int)interval

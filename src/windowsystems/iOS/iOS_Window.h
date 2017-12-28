@@ -55,7 +55,7 @@ namespace april
 		void touchesMoved_withEvent_(void* nssetTouches, void* uieventEvent);
 		void touchesCancelled_withEvent_(void* nssetTouches, void* uieventEvent);
 		
-		void injectiOSChar(unsigned int inputChar);
+		void injectChar(unsigned int inputChar);
 		
 		void setDeviceOrientationCallback(void (*do_callback)());
 		void applicationWillResignActive();

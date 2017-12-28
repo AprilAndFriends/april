@@ -310,7 +310,7 @@ namespace april
 		}
 	}
 	
-	// TODOa - maybe this should be handle here and instead the Window superclass should keep handling this like in other implementations
+	// TODOx - maybe this should be handled here and instead the Window superclass should keep handling this like in other implementations
 	bool iOS_Window::isVirtualKeyboardVisible() const
 	{
 		return [glview isVirtualKeyboardVisible];
@@ -326,7 +326,7 @@ namespace april
 		this->keyboardRequest = -1;
 	}
 	
-	void iOS_Window::injectiOSChar(unsigned int inputChar)
+	void iOS_Window::injectChar(unsigned int inputChar)
 	{
 		if (inputChar == 0)
 		{
