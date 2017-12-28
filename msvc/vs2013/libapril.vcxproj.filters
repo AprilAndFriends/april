@@ -108,11 +108,17 @@
     <Filter Include="Source Files\rendersystems\OpenGL\GL\1">
       <UniqueIdentifier>{9928026c-27fb-4619-aa07-f9c4c33d2e8b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\rendercommands">
+    <Filter Include="Header Files\async">
+      <UniqueIdentifier>{b81de23f-99b9-4b7b-a434-c733c90dad2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\async">
       <UniqueIdentifier>{131cd70d-b6fb-478c-ad07-1cc4e12b9311}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\rendercommands">
-      <UniqueIdentifier>{b81de23f-99b9-4b7b-a434-c733c90dad2d}</UniqueIdentifier>
+    <Filter Include="Header Files\events">
+      <UniqueIdentifier>{9e7645e3-c63e-47e2-98b0-b5881b734d13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\events">
+      <UniqueIdentifier>{f276082f-b9c1-47ee-93ee-47e1c2e42537}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -209,10 +215,10 @@
     <ClCompile Include="..\..\src\delegates\EventDelegate.cpp">
       <Filter>Source Files\delegates</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\delegates\InputDelegate.cpp">
+    <ClCompile Include="..\..\src\delegates\KeyDelegate.cpp">
       <Filter>Source Files\delegates</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\delegates\KeyboardDelegate.cpp">
+    <ClCompile Include="..\..\src\delegates\InputDelegate.cpp">
       <Filter>Source Files\delegates</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\delegates\MotionDelegate.cpp">
@@ -329,20 +335,77 @@
     <ClCompile Include="..\..\src\Keys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\rendercommands\RenderCommand.cpp">
-      <Filter>Source Files\rendercommands</Filter>
+    <ClCompile Include="..\..\src\async\AsyncCommand.cpp">
+      <Filter>Source Files\async</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\rendercommands\ClearCommand.cpp">
-      <Filter>Source Files\rendercommands</Filter>
+    <ClCompile Include="..\..\src\async\AsyncCommandQueue.cpp">
+      <Filter>Source Files\async</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\rendercommands\RenderCommandQueue.cpp">
-      <Filter>Source Files\rendercommands</Filter>
+    <ClCompile Include="..\..\src\async\ClearColorCommand.cpp">
+      <Filter>Source Files\async</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\rendercommands\ClearColorCommand.cpp">
-      <Filter>Source Files\rendercommands</Filter>
+    <ClCompile Include="..\..\src\async\ClearCommand.cpp">
+      <Filter>Source Files\async</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\rendercommands\ClearDepthCommand.cpp">
-      <Filter>Source Files\rendercommands</Filter>
+    <ClCompile Include="..\..\src\async\ClearDepthCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\PresentFrameCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\RenderCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\ResetCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\StateUpdateCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\SuspendCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\DestroyCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\CreateCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\AssignWindowCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\CreateWindowCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\DestroyWindowCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\UnassignWindowCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\events\KeyEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\events\MouseEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\events\TouchEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\events\ControllerEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\events\MotionEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\events\GenericEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\async\DestroyTextureCommand.cpp">
+      <Filter>Source Files\async</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -427,10 +490,10 @@
     <ClInclude Include="..\..\include\april\EventDelegate.h">
       <Filter>Header Files\delegates</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\april\InputDelegate.h">
+    <ClInclude Include="..\..\include\april\KeyDelegate.h">
       <Filter>Header Files\delegates</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\april\KeyboardDelegate.h">
+    <ClInclude Include="..\..\include\april\InputDelegate.h">
       <Filter>Header Files\delegates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\MotionDelegate.h">
@@ -547,26 +610,86 @@
     <ClInclude Include="..\..\include\april\InputMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\rendercommands\ClearCommand.h">
-      <Filter>Header Files\rendercommands</Filter>
+    <ClInclude Include="..\..\src\async\AsyncCommand.h">
+      <Filter>Header Files\async</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\rendercommands\RenderCommand.h">
-      <Filter>Header Files\rendercommands</Filter>
+    <ClInclude Include="..\..\src\async\AsyncCommandQueue.h">
+      <Filter>Header Files\async</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\rendercommands\RenderCommandQueue.h">
-      <Filter>Header Files\rendercommands</Filter>
+    <ClInclude Include="..\..\src\async\AsyncCommands.h">
+      <Filter>Header Files\async</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\rendercommands\ClearColorCommand.h">
-      <Filter>Header Files\rendercommands</Filter>
+    <ClInclude Include="..\..\src\async\ClearColorCommand.h">
+      <Filter>Header Files\async</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\rendercommands\ClearDepthCommand.h">
-      <Filter>Header Files\rendercommands</Filter>
+    <ClInclude Include="..\..\src\async\ClearCommand.h">
+      <Filter>Header Files\async</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\rendercommands\RenderCommands.h">
-      <Filter>Header Files\rendercommands</Filter>
+    <ClInclude Include="..\..\src\async\ClearDepthCommand.h">
+      <Filter>Header Files\async</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\rendercommands\VertexRenderCommand.h">
-      <Filter>Header Files\rendercommands</Filter>
+    <ClInclude Include="..\..\src\async\PresentFrameCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\RenderCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\ResetCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\StateUpdateCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\SuspendCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\VertexRenderCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\CreateCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\DestroyCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\AssignWindowCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\Application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\UnassignWindowCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\DestroyWindowCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\CreateWindowCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\MouseEvent.h">
+      <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\TouchEvent.h">
+      <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\ControllerEvent.h">
+      <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\KeyEvent.h">
+      <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\MotionEvent.h">
+      <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\Events.h">
+      <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\GenericEvent.h">
+      <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\DestroyTextureCommand.h">
+      <Filter>Header Files\async</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

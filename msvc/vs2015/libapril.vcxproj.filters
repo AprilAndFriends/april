@@ -215,6 +215,9 @@
     <ClCompile Include="..\..\src\delegates\EventDelegate.cpp">
       <Filter>Source Files\delegates</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\delegates\KeyDelegate.cpp">
+      <Filter>Source Files\delegates</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\delegates\InputDelegate.cpp">
       <Filter>Source Files\delegates</Filter>
     </ClCompile>
@@ -395,9 +398,6 @@
     <ClCompile Include="..\..\src\events\ControllerEvent.cpp">
       <Filter>Source Files\events</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\delegates\KeyDelegate.cpp">
-      <Filter>Source Files\delegates</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\events\MotionEvent.cpp">
       <Filter>Source Files\events</Filter>
     </ClCompile>
@@ -488,6 +488,9 @@
       <Filter>Header Files\delegates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\EventDelegate.h">
+      <Filter>Header Files\delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\KeyDelegate.h">
       <Filter>Header Files\delegates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\InputDelegate.h">
@@ -675,9 +678,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\april\KeyEvent.h">
       <Filter>Header Files\events</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\april\KeyDelegate.h">
-      <Filter>Header Files\delegates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\april\MotionEvent.h">
       <Filter>Header Files\events</Filter>
