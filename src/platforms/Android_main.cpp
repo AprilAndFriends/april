@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -121,13 +121,13 @@ namespace april
 			try
 			{
 				april::application->update();
-				return (april::application->getState() == april::Application::State::Running);
 			}
 			catch (hexception& e)
 			{
 				hlog::error("FATAL", e.getFullMessage());
 				throw e;
 			}
+			return (april::application->getState() == april::Application::State::Running);
 		}
 		return false;
 	}
