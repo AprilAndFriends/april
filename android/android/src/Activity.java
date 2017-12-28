@@ -423,8 +423,8 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		{
 			this.callbacksOnDestroy.get(i).execute();
 		}
-		NativeInterface.activityOnDestroy();
 		NativeInterface.destroy();
+		NativeInterface.activityOnDestroy();
 		NativeInterface.reset();
 		super.onDestroy();
 		if (this.useHardExit)

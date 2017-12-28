@@ -437,7 +437,7 @@ namespace april
 		// no lock required since it only checks for existence, not for manipulation of data
 		if (this->data != NULL) // reload from memory
 		{
-			hlog::write(logTag, "Loading texture: " + this->_getInternalName());
+			hlog::write(logTag, "Uploading texture: " + this->_getInternalName());
 			currentData = this->data;
 			size = this->getByteSize();
 		}
@@ -449,7 +449,7 @@ namespace april
 		}
 		else
 		{
-			hlog::write(logTag, "Loading texture: " + this->_getInternalName());
+			hlog::write(logTag, "Uploading texture: " + this->_getInternalName());
 		}
 		lock.release();
 		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
@@ -533,7 +533,6 @@ namespace april
 			// TODOx - remove condition
 			if (/*this->type != Type::Volatile && this->type != Type::RenderTarget &&*/ (this->type != Type::Immutable || this->filename == ""))
 			{
-				lock.acquire(&this->asyncDataMutex);
 				if (this->data != currentData)
 				{
 					if (this->data != NULL)

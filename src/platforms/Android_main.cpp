@@ -103,12 +103,14 @@ namespace april
 	
 	void JNICALL _JNI_destroy(JNIEnv* env, jclass classe)
 	{
+		april::application->updateFinishing();
 		april::application->destroy();
 		if (april::application != NULL)
 		{
 			delete april::application;
 			april::application = NULL;
 		}
+		// nothing else may be called here, because this code is called from the Android UI thread
 	}
 	
 	bool JNICALL _JNI_update(JNIEnv* env, jclass classe)
@@ -119,13 +121,16 @@ namespace april
 			try
 			{
 				april::application->update();
+				if (april::application->getState() == april::Application::State::Running)
+				{
+					return true;
+				}
 			}
 			catch (hexception& e)
 			{
 				hlog::error("FATAL", e.getFullMessage());
 				throw e;
 			}
-			return (april::application->getState() == april::Application::State::Running);
 		}
 		return false;
 	}
@@ -236,13 +241,13 @@ namespace april
 	{
 		hlog::write(logTag, "Android Activity::onResume()");
 		PROTECTED_APPLICATION_CALL(resume());
-		PROTECTED_WINDOW_CALL(handleActivityChange(true));
+		PROTECTED_WINDOW_CALL(queueActivityChange(true));
 	}
 	
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onPause()");
-		PROTECTED_WINDOW_CALL(handleActivityChange(false));
+		PROTECTED_WINDOW_CALL(queueActivityChange(false));
 		PROTECTED_RENDERSYS_CALL(suspend());
 		PROTECTED_APPLICATION_CALL(suspend());
 	}
@@ -250,6 +255,7 @@ namespace april
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onStop()");
+		// nothing else may be called here, because this code is called from the Android UI thread
 	}
 	
 	void JNICALL _JNI_activityOnDestroy(JNIEnv* env, jclass classe)
@@ -260,6 +266,7 @@ namespace april
 			env->DeleteGlobalRef(april::classLoader);
 			april::classLoader = NULL;
 		}
+		// nothing else may be called here, because this code is called from the Android UI thread
 	}
 	
 	void JNICALL _JNI_activityOnRestart(JNIEnv* env, jclass classe)

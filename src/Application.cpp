@@ -9,6 +9,9 @@
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
+#ifdef _ANDROID
+#include "androidUtilJNI.h"
+#endif
 #include "april.h"
 #include "Application.h"
 #include "main_base.h"
@@ -19,6 +22,10 @@
 
 namespace april
 {
+#ifdef _ANDROID
+	extern void* javaVM;
+#endif
+
 	HL_ENUM_CLASS_DEFINE(Application::State,
 	(
 		HL_ENUM_DEFINE(Application::State, Idle);
@@ -60,17 +67,9 @@ namespace april
 
 	void Application::destroy()
 	{
-		// processing remaining commands from other thread
-		while (this->state == State::Stopping)
-		{
-			this->_updateSystem();
-		}
-		// finish everything up
-		this->_updateSystem();
-		// done
 		this->state = State::Idle;
+		this->resume(); // makes sure the update thread can resume
 		this->updateThread.join();
-		april::rendersys->_flushAsyncCommands();
 	}
 
 	void Application::enterMainLoop()
@@ -82,6 +81,21 @@ namespace april
 		{
 			this->update();
 		}
+		this->updateFinishing();
+	}
+
+	void Application::updateFinishing()
+	{
+		// processing remaining commands from other thread
+		while (this->state == State::Stopping)
+		{
+			this->_updateSystem();
+		}
+		// finish everything up
+		this->_updateSystem();
+		april::rendersys->_flushAsyncCommands();
+		// done
+		this->state = State::Idle;
 	}
 
 	void Application::update()
@@ -158,6 +172,9 @@ namespace april
 	void Application::_asyncUpdate(hthread* thread)
 	{
 		(*april::application->aprilApplicationInit)();
+#ifdef _ANDROID
+		getJNIEnv(); // attaches thread to Java VM;
+#endif
 		april::application->state = State::Running;
 		float timeDelta = 0.0f;
 		UpdateDelegate* updateDelegate = NULL;
@@ -192,6 +209,9 @@ namespace april
 			}
 		}
 		(*april::application->aprilApplicationDestroy)();
+#ifdef _ANDROID
+		((JavaVM*)april::javaVM)->DetachCurrentThread();
+#endif
 	}
 
 	void Application::suspend()

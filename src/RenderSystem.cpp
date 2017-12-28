@@ -566,6 +566,10 @@ namespace april
 
 	void RenderSystem::destroyTexture(Texture* texture)
 	{
+		if (texture == NULL)
+		{
+			throw Exception("Cannot call destroyTexture(), texture is NULL!");
+		}
 		if (this->renderHelper != NULL)
 		{
 			this->renderHelper->flush();

@@ -85,6 +85,9 @@ namespace april
 		/// @brief Performs the update of one frame.
 		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.
 		void update();
+		/// @brief Performs the update when finishing.
+		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.
+		void updateFinishing();
 		/// @brief Finishes the main loop.
 		void finish();
 		/// @brief Finalizes the application process so all threads can finish up.
