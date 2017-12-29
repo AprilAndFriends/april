@@ -1296,7 +1296,6 @@ namespace april
 		{
 			hthread::sleep(0.1f);
 			time -= 0.0001f;
-			TextureAsync::update();
 		}
 	}
 

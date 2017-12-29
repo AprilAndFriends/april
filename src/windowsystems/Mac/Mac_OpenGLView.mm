@@ -196,6 +196,12 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 		}
 		mStartedDrawing = false;
 	}
+	if (MAC_WINDOW->messageBoxQueue.size() > 0)
+	{
+#define ns(s) [NSString stringWithUTF8String:s.cStr()]
+		april::Mac_Window::MessageBoxData data = MAC_WINDOW->messageBoxQueue.removeFirst();
+		[AprilCocoaWindow showAlertView:ns(data.title) button1:ns(data.buttons[0]) button2:ns(data.buttons[1]) button3:ns(data.buttons[2]) btn1_t:data.buttonTypes[0] btn2_t:data.buttonTypes[1] btn3_t:data.buttonTypes[2] text:ns(data.text) callback:data.callback];
+	}
 }
 
 -(void)drawRect:(NSRect)dirtyRect

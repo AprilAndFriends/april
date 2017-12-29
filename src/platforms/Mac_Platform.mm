@@ -220,7 +220,7 @@ namespace april
 			printf("ERROR: %s\n", text.cStr());
 			exit(1);
 		}
-        MAC_WINDOW->queueMessageBox(title, argButtons, argButtonTypes, text, callback);
+        MAC_WINDOW->queueMessageBox(title, text, argButtons, argButtonTypes, callback);
 	}
 	
 }

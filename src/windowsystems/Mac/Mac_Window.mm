@@ -55,6 +55,15 @@ namespace april
 	{
 		return (gView != NULL && gView->mDisplayLink != nil);
 	}
+	
+	Mac_Window::MessageBoxData::MessageBoxData(chstr title, chstr text, harray<hstr> buttons, harray<MessageBoxButton> buttonTypes, void (*callback)(MessageBoxButton))
+	{
+		this->title = title;
+		this->text = text;
+		this->buttons = buttons;
+		this->buttonTypes = buttonTypes;
+		this->callback = callback;
+	}
 
 	Mac_Window::Mac_Window() : Window()
 	{
@@ -427,10 +436,9 @@ namespace april
 		}
 	}
 	
-	void Mac_Window::queueMessageBox(chstr title, harray<hstr> argButtons, harray<MessageBoxButton> argButtonTypes, chstr text, void (*callback)(MessageBoxButton))
+	void Mac_Window::queueMessageBox(chstr title, chstr text, harray<hstr> buttons, harray<MessageBoxButton> buttonTypes, void (*callback)(MessageBoxButton))
 	{
-#define ns(s) [NSString stringWithUTF8String:s.cStr()]
-		[AprilCocoaWindow showAlertView:ns(title) button1:ns(argButtons[0]) button2:ns(argButtons[1]) button3:ns(argButtons[2]) btn1_t:argButtonTypes[0] btn2_t:argButtonTypes[1] btn3_t:argButtonTypes[2] text:ns(text) callback:callback];
+		this->messageBoxQueue += MessageBoxData(title, text, buttons, buttonTypes, callback);
 	}
 	
 	Cursor* Mac_Window::_createCursor(bool fromResource)
