@@ -11,9 +11,8 @@
 
 namespace april
 {
-	DestroyTextureCommand::DestroyTextureCommand(Texture* texture) : AsyncCommand()
+	DestroyTextureCommand::DestroyTextureCommand(Texture* texture) : UnloadTextureCommand(texture)
 	{
-		this->texture = texture;
 	}
 
 	DestroyTextureCommand::~DestroyTextureCommand()
@@ -25,7 +24,7 @@ namespace april
 	{
 		if (this->texture != NULL)
 		{
-			this->texture->_deviceUnloadTexture();
+			UnloadTextureCommand::execute();
 			this->texture->waitForAsyncLoad(); // waiting for all async stuff to finish
 			delete this->texture;
 			this->texture = NULL;

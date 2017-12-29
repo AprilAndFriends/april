@@ -97,23 +97,6 @@ namespace april
 		this->renderTarget = false;
 	}
 
-	void Texture::Lock::activateRenderTarget(int x, int y, int w, int h, int dx, int dy, unsigned char* data, int dataWidth, int dataHeight, Image::Format format)
-	{
-		this->x = x;
-		this->y = y;
-		this->w = w;
-		this->h = h;
-		this->dx = dx;
-		this->dy = dy;
-		this->data = data;
-		this->dataWidth = dataWidth;
-		this->dataHeight = dataHeight;
-		this->format = format;
-		this->locked = true;
-		this->failed = false;
-		this->renderTarget = true;
-	}
-
 	Texture::Texture(bool fromResource)
 	{
 		this->filename = "";
@@ -209,11 +192,11 @@ namespace april
 	Texture::~Texture()
 	{
 		hmutex::ScopeLock lockData(&this->asyncDataMutex);
-		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->data != NULL)
 		{
 			delete[] this->data;
 		}
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		this->asyncLoadQueued = false;
 		this->asyncLoadDiscarded = false;
 		if (this->dataAsync != NULL)
@@ -225,7 +208,6 @@ namespace april
 	void Texture::_deviceUnloadTexture()
 	{
 		this->_deviceDestroyTexture();
-		hmutex::ScopeLock lockData(&this->asyncDataMutex);
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		this->loaded = false;
 		if (this->asyncLoadQueued)
@@ -238,7 +220,6 @@ namespace april
 			this->dataAsync = NULL;
 		}
 		this->firstUpload = true;
-		this->dirty = false;
 	}
 
 	int Texture::getWidth() const
@@ -405,16 +386,18 @@ namespace april
 
 	bool Texture::loadMetaData()
 	{
-		hmutex::ScopeLock lockData(&this->asyncDataMutex);
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->loaded)
 		{
 			return true;
 		}
-		bool hasData = (this->data != NULL || this->dataAsync != NULL);
-		lock.release();
+		hmutex::ScopeLock lockData(&this->asyncDataMutex);
+		if (this->data != NULL || this->dataAsync != NULL)
+		{
+			return true;
+		}
 		lockData.release();
-		return (hasData || this->_loadMetaData());
+		return this->_loadMetaData();
 	}
 
 	bool Texture::_loadMetaData()
@@ -454,8 +437,7 @@ namespace april
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->loaded)
 		{
-			lock.release();
-			this->_tryUploadDataToGpu();
+			this->_tryUploadDataToGpu(); // upload any additional changes
 			return true;
 		}
 		this->asyncLoadDiscarded = false; // a possible previous unload call must be canceled
@@ -671,40 +653,33 @@ namespace april
 	hstream* Texture::_prepareAsyncStream()
 	{
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
-		if (!this->asyncLoadQueued || this->asyncLoadDiscarded)
+		if (!this->asyncLoadQueued || this->asyncLoadDiscarded || this->filename == "")
 		{
 			this->asyncLoadQueued = false;
 			this->asyncLoadDiscarded = false;
 			return NULL;
 		}
 		lock.release();
-		hstream* stream = NULL;
-		if (this->filename != "")
+		hstream* stream = new hstream();
+		if (this->fromResource)
 		{
-			stream = new hstream();
-			if (this->fromResource)
-			{
-				hresource file;
-				file.open(this->filename);
-				stream->writeRaw(file);
-			}
-			else
-			{
-				hfile file;
-				file.open(this->filename);
-				stream->writeRaw(file);
-			}
-			stream->rewind();
+			hresource file;
+			file.open(this->filename);
+			stream->writeRaw(file);
 		}
+		else
+		{
+			hfile file;
+			file.open(this->filename);
+			stream->writeRaw(file);
+		}
+		stream->rewind();
 		lock.acquire(&this->asyncLoadMutex);
 		if (!this->asyncLoadQueued || this->asyncLoadDiscarded)
 		{
 			this->asyncLoadQueued = false;
 			this->asyncLoadDiscarded = false;
-			if (stream != NULL)
-			{
-				delete stream;
-			}
+			delete stream;
 			return NULL;
 		}
 		return stream;
@@ -721,17 +696,6 @@ namespace april
 		}
 		lock.release();
 		hlog::write(logTag, "Loading async texture: " + this->_getInternalName());
-		if (stream == NULL) // uses data in RAM
-		{
-			lock.acquire(&this->asyncLoadMutex);
-			if (this->asyncLoadQueued && !this->asyncLoadDiscarded)
-			{
-				this->_assignFormat();
-			}
-			this->asyncLoadQueued = false;
-			this->asyncLoadDiscarded = false;
-			return;
-		}
 		// must not call createFromStream() that converts automatically, because _processImageFormatSupport() needs to be called first
 		Image* image = Image::createFromStream(*(hsbase*)stream, "." + hfile::extensionOf(this->filename));
 		if (image != NULL)
@@ -849,6 +813,7 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + this->_getInternalName());
 			return color;
 		}
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		if (this->data != NULL)
 		{
 			color = Image::getPixel(x, y, this->data, this->width, this->height, this->format);
@@ -887,6 +852,7 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + this->_getInternalName());
 			return color;
 		}
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		if (this->data != NULL)
 		{
 			color = Image::getInterpolatedPixel(x, y, this->data, this->width, this->height, this->format);

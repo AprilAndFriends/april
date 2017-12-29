@@ -663,8 +663,6 @@ namespace april
 			void activateFail();
 			/// @brief Marks the lock as successful and stores the lock data. This has to be called on non-render targets.
 			void activateLock(int x, int y, int w, int h, int dx, int dy, unsigned char* data, int dataWidth, int dataHeight, Image::Format format);
-			/// @brief Marks the lock as successful and stores the lock data. This has to be called on't a render target.
-			void activateRenderTarget(int x, int y, int w, int h, int dx, int dy, unsigned char* data, int dataWidth, int dataHeight, Image::Format format);
 
 		};
 

@@ -13,25 +13,21 @@
 #ifndef APRIL_DESTROY_TEXTURE_COMMAND_H
 #define APRIL_DESTROY_TEXTURE_COMMAND_H
 
-#include "AsyncCommand.h"
+#include "UnloadTextureCommand.h"
 
 namespace april
 {
 	class Texture;
 
-	class DestroyTextureCommand : public AsyncCommand
+	class DestroyTextureCommand : public UnloadTextureCommand
 	{
 	public:
 		DestroyTextureCommand(Texture* texture);
 		~DestroyTextureCommand();
 
-		bool isFinalizer() const { return true; }
 		bool isSystemCommand() const { return true; }
 
 		void execute();
-
-	protected:
-		Texture* texture;
 
 	};
 
