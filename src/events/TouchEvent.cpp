@@ -10,10 +10,6 @@
 
 namespace april
 {
-	TouchEvent::TouchEvent()
-	{
-	}
-
 	TouchEvent::TouchEvent(const harray<gvec2>& touches)
 	{
 		this->touches = touches;

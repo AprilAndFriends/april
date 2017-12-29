@@ -16,10 +16,6 @@ namespace april
 		this->state = state;
 	}
 	
-	RenderCommand::~RenderCommand()
-	{
-	}
-
 	void RenderCommand::execute()
 	{
 		april::rendersys->_updateDeviceState(&this->state);

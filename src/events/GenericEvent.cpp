@@ -21,10 +21,6 @@ namespace april
 		HL_ENUM_DEFINE(GenericEvent::Type, LowMemoryWarning);
 	));
 
-	GenericEvent::GenericEvent() : intValue(0), intValueOther(0), floatValue(0.0f), boolValue(false)
-	{
-	}
-
 	GenericEvent::GenericEvent(Type type) : intValue(0), intValueOther(0), floatValue(0.0f), boolValue(false)
 	{
 		this->type = type;

@@ -22,7 +22,6 @@ namespace april
 	{
 	public:
 		RenderCommand(const RenderState& state);
-		~RenderCommand();
 
 		bool isUseState() const { return true; }
 		

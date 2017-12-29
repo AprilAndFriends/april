@@ -42,9 +42,7 @@ namespace april
 		Key keyCode;
 		/// @brief The character Unicode value.
 		unsigned int charCode;
-			
-		/// @brief Basic constructor.
-		KeyEvent();
+
 		/// @brief Constructor.
 		/// @param[in] type The event type.
 		/// @param[in] keyCode The key code.

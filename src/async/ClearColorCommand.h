@@ -18,7 +18,7 @@
 
 namespace april
 {
-	class ClearColorCommand : public ClearCommand
+	class ClearColorCommand : public RenderCommand
 	{
 	public:
 		ClearColorCommand(const RenderState& state, const april::Color& color, bool useDepth);
@@ -27,6 +27,7 @@ namespace april
 
 	protected:
 		april::Color color;
+		bool useDepth;
 
 	};
 	

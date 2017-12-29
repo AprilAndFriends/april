@@ -52,9 +52,7 @@ namespace april
 		gvec2 position;
 		/// @brief The key code.
 		Key keyCode;
-			
-		/// @brief Basic constructor.
-		MouseEvent();
+		
 		/// @brief Constructor.
 		/// @param[in] type The event type.
 		/// @param[in] position The pointer position.

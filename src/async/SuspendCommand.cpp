@@ -13,7 +13,7 @@
 
 namespace april
 {
-	SuspendCommand::SuspendCommand(const RenderState& state) : RenderCommand(state)
+	SuspendCommand::SuspendCommand() : AsyncCommand()
 	{
 	}
 	

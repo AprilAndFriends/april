@@ -298,7 +298,7 @@ namespace april
 
 	void RenderSystem::suspend()
 	{
-		this->_addAsyncCommand(new SuspendCommand(*this->state));
+		this->_addAsyncCommand(new SuspendCommand());
 	}
 
 	void RenderSystem::_deviceSuspend()

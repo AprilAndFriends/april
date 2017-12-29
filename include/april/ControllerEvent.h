@@ -53,9 +53,7 @@ namespace april
 		Button buttonCode;
 		/// @brief axisValue The axis value.
 		float axisValue;
-			
-		/// @brief Basic constructor.
-		ControllerEvent();
+
 		/// @brief Constructor.
 		/// @param[in] type The event type.
 		/// @param[in] controllerIndex Index of the controller.

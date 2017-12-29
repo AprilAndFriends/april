@@ -50,8 +50,6 @@ namespace april
 		/// @brief Motion data vector.
 		gvec3 motionVector;
 
-		/// @brief Basic constructor.
-		MotionEvent();
 		/// @brief Constructor.
 		/// @param[in] type The event type.
 		/// @param[in] motionVector Motion data vector.

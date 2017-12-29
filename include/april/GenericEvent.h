@@ -66,8 +66,6 @@ namespace april
 		/// @brief A gvec2 value related to the event.
 		gvec2 gvec2Value;
 
-		/// @brief Basic constructor.
-		GenericEvent();
 		/// @brief Constructor.
 		/// @param[in] type The event type.
 		GenericEvent(Type type);

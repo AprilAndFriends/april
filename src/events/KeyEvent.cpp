@@ -16,13 +16,6 @@ namespace april
 		HL_ENUM_DEFINE(KeyEvent::Type, Up);
 	));
 
-	KeyEvent::KeyEvent()
-	{
-		this->type = Type::Up;
-		this->keyCode = Key::None;
-		this->charCode = 0;
-	}
-
 	KeyEvent::KeyEvent(Type type, Key keyCode, unsigned int charCode)
 	{
 		this->type = type;

@@ -17,10 +17,10 @@
 
 namespace april
 {
-	class SuspendCommand : public RenderCommand
+	class SuspendCommand : public AsyncCommand
 	{
 	public:
-		SuspendCommand(const RenderState& state);
+		SuspendCommand();
 
 		bool isFinalizer() const { return true; }
 		bool isSystemCommand() const { return true; }

@@ -19,12 +19,6 @@ namespace april
 		HL_ENUM_DEFINE(ControllerEvent::Type, Disconnected);
 	));
 
-	ControllerEvent::ControllerEvent()
-	{
-		this->type = Type::Up;
-		this->buttonCode = Button::None;
-	}
-
 	ControllerEvent::ControllerEvent(Type type, int controllerIndex, Button buttonCode, float axisValue)
 	{
 		this->type = type;

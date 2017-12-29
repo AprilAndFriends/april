@@ -21,15 +21,15 @@ namespace april
 	class CreateWindowCommand : public AsyncCommand
 	{
 	public:
-		CreateWindowCommand(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		CreateWindowCommand(int width, int height, bool fullscreen, chstr title, Window::Options options);
 
 		bool isSystemCommand() const { return true; }
 
 		void execute();
 
 	protected:
-		int w;
-		int h;
+		int width;
+		int height;
 		bool fullscreen;
 		hstr title;
 		Window::Options options;
