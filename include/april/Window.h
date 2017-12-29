@@ -158,7 +158,7 @@ namespace april
 		/// @brief The mouse input delegate.
 		HL_DEFINE_GETSET(MouseDelegate*, mouseDelegate, MouseDelegate);
 		/// @brief The keyboard input delegate.
-		HL_DEFINE_GETSET(KeyDelegate*, keyboardDelegate, KeyDelegate);
+		HL_DEFINE_GETSET(KeyDelegate*, keyDelegate, KeyDelegate);
 		/// @brief The touch input delegate.
 		HL_DEFINE_GETSET(TouchDelegate*, touchDelegate, TouchDelegate);
 		/// @brief The controller input delegate.
@@ -482,8 +482,8 @@ namespace april
 		UpdateDelegate* updateDelegate;
 		/// @brief The current mouse delegate.
 		MouseDelegate* mouseDelegate;
-		/// @brief The current keyboard delegate.
-		KeyDelegate* keyboardDelegate;
+		/// @brief The current key delegate.
+		KeyDelegate* keyDelegate;
 		/// @brief The current touch delegate.
 		TouchDelegate* touchDelegate;
 		/// @brief The current controller delegate.

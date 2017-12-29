@@ -71,10 +71,6 @@ namespace april
 			textureDesc.Usage = D3D11_USAGE_DYNAMIC;
 			textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		}
-		if (type == Type::RenderTarget)
-		{
-			textureDesc.BindFlags |= D3D11_BIND_RENDER_TARGET;
-		}
 		textureDesc.MiscFlags = 0;
 		textureDesc.MipLevels = 1;
 		textureDesc.ArraySize = 1;
@@ -107,20 +103,6 @@ namespace april
 		{
 			hlog::error(logTag, "Failed to create DX11 texture!");
 			return false;
-		}
-		if (this->type == Type::RenderTarget)
-		{
-			D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
-			renderTargetViewDesc.Format = textureDesc.Format;
-			renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-			renderTargetViewDesc.Texture2D.MipSlice = 0;
-			hr = APRIL_D3D_DEVICE->CreateRenderTargetView(this->d3dTexture.Get(),
-				&renderTargetViewDesc, &this->d3dRenderTargetView);
-			if (FAILED(hr))
-			{
-				hlog::error(logTag, "Failed to create render target view for texture with render-to-texture!");
-				return false;
-			}
 		}
 		// shader resource
 		D3D11_SHADER_RESOURCE_VIEW_DESC textureViewDesc;

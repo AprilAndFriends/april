@@ -175,7 +175,7 @@ namespace april
 		void _setDeviceBlendMode(const BlendMode& blendMode);
 		void _setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
 
-		void _updateDeviceState(bool forceUpdate);
+		void _updateDeviceState(RenderState* state, bool forceUpdate);
 		void _updateShader(bool forceUpdate);
 
 		void _deviceClear(bool depth);

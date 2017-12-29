@@ -29,15 +29,13 @@ namespace april
 		{
 			for_iter (i, 0, argc)
 			{
-				april::args += argv[i];
+				args += argv[i];
 			}
 		}
 		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
 		april::application->setArgs(args);
-		april::WinUWP::Init = aprilApplicationInit;
-		april::WinUWP::Destroy = aprilApplicationDestroy;
 #ifdef _WINRT_WINDOW
-		Application::Start(ref new ApplicationInitializationCallback(
+		Windows::UI::Xaml::Application::Start(ref new ApplicationInitializationCallback(
 			[](ApplicationInitializationCallbackParams^ p)
 			{
 				april::WinRT::App = ref new april::WinRT_XamlApp();

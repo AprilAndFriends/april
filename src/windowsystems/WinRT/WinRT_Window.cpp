@@ -39,27 +39,23 @@ namespace april
 		this->destroy();
 	}
 
-	bool WinRT_Window::_systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	void WinRT_Window::_systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options)
 	{
 		// WinRT window forces its own size
 		float dpiRatio = WinRT::getDpiRatio();
 		CoreWindow^ window = CoreWindow::GetForCurrentThread();
-		w = hround(window->Bounds.Width * dpiRatio);
-		h = hround(window->Bounds.Height * dpiRatio);
+		width = hround(window->Bounds.Width * dpiRatio);
+		height = hround(window->Bounds.Height * dpiRatio);
 		// WinRT 8.1 or earlier is always considered fullscreen
 		fullscreen = true;
-		if (!Window::_systemCreate(w, h, fullscreen, title, options))
-		{
-			return false;
-		}
-		this->width = w;
-		this->height = h;
+		Window::_systemCreate(width, height, fullscreen, title, options);
+		this->width = width;
+		this->height = height;
 		this->delaySplash = 0.0f;
 		this->backButtonSystemHandling = false;
 		this->cursorMappings.clear();
 		this->inputMode = InputMode::Touch;
 		this->setCursorVisible(true);
-		return true;
 	}
 	
 	hstr WinRT_Window::getParam(chstr param)
@@ -84,7 +80,7 @@ namespace april
 		{
 			return hstr(this->delaySplash);
 		}
-		return "";
+		return Window::getParam(param);
 	}
 
 	void WinRT_Window::setParam(chstr param, chstr value)
@@ -105,14 +101,18 @@ namespace april
 			}
 		}
 #else
-		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
+		else if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
 		{
 			this->backButtonSystemHandling = (value != "0");
 		}
 #endif
-		if (param == WINRT_DELAY_SPLASH)
+		else if (param == WINRT_DELAY_SPLASH)
 		{
 			this->delaySplash = (float)value;
+		}
+		else
+		{
+			Window::setParam(param, value);
 		}
 	}
 
@@ -131,25 +131,20 @@ namespace april
 	{
 	}
 
-	void WinRT_Window::setResolution(int w, int h, bool fullscreen)
+	void WinRT_Window::setResolution(int width, int height, bool fullscreen)
 	{
 	}
 
-	void WinRT_Window::changeSize(float w, float h)
+	void WinRT_Window::changeSize(float width, float height)
 	{
 		hlog::write(logTag, "april::getSystemInfo() in WinRT_Window::changeSize()");
 		april::getSystemInfo(); // so the displayResolution value gets updated
 		float dpiRatio = WinRT::getDpiRatio();
-		this->width = hround(w * dpiRatio);
-		this->height = hround(h * dpiRatio);
+		this->width = hround(width * dpiRatio);
+		this->height = hround(height * dpiRatio);
 		this->_setRenderSystemResolution();
 	}
 	
-	void WinRT_Window::terminateMainLoop()
-	{
-		this->running = false;
-	}
-
 	void WinRT_Window::showVirtualKeyboard()
 	{
 		WinRT::App->Overlay->showKeyboard();

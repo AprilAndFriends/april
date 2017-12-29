@@ -94,7 +94,7 @@ namespace april
 		this->virtualKeyboard = NULL;
 		this->updateDelegate = NULL;
 		this->mouseDelegate = NULL;
-		this->keyboardDelegate = NULL;
+		this->keyDelegate = NULL;
 		this->touchDelegate = NULL;
 		this->controllerDelegate = NULL;
 		this->motionDelegate = NULL;
@@ -170,7 +170,7 @@ namespace april
 		this->virtualKeyboard = NULL;
 		this->updateDelegate = NULL;
 		this->mouseDelegate = NULL;
-		this->keyboardDelegate = NULL;
+		this->keyDelegate = NULL;
 		this->touchDelegate = NULL;
 		this->controllerDelegate = NULL;
 		this->motionDelegate = NULL;
@@ -611,7 +611,7 @@ namespace april
 
 	void Window::handleKeyOnlyInput(KeyEvent::Type type, Key keyCode)
 	{
-		if (this->keyboardDelegate != NULL && keyCode != Key::None)
+		if (this->keyDelegate != NULL && keyCode != Key::None)
 		{
 			if (type == KeyEvent::Type::Down)
 			{
@@ -619,11 +619,11 @@ namespace april
 				{
 					this->paused = !this->paused;
 				}
-				this->keyboardDelegate->onKeyDown(keyCode);
+				this->keyDelegate->onKeyDown(keyCode);
 			}
 			else if (type == KeyEvent::Type::Up)
 			{
-				this->keyboardDelegate->onKeyUp(keyCode);
+				this->keyDelegate->onKeyUp(keyCode);
 			}
 			bool processed = false;
 			// emulation of buttons using keyboard
@@ -661,9 +661,9 @@ namespace april
 
 	void Window::handleCharOnlyInput(unsigned int charCode)
 	{
-		if (this->keyboardDelegate != NULL && charCode >= 32 && charCode != 127) // special hack, backspace induces a character in some implementations
+		if (this->keyDelegate != NULL && charCode >= 32 && charCode != 127) // special hack, backspace induces a character in some implementations
 		{
-			this->keyboardDelegate->onChar(charCode);
+			this->keyDelegate->onChar(charCode);
 		}
 	}
 

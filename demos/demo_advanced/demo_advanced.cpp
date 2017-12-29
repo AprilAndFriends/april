@@ -364,7 +364,7 @@ class KeyDelegate : public april::KeyDelegate
 static UpdateDelegate* updateDelegate = NULL;
 static SystemDelegate* systemDelegate = NULL;
 static MouseDelegate* mouseDelegate = NULL;
-static KeyDelegate* keyboardDelegate = NULL;
+static KeyDelegate* keyDelegate = NULL;
 
 #ifdef __APPLE__
 void ObjCUtil_setCWD(const char* override_default_dir)
@@ -400,7 +400,7 @@ void __aprilApplicationInit()
 	updateDelegate = new UpdateDelegate();
 	systemDelegate = new SystemDelegate();
 	mouseDelegate = new MouseDelegate();
-	keyboardDelegate = new KeyDelegate();
+	keyDelegate = new KeyDelegate();
 
 #if defined(_ANDROID) || defined(_IOS) || defined(_WINRT)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
@@ -475,7 +475,7 @@ void __aprilApplicationInit()
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setSystemDelegate(systemDelegate);
 	april::window->setMouseDelegate(mouseDelegate);
-	april::window->setKeyDelegate(keyboardDelegate);
+	april::window->setKeyDelegate(keyDelegate);
 	cursor = april::window->createCursorFromResource(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
 
@@ -524,6 +524,6 @@ void __aprilApplicationDestroy()
 	systemDelegate = NULL;
 	delete mouseDelegate;
 	mouseDelegate = NULL;
-	delete keyboardDelegate;
-	keyboardDelegate = NULL;
+	delete keyDelegate;
+	keyDelegate = NULL;
 }

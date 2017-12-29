@@ -39,7 +39,7 @@ namespace april
 	class Texture;
 	
 	[Windows::Foundation::Metadata::WebHostHidden]
-	ref class WinRT_XamlApp sealed : public Application, public IComponentConnector
+	ref class WinRT_XamlApp sealed : public Windows::UI::Xaml::Application, public IComponentConnector
 	{
 	public:
 		WinRT_XamlApp();
@@ -98,7 +98,7 @@ namespace april
 		
 		void _tryAddRenderToken();
 		void _tryRemoveRenderToken();
-		void _handleFocusChange(bool focused);
+		void _updateFocusChange(bool focused);
 		void _refreshCursor();
 		gvec2 _transformPosition(float x, float y);
 		void _resetTouches();

@@ -46,13 +46,12 @@ namespace april
 		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId() const;
 
-		void setResolution(int w, int h, bool fullscreen);
+		void setResolution(int width, int height, bool fullscreen);
 		hstr findCursorFile(chstr filename) const;
 		
-		void terminateMainLoop();
 		void showVirtualKeyboard();
 		void hideVirtualKeyboard();
-		void changeSize(float w, float h); // required override instead of normal size changing
+		void changeSize(float width, float height); // required override instead of normal size changing
 		
 	protected:
 		int width;
@@ -61,7 +60,7 @@ namespace april
 		bool backButtonSystemHandling;
 		hmap<hstr, unsigned int> cursorMappings;
 
-		void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		void _systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options);
 		
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor();

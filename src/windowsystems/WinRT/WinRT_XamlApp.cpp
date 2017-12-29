@@ -15,6 +15,7 @@
 #include <hltypes/hstring.h>
 #include <hltypes/hthread.h>
 
+#include "Application.h"
 #include "april.h"
 #include "DirectX11_RenderSystem.h"
 #include "Platform.h"
@@ -254,12 +255,12 @@ namespace april
 		}
 		else if (args->WindowActivationState == CoreWindowActivationState::Deactivated)
 		{
-			this->_handleFocusChange(false);
+			this->_updateFocusChange(false);
 		}
 		else if (args->WindowActivationState == CoreWindowActivationState::CodeActivated ||
 			args->WindowActivationState == CoreWindowActivationState::PointerActivated)
 		{
-			this->_handleFocusChange(true);
+			this->_updateFocusChange(true);
 		}
 	}
 
@@ -270,13 +271,7 @@ namespace april
 			this->firstFrameAfterActivateHack = false;
 			return;
 		}
-		this->running = april::window->updateOneFrame();
-		april::rendersys->update();
-		UpdateDelegate* updateDelegate = april::window->getUpdateDelegate();
-		if (updateDelegate != NULL)
-		{
-			updateDelegate->onPresentFrame();
-		}
+		april::application->update();
 		this->firstFrameAfterActivateHack = false;
 		if (!this->running)
 		{
@@ -299,13 +294,15 @@ namespace april
 	{
 		hlog::write(logTag, "WinRT suspending...");
 		DX11_RENDERSYS->trim(); // required since Win 8.1
-		this->_handleFocusChange(false);
+		this->_updateFocusChange(false);
+		april::application->suspend();
 	}
 
 	void WinRT_XamlApp::OnResume(_In_ Object^ sender, _In_ Object^ args)
 	{
 		hlog::write(logTag, "WinRT resuming...");
-		this->_handleFocusChange(true);
+		april::application->resume();
+		this->_updateFocusChange(true);
 	}
 
 	void WinRT_XamlApp::OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args)
@@ -313,18 +310,18 @@ namespace april
 		args->Handled = true;
 		if (april::window != NULL)
 		{
-			april::window->handleQuitRequest(false);
+			april::window->queueQuitRequest(false);
 		}
 	}
 
-	void WinRT_XamlApp::_handleFocusChange(bool focused)
+	void WinRT_XamlApp::_updateFocusChange(bool focused)
 	{
 		this->_resetTouches();
 		if (april::window != NULL)
 		{
 			if (april::window->isFocused() != focused)
 			{
-				april::window->handleFocusChangeEvent(focused);
+				april::window->queueFocusChange(focused);
 			}
 		}
 		if (focused)
@@ -358,7 +355,7 @@ namespace april
 	{
 		hlog::write(logTag, "WinRT visibility change: " + hstr(args->Visible ? "true" : "false"));
 		args->Handled = true;
-		this->_handleFocusChange(args->Visible);
+		this->_updateFocusChange(args->Visible);
 	}
 
 	void WinRT_XamlApp::OnOrientationChanged(_In_ DisplayInformation^ sender, _In_ Object^ args)
@@ -378,7 +375,7 @@ namespace april
 	{
 		if (april::window != NULL)
 		{
-			april::window->handleVirtualKeyboardChange(true, args->OccludedRect.Height / CoreWindow::GetForCurrentThread()->Bounds.Height);
+			april::window->queueVirtualKeyboardChange(true, args->OccludedRect.Height / CoreWindow::GetForCurrentThread()->Bounds.Height);
 		}
 		this->_resetTouches();
 	}
@@ -387,7 +384,7 @@ namespace april
 	{
 		if (april::window != NULL)
 		{
-			april::window->handleVirtualKeyboardChange(false, 0.0f);
+			april::window->queueVirtualKeyboardChange(false, 0.0f);
 		}
 		this->_resetTouches();
 	}
@@ -416,7 +413,7 @@ namespace april
 			{
 				this->currentButton = Key::MouseM;
 			}
-			april::window->queueMouseEvent(Window::MouseInputEvent::Type::Down, position, this->currentButton);
+			april::window->queueMouseInput(MouseEvent::Type::Down, position, this->currentButton);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
@@ -429,7 +426,7 @@ namespace april
 				index = this->pointerIds.size();
 				this->pointerIds += id;
 			}
-			april::window->queueTouchEvent(Window::MouseInputEvent::Type::Down, position, index);
+			april::window->queueTouchInput(MouseEvent::Type::Down, position, index);
 #ifndef _WINP8
 			break;
 		}
@@ -451,7 +448,7 @@ namespace april
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
 			april::window->setInputMode(InputMode::Mouse);
-			april::window->queueMouseEvent(Window::MouseInputEvent::Type::Up, position, this->currentButton);
+			april::window->queueMouseInput(MouseEvent::Type::Up, position, this->currentButton);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
@@ -467,7 +464,7 @@ namespace april
 			{
 				this->pointerIds.removeAt(index);
 			}
-			april::window->queueTouchEvent(Window::MouseInputEvent::Type::Up, position, index);
+			april::window->queueTouchInput(MouseEvent::Type::Up, position, index);
 #ifndef _WINP8
 			break;
 		}
@@ -490,7 +487,7 @@ namespace april
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
 			april::window->setInputMode(InputMode::Mouse);
-			april::window->queueMouseEvent(Window::MouseInputEvent::Type::Move, position, this->currentButton);
+			april::window->queueMouseInput(MouseEvent::Type::Move, position, this->currentButton);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
@@ -502,7 +499,7 @@ namespace april
 			{
 				index = this->pointerIds.size();
 			}
-			april::window->queueTouchEvent(Window::MouseInputEvent::Type::Move, position, index);
+			april::window->queueTouchInput(MouseEvent::Type::Move, position, index);
 #ifndef _WINP8
 			break;
 		}
@@ -520,11 +517,11 @@ namespace april
 		float _wheelDelta = (float)args->CurrentPoint->Properties->MouseWheelDelta / WHEEL_DELTA;
 		if (this->scrollHorizontal ^ args->CurrentPoint->Properties->IsHorizontalMouseWheel)
 		{
-			april::window->queueMouseEvent(Window::MouseInputEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), Key::None);
+			april::window->queueMouseInput(MouseEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), Key::None);
 		}
 		else
 		{
-			april::window->queueMouseEvent(Window::MouseInputEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), Key::None);
+			april::window->queueMouseInput(MouseEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), Key::None);
 		}
 	}
 
@@ -536,7 +533,7 @@ namespace april
 			return;
 		}
 		Key key = Key::fromInt((int)args->VirtualKey);
-		april::window->queueKeyEvent(Window::KeyInputEvent::Type::Down, key, 0);
+		april::window->queueKeyInput(KeyEvent::Type::Down, key, 0);
 		if (key == Key::Control || key == Key::ControlL || key == Key::ControlR)
 		{
 			this->scrollHorizontal = true;
@@ -551,7 +548,7 @@ namespace april
 			return;
 		}
 		Key key = Key::fromInt((int)args->VirtualKey);
-		april::window->queueKeyEvent(Window::KeyInputEvent::Type::Up, key, 0);
+		april::window->queueKeyInput(KeyEvent::Type::Up, key, 0);
 		if (key == Key::Control || key == Key::ControlL || key == Key::ControlR)
 		{
 			this->scrollHorizontal = false;
@@ -569,7 +566,7 @@ namespace april
 		{
 			return;
 		}
-		april::window->queueKeyEvent(Window::KeyInputEvent::Type::Down, Key::None, args->KeyCode);
+		april::window->queueKeyInput(KeyEvent::Type::Down, Key::None, args->KeyCode);
 	}
 
 #ifdef _WINP8
@@ -577,8 +574,8 @@ namespace april
 	{
 		if (april::window != NULL && april::window->getParam(WINP8_BACK_BUTTON_SYSTEM_HANDLING) != "1")
 		{
-			april::window->queueKeyEvent(Window::KeyInputEvent::Type::Down, Key::Escape, 0);
-			april::window->queueKeyEvent(Window::KeyInputEvent::Type::Up, Key::Escape, 0);
+			april::window->queueKeyInput(KeyEvent::Type::Down, Key::Escape, 0);
+			april::window->queueKeyInput(KeyEvent::Type::Up, Key::Escape, 0);
 			args->Handled = true;
 		}
 	}
@@ -612,7 +609,7 @@ namespace april
 	{
 		for_iter_r (i, this->pointerIds.size(), 0)
 		{
-			april::window->queueTouchEvent(Window::MouseInputEvent::Type::Cancel, gvec2(), i);
+			april::window->queueTouchInput(MouseEvent::Type::Cancel, gvec2(), i);
 		}
 		this->pointerIds.clear();
 	}
