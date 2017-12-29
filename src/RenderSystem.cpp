@@ -520,7 +520,7 @@ namespace april
 		return texture;
 	}
 
-	Texture* RenderSystem::createTexture(int w, int h, unsigned char* data, Image::Format format)
+	Texture* RenderSystem::createTexture(int width, int height, unsigned char* data, Image::Format format)
 	{
 		if (format != Image::Format::Invalid && !this->getCaps().textureFormats.has(format))
 		{
@@ -532,8 +532,13 @@ namespace april
 			hlog::errorf(logTag, "Cannot create texture with data %s, the texture format '%s' is not supported!", address.cStr(), format.getName().cStr());
 			return NULL;
 		}
-		Texture* texture = this->_deviceCreateTexture(true);
-		if (!texture->_create(w, h, data, format))
+		Texture* texture = this->_deviceCreateTexture(false);
+		bool result = texture->_create(width, height, data, format);
+		if (result)
+		{
+			result = texture->loadAsync();
+		}
+		if (!result)
 		{
 			delete texture;
 			return NULL;
@@ -543,15 +548,20 @@ namespace april
 		return texture;
 	}
 
-	Texture* RenderSystem::createTexture(int w, int h, Color color, Image::Format format)
+	Texture* RenderSystem::createTexture(int width, int height, Color color, Image::Format format)
 	{
 		if (format != Image::Format::Invalid && !this->getCaps().textureFormats.has(format))
 		{
 			hlog::errorf(logTag, "Cannot create texture with color '%s', the texture format '%s' is not supported!", color.hex().cStr(), format.getName().cStr());
 			return NULL;
 		}
-		Texture* texture = this->_deviceCreateTexture(true);
-		if (!texture->_create(w, h, color, format))
+		Texture* texture = this->_deviceCreateTexture(false);
+		bool result = texture->_create(width, height, color, format);
+		if (result)
+		{
+			result = texture->loadAsync();
+		}
+		if (!result)
 		{
 			delete texture;
 			return NULL;

@@ -143,15 +143,8 @@ namespace april
 	{
 		this->filename = filename;
 		this->type = type;
-		this->width = 0;
-		this->height = 0;
 		this->type = type;
 		this->loadMode = loadMode;
-		this->format = Image::Format::Invalid;
-		this->dataFormat = 0;
-		this->data = NULL;
-		this->dataAsync = NULL;
-		this->asyncLoadQueued = false;
 		hlog::write(logTag, "Registering texture: " + this->_getInternalName());
 		return true;
 	}
@@ -160,15 +153,9 @@ namespace april
 	{
 		this->filename = filename;
 		this->type = type;
-		this->width = 0;
-		this->height = 0;
 		this->type = type;
 		this->loadMode = loadMode;
 		this->format = format;
-		this->dataFormat = 0;
-		this->data = NULL;
-		this->dataAsync = NULL;
-		this->asyncLoadQueued = false;
 		hlog::write(logTag, "Registering texture: " + this->_getInternalName());
 		return true;
 	}
@@ -180,15 +167,11 @@ namespace april
 			hlog::errorf(logTag, "Cannot create texture with dimensions %d,%d!", width, height);
 			return false;
 		}
-		this->filename = "";
 		this->width = width;
 		this->height = height;
 		this->type = Type::Managed;
-		this->loadMode = LoadMode::Async;
 		this->format = format;
 		this->data = new unsigned char[this->getByteSize()];
-		this->dataAsync = NULL;
-		this->asyncLoadQueued = false;
 		hlog::write(logTag, "Registering manual texture: " + this->_getInternalName());
 		Image::write(0, 0, this->width, this->height, 0, 0, data, this->width, this->height, format, this->data, this->width, this->height, this->format);
 		int maxTextureSize = april::rendersys->getCaps().maxTextureSize;
@@ -197,7 +180,7 @@ namespace april
 			hlog::warnf(logTag, "Texture size for '%s' is %d,%d while the reported system max texture size is %d!", this->_getInternalName().cStr(), this->width, this->height, maxTextureSize);
 		}
 		this->_assignFormat();
-		return this->loadAsync();
+		return true;
 	}
 
 	bool Texture::_create(int width, int height, const Color& color, Image::Format format)
@@ -207,15 +190,11 @@ namespace april
 			hlog::errorf(logTag, "Cannot create texture with dimensions %d,%d!", width, height);
 			return false;
 		}
-		this->filename = "";
 		this->width = width;
 		this->height = height;
 		this->type = Type::Managed;
-		this->loadMode = LoadMode::Async;
 		this->format = format;
 		this->data = new unsigned char[this->getByteSize()];
-		this->dataAsync = NULL;
-		this->asyncLoadQueued = false;
 		hlog::write(logTag, "Registering manual texture: " + this->_getInternalName());
 		Image::fillRect(0, 0, this->width, this->height, color, this->data, this->width, this->height, this->format);
 		int maxTextureSize = april::rendersys->getCaps().maxTextureSize;
@@ -224,11 +203,13 @@ namespace april
 			hlog::warnf(logTag, "Texture size for '%s' is %d,%d while the reported system max texture size is %d!", this->_getInternalName().cStr(), this->width, this->height, maxTextureSize);
 		}
 		this->_assignFormat();
-		return this->loadAsync();
+		return true;
 	}
 
 	Texture::~Texture()
 	{
+		hmutex::ScopeLock lockData(&this->asyncDataMutex);
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->data != NULL)
 		{
 			delete[] this->data;
@@ -424,21 +405,21 @@ namespace april
 
 	bool Texture::loadMetaData()
 	{
-		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		hmutex::ScopeLock lockData(&this->asyncDataMutex);
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->loaded)
 		{
 			return true;
 		}
 		bool hasData = (this->data != NULL || this->dataAsync != NULL);
-		lockData.release();
 		lock.release();
+		lockData.release();
 		return (hasData || this->_loadMetaData());
 	}
 
 	bool Texture::_loadMetaData()
 	{
-		if (this->width == 0 || this->height == 0)
+		if (this->width <= 0 || this->height <= 0)
 		{
 			if (this->filename == "")
 			{
@@ -682,8 +663,8 @@ namespace april
 				break;
 			}
 			lock.release();
-			hthread::sleep(0.001f);
-			time -= 0.000001f;
+			hthread::sleep(0.1f);
+			time -= 0.0001f;
 		}
 	}
 
