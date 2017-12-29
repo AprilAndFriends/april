@@ -284,7 +284,7 @@ namespace april
 		/// @param[in] type The Texture type that should be created.
 		/// @param[in] loadMode How and when the Texture should be loaded.
 		/// @return The created Texture object or NULL if failed.
-		Texture* createTextureFromResource(chstr filename, Texture::Type type = Texture::Type::Immutable, Texture::LoadMode loadMode = Texture::LoadMode::Immediate);
+		Texture* createTextureFromResource(chstr filename, Texture::Type type = Texture::Type::Immutable, Texture::LoadMode loadMode = Texture::LoadMode::Async);
 		/// @brief Creates a Texture object from a resource file.
 		/// @param[in] filename The filename of the resource.
 		/// @param[in] format To which pixel format the loaded data should be converted.
@@ -292,13 +292,13 @@ namespace april
 		/// @param[in] loadMode How and when the Texture should be loaded.
 		/// @return The created Texture object or NULL if failed.
 		/// @note When a format is forced, it's best to use managed (but not necessary).
-		Texture* createTextureFromResource(chstr filename, Image::Format format, Texture::Type type = Texture::Type::Managed, Texture::LoadMode loadMode = Texture::LoadMode::Immediate);
+		Texture* createTextureFromResource(chstr filename, Image::Format format, Texture::Type type = Texture::Type::Managed, Texture::LoadMode loadMode = Texture::LoadMode::Async);
 		/// @brief Creates a Texture object from a file.
 		/// @param[in] filename The filename of the file.
 		/// @param[in] type The Texture type that should be created.
 		/// @param[in] loadMode How and when the Texture should be loaded.
 		/// @return The created Texture object or NULL if failed.
-		Texture* createTextureFromFile(chstr filename, Texture::Type type = Texture::Type::Immutable, Texture::LoadMode loadMode = Texture::LoadMode::Immediate);
+		Texture* createTextureFromFile(chstr filename, Texture::Type type = Texture::Type::Immutable, Texture::LoadMode loadMode = Texture::LoadMode::Async);
 		/// @brief Creates a Texture object from a file.
 		/// @param[in] filename The filename of the file.
 		/// @param[in] format To which pixel format the loaded data should be converted.
@@ -306,7 +306,7 @@ namespace april
 		/// @param[in] loadMode How and when the Texture should be loaded.
 		/// @return The created Texture object or NULL if failed.
 		/// @note When a format is forced, it's best to use managed (but not necessary).
-		Texture* createTextureFromFile(chstr filename, Image::Format format, Texture::Type type = Texture::Type::Managed, Texture::LoadMode loadMode = Texture::LoadMode::Immediate);
+		Texture* createTextureFromFile(chstr filename, Image::Format format, Texture::Type type = Texture::Type::Managed, Texture::LoadMode loadMode = Texture::LoadMode::Async);
 		/// @brief Creates a Texture object from raw data.
 		/// @param[in] w Width of the image data.
 		/// @param[in] h Height of the image data.
@@ -314,7 +314,7 @@ namespace april
 		/// @param[in] format The format of the provided image data.
 		/// @param[in] type The Texture type that should be created.
 		/// @return The created Texture object or NULL if failed.
-		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type = Texture::Type::Managed);
+		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format);
 		/// @brief Creates a Texture object completely filled with a specific color.
 		/// @param[in] w Width of the image data.
 		/// @param[in] h Height of the image data.
@@ -322,7 +322,7 @@ namespace april
 		/// @param[in] format The format of the provided image data.
 		/// @param[in] type The Texture type that should be created.
 		/// @return The created Texture object or NULL if failed.
-		Texture* createTexture(int w, int h, Color color, Image::Format format, Texture::Type type = Texture::Type::Managed);
+		Texture* createTexture(int w, int h, Color color, Image::Format format);
 		/// @brief Destroys a Texture object.
 		/// @param[in] texture The Texture that should be destroyed.
 		/// @note After this call the Texture pointer becomes invalid.

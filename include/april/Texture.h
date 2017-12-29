@@ -26,6 +26,9 @@
 #include "Color.h"
 #include "Image.h"
 
+// TODOx - remove this once merged into trunk
+#define __APRIL_5_x_API
+
 namespace april
 {
 	class DestroyTextureCommand;
@@ -47,18 +50,12 @@ namespace april
 		/// @brief Defines texture types in order to control their behavior and certain features.
 		HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, Type,
 		(
-			/// @var static const Type Type::Managed
-			/// @brief Resides in RAM and on GPU, can be modified. Best used for manually created textures or loaded from files which will be modified.
-			HL_ENUM_DECLARE(Type, Managed);
 			/// @var static const Type Type::Immutable
 			/// @brief Cannot be modified or read. Texture with manual data will have a copy of the data in RAM, files will be reloaded from persistent memory.
 			HL_ENUM_DECLARE(Type, Immutable);
-			/// @var static const Type Type::Volatile
-			/// @brief Used for feeding the GPU texture data constantly (e.g. video). It has no local RAM copy for when the rendering context is lost and cannot be restored.
-			HL_ENUM_DECLARE(Type, Volatile);
-			/// @var static const Type Type::RenderTarget
-			/// @brief Used for render targets. Acts like Type::Managed.
-			HL_ENUM_DECLARE(Type, RenderTarget);
+			/// @var static const Type Type::Managed
+			/// @brief Resides in RAM and on GPU, can be modified. Best used for manually created textures or loaded from files which will be modified.
+			HL_ENUM_DECLARE(Type, Managed);
 		));
 
 		/// @class Filter
@@ -89,12 +86,6 @@ namespace april
 		/// @brief Defines how and when textures should be loaded into VRAM.
 		HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, LoadMode,
 		(
-			/// @var static const LoadMode LoadMode::Normal
-			/// @brief Loads the texture and uploads data to the GPU right away.
-			HL_ENUM_DECLARE(LoadMode, Immediate);
-			/// @var static const LoadMode LoadMode::OnDemand
-			/// @brief Doesn't load the texture yet at all. It will be loaded and uploaded to the GPU on the first use.
-			HL_ENUM_DECLARE(LoadMode, OnDemand);
 			/// @var static const LoadMode LoadMode::Async
 			/// @brief Loads the texture asynchronously right away and uploads the data to the GPU as soon as it is available before the next frame.
 			/// @note If the texture is used before it loaded asynchronously, it cannot be uploaded to the GPU and will not be rendered properly.
@@ -103,6 +94,9 @@ namespace april
 			/// @brief Loads the texture asynchronously right away, but it will upload the data to the GPU on the first use.
 			/// @note If the texture is used before it loaded asynchronously, it cannot be uploaded to the GPU and will not be rendered properly.
 			HL_ENUM_DECLARE(LoadMode, AsyncDeferredUpload);
+			/// @var static const LoadMode LoadMode::OnDemand
+			/// @brief Doesn't load the texture yet at all. It will be loaded and uploaded to the GPU on the first use.
+			HL_ENUM_DECLARE(LoadMode, OnDemand);
 		));
 
 		/// @brief The texture filename if available.
@@ -135,7 +129,7 @@ namespace april
 		int getBpp() const;
 		/// @brief Gets the size of the image data in bytes.
 		/// @return Size of the image data in bytes.
-		/// @note The calculation is basically "w * h * getBpp()".
+		/// @note The calculation is basically "width * height * bpp".
 		int getByteSize() const;
 		/// @brief Gets the current VRAM consumption.
 		/// @return The current VRAM consumption.
@@ -162,22 +156,16 @@ namespace april
 		/// @see isAsyncLoadQueued()
 		bool isLoadedAny();
 
-		/// @brief Loads the texture immediately. If the texture was queued to be loaded asynchronously, this method will wait until it's loaded and return true.
-		/// @return True if successful or already loaded.
-		bool load();
-		/// @brief Uploads the texture data to the GPU.
-		/// @return True if successful or already loaded.
-		bool upload();
 		/// @brief Loads the texture asynchronously.
 		/// @return True if queueing was successful.
 		/// @note Using a texture before it is uploaded to the GPU will cause undefined behavior. Always call load() before using it, because this ensures that it's loaded.
 		bool loadAsync();
-		/// @brief Unloads the texture from the GPU.
-		/// @note When type is Type::Managed, the raw image data remains in RAM.
-		void unload();
 		/// @brief Loads the texture's meta data only.
 		/// @return True if successful or already loaded.
 		bool loadMetaData();
+		/// @brief Unloads the texture from the GPU.
+		/// @note When type is Type::Managed, the raw image data remains in RAM.
+		void unload();
 		/// @brief Makes sure the texture is loaded if it can be loaded or was async queued.
 		/// @see load
 		/// @see waitForAsyncLoad
@@ -189,14 +177,6 @@ namespace april
 		/// @note This should usually not be used externally. load() uses this internally when the texture was already queued to be loaded asynchronously.
 		/// @see load
 		void waitForAsyncLoad(float timeout = 0.0f);
-
-		/// @brief Locks the texture for multiple image data manipulation calls.
-		/// @return True if successful. Will return false if the texture type doesn't allow texture reading and modifying.
-		bool lock();
-		/// @brief Unlocks the texture after image data manipulation calls and uploads the changed data to the GPU.
-		/// @return True if successful.
-		/// @note No upload will happen if no changes have been made or the texture is currently not loaded.
-		bool unlock();
 
 		/// @brief Clears the entire image and sets all image data to zeroes.
 		/// @return True if successful.
@@ -632,6 +612,11 @@ namespace april
 		/// @note This is an expensive operation and should be used sparingly.
 		bool insertAlphaMap(Image* image, unsigned char median, int ambiguity); // TODOa - this functionality might be removed since shaders are much faster
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+		HL_DEPRECATED("Deprecated API. Use loadAsync() instead.")
+		bool load() { return this->loadAsync(); }
+#endif
+
 	protected:
 		/// @brief Defines a texture read lock for reading and writing to improve performance.
 		struct Lock
@@ -755,21 +740,21 @@ namespace april
 		/// @return True if successful.
 		virtual bool _create(chstr filename, Image::Format format, Type type, LoadMode loadMode);
 		/// @brief Creates and sets up all of the texture's internal data.
-		/// @param[in] w Width of the raw image data.
-		/// @param[in] h Height of the raw image data.
+		/// @param[in] width Width of the raw image data.
+		/// @param[in] height Height of the raw image data.
 		/// @param[in] data The raw image data.
 		/// @param[in] format The pixel format of the raw image data.
-		/// @param[in] type The texture type.
 		/// @return True if successful.
-		virtual bool _create(int w, int h, unsigned char* data, Image::Format format, Type type);
+		/// @note The the type is automatically Texture::Type::Managed.
+		virtual bool _create(int width, int height, unsigned char* data, Image::Format format);
 		/// @brief Creates and sets up all of the texture's internal data and fills it with the given Color.
-		/// @param[in] w Width of the raw image data.
-		/// @param[in] h Height of the raw image data.
+		/// @param[in] width Width of the raw image data.
+		/// @param[in] height Height of the raw image data.
 		/// @param[in] color The color to be filled.
 		/// @param[in] format The pixel format of the raw image data.
-		/// @param[in] type The texture type.
 		/// @return True if successful.
-		virtual bool _create(int w, int h, const Color& color, Image::Format format, Type type);
+		/// @note The the type is automatically Texture::Type::Managed.
+		virtual bool _create(int width, int height, const Color& color, Image::Format format);
 
 		/// @brief Creates the device texture.
 		/// @param[in] data The raw image data.
@@ -810,7 +795,17 @@ namespace april
 		/// @note This is usually used for debugging and logging purposes.
 		hstr _getInternalName() const;
 
-		/// @brief Makes sure the texture is loaded and handles Texture update.
+		/// @brief Loads the texture asynchronously. Used internally only.
+		/// @return True if queueing was successful.
+		/// @note Using a texture before it is uploaded to the GPU will cause undefined behavior. Always call load() before using it, because this ensures that it's loaded.
+		bool _loadAsync();
+		/// @brief Loads the texture's meta data only. Used internally only.
+		/// @return True if successful or already loaded.
+		bool _loadMetaData();
+		/// @brief Uploads the texture data to the GPU. Used internally only.
+		/// @return True if successful or already loaded.
+		bool _upload();
+		/// @brief Makes sure the texture is loaded and handles Texture update. Used internally only.
 		/// @see load
 		/// @see ensureLoaded
 		/// @see waitForAsyncLoad
@@ -863,21 +858,6 @@ namespace april
 		/// @param[in,out] outHeight Power-of-two height.
 		unsigned char* _createPotClearData(int& outWidth, int& outHeight);
 
-		/// @brief Try to lock a rectangle on the texture.
-		/// @param[in] x X-coordinate of the rectangle.
-		/// @param[in] y Y-coordinate of the rectangle.
-		/// @param[in] w Width of the rectangle.
-		/// @param[in] h Height of the rectangle.
-		/// @return The Lock object which contains data on whether the lock was successful or not.
-		Lock _tryLock(int x, int y, int w, int h);
-		/// @brief Try to lock the whole texture texture.
-		/// @return The Lock object which contains data on whether the lock was successful or not.
-		Lock _tryLock();
-		/// @brief Remove a lock.
-		/// @param[in] lock The Lock object.
-		/// @param[in] update True if the image data should be reuploaded to the GPU.
-		/// @return True if successful.
-		bool _unlock(Lock lock, bool update);
 		/// @brief Try to lock a rectangle on the texture in the system implementation.
 		/// @param[in] x X-coordinate of the rectangle.
 		/// @param[in] y Y-coordinate of the rectangle.
@@ -890,6 +870,10 @@ namespace april
 		/// @param[in] update True if the image data should be reuploaded to the GPU.
 		/// @return True if successful.
 		virtual bool _unlockSystem(Lock& lock, bool update) = 0;
+		/// @brief Attempts to upload changed texture data to the GPU.
+		/// @return True if successful.
+		/// @note No upload will happen if no changes have been made or the texture is currently not loaded.
+		bool _tryUploadDataToGpu();
 		/// @brief Uploads local image data directly to the GPU.
 		/// @param[in] x X-coordinate of the rectangle.
 		/// @param[in] y Y-coordinate of the rectangle.
@@ -914,5 +898,4 @@ namespace april
 	};
 	
 }
-
 #endif

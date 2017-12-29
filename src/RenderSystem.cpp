@@ -505,11 +505,7 @@ namespace april
 		bool result = (format == Image::Format::Invalid ? texture->_create(name, type, loadMode) : texture->_create(name, format, type, loadMode));
 		if (result)
 		{
-			if (loadMode == Texture::LoadMode::Immediate)
-			{
-				result = texture->load();
-			}
-			else if (loadMode == Texture::LoadMode::Async || loadMode == Texture::LoadMode::AsyncDeferredUpload)
+			if (loadMode == Texture::LoadMode::Async || loadMode == Texture::LoadMode::AsyncDeferredUpload)
 			{
 				result = texture->loadAsync();
 			}
@@ -524,7 +520,7 @@ namespace april
 		return texture;
 	}
 
-	Texture* RenderSystem::createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type)
+	Texture* RenderSystem::createTexture(int w, int h, unsigned char* data, Image::Format format)
 	{
 		if (format != Image::Format::Invalid && !this->getCaps().textureFormats.has(format))
 		{
@@ -537,7 +533,7 @@ namespace april
 			return NULL;
 		}
 		Texture* texture = this->_deviceCreateTexture(true);
-		if (!texture->_create(w, h, data, format, type))
+		if (!texture->_create(w, h, data, format))
 		{
 			delete texture;
 			return NULL;
@@ -547,7 +543,7 @@ namespace april
 		return texture;
 	}
 
-	Texture* RenderSystem::createTexture(int w, int h, Color color, Image::Format format, Texture::Type type)
+	Texture* RenderSystem::createTexture(int w, int h, Color color, Image::Format format)
 	{
 		if (format != Image::Format::Invalid && !this->getCaps().textureFormats.has(format))
 		{
@@ -555,7 +551,7 @@ namespace april
 			return NULL;
 		}
 		Texture* texture = this->_deviceCreateTexture(true);
-		if (!texture->_create(w, h, color, format, type))
+		if (!texture->_create(w, h, color, format))
 		{
 			delete texture;
 			return NULL;
@@ -858,16 +854,15 @@ namespace april
 		// texture
 		if (forceUpdate || this->deviceState->texture != state->texture || this->deviceState->useTexture != state->useTexture)
 		{
-			// filtering and wrapping applied before loading texture data, some systems are optimized to work like this (e.g. iOS OpenGLES guidelines suggest it)
 			if (state->texture != NULL && state->useTexture)
 			{
 				++this->statCurrentFrameTextureSwitches;
-				state->texture->loadAsync();
 				state->texture->_ensureInternalLoaded();
-				state->texture->upload();
-				this->_setDeviceTexture(state->texture);
+				state->texture->_upload();
+				// filtering and address mode applied before loading texture data, some systems are optimized to work like this (e.g. iOS OpenGLES guidelines suggest it)
 				this->_setDeviceTextureFilter(state->texture->getFilter());
 				this->_setDeviceTextureAddressMode(state->texture->getAddressMode());
+				this->_setDeviceTexture(state->texture);
 			}
 			else
 			{

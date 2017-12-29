@@ -27,10 +27,8 @@ namespace april
 {
 	HL_ENUM_CLASS_DEFINE(Texture::Type,
 	(
-		HL_ENUM_DEFINE(Texture::Type, Managed);
 		HL_ENUM_DEFINE(Texture::Type, Immutable);
-		HL_ENUM_DEFINE(Texture::Type, Volatile);
-		HL_ENUM_DEFINE(Texture::Type, RenderTarget);
+		HL_ENUM_DEFINE(Texture::Type, Managed);
 	));
 
 	HL_ENUM_CLASS_DEFINE(Texture::Filter,
@@ -47,10 +45,9 @@ namespace april
 
 	HL_ENUM_CLASS_DEFINE(Texture::LoadMode,
 	(
-		HL_ENUM_DEFINE(Texture::LoadMode, Immediate);
-		HL_ENUM_DEFINE(Texture::LoadMode, OnDemand);
 		HL_ENUM_DEFINE(Texture::LoadMode, Async);
 		HL_ENUM_DEFINE(Texture::LoadMode, AsyncDeferredUpload);
+		HL_ENUM_DEFINE(Texture::LoadMode, OnDemand);
 	));
 
 	Texture::Lock::Lock()
@@ -121,7 +118,7 @@ namespace april
 		this->filename = "";
 		this->type = Type::Immutable;
 		this->loaded = false;
-		this->loadMode = LoadMode::Immediate;
+		this->loadMode = LoadMode::Async;
 		this->format = Image::Format::Invalid;
 		this->dataFormat = 0;
 		this->width = 0;
@@ -175,73 +172,57 @@ namespace april
 		return true;
 	}
 
-	bool Texture::_create(int w, int h, unsigned char* data, Image::Format format, Texture::Type type)
+	bool Texture::_create(int width, int height, unsigned char* data, Image::Format format)
 	{
-		if (w == 0 || h == 0)
+		if (width <= 0 || height <= 0)
 		{
-			hlog::errorf(logTag, "Cannot create texture with dimensions %d,%d!", w, h);
+			hlog::errorf(logTag, "Cannot create texture with dimensions %d,%d!", width, height);
 			return false;
 		}
 		this->filename = "";
-		this->width = w;
-		this->height = h;
-		this->type = Type::Volatile; // so the write() call later on goes through
-		this->loadMode = LoadMode::Immediate;
-		int size = 0;
-		if (type != Type::Volatile && type != Type::RenderTarget)
-		{
-			this->format = format;
-			size = this->getByteSize();
-			this->data = new unsigned char[size];
-			this->type = Type::Managed;
-		}
-		else
-		{
-			this->format = april::rendersys->getNativeTextureFormat(format);
-			size = this->getByteSize();
-			this->type = type;
-		}
+		this->width = width;
+		this->height = height;
+		this->type = Type::Managed;
+		this->loadMode = LoadMode::Async;
+		this->format = format;
+		this->data = new unsigned char[this->getByteSize()];
 		this->dataAsync = NULL;
 		this->asyncLoadQueued = false;
-		hlog::write(logTag, "Registering texture: " + this->_getInternalName());
-		return this->loadAsync();
-	}
-
-	bool Texture::_create(int w, int h, const Color& color, Image::Format format, Texture::Type type)
-	{
-		if (w == 0 || h == 0)
-		{
-			hlog::errorf(logTag, "Cannot create texture with dimensions %d,%d!", w, h);
-			return false;
-		}
-		this->filename = "";
-		this->width = w;
-		this->height = h;
-		this->type = Type::Volatile; // so the fillRect() call later on goes through
-		this->loadMode = LoadMode::Immediate;
-		int size = 0;
-		if (type != Type::Volatile && type != Type::RenderTarget)
-		{
-			this->format = format;
-			size = this->getByteSize();
-			this->data = new unsigned char[size];
-			Image::fillRect(0, 0, this->width, this->height, color, this->data, this->width, this->height, this->format);
-			this->type = Type::Managed;
-		}
-		else
-		{
-			this->format = april::rendersys->getNativeTextureFormat(format);
-			size = this->getByteSize();
-			this->type = type;
-		}
-		this->dataAsync = NULL;
-		this->asyncLoadQueued = false;
-		hlog::write(logTag, "Registering texture: " + this->_getInternalName());
+		hlog::write(logTag, "Registering manual texture: " + this->_getInternalName());
+		Image::write(0, 0, this->width, this->height, 0, 0, data, this->width, this->height, format, this->data, this->width, this->height, this->format);
 		int maxTextureSize = april::rendersys->getCaps().maxTextureSize;
 		if (maxTextureSize > 0 && (this->width > maxTextureSize || this->height > maxTextureSize))
 		{
 			hlog::warnf(logTag, "Texture size for '%s' is %d,%d while the reported system max texture size is %d!", this->_getInternalName().cStr(), this->width, this->height, maxTextureSize);
 		}
+		this->_assignFormat();
+		return this->loadAsync();
+	}
+
+	bool Texture::_create(int width, int height, const Color& color, Image::Format format)
+	{
+		if (width <= 0 || height <= 0)
+		{
+			hlog::errorf(logTag, "Cannot create texture with dimensions %d,%d!", width, height);
+			return false;
+		}
+		this->filename = "";
+		this->width = width;
+		this->height = height;
+		this->type = Type::Managed;
+		this->loadMode = LoadMode::Async;
+		this->format = format;
+		this->data = new unsigned char[this->getByteSize()];
+		this->dataAsync = NULL;
+		this->asyncLoadQueued = false;
+		hlog::write(logTag, "Registering manual texture: " + this->_getInternalName());
+		Image::fillRect(0, 0, this->width, this->height, color, this->data, this->width, this->height, this->format);
+		int maxTextureSize = april::rendersys->getCaps().maxTextureSize;
+		if (maxTextureSize > 0 && (this->width > maxTextureSize || this->height > maxTextureSize))
+		{
+			hlog::warnf(logTag, "Texture size for '%s' is %d,%d while the reported system max texture size is %d!", this->_getInternalName().cStr(), this->width, this->height, maxTextureSize);
+		}
+		this->_assignFormat();
 		return this->loadAsync();
 	}
 
@@ -314,7 +295,7 @@ namespace april
 
 	int Texture::getCurrentRamSize()
 	{
-		if (this->type == Type::Immutable || this->type == Type::Volatile || this->type == Type::RenderTarget)
+		if (this->type == Type::Immutable)
 		{
 			return 0;
 		}
@@ -364,7 +345,7 @@ namespace april
 
 	bool Texture::_isReadable() const
 	{
-		return (this->type == Type::Managed || this->type == Type::RenderTarget);
+		return (this->type == Type::Managed);
 	}
 
 	bool Texture::_isWritable() const
@@ -396,32 +377,84 @@ namespace april
 		return result;
 	}
 
-	bool Texture::load()
+	bool Texture::loadAsync()
 	{
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		return this->_loadAsync();
+	}
+
+	bool Texture::_loadAsync()
+	{
+		if (this->dataAsync != NULL || this->loaded)
+		{
+			return false;
+		}
+		this->_loadMetaData();
+		this->asyncLoadDiscarded = false;
+		if (!this->asyncLoadQueued) // this check is down here to allow the upper error messages to be displayed
+		{
+			if (this->filename == "")
+			{
+				this->_assignFormat();
+			}
+			this->asyncLoadQueued = TextureAsync::queueLoad(this);
+		}
+		return this->asyncLoadQueued;
+	}
+
+	bool Texture::loadMetaData()
+	{
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		hmutex::ScopeLock lockData(&this->asyncDataMutex);
 		if (this->loaded)
 		{
 			return true;
 		}
-		this->asyncLoadDiscarded = false; // a possible previous unload call must be canceled
-		if (this->asyncLoadQueued)
-		{
-			lock.release();
-			this->waitForAsyncLoad();
-			return true; // will already call this method again through TextureAsync::update() so it does not need to continue
-		}
+		bool hasData = (this->data != NULL || this->dataAsync != NULL);
+		lockData.release();
 		lock.release();
-		this->loadMetaData();
-		return this->loadAsync();
+		return (hasData || this->_loadMetaData());
 	}
 
-	bool Texture::upload()
+	bool Texture::_loadMetaData()
+	{
+		if (this->width == 0 || this->height == 0)
+		{
+			if (this->filename == "")
+			{
+				hlog::error(logTag, "No filename for texture specified!");
+				return false;
+			}
+			Image* image = (this->fromResource ? Image::readMetaDataFromResource(this->filename) : Image::readMetaDataFromFile(this->filename));
+			if (image != NULL)
+			{
+				image = this->_processImageFormatSupport(image);
+			}
+			if (image == NULL)
+			{
+				hlog::error(logTag, "Failed to load texture: " + this->_getInternalName());
+				return false;
+			}
+			this->width = image->w;
+			this->height = image->h;
+			this->format = image->format;
+			this->dataFormat = image->internalFormat;
+			if (this->dataFormat != 0)
+			{
+				this->compressedSize = image->compressedSize;
+			}
+			delete image;
+		}
+		return true;
+	}
+
+	bool Texture::_upload()
 	{
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (this->loaded)
 		{
 			lock.release();
-			this->unlock();
+			this->_tryUploadDataToGpu();
 			return true;
 		}
 		this->asyncLoadDiscarded = false; // a possible previous unload call must be canceled
@@ -452,8 +485,8 @@ namespace april
 			hlog::write(logTag, "Uploading texture: " + this->_getInternalName());
 		}
 		lock.release();
-		// if no cached data and not a volatile texture that was previously loaded and thus has a width and height
-		if (currentData == NULL && ((this->type != Type::Volatile && this->type != Type::RenderTarget) || this->width == 0 || this->height == 0))
+		// if no cached data was previously loaded
+		if (currentData == NULL)
 		{
 			if (this->filename == "")
 			{
@@ -530,8 +563,7 @@ namespace april
 					}
 				}
 			}
-			// TODOx - remove condition
-			if (/*this->type != Type::Volatile && this->type != Type::RenderTarget &&*/ (this->type != Type::Immutable || this->filename == ""))
+			if (this->type != Type::Immutable || this->filename == "")
 			{
 				if (this->data != currentData)
 				{
@@ -550,72 +582,11 @@ namespace april
 			}
 			lock.release();
 		}
-		// TODOx - remove this code?
-		/*
-		else if (this->type == Type::Volatile) // when recreating a texture, it is important that it is created empty to avoid problems (e.g. DX9 creates a white initial texture)
-		{
-			this->_rawClear();
-		}
-		*/
-		this->unlock(); // upload any additional changes
+		this->_tryUploadDataToGpu(); // upload any additional changes
 		lock.acquire(&this->asyncLoadMutex);
 		this->dataAsync = NULL; // not needed anymore and makes isLoadedAsync() return false now
 		this->loaded = result;
 		return true;
-	}
-
-	bool Texture::loadAsync()
-	{
-		this->unlock();
-		hmutex::ScopeLock lock(&this->asyncLoadMutex);
-		if (this->dataAsync != NULL || this->loaded)
-		{
-			return false;
-		}
-		// TODOx - remove this?
-		/*
-		if (this->data != NULL || ((this->type == Type::Volatile || this->type == Type::RenderTarget) && this->width > 0 && this->height > 0))
-		{
-			hstr error = "This texture type does not support async loading! texture: '" + this->_getInternalName() + "', reasons:";
-			if (this->data != NULL)
-			{
-				error += "\ndata isn't NULL.";
-			}
-			if (this->type == Type::Volatile)
-			{
-				error += "\ntype is 'volatile'.";
-			}
-			if (this->type == Type::RenderTarget)
-			{
-				error += "\ntype is 'render target'.";
-			}
-			if (this->width > 0)
-			{
-				error += "\nwidth is larger than 0.";
-			}
-			if (this->height > 0)
-			{
-				error += "\nheight is larger than 0.";
-			}
-			hlog::warn(logTag, error);
-			return false;
-		}
-		if (this->filename == "")
-		{
-			hlog::error(logTag, "No filename for texture specified!");
-			return false;
-		}
-		*/
-		this->asyncLoadDiscarded = false;
-		if (!this->asyncLoadQueued) // this check is down here to allow the upper error messages to be displayed
-		{
-			if (this->filename == "")
-			{
-				this->_assignFormat();
-			}
-			this->asyncLoadQueued = TextureAsync::queueLoad(this);
-		}
-		return this->asyncLoadQueued;
 	}
 
 	void Texture::unload()
@@ -638,47 +609,6 @@ namespace april
 		}
 		this->firstUpload = true;
 		this->dirty = false;
-	}
-
-	bool Texture::loadMetaData()
-	{
-		hmutex::ScopeLock lock(&this->asyncLoadMutex);
-		hmutex::ScopeLock lockData(&this->asyncDataMutex);
-		if (this->loaded)
-		{
-			return true;
-		}
-		bool hasData = (this->data != NULL || this->dataAsync != NULL);
-		lockData.release();
-		lock.release();
-		if (!hasData && this->type != Type::Volatile && this->type != Type::RenderTarget && (this->width == 0 || this->height == 0))
-		{
-			if (this->filename == "")
-			{
-				hlog::error(logTag, "No filename for texture specified!");
-				return false;
-			}
-			Image* image = (this->fromResource ? Image::readMetaDataFromResource(this->filename) : Image::readMetaDataFromFile(this->filename));
-			if (image != NULL)
-			{
-				image = this->_processImageFormatSupport(image);
-			}
-			if (image == NULL)
-			{
-				hlog::error(logTag, "Failed to load texture: " + this->_getInternalName());
-				return false;
-			}
-			this->width = image->w;
-			this->height = image->h;
-			this->format = image->format;
-			this->dataFormat = image->internalFormat;
-			if (this->dataFormat != 0)
-			{
-				this->compressedSize = image->compressedSize;
-			}
-			delete image;
-		}
-		return true;
 	}
 
 	bool Texture::ensureLoaded()
@@ -713,6 +643,7 @@ namespace april
 		{
 			return true;
 		}
+		this->_loadAsync();
 		if (this->asyncLoadQueued || this->dataAsync != NULL || (this->filename == "" && this->data != NULL))
 		{
 			lock.release();
@@ -897,50 +828,6 @@ namespace april
 			}
 		}
 		return image;
-	}
-
-	bool Texture::lock()
-	{
-		// TODOx - remove
-		/*
-		if (!this->_isAlterable())
-		{
-			hlog::warn(logTag, "Cannot use locking, texture is not alterable: " + this->_getInternalName());
-			return false;
-		}
-		if (this->locked)
-		{
-			return false;
-		}
-		this->locked = true;
-		return true;
-		*/
-		return false;
-	}
-
-	bool Texture::unlock()
-	{
-		// TODOx - remove
-		/*
-		if (!this->locked)
-		{
-			return false;
-		}
-		this->locked = false;
-		if (this->isLoaded() && this->dirty)
-		{
-			this->_uploadDataToGpu(0, 0, this->getWidth(), this->getHeight());
-		}
-		this->dirty = false;
-		return true;
-		*/
-		hmutex::ScopeLock lock(&this->asyncDataMutex);
-		if (this->dirty)
-		{
-			this->dirty = false;
-			this->_uploadDataToGpu(0, 0, this->width, this->height);
-		}
-		return false;
 	}
 
 	bool Texture::clear()
@@ -1570,44 +1457,16 @@ namespace april
 		return newData;
 	}
 
-	Texture::Lock Texture::_tryLock(int x, int y, int w, int h)
+	bool Texture::_tryUploadDataToGpu()
 	{
-		Lock lock;
-		// TODOx - remove
-		/*
-		if (this->data != NULL)
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		if (this->dirty)
 		{
-			lock.activateLock(x, y, w, h, x, y, this->data, this->width, this->height, this->format);
+			this->dirty = false;
+			this->_uploadDataToGpu(0, 0, this->width, this->height);
+			return true;
 		}
-		else
-		{
-			this->loadAsync();
-			this->ensureLoaded();
-			lock = this->_tryLockSystem(x, y, w, h);
-		}
-		if (!lock.failed)
-		{
-			this->locked = true;
-		}
-		*/
-		return lock;
-	}
-
-	Texture::Lock Texture::_tryLock()
-	{
-		return this->_tryLock(0, 0, this->width, this->height);
-	}
-
-	bool Texture::_unlock(Texture::Lock lock, bool update)
-	{
-		// TODOx - remove
-		/*
-		if (!this->_unlockSystem(lock, update) && !lock.failed && update)
-		{
-			this->dirty = true;
-		}
-		*/
-		return update;
+		return false;
 	}
 
 	bool Texture::_uploadDataToGpu(int x, int y, int w, int h)

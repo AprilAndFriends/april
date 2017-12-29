@@ -62,7 +62,7 @@ namespace april
 			// only async on-demand textures shouldn't be loaded
 			if ((*it)->getLoadMode() != Texture::LoadMode::AsyncDeferredUpload && (*it)->isLoadedAsync())
 			{
-				(*it)->upload();
+				(*it)->_upload();
 				++count;
 				if (maxCount > 0 && count >= maxCount)
 				{
