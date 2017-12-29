@@ -396,7 +396,7 @@
     <ClInclude Include="..\..\src\async\StateUpdateCommand.h" />
     <ClInclude Include="..\..\src\async\SuspendCommand.h" />
     <ClInclude Include="..\..\src\async\UnassignWindowCommand.h" />
-    <ClCompile Include="..\..\src\async\UnloadTextureCommand.h" />
+    <ClInclude Include="..\..\src\async\UnloadTextureCommand.h" />
     <ClInclude Include="..\..\src\async\VertexRenderCommand.h" />
     <ClInclude Include="..\..\src\util\egl.h" />
     <ClInclude Include="..\..\src\RenderHelper.h" />
