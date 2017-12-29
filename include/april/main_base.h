@@ -39,7 +39,6 @@
 #endif
 
 /// @brief This function is called after the platform application has initialized. The developer implements this.
-/// @param[in] args An array of arguments.
 extern void __aprilApplicationInit();
 /// @brief This function is called before the platform application exits. The developer implements this.
 extern void __aprilApplicationDestroy();

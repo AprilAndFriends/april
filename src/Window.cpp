@@ -106,21 +106,21 @@ namespace april
 		this->destroy();
 	}
 
-	bool Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	bool Window::create(int width, int height, bool fullscreen, chstr title, Window::Options options)
 	{
 		if (!this->created)
 		{
 			this->created = true;
-			april::rendersys->_addAsyncCommand(new CreateWindowCommand(w, h, fullscreen, title, options));
+			april::rendersys->_addAsyncCommand(new CreateWindowCommand(width, height, fullscreen, title, options));
 			return true;
 		}
 		return false;
 	}
 	
-	void Window::_systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	void Window::_systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options)
 	{
 		hlog::writef(logTag, "Creating window: '%s' (%d, %d) %s, '%s', (options: %s)",
-			this->name.cStr(), w, h, fullscreen ? "fullscreen" : "windowed", title.cStr(), options.toString().cStr());
+			this->name.cStr(), width, height, fullscreen ? "fullscreen" : "windowed", title.cStr(), options.toString().cStr());
 		this->fullscreen = fullscreen;
 		this->title = title;
 		this->options = options;
@@ -129,8 +129,8 @@ namespace april
 		{
 			if (!fullscreen)
 			{
-				this->lastWidth = w;
-				this->lastHeight = h;
+				this->lastWidth = width;
+				this->lastHeight = height;
 			}
 			else
 			{
@@ -279,12 +279,12 @@ namespace april
 		this->fullscreen = value;
 	}
 
-	void Window::setResolution(int w, int h)
+	void Window::setResolution(int width, int height)
 	{
-		this->setResolution(w, h, this->isFullscreen());
+		this->setResolution(width, height, this->isFullscreen());
 	}
 
-	void Window::setResolution(int w, int h, bool fullscreen)
+	void Window::setResolution(int width, int height, bool fullscreen)
 	{
 		hlog::warnf(logTag, "setResolution() is not available in '%s'.", this->name.cStr());
 	}

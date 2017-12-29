@@ -84,13 +84,13 @@ namespace april
 		/// @brief Destructor.
 		virtual ~Window();
 		/// @brief Creates the Window.
-		/// @param[in] w Width of the window's rendering area.
-		/// @param[in] h Height of the window's rendering area.
+		/// @param[in] width Width of the window's rendering area.
+		/// @param[in] height Height of the window's rendering area.
 		/// @param[in] fullscreen Whether the window should be created in fullscreen or not.
 		/// @param[in] title The title to be displayed on the window title bar.
 		/// @param[in] options The Options object.
 		/// @return True if successful.
-		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		bool create(int width, int height, bool fullscreen, chstr title, Window::Options options);
 		/// @brief Destroys the Window.
 		/// @return True if successful.
 		bool destroy();
@@ -185,14 +185,14 @@ namespace april
 		virtual bool isCursorInside() const;
 
 		/// @brief Sets the Window resolution/size.
-		/// @param[in] w Width of the window's rendering area.
-		/// @param[in] h Height of the window's rendering area.
-		virtual void setResolution(int w, int h);
+		/// @param[in] width Width of the window's rendering area.
+		/// @param[in] height Height of the window's rendering area.
+		virtual void setResolution(int width, int height);
 		/// @brief Sets the Window resolution/size with fullscreen manipulation.
-		/// @param[in] w Width of the window's rendering area.
-		/// @param[in] h Height of the window's rendering area.
+		/// @param[in] width Width of the window's rendering area.
+		/// @param[in] height Height of the window's rendering area.
 		/// @param[in] fullscreen Whether the window should be switched to fullscreen or windowed.
-		virtual void setResolution(int w, int h, bool fullscreen);
+		virtual void setResolution(int width, int height, bool fullscreen);
 		/// @brief Toggles fullscreen/window mode.
 		/// @note Remembers the last windowed size and returns to it. Useful when using directly with a fullscreen hotkey.
 		/// @see setFullscreen
@@ -276,8 +276,8 @@ namespace april
 		/// @note This is a different concept from focus-change that is usually only used in certain implementations.
 		virtual void handleActivityChange(bool active);
 		/// @brief Handles a size-change event and propagates it to the delegate.
-		/// @param[in] w New width of the resolutin.
-		/// @param[in] h New height of the resolutin.
+		/// @param[in] width New width of the resolutin.
+		/// @param[in] height New height of the resolutin.
 		/// @param[in] fullscreen Whether the display is now fullscreen or windowed.
 		virtual void handleSizeChange(int width, int height, bool fullscreen);
 		/// @brief Handles a input-mode-change event and propagates it to the delegate.
@@ -338,13 +338,13 @@ namespace april
 		/// @note This is mostly used internally.
 		virtual void queueActivityChange(bool active);
 		/// @brief Queues a size change event for processing before the start of the next frame.
-		/// @param[in] w New width of the resolutin.
-		/// @param[in] h New height of the resolutin.
+		/// @param[in] width New width of the resolutin.
+		/// @param[in] height New height of the resolutin.
 		/// @param[in] fullscreen Whether the display is now fullscreen or windowed.
 		/// @note This is mostly used internally.
 		virtual void queueSizeChange(int width, int height, bool fullscreen);
 		/// @brief Queues a size change event for processing before the start of the next frame.
-		/// @param[in] size New window size.
+		/// @param[in] inputMode New input mode.
 		/// @note This is mostly used internally.
 		virtual void queueInputModeChange(const InputMode& inputMode);
 		/// @brief Queues a virtual-keyboard-change event and propagates it to the delegate.
@@ -494,13 +494,13 @@ namespace april
 		SystemDelegate* systemDelegate;
 
 		/// @brief Creates the Window.
-		/// @param[in] w Width of the window's rendering area.
-		/// @param[in] h Height of the window's rendering area.
+		/// @param[in] width Width of the window's rendering area.
+		/// @param[in] height Height of the window's rendering area.
 		/// @param[in] fullscreen Whether the window should be created in fullscreen or not.
 		/// @param[in] title The title to be displayed on the window title bar.
 		/// @param[in] options The Options object.
 		/// @return True if successful.
-		virtual void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		virtual void _systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options);
 		/// @brief Destroys the Window.
 		/// @return True if successful.
 		virtual void _systemDestroy();
@@ -521,10 +521,10 @@ namespace april
 		/// @see _setRenderSystemResolution(int w, int h, bool fullscreen)
 		void _setRenderSystemResolution();
 		/// @brief Calls the RenderSystem method for changing the resolution to synchronize Window and RenderSystem.
-		/// @param[in] w New width of the resolutin.
-		/// @param[in] h New height of the resolutin.
+		/// @param[in] width New width of the resolutin.
+		/// @param[in] height New height of the resolutin.
 		/// @param[in] fullscreen Whether the display is now fullscreen or windowed.
-		virtual void _setRenderSystemResolution(int w, int h, bool fullscreen);
+		virtual void _setRenderSystemResolution(int width, int height, bool fullscreen);
 
 		/// @brief Creates the actual system Cursor.
 		/// @param[in] fromResource Whether the Cursor is created from a resource file or a normal file.
