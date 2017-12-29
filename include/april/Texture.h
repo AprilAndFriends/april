@@ -26,9 +26,6 @@
 #include "Color.h"
 #include "Image.h"
 
-// TODOx - remove this once merged into trunk
-#define __APRIL_5_x_API
-
 namespace april
 {
 	class DestroyTextureCommand;
@@ -36,6 +33,7 @@ namespace april
 	class RenderSystem;
 	class ResetCommand;
 	class TextureAsync;
+	class UnloadTextureCommand;
 	
 	/// @brief Defines a generic texture.
 	class aprilExport Texture
@@ -45,6 +43,7 @@ namespace april
 		friend class RenderSystem;
 		friend class ResetCommand;
 		friend class TextureAsync;
+		friend class UnloadTextureCommand;
 
 		/// @class Type
 		/// @brief Defines texture types in order to control their behavior and certain features.
@@ -765,6 +764,8 @@ namespace april
 		/// @param[in] type The texture type.
 		/// @return True if successful.
 		virtual bool _deviceCreateTexture(unsigned char* data, int size, Type type) = 0;
+		/// @brief Unloads the device texture.
+		void _deviceUnloadTexture();
 		/// @brief Destroy the device texture.
 		/// @return True if successful.
 		virtual bool _deviceDestroyTexture() = 0;

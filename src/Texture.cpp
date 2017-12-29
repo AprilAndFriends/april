@@ -16,9 +16,10 @@
 #include "april.h"
 #include "Color.h"
 #include "Image.h"
+#include "RenderSystem.h"
 #include "Texture.h"
 #include "TextureAsync.h"
-#include "RenderSystem.h"
+#include "UnloadTextureCommand.h"
 
 #define HROUND_GRECT(rect) hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h)
 #define HROUND_GVEC2(vec2) hround(vec2.x), hround(vec2.y)
@@ -238,6 +239,25 @@ namespace april
 		{
 			delete[] this->dataAsync;
 		}
+	}
+
+	void Texture::_deviceUnloadTexture()
+	{
+		this->_deviceDestroyTexture();
+		hmutex::ScopeLock lockData(&this->asyncDataMutex);
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		this->loaded = false;
+		if (this->asyncLoadQueued)
+		{
+			this->asyncLoadDiscarded = true;
+		}
+		if (this->dataAsync != NULL)
+		{
+			delete[] this->dataAsync;
+			this->dataAsync = NULL;
+		}
+		this->firstUpload = true;
+		this->dirty = false;
 	}
 
 	int Texture::getWidth() const
@@ -591,24 +611,11 @@ namespace april
 
 	void Texture::unload()
 	{
-		if (this->_deviceDestroyTexture())
+		if (this->isLoadedAny())
 		{
 			hlog::write(logTag, "Unloading texture: " + this->_getInternalName());
 		}
-		hmutex::ScopeLock lockData(&this->asyncDataMutex);
-		hmutex::ScopeLock lock(&this->asyncLoadMutex);
-		this->loaded = false;
-		if (this->asyncLoadQueued)
-		{
-			this->asyncLoadDiscarded = true;
-		}
-		if (this->dataAsync != NULL)
-		{
-			delete[] this->dataAsync;
-			this->dataAsync = NULL;
-		}
-		this->firstUpload = true;
-		this->dirty = false;
+		april::rendersys->_addAsyncCommand(new UnloadTextureCommand(this));
 	}
 
 	bool Texture::ensureLoaded()

@@ -531,6 +531,7 @@
     <ClCompile Include="..\..\src\async\StateUpdateCommand.cpp" />
     <ClCompile Include="..\..\src\async\SuspendCommand.cpp" />
     <ClCompile Include="..\..\src\async\UnassignWindowCommand.cpp" />
+    <ClCompile Include="..\..\src\async\UnloadTextureCommand.cpp" />
     <ClCompile Include="..\..\src\events\ControllerEvent.cpp" />
     <ClCompile Include="..\..\src\events\GenericEvent.cpp" />
     <ClCompile Include="..\..\src\events\KeyEvent.cpp" />
@@ -668,6 +669,7 @@
     <ClInclude Include="..\..\src\async\StateUpdateCommand.h" />
     <ClInclude Include="..\..\src\async\SuspendCommand.h" />
     <ClInclude Include="..\..\src\async\UnassignWindowCommand.h" />
+    <ClCompile Include="..\..\src\async\UnloadTextureCommand.h" />
     <ClInclude Include="..\..\src\async\VertexRenderCommand.h" />
     <ClInclude Include="..\..\src\util\egl.h" />
     <ClInclude Include="..\..\src\RenderHelper.h" />

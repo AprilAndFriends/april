@@ -25,7 +25,7 @@ namespace april
 	{
 		if (this->texture != NULL)
 		{
-			this->texture->unload();
+			this->texture->_deviceUnloadTexture();
 			this->texture->waitForAsyncLoad(); // waiting for all async stuff to finish
 			delete this->texture;
 			this->texture = NULL;

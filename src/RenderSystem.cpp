@@ -225,7 +225,7 @@ namespace april
 			{
 				if ((*it)->isAsyncLoadQueued())
 				{
-					(*it)->unload(); // to cancel all async loads
+					(*it)->_deviceUnloadTexture(); // to cancel all async loads
 				}
 			}
 			this->waitForAsyncTextures();
@@ -1277,6 +1277,15 @@ namespace april
 		foreach (Texture*, it, textures)
 		{
 			(*it)->unload();
+		}
+	}
+
+	void RenderSystem::_deviceUnloadTextures()
+	{
+		harray<Texture*> textures = this->getTextures();
+		foreach (Texture*, it, textures)
+		{
+			(*it)->_deviceUnloadTexture();
 		}
 	}
 

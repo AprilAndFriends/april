@@ -201,7 +201,7 @@ namespace april
 	void OpenGLES_RenderSystem::_deviceSuspend()
 	{
 		OpenGL_RenderSystem::_deviceSuspend();
-		this->unloadTextures();
+		this->_deviceUnloadTextures();
 		this->_destroyShaders();
 	}
 

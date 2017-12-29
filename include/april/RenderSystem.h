@@ -856,6 +856,9 @@ namespace april
 		virtual void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count) = 0;
 		/// @brief Flushes the currently rendered data to the backbuffer for display.
 		virtual void _devicePresentFrame();
+		/// @brief Unloads all textures. Used internally only.
+		/// @note Useful for clearing all memory or if something invalidates textures and cannot guarantee that they are loaded anymore.
+		void _deviceUnloadTextures();
 
 		/// @brief Calculates the number of primitives based on the number of vertices.
 		/// @param[in] renderOperation The RenderOperation that is used for rendering

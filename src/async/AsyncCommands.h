@@ -29,6 +29,7 @@
 #include "StateUpdateCommand.h"
 #include "SuspendCommand.h"
 #include "UnassignWindowCommand.h"
+#include "UnloadTextureCommand.h"
 #include "VertexRenderCommand.h"
 
 #endif

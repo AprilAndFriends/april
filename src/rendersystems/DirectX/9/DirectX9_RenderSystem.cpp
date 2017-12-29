@@ -180,10 +180,7 @@ namespace april
 	{
 		RenderSystem::_deviceReset();
 		this->d3dDevice->EndScene();
-		foreach (Texture*, it, this->textures)
-		{
-			(*it)->unload();
-		}
+		this->_deviceUnloadTextures();
 		this->backBuffer->Release();
 		this->backBuffer = NULL;
 		HRESULT hr;
@@ -741,11 +738,7 @@ namespace april
 		if (hr == D3DERR_DEVICELOST)
 		{
 			hlog::write(logTag, "Direct3D9 Device lost, attempting to restore...");
-			harray<Texture*> textures = this->getTextures(); // using this approach to make sure no race condition happens
-			foreach (Texture*, it, textures)
-			{
-				(*it)->unload();
-			}
+			this->_deviceUnloadTextures();
 			this->backBuffer->Release();
 			this->backBuffer = NULL;
 			while (april::application->getState() == Application::State::Running)
