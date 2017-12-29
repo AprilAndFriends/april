@@ -195,6 +195,12 @@
 		84320A321FF524B6003A0539 /* WinUWP_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */; };
 		84320A331FF524B6003A0539 /* WinUWP_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */; };
 		84320A341FF524B7003A0539 /* WinUWP_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */; };
+		84320A371FF66B62003A0539 /* UnloadTextureCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A351FF66B62003A0539 /* UnloadTextureCommand.cpp */; };
+		84320A381FF66B62003A0539 /* UnloadTextureCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 84320A361FF66B62003A0539 /* UnloadTextureCommand.h */; };
+		84320A391FF66B74003A0539 /* UnloadTextureCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A351FF66B62003A0539 /* UnloadTextureCommand.cpp */; };
+		84320A3A1FF66B75003A0539 /* UnloadTextureCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A351FF66B62003A0539 /* UnloadTextureCommand.cpp */; };
+		84320A3B1FF66B75003A0539 /* UnloadTextureCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A351FF66B62003A0539 /* UnloadTextureCommand.cpp */; };
+		84320A3C1FF66B79003A0539 /* UnloadTextureCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 84320A361FF66B62003A0539 /* UnloadTextureCommand.h */; };
 		B4046B361ECDCA3C00F85550 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B321ECDCA3C00F85550 /* egl.cpp */; };
 		B4046B371ECDCA3C00F85550 /* egl.h in Headers */ = {isa = PBXBuildFile; fileRef = B4046B331ECDCA3C00F85550 /* egl.h */; };
 		B4046B381ECDCA3C00F85550 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */; };
@@ -609,6 +615,8 @@
 		84320A011FF4F19F003A0539 /* KeyDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KeyDelegate.cpp; path = src/delegates/KeyDelegate.cpp; sourceTree = "<group>"; };
 		84320A2B1FF524AE003A0539 /* WinUWP_main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WinUWP_main.cpp; path = src/platforms/WinUWP_main.cpp; sourceTree = "<group>"; };
 		84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WinUWP_Platform.cpp; path = src/platforms/WinUWP_Platform.cpp; sourceTree = "<group>"; };
+		84320A351FF66B62003A0539 /* UnloadTextureCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnloadTextureCommand.cpp; path = src/async/UnloadTextureCommand.cpp; sourceTree = "<group>"; };
+		84320A361FF66B62003A0539 /* UnloadTextureCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnloadTextureCommand.h; path = src/async/UnloadTextureCommand.h; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* april.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4046B321ECDCA3C00F85550 /* egl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egl.cpp; path = src/util/egl.cpp; sourceTree = "<group>"; };
@@ -1068,6 +1076,8 @@
 				8432090C1FF4EE5A003A0539 /* SuspendCommand.h */,
 				8432090D1FF4EE5A003A0539 /* UnassignWindowCommand.cpp */,
 				8432090E1FF4EE5A003A0539 /* UnassignWindowCommand.h */,
+				84320A351FF66B62003A0539 /* UnloadTextureCommand.cpp */,
+				84320A361FF66B62003A0539 /* UnloadTextureCommand.h */,
 				8432090F1FF4EE5A003A0539 /* VertexRenderCommand.h */,
 			);
 			name = async;
@@ -1544,6 +1554,7 @@
 				B455011C1BD7A7D100E75E43 /* OpenGLC_RenderSystem.h in Headers */,
 				D1E7203E16D37B2700B9C9AD /* SystemDelegate.h in Headers */,
 				D13681B0187BFB6600E66E32 /* Standard_main.h in Headers */,
+				84320A3C1FF66B79003A0539 /* UnloadTextureCommand.h in Headers */,
 				843209631FF4EEAB003A0539 /* ResetCommand.h in Headers */,
 				843209AB1FF4EF2C003A0539 /* TouchEvent.h in Headers */,
 				843209551FF4EEAB003A0539 /* AssignWindowCommand.h in Headers */,
@@ -1656,6 +1667,7 @@
 				D13681AD187BFB6600E66E32 /* RenderState.h in Headers */,
 				843209A11FF4EF27003A0539 /* TouchEvent.h in Headers */,
 				D13681A9187BFB6600E66E32 /* main_base.h in Headers */,
+				84320A381FF66B62003A0539 /* UnloadTextureCommand.h in Headers */,
 				843209191FF4EE5A003A0539 /* ClearCommand.h in Headers */,
 				B45501921BD7B6F200E75E43 /* OpenGLES_VertexShader.h in Headers */,
 				D1AF66D4170B1E5900A43743 /* UpdateDelegate.h in Headers */,
@@ -1826,6 +1838,7 @@
 				D1E7206416D37C5600B9C9AD /* Image.cpp in Sources */,
 				D1E7206716D37C5600B9C9AD /* ImageJpg.cpp in Sources */,
 				D1B4873919337479004674EB /* Mac_Platform.mm in Sources */,
+				84320A391FF66B74003A0539 /* UnloadTextureCommand.cpp in Sources */,
 				843209801FF4EEC3003A0539 /* DestroyCommand.cpp in Sources */,
 				843209851FF4EEC3003A0539 /* ResetCommand.cpp in Sources */,
 				8432097F1FF4EEC3003A0539 /* CreateWindowCommand.cpp in Sources */,
@@ -1905,6 +1918,7 @@
 				B44FBDA61BE0E44A00DD8995 /* AprilViewController.mm in Sources */,
 				843209C91FF4EF7B003A0539 /* KeyEvent.cpp in Sources */,
 				B4046B3D1ECDCB8900F85550 /* zlibUtil.cpp in Sources */,
+				84320A3B1FF66B75003A0539 /* UnloadTextureCommand.cpp in Sources */,
 				8432098E1FF4EF06003A0539 /* Application.cpp in Sources */,
 				843209531FF4EE72003A0539 /* UnassignWindowCommand.cpp in Sources */,
 				B44FBDA71BE0E44A00DD8995 /* Cursor.cpp in Sources */,
@@ -1999,6 +2013,7 @@
 				B45501861BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
 				D1B486B919337389004674EB /* Mac_LoadingOverlay.mm in Sources */,
 				D153475C178AD62A00151D1A /* InputDelegate.cpp in Sources */,
+				84320A3A1FF66B75003A0539 /* UnloadTextureCommand.cpp in Sources */,
 				D1B486C119337389004674EB /* Mac_Window.mm in Sources */,
 				843209391FF4EE71003A0539 /* CreateWindowCommand.cpp in Sources */,
 				B436D2E41D05AE9100DA2C15 /* RenderHelperLayered2D.cpp in Sources */,
@@ -2093,6 +2108,7 @@
 				B45501841BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
 				D1B486C019337389004674EB /* Mac_Window.mm in Sources */,
 				D1AF66AD170B1E5900A43743 /* aprilUtil.cpp in Sources */,
+				84320A371FF66B62003A0539 /* UnloadTextureCommand.cpp in Sources */,
 				D1AF66AE170B1E5900A43743 /* EventDelegate.cpp in Sources */,
 				8432096E1FF4EEC2003A0539 /* CreateWindowCommand.cpp in Sources */,
 				B436D2E01D05AE8800DA2C15 /* RenderHelperLayered2D.cpp in Sources */,

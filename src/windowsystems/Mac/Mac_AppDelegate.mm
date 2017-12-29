@@ -57,9 +57,8 @@ bool g_WindowFocusedBeforeSleep = false;
 - (void) applicationDidFinishLaunching: (NSNotification*) note
 {
 	NSLog(@"april::applicationDidFinishLaunching");
-	mAppFocused = true;	// register for sleep/wake notifications, needed for proper handling
+	mAppFocused = true;	// register for sleep/wake notifications, needed for proper handling of focus/unfocus events
 	april::application->init();
-	// of focus/unfocus events
 	if (april::window == NULL)
 	{
 		[NSApp terminate:nil];
@@ -77,7 +76,7 @@ bool g_WindowFocusedBeforeSleep = false;
 
 - (void) applicationWillTerminate:(NSNotification*) note
 {
-	if (april::window != NULL && april::isUsingCVDisplayLink())
+	if (april::isUsingCVDisplayLink())
 	{
 		hmutex::ScopeLock lock(&MAC_WINDOW->renderThreadSyncMutex);
 		gAppStarted = false;
