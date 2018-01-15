@@ -145,10 +145,6 @@ namespace april
 		return result;
 	}
 
-	void WinUWP_Window::_presentFrame()
-	{
-	}
-
 	void WinUWP_Window::checkEvents()
 	{
 		// TODOuwp - implement this

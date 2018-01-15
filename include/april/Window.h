@@ -49,6 +49,7 @@ namespace april
 	public:
 		friend class CreateWindowCommand;
 		friend class DestroyWindowCommand;
+		friend class RenderSystem;
 		friend class UnassignWindowCommand;
 
 		/// @brief Defines options for creation of the window.
@@ -207,11 +208,6 @@ namespace april
 		/// @brief Gets the Window's internal backend ID.
 		/// @return The Window's internal backend ID.
 		virtual void* getBackendId() const = 0;
-
-		/// @brief Flushes the currently rendered data to the backbuffer for display.
-		/// @param[in] systemEnabled Whether the system call is enabled.
-		/// @note Usually this doesn't need to be called manually.
-		void presentFrame(bool systemEnabled);
 
 		/// @brief Updates the entire application by one frame.
 		/// @param[in] timeDelta Time since last frame.
@@ -535,7 +531,8 @@ namespace april
 		virtual void _refreshCursor();
 
 		/// @brief Flushes the currently rendered data to the backbuffer for display.
-		virtual void _presentFrame() = 0;
+		/// @param[in] systemEnabled Whether the system call is enabled.
+		virtual void _presentFrame(bool systemEnabled);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 		// TODOaa - refactor or maybe even remove this

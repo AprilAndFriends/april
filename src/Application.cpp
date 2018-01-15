@@ -198,12 +198,6 @@ namespace april
 				april::window->setPresentFrameEnabled(true);
 #endif
 			}
-			else // required, otherwise a deadlock can occur
-			{
-				april::window->setPresentFrameEnabled(false);
-				april::rendersys->presentFrame();
-				april::window->setPresentFrameEnabled(true);
-			}
 			lock.release();
 			while (april::application->state == State::Running && april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
 			{

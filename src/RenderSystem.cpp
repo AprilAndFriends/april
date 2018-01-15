@@ -1344,7 +1344,7 @@ namespace april
 	void RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
 		this->flushFrame(true);
-		april::window->presentFrame(systemEnabled);
+		april::window->_presentFrame(systemEnabled);
 	}
 
 	unsigned int RenderSystem::_numPrimitives(const RenderOperation& renderOperation, int count) const

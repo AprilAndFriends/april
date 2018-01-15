@@ -59,7 +59,7 @@ namespace april
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor() { }
 		
-		void _presentFrame();
+		void _presentFrame(bool systemEnabled);
 
 	};
 

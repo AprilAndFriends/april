@@ -320,13 +320,9 @@ namespace april
 		april::rendersys->_deviceChangeResolution(width, height, fullscreen);
 	}
 	
-	void Window::presentFrame(bool systemEnabled)
+	void Window::_presentFrame(bool systemEnabled)
 	{
 		april::application->_updateFps();
-		if (systemEnabled)
-		{
-			this->_presentFrame();
-		}
 	}
 
 	bool Window::update(float timeDelta)

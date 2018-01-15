@@ -74,7 +74,7 @@ namespace april
 		
 		void _processEvents();
 		
-		void _presentFrame();
+		void _presentFrame(bool systemEnabled);
 		
 	};
 	

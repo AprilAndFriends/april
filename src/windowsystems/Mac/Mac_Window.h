@@ -88,7 +88,7 @@ namespace april
 		void _systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options);
 		void _systemDestroy();
 		
-		void _presentFrame();
+		void _presentFrame(bool systemEnabled);
 		
 	};
 	

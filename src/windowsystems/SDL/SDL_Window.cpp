@@ -225,18 +225,22 @@ namespace april
 		return Window::update(timeDelta);
 	}
 
-	void SDL_Window::_presentFrame()
+	void SDL_Window::_presentFrame(bool systemEnabled)
 	{
-#if defined(_WIN32) && defined(_OPENGL)
-		harray<hstr> renderSystems;
-		renderSystems += april::RenderSystemType::OpenGL1.getName();
-		renderSystems += april::RenderSystemType::OpenGLES1.getName();
-		renderSystems += april::RenderSystemType::OpenGLES2.getName();
-		if (renderSystems.has(april::rendersys->getName()))
+		Window::_presentFrame(systemEnabled);
+		if (systemEnabled)
 		{
-			SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());
-		}
+#if defined(_WIN32) && defined(_OPENGL)
+			harray<hstr> renderSystems;
+			renderSystems += april::RenderSystemType::OpenGL1.getName();
+			renderSystems += april::RenderSystemType::OpenGLES1.getName();
+			renderSystems += april::RenderSystemType::OpenGLES2.getName();
+			if (renderSystems.has(april::rendersys->getName()))
+			{
+				SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());
+			}
 #endif
+		}
 	}
 	
 	void SDL_Window::checkEvents()

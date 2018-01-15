@@ -63,7 +63,7 @@ namespace april
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor();
 
-		void _presentFrame();
+		void _presentFrame(bool systemEnabled);
 		
 		void _handleSDLKeyEvent(Window::KeyEventType type, SDL_Keycode keyCode, unsigned int unicode);
 		void _handleSDLMouseEvent(SDL_Event &evt);

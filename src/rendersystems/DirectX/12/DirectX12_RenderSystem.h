@@ -204,7 +204,7 @@ namespace april
 		void _deviceRender(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count);
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
-		void _devicePresentFrame();
+		void _devicePresentFrame(bool systemEnabled);
 
 		void _updatePipelineState(const RenderOperation& renderOperation);
 		void _renderDX12VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize);

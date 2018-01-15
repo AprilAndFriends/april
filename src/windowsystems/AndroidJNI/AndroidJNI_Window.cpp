@@ -81,11 +81,15 @@ namespace april
 		return Window::update(timeDelta);
 	}
 
-	void AndroidJNI_Window::_presentFrame()
+	void AndroidJNI_Window::_presentFrame(bool systemEnabled)
 	{
-		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodSwapBuffers, "swapBuffers", _JARGS(_JVOID, ));
-		env->CallStaticVoidMethod(classNativeInterface, methodSwapBuffers);
-		env->PopLocalFrame(NULL);
+		Window::_presentFrame(systemEnabled);
+		if (systemEnabled)
+		{
+			APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodSwapBuffers, "swapBuffers", _JARGS(_JVOID, ));
+			env->CallStaticVoidMethod(classNativeInterface, methodSwapBuffers);
+			env->PopLocalFrame(NULL);
+		}
 	}
 
 	void AndroidJNI_Window::queueTouchInput(const MouseEvent::Type& type, cgvec2 position, int index)

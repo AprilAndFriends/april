@@ -79,7 +79,7 @@ namespace april
 		void _refreshCursor();
 		void _updateCursorPosition();
 		
-		void _presentFrame();
+		void _presentFrame(bool systemEnabled);
 
 		static LRESULT CALLBACK _mainProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 

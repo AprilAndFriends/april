@@ -925,12 +925,15 @@ namespace april
 		return NULL;
 	}
 	
-	void DirectX11_RenderSystem::_devicePresentFrame()
+	void DirectX11_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
-		RenderSystem::_devicePresentFrame();
-		this->swapChain->Present(1, 0);
-		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
-		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+		RenderSystem::_devicePresentFrame(systemEnabled);
+		if (systemEnabled)
+		{
+			this->swapChain->Present(1, 0);
+			// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
+			this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+		}
 	}
 
 	void DirectX11_RenderSystem::updateOrientation()

@@ -165,20 +165,24 @@ namespace april
 		return viewcontroller;
 	}
 
-	void iOS_Window::_presentFrame()
+	void iOS_Window::_presentFrame(bool systemEnabled)
 	{
-		if (this->firstFrameDrawn)
+		Window::_presentFrame(systemEnabled)
+		if (systemEnabled)
 		{
-			[glview swapBuffers];
-		}
-		else
-		{
-			this->_processEvents();
-			if (!this->retainLoadingOverlay)
+			if (this->firstFrameDrawn)
 			{
-				[viewcontroller removeImageView:false];
+				[glview swapBuffers];
 			}
-			this->firstFrameDrawn = true;
+			else
+			{
+				this->_processEvents();
+				if (!this->retainLoadingOverlay)
+				{
+					[viewcontroller removeImageView:false];
+				}
+				this->firstFrameDrawn = true;
+			}
 		}
 	}
 
