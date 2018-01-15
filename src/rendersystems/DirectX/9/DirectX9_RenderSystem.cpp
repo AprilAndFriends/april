@@ -173,7 +173,7 @@ namespace april
 		this->_deviceClear(false);
 		this->d3dDevice->BeginScene();
 		this->renderTarget = NULL;
-		this->_devicePresentFrame();
+		this->_devicePresentFrame(true);
 	}
 
 	void DirectX9_RenderSystem::_deviceReset()
@@ -730,9 +730,9 @@ namespace april
 		return image;
 	}
 	
-	void DirectX9_RenderSystem::_devicePresentFrame()
+	void DirectX9_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
-		RenderSystem::_devicePresentFrame();
+		RenderSystem::_devicePresentFrame(systemEnabled);
 		this->d3dDevice->EndScene();
 		HRESULT hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
 		if (hr == D3DERR_DEVICELOST)
