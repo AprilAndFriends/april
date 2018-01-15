@@ -1338,13 +1338,13 @@ namespace april
 
 	void RenderSystem::presentFrame()
 	{
-		this->_addAsyncCommand(new PresentFrameCommand(*this->state));
+		this->_addAsyncCommand(new PresentFrameCommand(*this->state, april::window->isPresentFrameEnabled()));
 	}
 
-	void RenderSystem::_devicePresentFrame()
+	void RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
 		this->flushFrame(true);
-		april::window->presentFrame();
+		april::window->presentFrame(systemEnabled);
 	}
 
 	unsigned int RenderSystem::_numPrimitives(const RenderOperation& renderOperation, int count) const

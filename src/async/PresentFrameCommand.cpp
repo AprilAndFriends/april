@@ -13,14 +13,15 @@
 
 namespace april
 {
-	PresentFrameCommand::PresentFrameCommand(const RenderState& state) : RenderCommand(state)
+	PresentFrameCommand::PresentFrameCommand(const RenderState& state, bool systemEnabled) : RenderCommand(state)
 	{
+		this->systemEnabled = systemEnabled;
 	}
 	
 	void PresentFrameCommand::execute()
 	{
 		RenderCommand::execute();
-		april::rendersys->_devicePresentFrame();
+		april::rendersys->_devicePresentFrame(this->systemEnabled);
 		april::rendersys->_updateDeviceState(&this->state, true);
 	}
 	

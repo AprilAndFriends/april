@@ -20,11 +20,14 @@ namespace april
 	class PresentFrameCommand : public RenderCommand
 	{
 	public:
-		PresentFrameCommand(const RenderState& state);
+		PresentFrameCommand(const RenderState& state, bool systemEnabled);
 
 		bool isFinalizer() const { return true; }
 		
 		void execute();
+
+	protected:
+		bool systemEnabled;
 
 	};
 	

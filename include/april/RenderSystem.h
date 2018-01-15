@@ -855,7 +855,8 @@ namespace april
 		/// @param[in] count How many vertices from the array should be rendered.
 		virtual void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count) = 0;
 		/// @brief Flushes the currently rendered data to the backbuffer for display.
-		virtual void _devicePresentFrame();
+		/// @param[in] systemEnabled Whether the system present is actually enabled.
+		virtual void _devicePresentFrame(bool systemEnabled);
 		/// @brief Unloads all textures. Used internally only.
 		/// @note Useful for clearing all memory or if something invalidates textures and cannot guarantee that they are loaded anymore.
 		void _deviceUnloadTextures();

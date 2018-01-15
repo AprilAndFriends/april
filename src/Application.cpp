@@ -175,6 +175,7 @@ namespace april
 		UpdateDelegate* updateDelegate = NULL;
 		hmutex::ScopeLock lock;
 		hmutex::ScopeLock lockTimeDelta;
+		bool presented = true;
 		while (april::application->state == State::Running)
 		{
 			lock.acquire(&april::application->updateMutex);
@@ -196,6 +197,12 @@ namespace april
 				updateDelegate->onPresentFrame();
 				april::window->setPresentFrameEnabled(true);
 #endif
+			}
+			else // required, otherwise a deadlock can occur
+			{
+				april::window->setPresentFrameEnabled(false);
+				april::rendersys->presentFrame();
+				april::window->setPresentFrameEnabled(true);
 			}
 			lock.release();
 			while (april::application->state == State::Running && april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())

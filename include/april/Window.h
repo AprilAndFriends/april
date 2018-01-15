@@ -209,8 +209,9 @@ namespace april
 		virtual void* getBackendId() const = 0;
 
 		/// @brief Flushes the currently rendered data to the backbuffer for display.
+		/// @param[in] systemEnabled Whether the system call is enabled.
 		/// @note Usually this doesn't need to be called manually.
-		void presentFrame();
+		void presentFrame(bool systemEnabled);
 
 		/// @brief Updates the entire application by one frame.
 		/// @param[in] timeDelta Time since last frame.
