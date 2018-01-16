@@ -128,7 +128,7 @@ namespace april
 		this->state = new RenderState();
 		this->deviceState = new RenderState();
 		this->processingAsync = false;
-		this->frameAdvanceUpdates = 1;
+		this->frameAdvanceUpdates = 0;
 		this->statCurrentFrameRenderCalls = 0;
 		this->statLastFrameRenderCalls = 0;
 		this->statCurrentFrameTextureSwitches = 0;
@@ -217,25 +217,19 @@ namespace april
 			delete this->renderHelper;
 			this->renderHelper = NULL;
 		}
-		// first wait for queud textures to cancel
-		harray<Texture*> textures = this->getTextures();
-		if (this->hasAsyncTexturesQueued())
-		{
-			foreach (Texture*, it, textures)
-			{
-				if ((*it)->isAsyncLoadQueued())
-				{
-					(*it)->_deviceUnloadTexture(); // to cancel all async loads
-				}
-			}
-			this->waitForAsyncTextures();
-		}
-		// creating a copy (again), because deleting a texture modifies this->textures
-		textures = this->getTextures();
+		// deleting all textures safely
+		hmutex::ScopeLock lockTextures(&this->texturesMutex);
+		harray<Texture*> textures = this->textures;
+		this->textures.clear();
+		lockTextures.release();
+		this->waitForAsyncTextures();
 		foreach (Texture*, it, textures)
 		{
+			(*it)->_deviceUnloadTexture();
+			(*it)->waitForAsyncLoad();
 			delete (*it);
 		}
+		// misc
 		this->state->reset();
 		this->deviceState->reset();
 		foreach (AsyncCommandQueue*, it, this->asyncCommandQueues)

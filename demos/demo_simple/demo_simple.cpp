@@ -225,7 +225,7 @@ void __aprilApplicationInit()
 	textureRect.x = -textureRect.w * 0.5f;
 	textureRect.y = -textureRect.h * 0.5f;
 	// demonstrating some of the image manipulation methods
-	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::Format::RGBA, april::Texture::Type::Managed);
+	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::Format::RGBA);
 	manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 0, 0, texture);
 	manualTexture->invert(0, 0, 256, 128);
 	manualTexture->saturate(0, 128, 128, 128, 0.0f);
