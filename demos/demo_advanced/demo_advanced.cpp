@@ -50,10 +50,7 @@
 #define CIRCLE_RADIUS 8
 
 april::Cursor* cursor = NULL;
-april::Texture* texture = NULL;
-april::Texture* texture2 = NULL;
-april::Texture* texture3 = NULL;
-april::Texture* texture4 = NULL;
+april::Texture* textures[4] = { NULL, NULL, NULL, NULL};
 
 // vertices for render test
 april::TexturedVertex dv[4];
@@ -188,7 +185,7 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->translate(gvec2(64, 0));
 		april::rendersys->render(april::RenderOperation::TriangleStrip, sf, SHAPE_VERTICES);
 		// textured polygon
-		april::rendersys->setTexture(texture2);
+		april::rendersys->setTexture(textures[1]);
 		april::rendersys->translate(gvec2(64, 0));
 		april::rendersys->render(april::RenderOperation::TriangleStrip, sf, SHAPE_VERTICES);
 		// line strip polygon
@@ -205,14 +202,14 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->translate(gvec2(-50, 300));
 		for_iter (i, 0, 4)
 		{
-			april::rendersys->setTexture(texture2);
+			april::rendersys->setTexture(textures[1]);
 			april::rendersys->setBlendMode(april::BlendMode::Alpha);
 
 			april::rendersys->translate(gvec2(90, -32));
 			april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
 			april::rendersys->translate(gvec2(32, 32));
 
-			april::rendersys->setTexture(texture3);
+			april::rendersys->setTexture(textures[2]);
 			april::rendersys->setBlendMode(april::BlendMode::fromInt(i));
 			april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
 		}
@@ -222,17 +219,17 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->translate(gvec2(-50, 450));
 		for_iter (i, 0, 3)
 		{
-			april::rendersys->setTexture(texture2);
+			april::rendersys->setTexture(textures[1]);
 			april::rendersys->setColorMode(april::ColorMode::Multiply, 1.0f);
 			april::rendersys->translate(gvec2(90, -32));
 			april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
 			april::rendersys->translate(gvec2(32, 32));
-			april::rendersys->setTexture(texture3);
+			april::rendersys->setTexture(textures[2]);
 			april::rendersys->setColorMode(april::ColorMode::fromInt(i), 0.5f);
 			april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
 		}
 		april::rendersys->setModelviewMatrix(modelviewMatrix);
-		april::rendersys->setTexture(texture4);
+		april::rendersys->setTexture(textures[3]);
 		april::rendersys->translate(gvec2(0, 0));
 		april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
 		april::rendersys->translate(gvec2(200, 0));
@@ -252,7 +249,7 @@ class UpdateDelegate : public april::UpdateDelegate
 		bone.render();	
 #ifdef _ENGINE_RENDER_TEST
 		// testing all render methods
-		april::rendersys->setTexture(texture);
+		april::rendersys->setTexture(textures[0]);
 		april::rendersys->drawFilledRect(grect(drawRect.w - 110.0f, drawRect.h - 310.0f, 110.0f, 310.0f), april::Color::Black);
 		april::rendersys->render(april::RenderOperation::TriangleList, pv, 3);
 		april::rendersys->render(april::RenderOperation::TriangleList, &pv[1], 3, april::Color::Yellow);
@@ -373,10 +370,10 @@ void __aprilApplicationInit()
 #ifdef _WINRT
 	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
 #endif
-	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::Type::Managed);
-	texture2 = april::rendersys->createTextureFromResource(RESOURCE_PATH "camo", april::Texture::Type::Managed);
-	texture3 = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo", april::Texture::Type::Managed);
-	texture4 = april::rendersys->createTextureFromResource(RESOURCE_PATH "bloom", april::Texture::Type::Managed);
+	textures[0] = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::Type::Managed);
+	textures[1] = april::rendersys->createTextureFromResource(RESOURCE_PATH "camo", april::Texture::Type::Managed);
+	textures[2] = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo", april::Texture::Type::Managed);
+	textures[3] = april::rendersys->createTextureFromResource(RESOURCE_PATH "bloom", april::Texture::Type::Managed);
 	// background
 	dv[0].x = 0.0f;			dv[0].y = 0.0f;			dv[0].z = 0.0f;	dv[0].u = 0.0f;	dv[0].v = 0.0f;
 	dv[1].x = drawRect.w;	dv[1].y = 0.0f;			dv[1].z = 0.0f;	dv[1].u = 1.0f;	dv[1].v = 0.0f;
@@ -476,14 +473,14 @@ void __aprilApplicationDestroy()
 	april::window->setCursor(NULL);
 	april::window->destroyCursor(cursor);
 	cursor = NULL;
-	april::rendersys->destroyTexture(texture);
-	texture = NULL;
-	april::rendersys->destroyTexture(texture2);
-	texture2 = NULL;
-	april::rendersys->destroyTexture(texture3);
-	texture3 = NULL;
-	april::rendersys->destroyTexture(texture4);
-	texture4 = NULL;
+	april::rendersys->destroyTexture(textures[0]);
+	textures[0] = NULL;
+	april::rendersys->destroyTexture(textures[1]);
+	textures[1] = NULL;
+	april::rendersys->destroyTexture(textures[2]);
+	textures[2] = NULL;
+	april::rendersys->destroyTexture(textures[3]);
+	textures[3] = NULL;
 	april::destroy();
 	delete updateDelegate;
 	updateDelegate = NULL;
