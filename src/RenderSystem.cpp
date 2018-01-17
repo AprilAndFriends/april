@@ -127,6 +127,7 @@ namespace april
 		this->pixelOffset = 0.0f;
 		this->state = new RenderState();
 		this->deviceState = new RenderState();
+		this->lastAsyncCommandQueue = NULL;
 		this->processingAsync = false;
 		this->frameAdvanceUpdates = 0;
 		this->statCurrentFrameRenderCalls = 0;
@@ -438,6 +439,7 @@ namespace april
 				{
 					(*it)->execute();
 				}
+				/*
 				if (queue->isRepeatable())
 				{
 					if (this->lastAsyncCommandQueue != NULL)
@@ -450,6 +452,8 @@ namespace april
 				{
 					delete queue;
 				}
+				*/
+				delete queue;
 				lock.acquire(&this->asyncMutex);
 				this->processingAsync = false;
 				lock.release();
