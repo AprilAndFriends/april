@@ -302,19 +302,16 @@ namespace april
 	void Win32_Window::_presentFrame(bool systemEnabled)
 	{
 		Window::_presentFrame(systemEnabled);
-		if (systemEnabled)
-		{
 #ifdef _OPENGL
-			harray<hstr> renderSystems;
-			renderSystems += april::RenderSystemType::OpenGL1.getName();
-			renderSystems += april::RenderSystemType::OpenGLES1.getName();
-			renderSystems += april::RenderSystemType::OpenGLES2.getName();
-			if (renderSystems.has(april::rendersys->getName()))
-			{
-				SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());
-			}
-#endif
+		harray<hstr> renderSystems;
+		renderSystems += april::RenderSystemType::OpenGL1.getName();
+		renderSystems += april::RenderSystemType::OpenGLES1.getName();
+		renderSystems += april::RenderSystemType::OpenGLES2.getName();
+		if (renderSystems.has(april::rendersys->getName()))
+		{
+			SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());
 		}
+#endif
 	}
 	
 	void Win32_Window::checkEvents()

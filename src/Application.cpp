@@ -189,13 +189,9 @@ namespace april
 			updateDelegate = april::window->getUpdateDelegate(); // constantly getting to make sure not to use an outdated object
 			if (updateDelegate != NULL)
 			{
-#ifndef _ANDROID
-				updateDelegate->onPresentFrame();
-#else // on AndroidJNI the backend does buffer swapping so this single call needs to be ignored
 				april::window->setPresentFrameEnabled(false);
 				updateDelegate->onPresentFrame();
 				april::window->setPresentFrameEnabled(true);
-#endif
 			}
 			lock.release();
 			while (april::application->state == State::Running && april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
@@ -231,8 +227,7 @@ namespace april
 	void Application::renderFrameSync()
 	{
 		hmutex::ScopeLock lock(&this->updateMutex);
-		// TODO - enable and fix
-		//april::rendersys->_repeatLastFrame();
+		april::rendersys->_repeatLastFrame();
 	}
 
 }
