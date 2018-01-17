@@ -167,7 +167,7 @@ namespace april
 
 	void iOS_Window::_presentFrame(bool systemEnabled)
 	{
-		Window::_presentFrame(systemEnabled)
+		Window::_presentFrame(systemEnabled);
 		if (systemEnabled)
 		{
 			if (this->firstFrameDrawn)
