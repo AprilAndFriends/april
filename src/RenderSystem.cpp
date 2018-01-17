@@ -226,7 +226,7 @@ namespace april
 		foreach (Texture*, it, textures)
 		{
 			(*it)->_deviceUnloadTexture();
-			(*it)->waitForAsyncLoad();
+			(*it)->_waitForInternalAsyncLoad();
 			delete (*it);
 		}
 		// misc

@@ -25,7 +25,7 @@ namespace april
 		if (this->texture != NULL)
 		{
 			UnloadTextureCommand::execute();
-			this->texture->waitForAsyncLoad(); // waiting for all async stuff to finish
+			this->texture->_waitForInternalAsyncLoad(); // waiting for all async stuff to finish
 			delete this->texture;
 			this->texture = NULL;
 		}

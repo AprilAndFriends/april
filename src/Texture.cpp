@@ -443,9 +443,8 @@ namespace april
 		this->asyncLoadDiscarded = false; // a possible previous unload call must be canceled
 		if (this->asyncLoadQueued)
 		{
-			// TODOx - this could be a hazard for deadlocks
 			lock.release();
-			this->waitForAsyncLoad();
+			this->_waitForInternalAsyncLoad();
 			return true; // will already call this method again through TextureAsync::update() so it does not need to continue
 		}
 		int size = 0;
@@ -647,6 +646,23 @@ namespace april
 			lock.release();
 			hthread::sleep(0.1f);
 			time -= 0.0001f;
+		}
+	}
+
+	void Texture::_waitForInternalAsyncLoad()
+	{
+		TextureAsync::prioritizeLoad(this);
+		hmutex::ScopeLock lock;
+		while (true)
+		{
+			TextureAsync::update();
+			lock.acquire(&this->asyncLoadMutex);
+			if (!this->asyncLoadQueued)
+			{
+				break;
+			}
+			lock.release();
+			hthread::sleep(0.001f);
 		}
 	}
 

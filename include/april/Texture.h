@@ -813,6 +813,10 @@ namespace april
 		/// @see waitForAsyncLoad
 		/// @return True if successful or already loaded.
 		bool _ensureInternalLoaded();
+		/// @brief Waits for the texture to load asynchronously.
+		/// @note This should usually not be used externally.
+		/// @see load
+		void _waitForInternalAsyncLoad();
 
 		/// @brief Clears the entire image and sets all image data to zeroes without safety checks. Used internally only.
 		/// @return True if successful.
