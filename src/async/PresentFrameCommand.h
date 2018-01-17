@@ -23,6 +23,7 @@ namespace april
 		PresentFrameCommand(const RenderState& state, bool systemEnabled);
 
 		bool isFinalizer() const { return true; }
+		bool isRepeatable() const { return true; }
 		
 		void execute();
 

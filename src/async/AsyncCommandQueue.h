@@ -28,6 +28,8 @@ namespace april
 
 		AsyncCommandQueue();
 		~AsyncCommandQueue();
+
+		bool isRepeatable() const;
 		
 	};
 	

@@ -614,7 +614,7 @@ namespace april
 			return true;
 		}
 		this->_loadAsync();
-		if (this->asyncLoadQueued || this->dataAsync != NULL || (this->filename == "" && this->data != NULL))
+		if ((this->asyncLoadQueued || this->dataAsync != NULL) && this->filename != "")
 		{
 			lock.release();
 			TextureAsync::prioritizeLoad(this);
@@ -653,7 +653,7 @@ namespace april
 	hstream* Texture::_prepareAsyncStream()
 	{
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
-		if (!this->asyncLoadQueued || this->asyncLoadDiscarded || this->filename == "")
+		if (!this->asyncLoadQueued || this->asyncLoadDiscarded || (this->filename == "" && this->data != NULL))
 		{
 			this->asyncLoadQueued = false;
 			this->asyncLoadDiscarded = false;

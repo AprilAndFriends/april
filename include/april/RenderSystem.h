@@ -603,6 +603,8 @@ namespace april
 		RenderHelper* renderHelper;
 		/// @brief Async command queue.
 		harray<AsyncCommandQueue*> asyncCommandQueues;
+		/// @brief Last special async command queue.
+		AsyncCommandQueue* lastAsyncCommandQueue;
 		/// @brief Whether async commands are being processed right now.
 		bool processingAsync;
 		/// @brief How many times a render call was called during this frame.
@@ -857,6 +859,9 @@ namespace april
 		/// @brief Flushes the currently rendered data to the backbuffer for display.
 		/// @param[in] systemEnabled Whether the system present is actually enabled.
 		virtual void _devicePresentFrame(bool systemEnabled);
+		/// @brief Renders previous frame again.
+		/// @see _devicePresentFrame
+		void _repeatLastFrame();
 		/// @brief Unloads all textures. Used internally only.
 		/// @note Useful for clearing all memory or if something invalidates textures and cannot guarantee that they are loaded anymore.
 		void _deviceUnloadTextures();

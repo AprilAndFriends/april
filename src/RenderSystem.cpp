@@ -237,6 +237,11 @@ namespace april
 			delete (*it);
 		}
 		this->asyncCommandQueues.clear();
+		if (this->lastAsyncCommandQueue != NULL)
+		{
+			delete this->lastAsyncCommandQueue;
+			this->lastAsyncCommandQueue = NULL;
+		}
 		this->statCurrentFrameRenderCalls = 0;
 		this->statLastFrameRenderCalls = 0;
 		this->statCurrentFrameTextureSwitches = 0;
@@ -433,7 +438,18 @@ namespace april
 				{
 					(*it)->execute();
 				}
-				delete queue;
+				if (queue->isRepeatable())
+				{
+					if (this->lastAsyncCommandQueue != NULL)
+					{
+						delete this->lastAsyncCommandQueue;
+					}
+					this->lastAsyncCommandQueue = queue;
+				}
+				else
+				{
+					delete queue;
+				}
 				lock.acquire(&this->asyncMutex);
 				this->processingAsync = false;
 				lock.release();
@@ -1339,6 +1355,22 @@ namespace april
 	{
 		this->flushFrame(true);
 		april::window->_presentFrame(systemEnabled);
+	}
+
+	void RenderSystem::_repeatLastFrame()
+	{
+		if (this->lastAsyncCommandQueue != NULL)
+		{
+			hmutex::ScopeLock lock(&this->asyncMutex);
+			this->processingAsync = true;
+			lock.release();
+			foreach (AsyncCommand*, it, this->lastAsyncCommandQueue->commands)
+			{
+				(*it)->execute();
+			}
+			lock.acquire(&this->asyncMutex);
+			this->processingAsync = false;
+		}
 	}
 
 	unsigned int RenderSystem::_numPrimitives(const RenderOperation& renderOperation, int count) const

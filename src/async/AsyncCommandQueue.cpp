@@ -24,5 +24,10 @@ namespace april
 			delete (*it);
 		}
 	}
+
+	bool AsyncCommandQueue::isRepeatable() const
+	{
+		return (this->commands.size() > 0 && this->commands.last()->isRepeatable());
+	}
 	
 }
