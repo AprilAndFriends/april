@@ -175,7 +175,6 @@ namespace april
 		UpdateDelegate* updateDelegate = NULL;
 		hmutex::ScopeLock lock;
 		hmutex::ScopeLock lockTimeDelta;
-		bool presented = true;
 		while (april::application->state == State::Running)
 		{
 			lock.acquire(&april::application->updateMutex);
