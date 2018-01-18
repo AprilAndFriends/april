@@ -134,7 +134,6 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 			CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(mDisplayLink, cglContext, cglPixelFormat);
 			CVDisplayLinkStart(mDisplayLink);
 		}
-		[context makeCurrentContext];
 	}
 }
 
