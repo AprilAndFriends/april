@@ -41,12 +41,42 @@ static NSString* getLocalizedString(NSString* key, NSString* fallback)
 @end
 
 @interface AprilApplication : NSApplication
+@property bool appRunning;
 @end
 
 @implementation AprilApplication
 
+/*
+- (void)run
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[self finishLaunching];
+	self.appRunning = true;
+	NSEvent* event = nil;
+	do
+	{
+		[pool release];
+		pool = [[NSAutoreleasePool alloc] init];
+		event = [self nextEventMatchingMask:NSAnyEventMask untilDate:[NSDate distantFuture] inMode:NSDefaultRunLoopMode dequeue:YES];
+		[self sendEvent:event];
+		[self updateWindows];
+		hlog::error("OK", "UPDATE");
+		if (april::application != NULL && april::application->getState() == april::Application::State::Running)
+		{
+			april::application->update();
+			if (april::application->getState() != april::Application::State::Running)
+			{
+				april::application->finish();
+			}
+		}
+	} while (self.appRunning);
+	[pool release];
+}
+*/
+
 - (void)terminate:(id)sender
 {
+	self.appRunning = false;
 #ifdef _SDL
 	gAprilShouldInvokeQuitCallback = 1;
 #else

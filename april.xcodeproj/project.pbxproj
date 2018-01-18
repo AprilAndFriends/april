@@ -828,7 +828,7 @@
 		D1E7206216D37C5600B9C9AD /* ImageJpt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageJpt.cpp; path = src/images/ImageJpt.cpp; sourceTree = "<group>"; };
 		D1E7206316D37C5600B9C9AD /* ImagePng.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImagePng.cpp; path = src/images/ImagePng.cpp; sourceTree = "<group>"; };
 		D1E7207116D37C6A00B9C9AD /* TimerSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerSDL.cpp; path = src/timers/TimerSDL.cpp; sourceTree = "<group>"; };
-		D1E7207316D37C7000B9C9AD /* TimerPosix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerPosix.cpp; path = src/timers/TimerPosix.cpp; sourceTree = "<group>"; };
+		D1E7207316D37C7000B9C9AD /* TimerPosix.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = TimerPosix.cpp; path = src/timers/TimerPosix.cpp; sourceTree = "<group>"; };
 		D1E7207616D37C7800B9C9AD /* TimerWin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TimerWin.cpp; path = src/timers/TimerWin.cpp; sourceTree = "<group>"; };
 		D1FED157192A3B5F00BE6A6D /* Cursor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cursor.cpp; path = src/Cursor.cpp; sourceTree = "<group>"; };
 		D1FED15E192A3B7B00BE6A6D /* Cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cursor.h; path = include/april/Cursor.h; sourceTree = "<group>"; };

@@ -71,6 +71,22 @@ bool g_WindowFocusedBeforeSleep = false;
 	}
 }
 
+/*
+- (void) applicationWillUpdate:(NSNotification*)notification
+{
+	if (april::application != NULL && april::application->getState() == april::Application::State::Running)
+	{
+		april::application->update();
+		//[[self openGLContext] flushBuffer];
+		if (april::application->getState() != april::Application::State::Running)
+		{
+			//[gWindow terminateMainLoop];
+		}
+	}
+	//[gView draw];
+}
+*/
+
 - (void) applicationWillTerminate:(NSNotification*) note
 {
 	if (april::isUsingCVDisplayLink())

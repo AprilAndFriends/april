@@ -14,16 +14,81 @@
 #include "RenderSystem.h"
 #include "Timer.h"
 
+#ifdef _IOS
+#import <Foundation/Foundation.h>
+#include <mach/mach_time.h>
+#endif
+#ifdef _MAC
+#include <sys/sysctl.h>
+#import <AppKit/NSWindow.h>
+#import <Foundation/NSString.h>
+#endif
+#ifdef _ANDROID
+#include <sys/sysinfo.h>
+#endif
+
 namespace april
 {
+#if !defined(_WIN32) && !defined(_ANDROID)
+	inline static struct timeval _simpleUnixNowTime()
+	{
+		struct timeval result;
+		struct timezone tz;
+		gettimeofday(&result, &tz);
+		return result;
+	}
+#endif
+	
+	inline static int64_t _currentMicroTime()
+	{
+#ifdef _IOS
+		// iOS does not support CLOCK_MONOTONIC_RAW (before iOS 10 clock_gettime() wasn't supported at all)
+		mach_timebase_info_data_t info;
+		mach_timebase_info(&info);
+		uint64_t result = mach_absolute_time();
+		result *= info.numer;
+		result /= info.denom;
+		return (result / 1000LL);
+#else
+#ifdef _MAC
+		SInt32 minor;
+		// Mac OSX only started supporting clock_gettime() after 10.12, can be removed when min. supported Mac version becomes 10.12
+		if (Gestalt(gestaltSystemVersionMinor, &minor) == noErr && minor < 12)
+		{
+			struct timeval bootTime;
+			size_t size = sizeof(bootTime);
+			static int mib[2] = { CTL_KERN, KERN_BOOTTIME };
+			if (sysctl(mib, 2, &bootTime, &size, NULL, 0) != -1 && bootTime.tv_sec != 0)
+			{
+				struct timeval now = _simpleUnixNowTime();
+				// cast first, because if we multiply by 1000 before casting we could get an overflow on 32 bit systems
+				int64_t tv_sec = (int64_t)(now.tv_sec - bootTime.tv_sec);
+				int64_t tv_usec = (int64_t)(now.tv_usec - bootTime.tv_usec);
+				return (tv_sec * 1000000LL + tv_usec);
+			}
+			return 0LL;
+		}
+#endif
+		struct timespec ts;
+		if (clock_gettime(CLOCK_MONOTONIC_RAW, &ts) == 0)
+		{
+			// cast first, because if we multiply by 1000 before casting we could get an overflow on 32 bit systems
+			int64_t tv_sec = (int64_t)ts.tv_sec;
+			int64_t tv_nsec = (int64_t)ts.tv_nsec;
+			return (tv_sec * 1000000LL + tv_nsec / 1000LL);
+		}
+		return 0LL;
+#endif
+	}
+	
 	Timer::Timer()
 	{
 		this->difference = 0.0f;
 		this->td1 = 0.0;
 		this->td2 = 0.0;
-		this->frequency = 1LL;
-		this->resolution = 0.001;
-		this->start = (int64_t)htickCount();
+		this->frequency = 1000000LL;
+		this->resolution = 0.000001;
+		this->start = _currentMicroTime();
 		this->performanceTimer = false;
 		this->performanceTimerStart = 0;
 		this->performanceTimerElapsed = 0;
@@ -35,10 +100,10 @@ namespace april
 	
 	double Timer::getTime() const
 	{
-		return ((double)((int64_t)htickCount() - this->start) * this->resolution * 1000.0);
+		return ((double)(_currentMicroTime() - this->start) * this->frequency);
 	}
 	
-	float Timer::diff(bool update)
+	double Timer::diff(bool update)
 	{
 		if (update)
 		{
@@ -50,10 +115,10 @@ namespace april
 	void Timer::update()
 	{
 		this->td2 = this->getTime();
-		this->difference = (float)((this->td2 - this->td1) * 0.001);
-		if (this->difference < 0)
+		this->difference = this->td2 - this->td1;
+		if (this->difference < 0.0)
 		{
-			this->difference = 0; // in case user has moved the clock back, don't allow negative increments
+			this->difference = 0.0; // in case user has moved the clock back, don't allow negative increments
 		}
 		this->td1 = this->td2;
 	}

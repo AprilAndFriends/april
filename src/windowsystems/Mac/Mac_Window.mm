@@ -141,7 +141,7 @@ namespace april
 		}
 		gWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
 		[gWindow configure];
-		setTitle(windowTitle);
+		this->setTitle(windowTitle);
 		createLoadingOverlay(gWindow);
 		if (fullscreen)
 		{
@@ -367,7 +367,7 @@ namespace april
 	{
 		if (this->fpsCounter)
 		{
-			hstr newTitle = title + hsprintf(" [FPS: %d]", april::application->getFps());
+			hstr newTitle = /*title +*/ hsprintf(" [FPS: %d]", april::application->getFps());
 			// optimization to prevent setting title every frame
 			if (newTitle == this->fpsTitle)
 			{
@@ -433,7 +433,6 @@ namespace april
 			}
 			[gView presentFrame];
 			[gView setNeedsDisplay:YES];
-			[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.01]];
 			if (displayLink)
 			{
 				this->setIgnoreUpdateFlag(false);

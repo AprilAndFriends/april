@@ -34,7 +34,6 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 
 @implementation AprilMacOpenGLView
 
-
 -(void)cursorCheck:(NSTimer*) t
 {
 	// kspes@20150819 - Starting MacOS 10.10.5 I've noticed cursor rects getting messed up in fullscreen mode (windowed works fine). So this code here is a hack/workarround that problem
@@ -135,6 +134,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 			CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(mDisplayLink, cglContext, cglPixelFormat);
 			CVDisplayLinkStart(mDisplayLink);
 		}
+		[context makeCurrentContext];
 	}
 }
 
@@ -180,17 +180,18 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 			mStartedDrawing = false;
 			return;
 		}
-		NSOpenGLContext* context = [self openGLContext];
-		[context makeCurrentContext];
 		if (april::application != NULL && april::application->getState() == april::Application::State::Running)
 		{
 			april::application->update();
+			NSOpenGLContext* context = [self openGLContext];
 			[context flushBuffer];
+			[context makeCurrentContext];
 			if (april::application->getState() != april::Application::State::Running)
 			{
 				[gWindow terminateMainLoop];
 			}
 		}
+		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.001]];
 		mStartedDrawing = false;
 	}
 	if (MAC_WINDOW->messageBoxQueue.size() > 0)
@@ -235,8 +236,11 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 	}
 	else
 	{
-		[[self openGLContext] makeCurrentContext];
-		[[self openGLContext] flushBuffer];
+		/*
+		NSOpenGLContext* context = [self openGLContext];
+		[context flushBuffer];
+		[context makeCurrentContext];
+		 */
 	}
 }
 

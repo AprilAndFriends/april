@@ -25,7 +25,6 @@ namespace april
 		this->mTimerElapsed = 0;
 		performanceTimerElapsed = 0;
 		performanceTimer = 0;
-		
 		// for sdl:
 		performanceTimer = 0; // was: "false"
 		this->mTimerStart = SDL_GetTicks();
@@ -37,12 +36,12 @@ namespace april
 	{
 	}
 	
-	float Timer::getTime()
+	double Timer::getTime()
 	{
-		return (float)(SDL_GetTicks() - this->mTimerStart);
+		return (double)(SDL_GetTicks() - this->mTimerStart);
 	}
 	
-	float Timer::diff(bool doUpdate)
+	double Timer::diff(bool doUpdate)
 	{
 		if (doUpdate)
 		{
@@ -53,8 +52,8 @@ namespace april
 	
 	void Timer::update()
 	{
-		this->td2 = getTime();
-		this->dt = (this->td2-this->td) * 0.1f;
+		this->td2 = this->getTime();
+		this->dt = (this->td2 - this->td);
 		if (this->dt < 0)
 		{
 			this->dt = 0; // in case user has moved the clock back, don't allow negative increments

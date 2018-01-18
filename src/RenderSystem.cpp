@@ -439,6 +439,14 @@ namespace april
 				{
 					(*it)->execute();
 				}
+				if (queue->commands.size() > 0)
+				{
+					AsyncCommand* command = queue->commands.last();
+					if (command->isFinalizer())
+					{
+						result = true;
+					}
+				}
 				/*
 				if (queue->isRepeatable())
 				{
@@ -457,7 +465,7 @@ namespace april
 				lock.acquire(&this->asyncMutex);
 				this->processingAsync = false;
 				lock.release();
-				result = true;
+				//result = true;
 			}
 			/*
 			else

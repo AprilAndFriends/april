@@ -98,7 +98,7 @@ namespace april
 		this->state = State::Idle;
 	}
 
-	void Application::update()
+	bool Application::update()
 	{
 		TextureAsync::update();
 		april::window->checkEvents();
@@ -115,7 +115,7 @@ namespace april
 		hmutex::ScopeLock lock(&this->timeDeltaMutex);
 		this->timeDelta += timeDelta;
 		lock.release();
-		april::rendersys->update(timeDelta);
+		return april::rendersys->update(timeDelta);
 	}
 
 	void Application::_updateSystem()

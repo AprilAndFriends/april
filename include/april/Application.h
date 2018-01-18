@@ -68,7 +68,7 @@ namespace april
 		/// @brief The current FPS.
 		HL_DEFINE_GETSET(int, fps, Fps);
 		/// @brief The FPS resolution.
-		HL_DEFINE_GETSET(float, fpsResolution, FpsResolution);
+		HL_DEFINE_GETSET(double, fpsResolution, FpsResolution);
 		/// @brief The maximum allowed time-delta between frames.
 		/// @note Limiting this makes sense, because on weak hardware configurations it allows that large frameskips don't result in too large time skips.
 		HL_DEFINE_GETSET(float, timeDeltaMaxLimit, TimeDeltaMaxLimit);
@@ -83,8 +83,9 @@ namespace april
 		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.
 		void enterMainLoop();
 		/// @brief Performs the update of one frame.
+		/// @return True if a system command was executed.
 		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.
-		void update();
+		bool update();
 		/// @brief Performs the update when finishing.
 		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.
 		void updateFinishing();
@@ -124,9 +125,9 @@ namespace april
 		/// @brief Current counter for FPS calculation.
 		int fpsCount;
 		/// @brief Current timer for FPS calculation.
-		float fpsTimer;
+		double fpsTimer;
 		/// @brief FPS update resolution.
-		float fpsResolution;
+		double fpsResolution;
 		/// @brief Maximum allowed time-delta that are propagated into the UpdateDelegate.
 		/// @note Limiting this makes sense, because on weak hardware configurations it allows that large frameskips don't result in too large time skips.
 		float timeDeltaMaxLimit;
