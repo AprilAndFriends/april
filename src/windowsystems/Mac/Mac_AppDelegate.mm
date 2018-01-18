@@ -70,8 +70,8 @@ bool g_WindowFocusedBeforeSleep = false;
 	if (april::isUsingCVDisplayLink())
 	{
 		hmutex::ScopeLock lock(&MAC_WINDOW->renderThreadSyncMutex);
-		gAppStarted = true;
 	}
+	gAppStarted = true;
 }
 
 - (void) applicationWillTerminate:(NSNotification*) note
@@ -79,8 +79,8 @@ bool g_WindowFocusedBeforeSleep = false;
 	if (april::isUsingCVDisplayLink())
 	{
 		hmutex::ScopeLock lock(&MAC_WINDOW->renderThreadSyncMutex);
-		gAppStarted = false;
 	}
+	gAppStarted = false;
 	april::application->updateFinishing();
 	april::application->destroy();
 }

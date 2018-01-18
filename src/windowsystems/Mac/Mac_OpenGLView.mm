@@ -24,7 +24,7 @@
 #define MAC_WINDOW ((april::Mac_Window*)april::window)
 
 static AprilMacOpenGLView* gView;
-extern bool gAppStarted;
+extern bool gAppStarted; // TODO - probably can be removed now that april::Application::State is used
 extern AprilCocoaWindow* gWindow;
 
 static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* displayLinkContext)
@@ -153,7 +153,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 		t1 = htickCount();
 #endif
 		hmutex::ScopeLock lock(&MAC_WINDOW->renderThreadSyncMutex);
-		if (gAppStarted)
+		if (gAppStarted && april::application != NULL)
 		{
 			NSOpenGLContext* context = [gView openGLContext];
 			[context makeCurrentContext];
@@ -185,7 +185,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 		}
 		NSOpenGLContext* context = [self openGLContext];
 		[context makeCurrentContext];
-		if (april::application != NULL)
+		if (gAppStarted && april::application != NULL)
 		{
 			april::application->update();
 			[context flushBuffer];
