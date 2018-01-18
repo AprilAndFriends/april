@@ -598,6 +598,10 @@ namespace april
 		hmutex::ScopeLock lock(&this->texturesMutex);
 		this->textures -= texture;
 		lock.release();
+		if (this->state->texture == texture)
+		{
+			this->state->texture = NULL;
+		}
 		this->_addAsyncCommand(new DestroyTextureCommand(texture));
 	}
 

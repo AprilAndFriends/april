@@ -20,9 +20,6 @@ namespace april
 	
 	void ClearCommand::execute()
 	{
-		// TODO - removing texture usage due to an unusual crash on Mac (only when using "cageplayer") that would try to access potentially deleted textures
-		this->state.useTexture = false;
-		this->state.texture = NULL;
 		RenderCommand::execute();
 		april::rendersys->_deviceClear(this->useDepth);
 	}
