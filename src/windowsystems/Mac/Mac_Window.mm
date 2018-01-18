@@ -367,13 +367,14 @@ namespace april
 	{
 		if (this->fpsCounter)
 		{
-			hstr fpsTitle = title + hsprintf(" [FPS: %d]", april::application->getFps());
+			hstr newTitle = title + hsprintf(" [FPS: %d]", april::application->getFps());
 			// optimization to prevent setting title every frame
-			if (this->fpsTitle != fpsTitle)
+			if (newTitle == this->fpsTitle)
 			{
-				this->fpsTitle = fpsTitle;
-				[gWindow _setTitle:[NSString stringWithUTF8String:this->fpsTitle.cStr()]];
+				return;
 			}
+			this->fpsTitle = newTitle;
+			[gWindow _setTitle:[NSString stringWithUTF8String:newTitle.cStr()]];
 		}
 		else
 		{

@@ -160,11 +160,14 @@ namespace april
 	{
 		if (this->fpsCounter)
 		{
-			hstr t = title + hsprintf(" [FPS: %d]", april::application->getFps());
+			hstr newTitle = title + hsprintf(" [FPS: %d]", april::application->getFps());
 			// optimization to prevent setting title every frame
-			if (t == this->fpsTitle) return;
-			this->fpsTitle = t;
-			SetWindowTextW(this->hWnd, t.wStr().c_str());
+			if (newTitle == this->fpsTitle)
+			{
+				return;
+			}
+			this->fpsTitle = newTitle;
+			SetWindowTextW(this->hWnd, newTitle.wStr().c_str());
 		}
 		else
 		{
