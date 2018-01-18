@@ -24,7 +24,6 @@
 #define MAC_WINDOW ((april::Mac_Window*)april::window)
 
 static AprilMacOpenGLView* gView;
-extern bool gAppStarted; // TODO - probably can be removed now that april::Application::State is used
 extern AprilCocoaWindow* gWindow;
 
 static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* displayLinkContext)
@@ -153,7 +152,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 		t1 = htickCount();
 #endif
 		hmutex::ScopeLock lock(&MAC_WINDOW->renderThreadSyncMutex);
-		if (gAppStarted && april::application != NULL)
+		if (april::application != NULL && april::application->getState() == april::Application::State::Running)
 		{
 			NSOpenGLContext* context = [gView openGLContext];
 			[context makeCurrentContext];
@@ -166,8 +165,6 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 				printf("overdraw: %d ms\n", t2 - t1);
 			}
 #endif
-			// TODOx - is this still needed?
-			//april::rendersys->flushFrame(true);
 			CGLFlushDrawable([context CGLContextObj]);
 			CGLUnlockContext([context CGLContextObj]);
 			if (april::application->getState() != april::Application::State::Running)
@@ -185,7 +182,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 		}
 		NSOpenGLContext* context = [self openGLContext];
 		[context makeCurrentContext];
-		if (gAppStarted && april::application != NULL)
+		if (april::application != NULL && april::application->getState() == april::Application::State::Running)
 		{
 			april::application->update();
 			[context flushBuffer];

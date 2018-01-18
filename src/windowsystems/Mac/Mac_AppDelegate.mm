@@ -18,8 +18,6 @@
 
 #define MAC_WINDOW ((april::Mac_Window*)april::window)
 
-bool gAppStarted = false;
-
 NSString* getApplicationName();
 
 bool g_WindowFocusedBeforeSleep = false;
@@ -71,7 +69,6 @@ bool g_WindowFocusedBeforeSleep = false;
 	{
 		hmutex::ScopeLock lock(&MAC_WINDOW->renderThreadSyncMutex);
 	}
-	gAppStarted = true;
 }
 
 - (void) applicationWillTerminate:(NSNotification*) note
@@ -80,7 +77,6 @@ bool g_WindowFocusedBeforeSleep = false;
 	{
 		hmutex::ScopeLock lock(&MAC_WINDOW->renderThreadSyncMutex);
 	}
-	gAppStarted = false;
 	april::application->updateFinishing();
 	april::application->destroy();
 }
