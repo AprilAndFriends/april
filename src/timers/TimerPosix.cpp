@@ -86,7 +86,7 @@ namespace april
 		this->difference = 0.0f;
 		this->td1 = 0.0;
 		this->td2 = 0.0;
-		this->frequency = 1000000LL;
+		this->frequency = 1000LL;
 		this->resolution = 0.000001;
 		this->start = _currentMicroTime();
 		this->performanceTimer = false;
@@ -100,7 +100,7 @@ namespace april
 	
 	double Timer::getTime() const
 	{
-		return ((double)(_currentMicroTime() - this->start) * this->frequency);
+		return ((double)(_currentMicroTime() - this->start) * this->frequency * 1000.0);
 	}
 	
 	double Timer::diff(bool update)
@@ -115,11 +115,7 @@ namespace april
 	void Timer::update()
 	{
 		this->td2 = this->getTime();
-		this->difference = this->td2 - this->td1;
-		if (this->difference < 0.0)
-		{
-			this->difference = 0.0; // in case user has moved the clock back, don't allow negative increments
-		}
+		this->difference = hmax((this->td2 - this->td1) * 0.001, 0.0); // limiting to 0 in case user has moved the clock back, don't allow negative increments
 		this->td1 = this->td2;
 	}
 

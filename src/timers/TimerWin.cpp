@@ -72,11 +72,7 @@ namespace april
 	void Timer::update()
 	{
 		this->td2 = this->getTime();
-		this->difference = (float)((this->td2 - this->td1) * 0.001);
-		if (this->difference < 0)
-		{
-			this->difference = 0; // in case user has moved the clock back, don't allow negative increments
-		}
+		this->difference = hmax((this->td2 - this->td1) * 0.001, 0.0); // limiting to 0 in case user has moved the clock back, don't allow negative increments
 		this->td1 = this->td2;
 	}
 
