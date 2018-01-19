@@ -32,7 +32,7 @@ namespace april
 		if (!QueryPerformanceFrequency((LARGE_INTEGER*)&this->frequency))
 		{
 			hlog::warn(logTag, "Performance timer not available, multimedia timer will be used instead!");
-			this->start = (int64_t)htickCount();
+			this->start = htickCount();
 			this->resolution = 0.001;
 			this->frequency = 1000LL;
 		}
@@ -57,10 +57,10 @@ namespace april
 			QueryPerformanceCounter((LARGE_INTEGER*)&time);
 			return ((double)(time - this->performanceTimerStart) * this->resolution * 1000.0);
 		}
-		return ((double)((int64_t)htickCount() - this->start) * this->resolution * 1000.0);
+		return ((double)(htickCount() - this->start) * this->resolution * 1000.0);
 	}
 	
-	float Timer::diff(bool update)
+	double Timer::diff(bool update)
 	{
 		if (update)
 		{
