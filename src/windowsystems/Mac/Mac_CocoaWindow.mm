@@ -40,7 +40,7 @@ namespace april
 
 - (void)timerEvent:(NSTimer*) t
 {
-F	// Avoid CPU overload while the app is waiting for screen to refresh
+	// Avoid CPU overload while the app is waiting for screen to refresh
 	if (mView->mStartedDrawing || april::rendersys->getAsyncQueuesCount() <= 0)
 	{
 		hthread::sleep(1);
