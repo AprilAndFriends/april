@@ -29,7 +29,7 @@
 
 namespace april
 {
-#if !defined(_WIN32) && !defined(_ANDROID)
+#ifdef _MAC
 	inline static struct timeval _simpleUnixNowTime()
 	{
 		struct timeval result;
@@ -83,12 +83,12 @@ namespace april
 	
 	Timer::Timer()
 	{
-		this->difference = 0.0f;
-		this->td1 = 0.0;
+		this->difference = 0.0;
 		this->td2 = 0.0;
 		this->frequency = 1000LL;
 		this->resolution = 0.000001;
 		this->start = _currentMicroTime();
+		this->td1 = this->start;
 		this->performanceTimer = false;
 		this->performanceTimerStart = 0;
 		this->performanceTimerElapsed = 0;
@@ -100,7 +100,7 @@ namespace april
 	
 	double Timer::getTime() const
 	{
-		return ((double)(_currentMicroTime() - this->start) * this->frequency * 1000.0);
+		return (double)(_currentMicroTime() - this->start);
 	}
 	
 	double Timer::diff(bool update)
@@ -115,7 +115,7 @@ namespace april
 	void Timer::update()
 	{
 		this->td2 = this->getTime();
-		this->difference = hmax((this->td2 - this->td1) * 0.001, 0.0); // limiting to 0 in case user has moved the clock back, don't allow negative increments
+		this->difference = hmax((this->td2 - this->td1) * this->resolution, 0.0); // limiting to 0 in case user has moved the clock back, don't allow negative increments
 		this->td1 = this->td2;
 	}
 

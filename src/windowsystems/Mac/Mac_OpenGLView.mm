@@ -182,6 +182,8 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 			mStartedDrawing = false;
 			return;
 		}
+		NSOpenGLContext* context = [self openGLContext];
+		[context makeCurrentContext];
 		if (april::application != NULL && april::application->getState() == april::Application::State::Running)
 		{
 			april::application->update();
