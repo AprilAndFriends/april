@@ -23,12 +23,14 @@
 
 #define MAC_WINDOW ((april::Mac_Window*)april::window)
 
-static AprilMacOpenGLView* gView;
-extern AprilCocoaWindow* gWindow;
+namespace april
+{
+	AprilMacOpenGLView* macGlView = nil;
+}
 
 static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp* now, const CVTimeStamp* outputTime, CVOptionFlags flagsIn, CVOptionFlags* flagsOut, void* displayLinkContext)
 {
-	[gView draw];
+	[april::macGlView draw];
 	return kCVReturnSuccess;
 }
 
@@ -50,7 +52,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 	{
 		if (current != mCursor)
 		{
-			[gWindow invalidateCursorRectsForView:self];
+			[april::macCocoaWindow invalidateCursorRectsForView:self];
 			[mCursor set];
 		}
 	}
@@ -58,7 +60,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 	{
 		if (current != mBlankCursor)
 		{
-			[gWindow invalidateCursorRectsForView:self];
+			[april::macCocoaWindow invalidateCursorRectsForView:self];
 			[mBlankCursor set];
 		}
 	}
@@ -66,15 +68,15 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 	{
 		if (current != [NSCursor arrowCursor])
 		{
-			[gWindow invalidateCursorRectsForView:self];
+			[april::macCocoaWindow invalidateCursorRectsForView:self];
 			[[NSCursor arrowCursor] set];
 		}
 	}
 }
 
--(id) initWithFrame:(NSRect)frameRect
+-(id) initWithFrame:(NSRect)frameRect withPixels:(NSOpenGLPixelFormat*)pixelFormat
 {
-	gView = self;
+	april::macGlView = self;
 	mDisplayLink = nil;
 	mFrameRect = frameRect;
 	mUseBlankCursor = false;
@@ -96,35 +98,36 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 	return self;
 }
 
--(void)initOpenGL
+-(void) initApril
 {
-	// set up pixel format
 	int n = 0;
-	NSOpenGLPixelFormatAttribute a[64] = {0};
-	a[n++] = NSOpenGLPFANoRecovery;
-	a[n++] = NSOpenGLPFADoubleBuffer;
-	a[n++] = NSOpenGLPFADepthSize; a[n++] = (NSOpenGLPixelFormatAttribute) 16;
+	NSOpenGLPixelFormatAttribute attributes[64] = {0};
+	attributes[n++] = NSOpenGLPFANoRecovery;
+	attributes[n++] = NSOpenGLPFADoubleBuffer;
+	attributes[n++] = NSOpenGLPFADepthSize;
+	attributes[n++] = (NSOpenGLPixelFormatAttribute)16;
 	if (isLionOrNewer())
 	{
-		a[n++] = kCGLPFAOpenGLProfile; a[n++] = kCGLOGLPVersion_Legacy;
+		attributes[n++] = kCGLPFAOpenGLProfile;
+		attributes[n++] = kCGLOGLPVersion_Legacy;
 	}
-	a[n++] = 0;
-	NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:a];
-	if (pf == NULL)
+	attributes[n++] = 0;
+	NSOpenGLPixelFormat* pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
+	if (pixelFormat == NULL)
 	{
 		hlog::error(april::logTag, "Unable to create requested OpenGL pixel format");
 	}
-	if (self = [super initWithFrame:mFrameRect pixelFormat:[pf autorelease]])
+	self = [super initWithFrame:mFrameRect pixelFormat:[pixelFormat autorelease]];
+	if (self != NULL)
 	{
 		NSOpenGLContext* context = [self openGLContext];
 		[context makeCurrentContext];
-		// Synchronize buffer swaps with vertical refresh rate
-		GLint swapInt = 1;
+		GLint swapInterval = 1;
 		if (april::rendersys->getOptions().vSync == false)
 		{
-			swapInt = 0;
+			swapInterval = 0;
 		}
-		[context setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
+		[context setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
 		if (april::isUsingCVDisplayLink())
 		{
 			CGLContextObj cglContext = [[self openGLContext] CGLContextObj];
@@ -137,7 +140,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 	}
 }
 
--(void)draw
+-(void) draw
 {
 	bool displayLink = april::isUsingCVDisplayLink();
 	if (displayLink)
@@ -147,13 +150,13 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 			return;
 		}
 #ifdef _OVERDRAW_DEBUG
-		unsigned int t1, t2;
-		t1 = htickCount();
+		unsigned int t1 = htickCount();
+		unsigned int t2 = 0;
 #endif
 		hmutex::ScopeLock lock(&MAC_WINDOW->renderThreadSyncMutex);
 		if (april::application != NULL && april::application->getState() == april::Application::State::Running)
 		{
-			NSOpenGLContext* context = [gView openGLContext];
+			NSOpenGLContext* context = [april::macGlView openGLContext];
 			[context makeCurrentContext];
 			CGLLockContext([context CGLContextObj]);
 			april::application->update();
@@ -168,7 +171,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 			CGLUnlockContext([context CGLContextObj]);
 			if (april::application->getState() != april::Application::State::Running)
 			{
-				[gWindow terminateMainLoop];
+				[april::macCocoaWindow terminateMainLoop];
 			}
 		}
 	}
@@ -182,15 +185,11 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 		if (april::application != NULL && april::application->getState() == april::Application::State::Running)
 		{
 			april::application->update();
-			NSOpenGLContext* context = [self openGLContext];
-			[context flushBuffer];
-			[context makeCurrentContext];
 			if (april::application->getState() != april::Application::State::Running)
 			{
-				[gWindow terminateMainLoop];
+				[april::macCocoaWindow terminateMainLoop];
 			}
 		}
-		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.001]];
 		mStartedDrawing = false;
 	}
 	if (MAC_WINDOW->messageBoxQueue.size() > 0)
@@ -203,6 +202,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 
 -(void)drawRect:(NSRect)dirtyRect
 {
+	[super drawRect:dirtyRect];
 	bool displayLink = april::isUsingCVDisplayLink();
 	if (displayLink)
 	{
@@ -235,11 +235,9 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 	}
 	else
 	{
-		/*
 		NSOpenGLContext* context = [self openGLContext];
 		[context flushBuffer];
 		[context makeCurrentContext];
-		 */
 	}
 }
 

@@ -53,4 +53,8 @@ struct MessageBoxParams
 
 @end
 
+namespace april
+{
+	extern AprilCocoaWindow* macCocoaWindow;
+}
 #endif

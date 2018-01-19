@@ -24,9 +24,11 @@
 	NSRect mFrameRect;
     CVDisplayLinkRef mDisplayLink;
 	NSTimer* mTimer;
+
 }
+
+- (void) initApril;
 - (void) draw;
-- (void) initOpenGL;
 - (void) presentFrame;
 - (void) setUseBlankCursor:(BOOL)value;
 - (void) setCursor:(NSCursor*)cursor;
@@ -34,4 +36,8 @@
 
 @end
 
+namespace april
+{
+	extern AprilMacOpenGLView* macGlView;
+}
 #endif

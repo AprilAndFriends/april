@@ -422,6 +422,35 @@ namespace april
 		this->state->projectionMatrix = value;
 		this->state->projectionMatrixChanged = true;
 	}
+	
+	/*
+	bool RenderSystem::isNextCommandPresentFrame()
+	{
+		bool result = false;
+		hmutex::ScopeLock lock(&this->asyncMutex);
+		if (this->asyncCommandQueues.size() < 2)
+		{
+			return false;
+		}
+		AsyncCommandQueue* queue = this->asyncCommandQueues.first();
+		if ((*it)->commands.size() > 0 &&
+	AsyncCommandQueue* queue = this->asyncCommandQueues.removeFirst();
+	this->processingAsync = true;
+	lock.release();
+	foreach (AsyncCommand*, it, queue->commands)
+	{
+		(*it)->execute();
+	}
+	if (queue->commands.size() > 0)
+	{
+		AsyncCommand* command = queue->commands.last();
+		if (command->isFinalizer())
+		{
+			result = true;
+		}
+	}
+	}
+			*/
 
 	bool RenderSystem::update(float timeDelta)
 	{
@@ -442,7 +471,7 @@ namespace april
 				if (queue->commands.size() > 0)
 				{
 					AsyncCommand* command = queue->commands.last();
-					if (command->isFinalizer())
+					if (command->isFinalizer() && !command->isSystemCommand())
 					{
 						result = true;
 					}

@@ -17,6 +17,7 @@
 #include <hltypes/hlog.h>
 #include <hltypes/hthread.h>
 
+#include "Application.h"
 #include "april.h"
 #include "Mac_Keys.h"
 #include "Mac_LoadingOverlay.h"
@@ -30,6 +31,8 @@ static bool gFullscreenToggleRequest = false;
 
 namespace april
 {
+	AprilCocoaWindow* macCocoaWindow = nil;
+	
 	bool hasDisplayLinkThreadStarted();
 }
 
@@ -38,7 +41,7 @@ namespace april
 - (void)timerEvent:(NSTimer*) t
 {
 	// Avoid CPU overload while the app is waiting for screen to refresh
-	if (mView->mStartedDrawing)
+	if (mView->mStartedDrawing || april::rendersys->getAsyncQueuesCount() <= 0)
 	{
 		hthread::sleep(1);
 		return;

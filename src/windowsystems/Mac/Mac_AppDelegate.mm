@@ -77,13 +77,13 @@ bool g_WindowFocusedBeforeSleep = false;
 	if (april::application != NULL && april::application->getState() == april::Application::State::Running)
 	{
 		april::application->update();
-		//[[self openGLContext] flushBuffer];
+		//[[self glContext] flushBuffer];
 		if (april::application->getState() != april::Application::State::Running)
 		{
-			//[gWindow terminateMainLoop];
+			//[april::macCocoaWindow terminateMainLoop];
 		}
 	}
-	//[gView draw];
+	//[april::macGlView draw];
 }
 */
 
