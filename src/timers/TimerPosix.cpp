@@ -8,6 +8,8 @@
 
 #if defined(_UNIX) || defined(_ANDROID)
 #include <sys/time.h>
+#include <time.h>
+
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
