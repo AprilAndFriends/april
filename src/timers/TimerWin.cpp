@@ -43,7 +43,7 @@ namespace april
 			this->performanceTimerElapsed = this->performanceTimerStart;
 			this->start = this->performanceTimerStart;
 		}
-		this->td1 = this->start;
+		this->td1 = (double)this->start;
 	}
 	
 	Timer::~Timer()
@@ -56,9 +56,9 @@ namespace april
 		{
 			int64_t time;
 			QueryPerformanceCounter((LARGE_INTEGER*)&time);
-			return ((double)(time - this->performanceTimerStart) * this->resolution * 1000.0);
+			return ((double)(time - this->performanceTimerStart));
 		}
-		return ((double)(htickCount() - this->start) * this->resolution * 1000.0);
+		return ((double)(htickCount() - this->start));
 	}
 	
 	double Timer::diff(bool update)
