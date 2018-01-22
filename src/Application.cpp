@@ -102,7 +102,7 @@ namespace april
 	{
 		TextureAsync::update();
 		april::window->checkEvents();
-		float timeDelta = this->timer.diff(true);
+		float timeDelta = (float)this->timer.diff(true);
 		if (!april::window->isFocused())
 		{
 			timeDelta = 0.0f;
