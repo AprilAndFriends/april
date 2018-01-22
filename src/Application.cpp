@@ -37,14 +37,11 @@ namespace april
 
 	Application* application = NULL;
 	
-	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : state(State::Idle), autoPresentFrame(false), suspended(false),
-		timeDelta(0.0f), fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f), updateThread(&_asyncUpdate, "APRIL Async Update")
+	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : state(State::Idle), suspended(false), timeDelta(0.0f),
+		fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f), updateThread(&_asyncUpdate, "APRIL Async Update")
 	{
 		this->aprilApplicationInit = aprilApplicationInit;
 		this->aprilApplicationDestroy = aprilApplicationDestroy;
-#ifdef _ANDROID
-		this->autoPresentFrame = true;
-#endif
 	}
 	
 	Application::~Application()
@@ -63,6 +60,7 @@ namespace april
 			}
 			hthread::sleep(0.001f);
 		}
+		this->timer.update();
 	}
 
 	void Application::destroy()
@@ -77,6 +75,7 @@ namespace april
 		this->fps = 0;
 		this->fpsCount = 0;
 		this->fpsTimer = 0.0f;
+		this->timer.update();
 		while (this->state == State::Running)
 		{
 			this->update();
@@ -186,13 +185,17 @@ namespace april
 			{
 				april::application->finish();
 			}
+			april::window->setPresentFrameEnabled(false);
 			updateDelegate = april::window->getUpdateDelegate(); // constantly getting to make sure not to use an outdated object
 			if (updateDelegate != NULL)
 			{
-				april::window->setPresentFrameEnabled(false);
 				updateDelegate->onPresentFrame();
-				april::window->setPresentFrameEnabled(true);
 			}
+			else
+			{
+				april::rendersys->presentFrame();
+			}
+			april::window->setPresentFrameEnabled(true);
 			lock.release();
 			while (april::application->state == State::Running && april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
 			{
@@ -210,6 +213,7 @@ namespace april
 		if (!this->suspended)
 		{
 			this->updateMutex.lock();
+			hlog::write(logTag, "Application suspend.");
 			this->suspended = true;
 			april::rendersys->_flushAsyncCommands();
 		}
@@ -219,6 +223,7 @@ namespace april
 	{
 		if (this->suspended)
 		{
+			hlog::write(logTag, "Application resume.");
 			this->suspended = false;
 			this->updateMutex.unlock();
 		}

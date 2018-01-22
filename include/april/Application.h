@@ -112,8 +112,6 @@ namespace april
 		void (*aprilApplicationDestroy)();
 		/// @brief The current application state.
 		State state;
-		/// @brief Whether automatic presentFrame() implementation is used by the underlying system.
-		bool autoPresentFrame;
 		/// @brief Whether the application has been suspended. Required by some OSes.
 		bool suspended;
 		/// @brief The Timer object used for timing purposes.

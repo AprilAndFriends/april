@@ -71,22 +71,6 @@ bool g_WindowFocusedBeforeSleep = false;
 	}
 }
 
-/*
-- (void) applicationWillUpdate:(NSNotification*)notification
-{
-	if (april::application != NULL && april::application->getState() == april::Application::State::Running)
-	{
-		april::application->update();
-		//[[self glContext] flushBuffer];
-		if (april::application->getState() != april::Application::State::Running)
-		{
-			//[april::macCocoaWindow terminateMainLoop];
-		}
-	}
-	//[april::macGlView draw];
-}
-*/
-
 - (void) applicationWillTerminate:(NSNotification*) note
 {
 	if (april::isUsingCVDisplayLink())

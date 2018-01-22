@@ -390,6 +390,19 @@ namespace april
 		return TextureAsync::isRunning();
 	}
 
+	bool RenderSystem::hasAsyncTexturesUploadQueued() const
+	{
+		harray<Texture*> textures = april::rendersys->getTextures();
+		foreach (Texture*, it, textures)
+		{
+			if ((*it)->getLoadMode() != Texture::LoadMode::AsyncDeferredUpload && (*it)->isLoadedAsync())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	grect RenderSystem::getViewport() const
 	{
 		return this->state->viewport;
