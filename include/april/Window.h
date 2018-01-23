@@ -29,6 +29,7 @@
 
 namespace april
 {
+	class Application;
 	class CreateWindowCommand;
 	class ControllerDelegate;
 	class Cursor;
@@ -47,6 +48,7 @@ namespace april
 	class aprilExport Window
 	{
 	public:
+		friend class Application;
 		friend class CreateWindowCommand;
 		friend class DestroyWindowCommand;
 		friend class RenderSystem;
@@ -505,7 +507,7 @@ namespace april
 		/// @note This is usually used only internally and is needed for some internal call ordering purposes.
 		virtual void _systemUnassign();
 
-		/// @brief Processed queued events.
+		/// @brief Processes queued events.
 		void _processEvents();
 
 		/// @brief Internally safe method for creating a Cursor object.

@@ -200,6 +200,7 @@ namespace april
 			while (april::application->state == State::Running && april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
 			{
 				hthread::sleep(0.001f);
+				april::window->_processEvents();
 			}
 		}
 		(*april::application->aprilApplicationDestroy)();
