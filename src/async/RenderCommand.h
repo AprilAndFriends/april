@@ -23,7 +23,9 @@ namespace april
 	public:
 		RenderCommand(const RenderState& state);
 
+		RenderState* getState() { return &this->state; }
 		bool isUseState() const { return true; }
+		bool isRepeatable() const { return true; }
 		
 		void execute();
 

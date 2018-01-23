@@ -29,7 +29,13 @@ namespace april
 		AsyncCommandQueue();
 		~AsyncCommandQueue();
 
+		HL_DEFINE_GETSET(int, repeatCount, RepeatCount);
 		bool isRepeatable() const;
+
+		void setupNextRepeat();
+
+	protected:
+		int repeatCount;
 		
 	};
 	

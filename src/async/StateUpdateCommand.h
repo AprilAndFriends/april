@@ -23,8 +23,10 @@ namespace april
 	public:
 		StateUpdateCommand(const RenderState& state);
 
+		RenderState* getState() { return &this->state; }
 		bool isUseState() const { return true; }
 		bool isSystemCommand() const { return true; }
+		bool isRepeatable() const { return true; }
 
 		void execute();
 

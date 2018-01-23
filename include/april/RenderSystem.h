@@ -202,6 +202,8 @@ namespace april
 		HL_DEFINE_GET(RenderMode, renderMode, RenderMode);
 		/// @brief Gets how frames in advance can be updated.
 		HL_DEFINE_GET(int, frameAdvanceUpdates, FrameAdvanceUpdates);
+		/// @brief Gets/sets how many times a frame should be duplicated during rendering.
+		HL_DEFINE_GETSET(int, frameDuplicates, FrameDuplicates);
 		/// @brief Gets how many times a render call was called during this frame.
 		HL_DEFINE_GET(int, statCurrentFrameRenderCalls, StatCurrentFrameRenderCalls);
 		/// @brief Gets how many times a render call was called during the last frame.
@@ -612,6 +614,8 @@ namespace april
 		bool processingAsync;
 		/// @brief How many times a render call was called during this frame.
 		int frameAdvanceUpdates;
+		/// @brief Gets how many times a frame should be duplicated during rendering.
+		int frameDuplicates;
 
 		/// @brief How many times a render call was called during this frame.
 		int statCurrentFrameRenderCalls;

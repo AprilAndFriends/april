@@ -13,6 +13,8 @@
 #ifndef APRIL_UNLOAD_TEXTURE_COMMAND_H
 #define APRIL_UNLOAD_TEXTURE_COMMAND_H
 
+#include <hltypes/hltypesUtil.h>
+
 #include "AsyncCommand.h"
 
 namespace april
@@ -24,6 +26,7 @@ namespace april
 	public:
 		UnloadTextureCommand(Texture* texture);
 
+		HL_DEFINE_GET(Texture*, texture, Texture);
 		bool isFinalizer() const { return true; }
 
 		void execute();

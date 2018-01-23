@@ -130,6 +130,7 @@ namespace april
 		this->lastAsyncCommandQueue = NULL;
 		this->processingAsync = false;
 		this->frameAdvanceUpdates = 0;
+		this->frameDuplicates = 0;
 		this->statCurrentFrameRenderCalls = 0;
 		this->statLastFrameRenderCalls = 0;
 		this->statCurrentFrameTextureSwitches = 0;
@@ -334,7 +335,12 @@ namespace april
 	int RenderSystem::getAsyncQueuesCount()
 	{
 		hmutex::ScopeLock lock(&this->asyncMutex);
-		return hmax(this->asyncCommandQueues.size() - 1, 0);
+		int result = hmax(this->asyncCommandQueues.size() - 1, 0);
+		if (this->lastAsyncCommandQueue != NULL)
+		{
+			++result;
+		}
+		return result;
 	}
 
 	harray<Texture*> RenderSystem::getTextures()
@@ -436,99 +442,51 @@ namespace april
 		this->state->projectionMatrixChanged = true;
 	}
 	
-	/*
-	bool RenderSystem::isNextCommandPresentFrame()
-	{
-		bool result = false;
-		hmutex::ScopeLock lock(&this->asyncMutex);
-		if (this->asyncCommandQueues.size() < 2)
-		{
-			return false;
-		}
-		AsyncCommandQueue* queue = this->asyncCommandQueues.first();
-		if ((*it)->commands.size() > 0 &&
-	AsyncCommandQueue* queue = this->asyncCommandQueues.removeFirst();
-	this->processingAsync = true;
-	lock.release();
-	foreach (AsyncCommand*, it, queue->commands)
-	{
-		(*it)->execute();
-	}
-	if (queue->commands.size() > 0)
-	{
-		AsyncCommand* command = queue->commands.last();
-		if (command->isFinalizer())
-		{
-			result = true;
-		}
-	}
-	}
-			*/
-
 	bool RenderSystem::update(float timeDelta)
 	{
 		bool result = false;
 		hmutex::ScopeLock lock(&this->asyncMutex);
-		if (this->asyncCommandQueues.size() >= 2)
+		if (this->asyncCommandQueues.size() >= 2 || this->lastAsyncCommandQueue != NULL)
 		{
-			// TODOx - maybe the other block can take care of everything
-			//if (timeDelta > 0.0f)
+			AsyncCommandQueue* queue = this->lastAsyncCommandQueue;
+			if (queue == NULL)
 			{
-				AsyncCommandQueue* queue = this->asyncCommandQueues.removeFirst();
-				this->processingAsync = true;
-				lock.release();
-				foreach (AsyncCommand*, it, queue->commands)
-				{
-					(*it)->execute();
-				}
-				if (queue->commands.size() > 0)
-				{
-					AsyncCommand* command = queue->commands.last();
-					if (command->isFinalizer() && !command->isSystemCommand())
-					{
-						result = true;
-					}
-				}
-				/*
-				if (queue->isRepeatable())
-				{
-					if (this->lastAsyncCommandQueue != NULL)
-					{
-						delete this->lastAsyncCommandQueue;
-					}
-					this->lastAsyncCommandQueue = queue;
-				}
-				else
-				{
-					delete queue;
-				}
-				*/
-				delete queue;
-				lock.acquire(&this->asyncMutex);
-				this->processingAsync = false;
-				lock.release();
-				//result = true;
+				queue = this->asyncCommandQueues.removeFirst();
 			}
-			/*
+			this->processingAsync = true;
+			lock.release();
+			foreach (AsyncCommand*, it, queue->commands)
+			{
+				(*it)->execute();
+			}
+			if (queue->commands.size() > 0)
+			{
+				AsyncCommand* command = queue->commands.last();
+				if (command->isFinalizer() && !command->isSystemCommand())
+				{
+					result = true;
+				}
+			}
+			bool repeatable = (queue->isRepeatable() && queue->getRepeatCount() < this->frameDuplicates);
+			lock.acquire(&this->asyncMutex);
+			this->processingAsync = false;
+			if (repeatable)
+			{
+				this->lastAsyncCommandQueue = queue;
+			}
+			else if (this->lastAsyncCommandQueue == queue)
+			{
+				this->lastAsyncCommandQueue = NULL;
+			}
+			lock.release();
+			if (repeatable)
+			{
+				this->lastAsyncCommandQueue->setupNextRepeat();
+			}
 			else
 			{
-				harray<AsyncCommandQueue*> queues = this->asyncCommandQueues.removeFirst(this->asyncCommandQueues.size() - 1);
-				this->processingAsync = true;
-				lock.release();
-				foreach (AsyncCommandQueue*, it, queues)
-				{
-					foreach (AsyncCommand*, it2, (*it)->commands)
-					{
-						(*it2)->execute();
-					}
-					delete (*it);
-				}
-				lock.acquire(&this->asyncMutex);
-				this->processingAsync = false;
-				lock.release();
-				result = true;
+				delete queue;
 			}
-			*/
 		}
 		return result;
 	}
@@ -1012,11 +970,11 @@ namespace april
 	void RenderSystem::waitForAsyncCommands(bool forced)
 	{
 		hmutex::ScopeLock lock(&this->asyncMutex);
-		if (forced && this->asyncCommandQueues.size() == 1 && this->asyncCommandQueues.first()->commands.size() > 0)
+		if (forced && this->asyncCommandQueues.size() == 1 && this->asyncCommandQueues.first()->commands.size() > 0 && this->lastAsyncCommandQueue == NULL)
 		{
 			this->asyncCommandQueues += new AsyncCommandQueue();
 		}
-		while (this->asyncCommandQueues.size() > 1 || this->processingAsync)
+		while (this->asyncCommandQueues.size() > 1 || this->lastAsyncCommandQueue != NULL || this->processingAsync)
 		{
 			lock.release();
 			hthread::sleep(0.001f);
