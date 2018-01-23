@@ -365,7 +365,7 @@ namespace april
 	{
 		if (this->fpsCounter)
 		{
-			hstr newTitle = /*title +*/ hsprintf(" [FPS: %d]", april::application->getFps());
+			hstr newTitle = title + hsprintf(" [FPS: %d]", april::application->getFps());
 			// optimization to prevent setting title every frame
 			if (newTitle == this->fpsTitle)
 			{
