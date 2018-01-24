@@ -581,7 +581,7 @@ namespace april
 		{
 			hlog::write(logTag, "Unloading texture: " + this->_getInternalName());
 		}
-		april::rendersys->_addAsyncCommand(new UnloadTextureCommand(this));
+		april::rendersys->_addUnloadTextureCommand(new UnloadTextureCommand(this));
 	}
 
 	bool Texture::ensureLoaded()

@@ -496,6 +496,10 @@ namespace april
 			{
 				this->lastAsyncCommandQueue->applyRepeatQueue(queue);
 			}
+			foreach (UnloadTextureCommand*, it, queue->unloadTextureCommands)
+			{
+				(*it)->execute();
+			}
 			delete queue;
 		}
 		return result;
@@ -620,7 +624,7 @@ namespace april
 		{
 			this->state->texture = NULL;
 		}
-		this->_addAsyncCommand(new DestroyTextureCommand(texture));
+		this->_addUnloadTextureCommand(new DestroyTextureCommand(texture));
 	}
 
 	PixelShader* RenderSystem::createPixelShaderFromResource(chstr filename)
@@ -946,6 +950,16 @@ namespace april
 		}
 	}
 
+	void RenderSystem::_addUnloadTextureCommand(UnloadTextureCommand* command)
+	{
+		hmutex::ScopeLock lock(&this->asyncMutex);
+		if (this->asyncCommandQueues.size() == 0)
+		{
+			this->asyncCommandQueues += new AsyncCommandQueue();
+		}
+		this->asyncCommandQueues.last()->unloadTextureCommands += command;
+	}
+
 	void RenderSystem::_flushAsyncCommands()
 	{
 		hmutex::ScopeLock lock(&this->asyncMutex);
@@ -961,6 +975,10 @@ namespace april
 					(*it2)->execute();
 				}
 			}
+			foreach (UnloadTextureCommand*, it2, (*it)->unloadTextureCommands)
+			{
+				(*it2)->execute();
+			}
 			delete (*it);
 		}
 	}
@@ -968,7 +986,7 @@ namespace april
 	void RenderSystem::waitForAsyncCommands(bool forced)
 	{
 		hmutex::ScopeLock lock(&this->asyncMutex);
-		if (forced && this->asyncCommandQueues.size() == 1 && this->asyncCommandQueues.first()->commands.size() > 0 &&
+		if (forced && this->asyncCommandQueues.size() == 1 && this->asyncCommandQueues.first()->hasCommands() &&
 			this->frameDuplicates > 0 && this->lastAsyncCommandQueue != NULL && this->lastAsyncCommandQueue->getRepeatCount() <= 0)
 		{
 			this->asyncCommandQueues += new AsyncCommandQueue();

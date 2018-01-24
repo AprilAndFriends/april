@@ -83,6 +83,9 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a3638d4568515527f1dfa35184134b75a">HL_DEFINE_GET</a> (hstr, <a class="el" href="classapril_1_1_texture.html#aadc2273828304fa3d8382a604860d4f0">filename</a>, Filename)</td></tr>
 <tr class="memdesc:a3638d4568515527f1dfa35184134b75a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The texture filename if available. <br /></td></tr>
 <tr class="separator:a3638d4568515527f1dfa35184134b75a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add481021726f895631ab7032eaf4ccdb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#add481021726f895631ab7032eaf4ccdb">HL_DEFINE_GETSET</a> (hstr, <a class="el" href="classapril_1_1_texture.html#a7914b9082c045afd015e88fa2918eb63">name</a>, Name)</td></tr>
+<tr class="memdesc:add481021726f895631ab7032eaf4ccdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The texture's custom name.  <a href="#add481021726f895631ab7032eaf4ccdb">More...</a><br /></td></tr>
+<tr class="separator:add481021726f895631ab7032eaf4ccdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba548874c04f941e9dca3b373278a368"><td class="memItemLeft" align="right" valign="top"><a id="aba548874c04f941e9dca3b373278a368"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aba548874c04f941e9dca3b373278a368">HL_DEFINE_GET</a> (<a class="el" href="classapril_1_1_texture_1_1_type.html">Type</a>, <a class="el" href="classapril_1_1_texture.html#a1e03a6060369015ccc2db32979b4773c">type</a>, <a class="el" href="classapril_1_1_texture_1_1_type.html">Type</a>)</td></tr>
 <tr class="memdesc:aba548874c04f941e9dca3b373278a368"><td class="mdescLeft">&#160;</td><td class="mdescRight">The texture type. <br /></td></tr>
@@ -326,6 +329,10 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:a0fd0136f94f98c62eb35b015bbfd9c88"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a0fd0136f94f98c62eb35b015bbfd9c88">_deviceCreateTexture</a> (unsigned char *<a class="el" href="classapril_1_1_texture.html#a85936cdc9fd821bb9b225a7cca32c1cf">data</a>, int size, <a class="el" href="classapril_1_1_texture_1_1_type.html">Type</a> <a class="el" href="classapril_1_1_texture.html#a1e03a6060369015ccc2db32979b4773c">type</a>)=0</td></tr>
 <tr class="memdesc:a0fd0136f94f98c62eb35b015bbfd9c88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the device texture.  <a href="#a0fd0136f94f98c62eb35b015bbfd9c88">More...</a><br /></td></tr>
 <tr class="separator:a0fd0136f94f98c62eb35b015bbfd9c88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d3101334b0cce9661b905ac206664d5"><td class="memItemLeft" align="right" valign="top"><a id="a0d3101334b0cce9661b905ac206664d5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a0d3101334b0cce9661b905ac206664d5">_deviceUnloadTexture</a> ()</td></tr>
+<tr class="memdesc:a0d3101334b0cce9661b905ac206664d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unloads the device texture. <br /></td></tr>
+<tr class="separator:a0d3101334b0cce9661b905ac206664d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a722ac5332a6419b58d15fa0a3e7897f3"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a722ac5332a6419b58d15fa0a3e7897f3">_deviceDestroyTexture</a> ()=0</td></tr>
 <tr class="memdesc:a722ac5332a6419b58d15fa0a3e7897f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy the device texture.  <a href="#a722ac5332a6419b58d15fa0a3e7897f3">More...</a><br /></td></tr>
 <tr class="separator:a722ac5332a6419b58d15fa0a3e7897f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -365,6 +372,9 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:a60440d2efcc755a8bbe01431e959bfe3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a60440d2efcc755a8bbe01431e959bfe3">_ensureInternalLoaded</a> ()</td></tr>
 <tr class="memdesc:a60440d2efcc755a8bbe01431e959bfe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Makes sure the texture is loaded and handles <a class="el" href="classapril_1_1_texture.html" title="Defines a generic texture. ">Texture</a> update. Used internally only.  <a href="#a60440d2efcc755a8bbe01431e959bfe3">More...</a><br /></td></tr>
 <tr class="separator:a60440d2efcc755a8bbe01431e959bfe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfdcd7e280903b391d3083444b0ce072"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#abfdcd7e280903b391d3083444b0ce072">_waitForInternalAsyncLoad</a> ()</td></tr>
+<tr class="memdesc:abfdcd7e280903b391d3083444b0ce072"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for the texture to load asynchronously.  <a href="#abfdcd7e280903b391d3083444b0ce072">More...</a><br /></td></tr>
+<tr class="separator:abfdcd7e280903b391d3083444b0ce072"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1747672a4c2010d5559111d7665d5e5a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a1747672a4c2010d5559111d7665d5e5a">_rawClear</a> ()</td></tr>
 <tr class="memdesc:a1747672a4c2010d5559111d7665d5e5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the entire image and sets all image data to zeroes without safety checks. Used internally only.  <a href="#a1747672a4c2010d5559111d7665d5e5a">More...</a><br /></td></tr>
 <tr class="separator:a1747672a4c2010d5559111d7665d5e5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -408,6 +418,9 @@ Protected Attributes</h2></td></tr>
 hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aadc2273828304fa3d8382a604860d4f0">filename</a></td></tr>
 <tr class="memdesc:aadc2273828304fa3d8382a604860d4f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The filename if available. <br /></td></tr>
 <tr class="separator:aadc2273828304fa3d8382a604860d4f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7914b9082c045afd015e88fa2918eb63"><td class="memItemLeft" align="right" valign="top">hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a7914b9082c045afd015e88fa2918eb63">name</a></td></tr>
+<tr class="memdesc:a7914b9082c045afd015e88fa2918eb63"><td class="mdescLeft">&#160;</td><td class="mdescRight">The texture's custom name.  <a href="#a7914b9082c045afd015e88fa2918eb63">More...</a><br /></td></tr>
+<tr class="separator:a7914b9082c045afd015e88fa2918eb63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e03a6060369015ccc2db32979b4773c"><td class="memItemLeft" align="right" valign="top"><a id="a1e03a6060369015ccc2db32979b4773c"></a>
 <a class="el" href="classapril_1_1_texture_1_1_type.html">Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a1e03a6060369015ccc2db32979b4773c">type</a></td></tr>
 <tr class="memdesc:a1e03a6060369015ccc2db32979b4773c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The texture type. <br /></td></tr>
@@ -505,6 +518,9 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>ResetCommand</b></td
 <tr class="memitem:a2dcb3ad5f9ccf0b506a8dadc9489ea98"><td class="memItemLeft" align="right" valign="top"><a id="a2dcb3ad5f9ccf0b506a8dadc9489ea98"></a>
 class&#160;</td><td class="memItemRight" valign="bottom"><b>TextureAsync</b></td></tr>
 <tr class="separator:a2dcb3ad5f9ccf0b506a8dadc9489ea98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e7b763581041025647036b448d7add0"><td class="memItemLeft" align="right" valign="top"><a id="a2e7b763581041025647036b448d7add0"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>UnloadTextureCommand</b></td></tr>
+<tr class="separator:a2e7b763581041025647036b448d7add0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Defines a generic texture. </p>
@@ -1904,6 +1920,35 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>TextureAsync</b></td
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if successful. </dd></dl>
+
+</div>
+</div>
+<a id="abfdcd7e280903b391d3083444b0ce072"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfdcd7e280903b391d3083444b0ce072">&#9670;&nbsp;</a></span>_waitForInternalAsyncLoad()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void april::Texture::_waitForInternalAsyncLoad </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Waits for the texture to load asynchronously. </p>
+<dl class="section note"><dt>Note</dt><dd>This should usually not be used externally. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd>load </dd></dl>
 
 </div>
 </div>
@@ -3399,6 +3444,43 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
 
 <p>Gets the width of the texture in pixels. </p>
 <dl class="section return"><dt>Returns</dt><dd>Width of the texture in pixels. </dd></dl>
+
+</div>
+</div>
+<a id="add481021726f895631ab7032eaf4ccdb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add481021726f895631ab7032eaf4ccdb">&#9670;&nbsp;</a></span>HL_DEFINE_GETSET()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">april::Texture::HL_DEFINE_GETSET </td>
+          <td>(</td>
+          <td class="paramtype">hstr&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_texture.html#a7914b9082c045afd015e88fa2918eb63">name</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Name&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The texture's custom name. </p>
+<dl class="section note"><dt>Note</dt><dd>Does not require to be unique. </dd></dl>
 
 </div>
 </div>
@@ -5101,6 +5183,31 @@ This should usually not be used externally. load() uses this internally when the
 
 <p>Whether the texture was loaded from a resource file or a normal file. </p>
 <dl class="section note"><dt>Note</dt><dd>This has no meaning if the data was created from memory and not loaded from a file. </dd></dl>
+
+</div>
+</div>
+<a id="a7914b9082c045afd015e88fa2918eb63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7914b9082c045afd015e88fa2918eb63">&#9670;&nbsp;</a></span>name</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">hstr april::Texture::name</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The texture's custom name. </p>
+<dl class="section note"><dt>Note</dt><dd>Does not require to be unique. </dd></dl>
 
 </div>
 </div>

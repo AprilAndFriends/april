@@ -25,12 +25,14 @@ namespace april
 	{
 	public:
 		harray<AsyncCommand*> commands;
+		harray<UnloadTextureCommand*> unloadTextureCommands;
 
 		AsyncCommandQueue();
 		~AsyncCommandQueue();
 
 		HL_DEFINE_GETSET(int, repeatCount, RepeatCount);
 		bool isRepeatable() const;
+		bool hasCommands() const;
 
 		void applyRepeatQueue(AsyncCommandQueue* other);
 		void setupNextRepeat();

@@ -123,6 +123,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a1169c7f27b07a0a8308b41fdc6d86a62">HL_DEFINE_GET</a> (int, <a class="el" href="classapril_1_1_render_system.html#aaf232af7dec2cc4c8a05d8ff2389580c">frameAdvanceUpdates</a>, FrameAdvanceUpdates)</td></tr>
 <tr class="memdesc:a1169c7f27b07a0a8308b41fdc6d86a62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets how frames in advance can be updated. <br /></td></tr>
 <tr class="separator:a1169c7f27b07a0a8308b41fdc6d86a62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af247b80ba8a681bd6e2ebb2dd0887762"><td class="memItemLeft" align="right" valign="top"><a id="af247b80ba8a681bd6e2ebb2dd0887762"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#af247b80ba8a681bd6e2ebb2dd0887762">HL_DEFINE_GETSET</a> (int, <a class="el" href="classapril_1_1_render_system.html#a59c010b62544287c643bca643b8f4042">frameDuplicates</a>, FrameDuplicates)</td></tr>
+<tr class="memdesc:af247b80ba8a681bd6e2ebb2dd0887762"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets/sets how many times a frame should be duplicated during rendering. <br /></td></tr>
+<tr class="separator:af247b80ba8a681bd6e2ebb2dd0887762"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fc02a266fd27b3411c6ad6813392cab"><td class="memItemLeft" align="right" valign="top"><a id="a4fc02a266fd27b3411c6ad6813392cab"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a4fc02a266fd27b3411c6ad6813392cab">HL_DEFINE_GET</a> (int, <a class="el" href="classapril_1_1_render_system.html#ab1eec2d11c5ba510f4fdee87fff8bca6">statCurrentFrameRenderCalls</a>, StatCurrentFrameRenderCalls)</td></tr>
 <tr class="memdesc:a4fc02a266fd27b3411c6ad6813392cab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets how many times a render call was called during this frame. <br /></td></tr>
@@ -184,6 +188,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 <tr class="memitem:aa34b8fc2d613583b4eae286a2cf446a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#aa34b8fc2d613583b4eae286a2cf446a0">hasAsyncTexturesQueued</a> () const</td></tr>
 <tr class="memdesc:aa34b8fc2d613583b4eae286a2cf446a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if there are any textures queued to be loaded asynchronously.  <a href="#aa34b8fc2d613583b4eae286a2cf446a0">More...</a><br /></td></tr>
 <tr class="separator:aa34b8fc2d613583b4eae286a2cf446a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d1d29e809e36da59e58a2694e2a11b3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a5d1d29e809e36da59e58a2694e2a11b3">hasAsyncTexturesUploadQueued</a> () const</td></tr>
+<tr class="memdesc:a5d1d29e809e36da59e58a2694e2a11b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if there are any textures queued to be uploaded.  <a href="#a5d1d29e809e36da59e58a2694e2a11b3">More...</a><br /></td></tr>
+<tr class="separator:a5d1d29e809e36da59e58a2694e2a11b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e9f9766045dedf72a3a0c6aa877abc8"><td class="memItemLeft" align="right" valign="top">grect&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a0e9f9766045dedf72a3a0c6aa877abc8">getViewport</a> () const</td></tr>
 <tr class="memdesc:a0e9f9766045dedf72a3a0c6aa877abc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the render viewport.  <a href="#a0e9f9766045dedf72a3a0c6aa877abc8">More...</a><br /></td></tr>
 <tr class="separator:a0e9f9766045dedf72a3a0c6aa877abc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -429,6 +436,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:adda8205f317d2840ac7b7565783ef897"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#adda8205f317d2840ac7b7565783ef897">_addAsyncCommand</a> (AsyncCommand *command)</td></tr>
 <tr class="memdesc:adda8205f317d2840ac7b7565783ef897"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a render command to the queue.  <a href="#adda8205f317d2840ac7b7565783ef897">More...</a><br /></td></tr>
 <tr class="separator:adda8205f317d2840ac7b7565783ef897"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af55566e58c4c5dc3d21162e5bb01a0e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#af55566e58c4c5dc3d21162e5bb01a0e9">_addUnloadTextureCommand</a> (UnloadTextureCommand *command)</td></tr>
+<tr class="memdesc:af55566e58c4c5dc3d21162e5bb01a0e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a special texture-unload command to the queue.  <a href="#af55566e58c4c5dc3d21162e5bb01a0e9">More...</a><br /></td></tr>
+<tr class="separator:af55566e58c4c5dc3d21162e5bb01a0e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49ee82604acbaa55982a7a50bc785a71"><td class="memItemLeft" align="right" valign="top"><a id="a49ee82604acbaa55982a7a50bc785a71"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a49ee82604acbaa55982a7a50bc785a71">_flushAsyncCommands</a> ()</td></tr>
 <tr class="memdesc:a49ee82604acbaa55982a7a50bc785a71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes all remaining async commands. <br /></td></tr>
@@ -574,10 +584,15 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a8be1ab90980e8b52c62b2bcc678c9463"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a8be1ab90980e8b52c62b2bcc678c9463">_deviceRender</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_colored_textured_vertex.html">ColoredTexturedVertex</a> *vertices, int count)=0</td></tr>
 <tr class="memdesc:a8be1ab90980e8b52c62b2bcc678c9463"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the final renders call for a vertex array.  <a href="#a8be1ab90980e8b52c62b2bcc678c9463">More...</a><br /></td></tr>
 <tr class="separator:a8be1ab90980e8b52c62b2bcc678c9463"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbe202a005305129207db878ca2917a8"><td class="memItemLeft" align="right" valign="top"><a id="acbe202a005305129207db878ca2917a8"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#acbe202a005305129207db878ca2917a8">_devicePresentFrame</a> ()</td></tr>
-<tr class="memdesc:acbe202a005305129207db878ca2917a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes the currently rendered data to the backbuffer for display. <br /></td></tr>
-<tr class="separator:acbe202a005305129207db878ca2917a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e57967205e0d7fd7f6e8c386732ab81"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a9e57967205e0d7fd7f6e8c386732ab81">_devicePresentFrame</a> (bool systemEnabled)</td></tr>
+<tr class="memdesc:a9e57967205e0d7fd7f6e8c386732ab81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes the currently rendered data to the backbuffer for display.  <a href="#a9e57967205e0d7fd7f6e8c386732ab81">More...</a><br /></td></tr>
+<tr class="separator:a9e57967205e0d7fd7f6e8c386732ab81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ce732980a0cf64f1bf71e2723b994cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a5ce732980a0cf64f1bf71e2723b994cc">_repeatLastFrame</a> ()</td></tr>
+<tr class="memdesc:a5ce732980a0cf64f1bf71e2723b994cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders previous frame again.  <a href="#a5ce732980a0cf64f1bf71e2723b994cc">More...</a><br /></td></tr>
+<tr class="separator:a5ce732980a0cf64f1bf71e2723b994cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27639f378164ecdfec6d3789a16bde64"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a27639f378164ecdfec6d3789a16bde64">_deviceUnloadTextures</a> ()</td></tr>
+<tr class="memdesc:a27639f378164ecdfec6d3789a16bde64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unloads all textures. Used internally only.  <a href="#a27639f378164ecdfec6d3789a16bde64">More...</a><br /></td></tr>
+<tr class="separator:a27639f378164ecdfec6d3789a16bde64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a010ad3c46b9afd8c4efb5f98ba008d"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a3a010ad3c46b9afd8c4efb5f98ba008d">_numPrimitives</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, int count) const</td></tr>
 <tr class="memdesc:a3a010ad3c46b9afd8c4efb5f98ba008d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the number of primitives based on the number of vertices.  <a href="#a3a010ad3c46b9afd8c4efb5f98ba008d">More...</a><br /></td></tr>
 <tr class="separator:a3a010ad3c46b9afd8c4efb5f98ba008d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -642,6 +657,10 @@ RenderHelper *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 harray&lt; AsyncCommandQueue * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a02859de2ccf887cee6a9f23dedd0fb4e">asyncCommandQueues</a></td></tr>
 <tr class="memdesc:a02859de2ccf887cee6a9f23dedd0fb4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Async command queue. <br /></td></tr>
 <tr class="separator:a02859de2ccf887cee6a9f23dedd0fb4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03a50967049e7a694ba093ad952bfd97"><td class="memItemLeft" align="right" valign="top"><a id="a03a50967049e7a694ba093ad952bfd97"></a>
+AsyncCommandQueue *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a03a50967049e7a694ba093ad952bfd97">lastAsyncCommandQueue</a></td></tr>
+<tr class="memdesc:a03a50967049e7a694ba093ad952bfd97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last special async command queue. <br /></td></tr>
+<tr class="separator:a03a50967049e7a694ba093ad952bfd97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d5def4e2c81b50d336d9e1870285c27"><td class="memItemLeft" align="right" valign="top"><a id="a9d5def4e2c81b50d336d9e1870285c27"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a9d5def4e2c81b50d336d9e1870285c27">processingAsync</a></td></tr>
 <tr class="memdesc:a9d5def4e2c81b50d336d9e1870285c27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether async commands are being processed right now. <br /></td></tr>
@@ -650,6 +669,10 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#aaf232af7dec2cc4c8a05d8ff2389580c">frameAdvanceUpdates</a></td></tr>
 <tr class="memdesc:aaf232af7dec2cc4c8a05d8ff2389580c"><td class="mdescLeft">&#160;</td><td class="mdescRight">How many times a render call was called during this frame. <br /></td></tr>
 <tr class="separator:aaf232af7dec2cc4c8a05d8ff2389580c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59c010b62544287c643bca643b8f4042"><td class="memItemLeft" align="right" valign="top"><a id="a59c010b62544287c643bca643b8f4042"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a59c010b62544287c643bca643b8f4042">frameDuplicates</a></td></tr>
+<tr class="memdesc:a59c010b62544287c643bca643b8f4042"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets how many times a frame should be duplicated during rendering. <br /></td></tr>
+<tr class="separator:a59c010b62544287c643bca643b8f4042"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1eec2d11c5ba510f4fdee87fff8bca6"><td class="memItemLeft" align="right" valign="top"><a id="ab1eec2d11c5ba510f4fdee87fff8bca6"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ab1eec2d11c5ba510f4fdee87fff8bca6">statCurrentFrameRenderCalls</a></td></tr>
 <tr class="memdesc:ab1eec2d11c5ba510f4fdee87fff8bca6"><td class="mdescLeft">&#160;</td><td class="mdescRight">How many times a render call was called during this frame. <br /></td></tr>
@@ -774,6 +797,40 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 </div><div class="memdoc">
 
 <p>Adds a render command to the queue. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">command</td><td>The command to add. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af55566e58c4c5dc3d21162e5bb01a0e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af55566e58c4c5dc3d21162e5bb01a0e9">&#9670;&nbsp;</a></span>_addUnloadTextureCommand()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void april::RenderSystem::_addUnloadTextureCommand </td>
+          <td>(</td>
+          <td class="paramtype">UnloadTextureCommand *&#160;</td>
+          <td class="paramname"><em>command</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds a special texture-unload command to the queue. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">command</td><td>The command to add. </td></tr>
@@ -1228,6 +1285,40 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 
 </div>
 </div>
+<a id="a9e57967205e0d7fd7f6e8c386732ab81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e57967205e0d7fd7f6e8c386732ab81">&#9670;&nbsp;</a></span>_devicePresentFrame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void april::RenderSystem::_devicePresentFrame </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>systemEnabled</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Flushes the currently rendered data to the backbuffer for display. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">systemEnabled</td><td>Whether the system present is actually enabled. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ae4ed3da25187cadd1de44d15d58fd2a5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae4ed3da25187cadd1de44d15d58fd2a5">&#9670;&nbsp;</a></span>_deviceRender() <span class="overload">[1/4]</span></h2>
 
@@ -1433,6 +1524,34 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a27639f378164ecdfec6d3789a16bde64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27639f378164ecdfec6d3789a16bde64">&#9670;&nbsp;</a></span>_deviceUnloadTextures()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void april::RenderSystem::_deviceUnloadTextures </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Unloads all textures. Used internally only. </p>
+<dl class="section note"><dt>Note</dt><dd>Useful for clearing all memory or if something invalidates textures and cannot guarantee that they are loaded anymore. </dd></dl>
 
 </div>
 </div>
@@ -2139,6 +2258,34 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
   </dd>
 </dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classapril_1_1_render_system.html#ad22f8e16faa525eb1be85bab417d598e" title="Renders an array of vertices to the backbuffer. ">render</a> </dd></dl>
+
+</div>
+</div>
+<a id="a5ce732980a0cf64f1bf71e2723b994cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ce732980a0cf64f1bf71e2723b994cc">&#9670;&nbsp;</a></span>_repeatLastFrame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void april::RenderSystem::_repeatLastFrame </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Renders previous frame again. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classapril_1_1_render_system.html#a9e57967205e0d7fd7f6e8c386732ab81" title="Flushes the currently rendered data to the backbuffer for display. ">_devicePresentFrame</a> </dd></dl>
 
 </div>
 </div>
@@ -3920,6 +4067,26 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 
 <p>Checks if there are any textures queued to be loaded asynchronously. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if there are any textures queued to be loaded asynchronously. </dd></dl>
+
+</div>
+</div>
+<a id="a5d1d29e809e36da59e58a2694e2a11b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d1d29e809e36da59e58a2694e2a11b3">&#9670;&nbsp;</a></span>hasAsyncTexturesUploadQueued()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool april::RenderSystem::hasAsyncTexturesUploadQueued </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks if there are any textures queued to be uploaded. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if there are any textures queued to be uploaded. </dd></dl>
 
 </div>
 </div>

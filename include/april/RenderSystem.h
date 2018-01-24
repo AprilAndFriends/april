@@ -671,6 +671,9 @@ namespace april
 		/// @brief Adds a render command to the queue.
 		/// @param[in] command The command to add.
 		void _addAsyncCommand(AsyncCommand* command);
+		/// @brief Adds a special texture-unload command to the queue.
+		/// @param[in] command The command to add.
+		void _addUnloadTextureCommand(UnloadTextureCommand* command);
 		/// @brief Flushes all remaining async commands.
 		void _flushAsyncCommands();
 
