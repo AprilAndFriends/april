@@ -234,16 +234,16 @@ namespace april
 		// misc
 		this->state->reset();
 		this->deviceState->reset();
-		foreach (AsyncCommandQueue*, it, this->asyncCommandQueues)
-		{
-			delete (*it);
-		}
-		this->asyncCommandQueues.clear();
 		if (this->lastAsyncCommandQueue != NULL)
 		{
 			delete this->lastAsyncCommandQueue;
 			this->lastAsyncCommandQueue = NULL;
 		}
+		foreach (AsyncCommandQueue*, it, this->asyncCommandQueues)
+		{
+			delete (*it);
+		}
+		this->asyncCommandQueues.clear();
 		this->statCurrentFrameRenderCalls = 0;
 		this->statLastFrameRenderCalls = 0;
 		this->statCurrentFrameTextureSwitches = 0;
@@ -846,34 +846,22 @@ namespace april
 	void RenderSystem::_updateDeviceState(RenderState* state, bool forceUpdate)
 	{
 		// viewport
-		if (forceUpdate || state->viewportChanged)
+		if (forceUpdate || (state->viewportChanged && this->deviceState->viewport != state->viewport))
 		{
-			if (forceUpdate || this->deviceState->viewport != state->viewport)
-			{
-				this->_setDeviceViewport(state->viewport);
-				this->deviceState->viewport = state->viewport;
-			}
-			state->viewportChanged = false;
+			this->_setDeviceViewport(state->viewport);
+			this->deviceState->viewport = state->viewport;
 		}
 		// modelview matrix
-		if (forceUpdate || state->modelviewMatrixChanged)
+		if (forceUpdate || (state->modelviewMatrixChanged && this->deviceState->modelviewMatrix != state->modelviewMatrix))
 		{
-			if (forceUpdate || this->deviceState->modelviewMatrix != state->modelviewMatrix)
-			{
-				this->_setDeviceModelviewMatrix(state->modelviewMatrix);
-				this->deviceState->modelviewMatrix = state->modelviewMatrix;
-			}
-			state->modelviewMatrixChanged = false;
+			this->_setDeviceModelviewMatrix(state->modelviewMatrix);
+			this->deviceState->modelviewMatrix = state->modelviewMatrix;
 		}
 		// projection matrix
-		if (forceUpdate || state->projectionMatrixChanged)
+		if (forceUpdate || (state->projectionMatrixChanged && this->deviceState->projectionMatrix != state->projectionMatrix))
 		{
-			if (forceUpdate || this->deviceState->projectionMatrix != state->projectionMatrix)
-			{
-				this->_setDeviceProjectionMatrix(state->projectionMatrix);
-				this->deviceState->projectionMatrix = state->projectionMatrix;
-			}
-			state->projectionMatrixChanged = false;
+			this->_setDeviceProjectionMatrix(state->projectionMatrix);
+			this->deviceState->projectionMatrix = state->projectionMatrix;
 		}
 		// depth buffer
 		if (forceUpdate || this->deviceState->depthBuffer != state->depthBuffer || this->deviceState->depthBufferWrite != state->depthBufferWrite)
