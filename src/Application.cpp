@@ -54,10 +54,7 @@ namespace april
 		this->updateThread.start();
 		while (this->state == State::Starting)
 		{
-			if (april::window != NULL && april::rendersys != NULL)
-			{
-				this->_updateSystem();
-			}
+			this->_updateSystem();
 			hthread::sleep(0.001f);
 		}
 		this->timer.update();
@@ -119,9 +116,12 @@ namespace april
 
 	void Application::_updateSystem()
 	{
-		TextureAsync::update();
-		april::window->checkEvents();
-		april::rendersys->update(0.0f); // might require some rendering
+		if (april::window != NULL && april::rendersys != NULL)
+		{
+			TextureAsync::update();
+			april::window->checkEvents();
+			april::rendersys->update(0.0f); // might require some rendering
+		}
 	}
 
 	void Application::_updateFps()
@@ -169,38 +169,41 @@ namespace april
 #ifdef _ANDROID
 		getJNIEnv(); // attaches thread to Java VM
 #endif
-		april::application->state = State::Running;
-		float timeDelta = 0.0f;
-		UpdateDelegate* updateDelegate = NULL;
-		hmutex::ScopeLock lock;
-		hmutex::ScopeLock lockTimeDelta;
-		while (april::application->state == State::Running)
+		if (april::window != NULL && april::rendersys != NULL)
 		{
-			lock.acquire(&april::application->updateMutex);
-			lockTimeDelta.acquire(&april::application->timeDeltaMutex);
-			timeDelta = april::application->timeDelta;
-			april::application->timeDelta = 0.0f;
-			lockTimeDelta.release();
-			if (!april::window->update(timeDelta))
+			april::application->state = State::Running;
+			float timeDelta = 0.0f;
+			UpdateDelegate* updateDelegate = NULL;
+			hmutex::ScopeLock lock;
+			hmutex::ScopeLock lockTimeDelta;
+			while (april::application->state == State::Running)
 			{
-				april::application->finish();
-			}
-			april::window->setPresentFrameEnabled(false);
-			updateDelegate = april::window->getUpdateDelegate(); // constantly getting to make sure not to use an outdated object
-			if (updateDelegate != NULL)
-			{
-				updateDelegate->onPresentFrame();
-			}
-			else
-			{
-				april::rendersys->presentFrame();
-			}
-			april::window->setPresentFrameEnabled(true);
-			lock.release();
-			while (april::application->state == State::Running && april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
-			{
-				hthread::sleep(0.001f);
-				april::window->_processEvents();
+				lock.acquire(&april::application->updateMutex);
+				lockTimeDelta.acquire(&april::application->timeDeltaMutex);
+				timeDelta = april::application->timeDelta;
+				april::application->timeDelta = 0.0f;
+				lockTimeDelta.release();
+				if (!april::window->update(timeDelta))
+				{
+					april::application->finish();
+				}
+				april::window->setPresentFrameEnabled(false);
+				updateDelegate = april::window->getUpdateDelegate(); // constantly getting to make sure not to use an outdated object
+				if (updateDelegate != NULL)
+				{
+					updateDelegate->onPresentFrame();
+				}
+				else
+				{
+					april::rendersys->presentFrame();
+				}
+				april::window->setPresentFrameEnabled(true);
+				lock.release();
+				while (april::application->state == State::Running && april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
+				{
+					hthread::sleep(0.001f);
+					april::window->_processEvents();
+				}
 			}
 		}
 		(*april::application->aprilApplicationDestroy)();
@@ -233,7 +236,8 @@ namespace april
 	void Application::renderFrameSync()
 	{
 		hmutex::ScopeLock lock(&this->updateMutex);
-		april::rendersys->_repeatLastFrame();
+		// TODO - can this even work?
+		//april::rendersys->_repeatLastFrame();
 	}
 
 }
