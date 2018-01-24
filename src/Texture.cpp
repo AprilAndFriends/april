@@ -343,7 +343,11 @@ namespace april
 	hstr Texture::_getInternalName() const
 	{
 		hstr result;
-		if (this->filename != "")
+		if (this->name != "")
+		{
+			result += "'" + this->name + "'";
+		}
+		else if (this->filename != "")
 		{
 			result += "'" + this->filename + "'";
 		}

@@ -100,6 +100,9 @@ namespace april
 
 		/// @brief The texture filename if available.
 		HL_DEFINE_GET(hstr, filename, Filename);
+		/// @brief The texture's custom name.
+		/// @note Does not require to be unique.
+		HL_DEFINE_GETSET(hstr, name, Name);
 		/// @brief The texture type.
 		HL_DEFINE_GET(Type, type, Type);
 		/// @brief The texture load mode.
@@ -668,6 +671,9 @@ namespace april
 
 		/// @brief The filename if available.
 		hstr filename;
+		/// @brief The texture's custom name.
+		/// @note Does not require to be unique.
+		hstr name;
 		/// @brief The texture type.
 		Type type;
 		/// @brief Whether the texture was uploaded to the GPU.
