@@ -11,7 +11,7 @@
 
 namespace april
 {
-	DestroyTextureCommand::DestroyTextureCommand(Texture* texture) : UnloadTextureCommand(texture)
+	DestroyTextureCommand::DestroyTextureCommand(Texture* texture) : UnloadTextureCommand(texture), executed(false)
 	{
 	}
 
@@ -22,13 +22,14 @@ namespace april
 
 	void DestroyTextureCommand::execute()
 	{
-		if (this->texture != NULL)
+		if (!this->executed)
 		{
 			UnloadTextureCommand::execute();
 			this->texture->_waitForInternalAsyncLoad(); // waiting for all async stuff to finish
 			delete this->texture;
-			this->texture = NULL;
+			// don't set texture to NULL, because it can accessed outside and the memory location is important
 		}
+		this->executed = true;
 	}
 
 }

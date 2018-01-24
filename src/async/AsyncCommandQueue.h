@@ -32,7 +32,9 @@ namespace april
 		HL_DEFINE_GETSET(int, repeatCount, RepeatCount);
 		bool isRepeatable() const;
 
+		void applyRepeatQueue(AsyncCommandQueue* other);
 		void setupNextRepeat();
+		void clearRepeat();
 
 	protected:
 		int repeatCount;

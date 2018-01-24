@@ -28,83 +28,83 @@ namespace april
 
 	bool AsyncCommandQueue::isRepeatable() const
 	{
-		return (this->commands.size() > 0 && this->commands.last()->isRepeatable());
+		if (this->commands.size() == 0)
+		{
+			return false;
+		}
+		AsyncCommand* command = this->commands.last();
+		return (command->isFinalizer() && command->isRepeatable());
 	}
 
-	void AsyncCommandQueue::setupNextRepeat()
+	void AsyncCommandQueue::applyRepeatQueue(AsyncCommandQueue* other)
 	{
-		if (this->repeatCount < 1)
+		if (other->commands.size() > 0)
 		{
-			harray<Texture*> destroyedTextures;
-			DestroyTextureCommand* destroyTextureCommand = NULL;
-			RenderCommand* renderCommand = NULL;
-			StateUpdateCommand* stateUpdateCommand = NULL;
-			bool initialStateDefined = false;
-			// first find all destroyed textures
-			foreach (AsyncCommand*, it, this->commands)
+			HL_LAMBDA_CLASS(_repeatableCommands, bool, ((AsyncCommand* const& command) { return command->isRepeatable(); }));
+			harray<AsyncCommand*> repeatableCommands = other->commands.findAll(&_repeatableCommands::lambda);
+			if (repeatableCommands.size() > 0)
 			{
-				destroyTextureCommand = dynamic_cast<DestroyTextureCommand*>(*it);
+				RenderCommand* renderCommand = NULL;
+				RenderState* state = NULL;
+				if (this->commands.size() == 0)
+				{
+					foreach (AsyncCommand*, it, repeatableCommands)
+					{
+						if (dynamic_cast<StateUpdateCommand*>(*it) != NULL)
+						{
+							break;
+						}
+						renderCommand = dynamic_cast<RenderCommand*>(*it);
+						if (renderCommand != NULL)
+						{
+							state = renderCommand->getState();
+							state->viewportChanged = false;
+							state->modelviewMatrixChanged = false;
+							state->projectionMatrixChanged = false;
+							this->commands += new StateUpdateCommand(*state);
+							break;
+						}
+					}
+				}
+				this->commands += repeatableCommands;
+				DestroyTextureCommand* destroyTextureCommand = dynamic_cast<DestroyTextureCommand*>(other->commands.last());
+				other->commands -= repeatableCommands;
 				if (destroyTextureCommand != NULL)
 				{
-					destroyedTextures += destroyTextureCommand->getTexture();
-				}
-				else if (!initialStateDefined)
-				{
-					stateUpdateCommand = dynamic_cast<StateUpdateCommand*>(*it);
-					if (stateUpdateCommand != NULL)
-					{
-						stateUpdateCommand = NULL;
-						initialStateDefined = true;
-					}
-					else
+					foreach (AsyncCommand*, it, this->commands)
 					{
 						renderCommand = dynamic_cast<RenderCommand*>(*it);
 						if (renderCommand != NULL)
 						{
-							stateUpdateCommand = new StateUpdateCommand(*renderCommand->getState());
-							initialStateDefined = true;
+							state = renderCommand->getState();
+							if (state->texture != NULL && state->texture == destroyTextureCommand->getTexture())
+							{
+								state->texture = NULL;
+							}
 						}
 					}
 				}
-			}
-			destroyedTextures.removeAll(NULL);
-			destroyedTextures.removeDuplicates();
-			harray<AsyncCommand*> oldCommands = this->commands;
-			this->commands.clear();
-			// make initial command doesn't use a destroyed texture
-			RenderState* state = NULL;
-			if (initialStateDefined && stateUpdateCommand != NULL)
-			{
-				state = stateUpdateCommand->getState();
-				if (state->texture != NULL && destroyedTextures.has(state->texture))
+				else if (dynamic_cast<PresentFrameCommand*>(this->commands.last()) != NULL)
 				{
-					state->texture = NULL;
-				}
-				this->commands += stateUpdateCommand;
-			}
-			// make sure no command actually uses the texture
-			foreach (AsyncCommand*, it, oldCommands)
-			{
-				if ((*it)->isRepeatable())
-				{
-					renderCommand = dynamic_cast<RenderCommand*>(*it);
-					if (renderCommand != NULL)
-					{
-						state = renderCommand->getState();
-						if (state->texture != NULL && destroyedTextures.has(state->texture))
-						{
-							state->texture = NULL;
-						}
-					}
-					this->commands += (*it);
-				}
-				else
-				{
-					delete (*it);
+					++this->repeatCount;
 				}
 			}
 		}
+	}
+
+	void AsyncCommandQueue::setupNextRepeat()
+	{
 		++this->repeatCount;
+	}
+
+	void AsyncCommandQueue::clearRepeat()
+	{
+		this->repeatCount = 0;
+		foreach (AsyncCommand*, it, this->commands)
+		{
+			delete (*it);
+		}
+		this->commands.clear();
 	}
 	
 }

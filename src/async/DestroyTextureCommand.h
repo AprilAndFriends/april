@@ -29,6 +29,9 @@ namespace april
 
 		void execute();
 
+	protected:
+		bool executed;
+
 	};
 
 }
