@@ -416,8 +416,6 @@ namespace april
 	void Mac_Window::_presentFrame(bool systemEnabled)
 	{
 		Window::_presentFrame(systemEnabled);
-		// presentFrame() calls are always manually called, so let's make sure
-		// Mac can update the view contents before we continue.
 		bool displayLink = isUsingCVDisplayLink();
 		if (displayLink)
 		{
@@ -428,17 +426,11 @@ namespace april
 			this->setIgnoreUpdateFlag(true);
 		}
 		[april::macGlView presentFrame];
-		[april::macGlView setNeedsDisplay:YES];
+		//[april::macGlView setNeedsDisplay:YES];
 		if (displayLink)
 		{
 			this->setIgnoreUpdateFlag(false);
 		}
-	}
-	
-	void Mac_Window::queueMessageBox(chstr title, chstr text, harray<hstr> buttons, harray<MessageBoxButton> buttonTypes, void (*callback)(MessageBoxButton))
-	{
-		this->messageBoxQueue += MessageBoxData(title, text, buttons, buttonTypes, callback);
-		[april::macGlView setNeedsDisplay:YES]; // required so the draw command is called where message boxes are actually processed
 	}
 	
 	Cursor* Mac_Window::_createCursor(bool fromResource)

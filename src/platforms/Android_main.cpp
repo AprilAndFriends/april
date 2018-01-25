@@ -273,34 +273,22 @@ namespace april
 	
 	void JNICALL _JNI_onDialogOk(JNIEnv* env, jclass classe)
 	{
-		if (dialogCallback != NULL)
-		{
-			(*dialogCallback)(MessageBoxButton::Ok);
-		}
+		april::Application::messageBoxCallback(MessageBoxButton::Ok);
 	}
 	
 	void JNICALL _JNI_onDialogYes(JNIEnv* env, jclass classe)
 	{
-		if (dialogCallback != NULL)
-		{
-			(*dialogCallback)(MessageBoxButton::Yes);
-		}
+		april::Application::messageBoxCallback(MessageBoxButton::Yes);
 	}
 	
 	void JNICALL _JNI_onDialogNo(JNIEnv* env, jclass classe)
 	{
-		if (dialogCallback != NULL)
-		{
-			(*dialogCallback)(MessageBoxButton::No);
-		}
+		april::Application::messageBoxCallback(MessageBoxButton::No);
 	}
 	
 	void JNICALL _JNI_onDialogCancel(JNIEnv* env, jclass classe)
 	{
-		if (dialogCallback != NULL)
-		{
-			(*dialogCallback)(MessageBoxButton::Cancel);
-		}
+		april::Application::messageBoxCallback(MessageBoxButton::Cancel);
 	}
 	
 #define METHOD_COUNT 32 // make sure this fits

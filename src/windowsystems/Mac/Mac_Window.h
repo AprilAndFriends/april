@@ -24,19 +24,6 @@ namespace april
 	class Mac_Window : public Window
 	{
 	public:
-		class MessageBoxData
-		{
-		public:
-			hstr title;
-			hstr text;
-			harray<hstr> buttons;
-			harray<MessageBoxButton> buttonTypes;
-			void (*callback)(MessageBoxButton);
-			
-			MessageBoxData(chstr title, chstr text, harray<hstr> buttons, harray<MessageBoxButton> buttonTypes, void (*callback)(MessageBoxButton));
-			
-		};
-		
 		Mac_Window();
 		~Mac_Window();
 
@@ -65,8 +52,6 @@ namespace april
 		
 		bool shouldIgnoreUpdate();
 		void setIgnoreUpdateFlag(bool value);
-		
-        void queueMessageBox(chstr title, chstr text, harray<hstr> buttons, harray<MessageBoxButton> buttonTypes, void (*callback)(MessageBoxButton));
         
 		bool displayLinkIgnoreSystemRedraw;
 		bool retainLoadingOverlay;
@@ -81,7 +66,6 @@ namespace april
 
 		float scalingFactor;
         hmutex renderThreadSyncMutex;
-		harray<MessageBoxData> messageBoxQueue;
 		
 	protected:
 		Cursor* _createCursor(bool fromResource);

@@ -21,6 +21,7 @@
 #include <hltypes/hthread.h>
 
 #include "aprilExport.h"
+#include "Platform.h"
 #include "Timer.h"
 
 namespace april
@@ -43,6 +44,9 @@ namespace april
 			/// @var static const Type Type::Starting
 			/// @brief Launching process is in progress.
 			HL_ENUM_DECLARE(State, Starting);
+			/// @var static const Type Type::StartedWaiting
+			/// @brief Launching process finished, waiting to run.
+			HL_ENUM_DECLARE(State, StartedWaiting);
 			/// @var static const Type Type::Running
 			/// @brief While the applications is running.
 			HL_ENUM_DECLARE(State, Running);
@@ -61,10 +65,10 @@ namespace april
 		/// @brief Destructor.
 		~Application();
 
-		/// @brief Get launch arguments.
+		/// @brief Get/Set launch arguments.
 		HL_DEFINE_GETSET(harray<hstr>, args, Args);
 		/// @brief Get running flag.
-		HL_DEFINE_GET(State, state, State);
+		State getState();
 		/// @brief The current FPS.
 		HL_DEFINE_GETSET(int, fps, Fps);
 		/// @brief The FPS resolution.
@@ -102,6 +106,14 @@ namespace april
 		/// @brief Processes and render a single frame.
 		/// @note This is usually called internally in some implementations, due to specific OS limitations.
 		void renderFrameSync();
+		/// @brief Queues a message box display.
+		/// @param[in] data The data for the message box display.
+		/// @note This is usually called internally only.
+		void queueMessageBox(const MessageBoxData& data);
+		/// @brief Waits until all OS message boxes have finished displaying.
+		void waitForMessageBoxes();
+
+		static void messageBoxCallback(const MessageBoxButton& button);
 
 	protected:
 		/// @brief Launch arguments.
@@ -129,18 +141,29 @@ namespace april
 		/// @brief Maximum allowed time-delta that are propagated into the UpdateDelegate.
 		/// @note Limiting this makes sense, because on weak hardware configurations it allows that large frameskips don't result in too large time skips.
 		float timeDeltaMaxLimit;
+		/// @brief Queue for message box displays.
+		harray<MessageBoxData> messageBoxQueue;
+		/// @brief Whether OS message box is being displayed at this moment or not.
+		bool displayingMessageBox;
 		/// @brief The update thread.
 		hthread updateThread;
 		/// @brief The update mutex.
 		hmutex updateMutex;
+		/// @brief The update mutex.
+		hmutex stateMutex;
 		/// @brief The time-delta mutex.
 		hmutex timeDeltaMutex;
+		/// @brief The message-box queue mutex.
+		hmutex messageBoxMutex;
 
+		/// @brief Set State.
+		/// @param[in] value New State.
+		void _setState(const State& value);
 		/// @brief Performs the update of one frame, but without any timer.
-		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.
 		void _updateSystem();
+		/// @brief Processes message box displays.
+		void _updateMessageBoxQueue();
 		/// @brief Performs FPS counter update.
-		/// @note This is usually called internally.
 		void _updateFps();
 
 		/// @brief Updates the application asynchronously.

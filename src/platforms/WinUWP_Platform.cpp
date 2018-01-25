@@ -151,34 +151,34 @@ namespace april
 		return true;
 	}
 
-	static void(*currentCallback)(MessageBoxButton) = NULL;
+	static void(*_currentDialogCallback)(MessageBoxButton) = NULL;
 
 	void _showMessageBoxResult(int button)
 	{
 		switch (button)
 		{
 		case IDOK:
-			if (currentCallback != NULL)
+			if (_currentDialogCallback != NULL)
 			{
-				(*currentCallback)(MessageBoxButton::Ok);
+				(*_currentDialogCallback)(MessageBoxButton::Ok);
 			}
 			break;
 		case IDYES:
-			if (currentCallback != NULL)
+			if (_currentDialogCallback != NULL)
 			{
-				(*currentCallback)(MessageBoxButton::Yes);
+				(*_currentDialogCallback)(MessageBoxButton::Yes);
 			}
 			break;
 		case IDNO:
-			if (currentCallback != NULL)
+			if (_currentDialogCallback != NULL)
 			{
-				(*currentCallback)(MessageBoxButton::No);
+				(*_currentDialogCallback)(MessageBoxButton::No);
 			}
 			break;
 		case IDCANCEL:
-			if (currentCallback != NULL)
+			if (_currentDialogCallback != NULL)
 			{
-				(*currentCallback)(MessageBoxButton::Cancel);
+				(*_currentDialogCallback)(MessageBoxButton::Cancel);
 			}
 			break;
 		default:
@@ -190,15 +190,14 @@ namespace april
 	static harray<DispatchedHandler^> messageBoxQueue;
 	static hmutex messageBoxQueueMutex;
 
-	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(MessageBoxButton), bool modal)
+	void _showMessageBox_platform(const MessageBoxData& data)
 	{
 		DispatchedHandler^ handler = ref new DispatchedHandler(
 			[title, text, buttons, style, customButtonTitles, callback]()
 		{
-			currentCallback = callback;
-			_HL_HSTR_TO_PSTR_DEF(text);
-			_HL_HSTR_TO_PSTR_DEF(title);
+			_currentDialogCallback = data.callback;
+			_HL_HSTR_TO_PSTR_DEF(data.text);
+			_HL_HSTR_TO_PSTR_DEF(data.title);
 			MessageDialog^ dialog = ref new MessageDialog(ptext, ptitle);
 			UICommandInvokedHandler^ commandHandler = ref new UICommandInvokedHandler(
 				[](IUICommand^ command)
@@ -220,20 +219,19 @@ namespace april
 			hstr yes;
 			hstr no;
 			hstr cancel;
-			_makeButtonLabels(&ok, &yes, &no, &cancel, buttons, customButtonTitles);
+			_makeButtonLabels(&ok, &yes, &no, &cancel, data.buttons, data.customButtonTitles);
 			_HL_HSTR_TO_PSTR_DEF(ok);
 			_HL_HSTR_TO_PSTR_DEF(yes);
 			_HL_HSTR_TO_PSTR_DEF(no);
 			_HL_HSTR_TO_PSTR_DEF(cancel);
-
-			if (buttons == MessageBoxButton::OkCancel)
+			if (data.buttons == MessageBoxButton::OkCancel)
 			{
 				dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 				dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDCANCEL));
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 1;
 			}
-			else if (buttons == MessageBoxButton::YesNoCancel)
+			else if (data.buttons == MessageBoxButton::YesNoCancel)
 			{
 				dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 				dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
@@ -241,13 +239,13 @@ namespace april
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 2;
 			}
-			else if (buttons == MessageBoxButton::Ok)
+			else if (data.buttons == MessageBoxButton::Ok)
 			{
 				dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 0;
 			}
-			else if (buttons == MessageBoxButton::YesNo)
+			else if (data.buttons == MessageBoxButton::YesNo)
 			{
 				dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 				dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));

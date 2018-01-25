@@ -229,78 +229,67 @@ namespace april
 		return false;
 	}
 	
-	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
+	void _showMessageBox_platform(const MessageBoxData& data)
 	{
 		NSString *nsButtons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[3] = {MessageBoxButton::Ok, MessageBoxButton::Ok, MessageBoxButton::Ok};
-		
-		int i0 = 0, i1 = 1, i2 = 2;
-//		if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_7_0)
-//		{
-//			i0 = 1, i1 = 0; // we want to bold the "OK" button, but in ios7 and up, the cancel button is bolded by default
-//		}
-
-		if (buttons == MessageBoxButton::OkCancel)
+		int i0 = 0;
+		int i1 = 1;
+		int i2 = 2;
+		if (data.buttons == MessageBoxButton::OkCancel)
 		{
-			nsButtons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
-			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
+			nsButtons[i1] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
 			buttonTypes[i1] = MessageBoxButton::Ok;
 			buttonTypes[i0] = MessageBoxButton::Cancel;
 		}
-		else if (buttons == MessageBoxButton::YesNoCancel)
+		else if (data.buttons == MessageBoxButton::YesNoCancel)
 		{
-			nsButtons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
-			nsButtons[i2] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
-			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
+			nsButtons[i1] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
+			nsButtons[i2] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
 			buttonTypes[i1] = MessageBoxButton::Yes;
 			buttonTypes[i2] = MessageBoxButton::No;
 			buttonTypes[i0] = MessageBoxButton::Cancel;
 		}
-		else if (buttons == MessageBoxButton::YesNo)
+		else if (data.buttons == MessageBoxButton::YesNo)
 		{
-			nsButtons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
-			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
+			nsButtons[i1] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
 			buttonTypes[i1] = MessageBoxButton::Yes;
 			buttonTypes[i0] = MessageBoxButton::No;
 		}
-		else if (buttons == MessageBoxButton::Cancel)
+		else if (data.buttons == MessageBoxButton::Cancel)
 		{
-			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
 			buttonTypes[i0] = MessageBoxButton::Cancel;
 		}
-		else if (buttons == MessageBoxButton::Ok)
+		else if (data.buttons == MessageBoxButton::Ok)
 		{
-			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
 			buttonTypes[i0] = MessageBoxButton::Ok;
 		}
-		else if (buttons == MessageBoxButton::Yes)
+		else if (data.buttons == MessageBoxButton::Yes)
 		{
-			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
 			buttonTypes[i0] = MessageBoxButton::Yes;
 		}
-		else if (buttons == MessageBoxButton::No)
+		else if (data.buttons == MessageBoxButton::No)
 		{
-			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
 			buttonTypes[i0] = MessageBoxButton::No;
 		}
-		
-		NSString *titlens = [NSString stringWithUTF8String:title.cStr()];
-		NSString *textns = [NSString stringWithUTF8String:text.cStr()];
-
-		AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] initWithModality:modal] autorelease];
-		mbd.callback = callback;
+		NSString *titlens = [NSString stringWithUTF8String:data.title.cStr()];
+		NSString *textns = [NSString stringWithUTF8String:data.text.cStr()];
+		AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] initWithModality:data.modal] autorelease];
+		mbd.callback = data.callback;
 		[mbd setButtonTypes:buttonTypes];
 		[mbd retain];
-
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:titlens
-														message:textns
-													   delegate:mbd 
-											  cancelButtonTitle:nsButtons[i0]
-											  otherButtonTitles:nsButtons[i1], nsButtons[i2], nil];
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:titlens message:textns delegate:mbd cancelButtonTitle:nsButtons[i0] otherButtonTitles:nsButtons[i1], nsButtons[i2], nil];
 		if (alert != nil) // just in case, hapens in some very weird situations..
 		{
 			[alert show];
-			if (modal)
+			if (data.modal)
 			{
 				CFRunLoopRun();
 			}

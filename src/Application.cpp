@@ -15,6 +15,7 @@
 #include "april.h"
 #include "Application.h"
 #include "main_base.h"
+#include "Platform.h"
 #include "RenderSystem.h"
 #include "TextureAsync.h"
 #include "UpdateDelegate.h"
@@ -37,8 +38,8 @@ namespace april
 
 	Application* application = NULL;
 	
-	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : state(State::Idle), suspended(false), timeDelta(0.0f),
-		fps(0), fpsCount(0), fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f), updateThread(&_asyncUpdate, "APRIL Async Update")
+	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : state(State::Idle), suspended(false), timeDelta(0.0f), fps(0), fpsCount(0),
+		fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f), displayingMessageBox(false), updateThread(&_asyncUpdate, "APRIL Async Update")
 	{
 		this->aprilApplicationInit = aprilApplicationInit;
 		this->aprilApplicationDestroy = aprilApplicationDestroy;
@@ -48,11 +49,23 @@ namespace april
 	{
 	}
 
+	Application::State Application::getState()
+	{
+		hmutex::ScopeLock lock(&this->stateMutex);
+		return this->state;
+	}
+
+	void Application::_setState(const State& value)
+	{
+		hmutex::ScopeLock lock(&this->stateMutex);
+		this->state = value;
+	}
+
 	void Application::init()
 	{
-		this->state = State::Starting;
+		this->_setState(State::Starting);
 		this->updateThread.start();
-		while (this->state == State::Starting)
+		while (this->getState() == State::Starting)
 		{
 			this->_updateSystem();
 			hthread::sleep(0.001f);
@@ -62,7 +75,7 @@ namespace april
 
 	void Application::destroy()
 	{
-		this->state = State::Idle;
+		this->_setState(State::Idle);
 		this->resume(); // makes sure the update thread can resume
 		this->updateThread.join();
 	}
@@ -73,7 +86,7 @@ namespace april
 		this->fpsCount = 0;
 		this->fpsTimer = 0.0f;
 		this->timer.update();
-		while (this->state == State::Running)
+		while (this->getState() == State::Running)
 		{
 			this->update();
 		}
@@ -83,7 +96,7 @@ namespace april
 	void Application::updateFinishing()
 	{
 		// processing remaining commands from other thread
-		while (this->state == State::Stopping)
+		while (this->getState() == State::Stopping)
 		{
 			this->_updateSystem();
 		}
@@ -91,7 +104,7 @@ namespace april
 		this->_updateSystem();
 		april::rendersys->_flushAsyncCommands();
 		// done
-		this->state = State::Idle;
+		this->_setState(State::Idle);
 	}
 
 	bool Application::update()
@@ -111,7 +124,21 @@ namespace april
 		hmutex::ScopeLock lock(&this->timeDeltaMutex);
 		this->timeDelta += timeDelta;
 		lock.release();
-		return april::rendersys->update(timeDelta);
+		bool result = april::rendersys->update(timeDelta);
+		this->_updateMessageBoxQueue();
+		return result;
+	}
+
+	void Application::_updateMessageBoxQueue()
+	{
+		hmutex::ScopeLock lock(&this->messageBoxMutex);
+		if (!this->displayingMessageBox && this->messageBoxQueue.size() > 0)
+		{
+			MessageBoxData data = this->messageBoxQueue.first();
+			this->displayingMessageBox = true;
+			lock.release();
+			_processMessageBox(data);
+		}
 	}
 
 	void Application::_updateSystem()
@@ -121,6 +148,7 @@ namespace april
 			TextureAsync::update();
 			april::window->checkEvents();
 			april::rendersys->update(0.0f); // might require some rendering
+			this->_updateMessageBoxQueue();
 		}
 	}
 
@@ -145,7 +173,8 @@ namespace april
 
 	void Application::finish()
 	{
-		if (this->state == State::Running)
+		hmutex::ScopeLock lock(&this->stateMutex);
+		if (this->state == State::Starting || this->state == State::Running)
 		{
 			this->state = State::Stopping;
 		}
@@ -153,12 +182,15 @@ namespace april
 
 	void Application::finalize()
 	{
+		hmutex::ScopeLock lock(&this->stateMutex);
 		if (this->state == State::Stopping)
 		{
 			this->state = State::Stopped;
 			while (this->state == State::Stopped)
 			{
+				lock.release();
 				hthread::sleep(0.001f);
+				lock.acquire(&this->stateMutex);
 			}
 		}
 	}
@@ -169,14 +201,15 @@ namespace april
 #ifdef _ANDROID
 		getJNIEnv(); // attaches thread to Java VM
 #endif
-		if (april::window != NULL && april::rendersys != NULL)
+		hmutex::ScopeLock lock(&april::application->stateMutex);
+		if (april::window != NULL && april::rendersys != NULL && april::application->state == State::Starting)
 		{
 			april::application->state = State::Running;
+			lock.release();
 			float timeDelta = 0.0f;
 			UpdateDelegate* updateDelegate = NULL;
-			hmutex::ScopeLock lock;
 			hmutex::ScopeLock lockTimeDelta;
-			while (april::application->state == State::Running)
+			while (april::application->getState() == State::Running)
 			{
 				lock.acquire(&april::application->updateMutex);
 				lockTimeDelta.acquire(&april::application->timeDeltaMutex);
@@ -199,7 +232,7 @@ namespace april
 				}
 				april::window->setPresentFrameEnabled(true);
 				lock.release();
-				while (april::application->state == State::Running && april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
+				while (april::application->getState() == State::Running && april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
 				{
 					hthread::sleep(0.001f);
 					april::window->_processEvents();
@@ -209,6 +242,8 @@ namespace april
 		else
 		{
 			april::application->state = State::Stopping;
+			lock.release();
+			april::window->_processEvents();
 		}
 		(*april::application->aprilApplicationDestroy)();
 #ifdef _ANDROID
@@ -242,6 +277,41 @@ namespace april
 		hmutex::ScopeLock lock(&this->updateMutex);
 		// TODO - can this even work?
 		//april::rendersys->_repeatLastFrame();
+	}
+
+	void Application::queueMessageBox(const MessageBoxData& data)
+	{
+		hmutex::ScopeLock lock(&this->messageBoxMutex);
+		this->messageBoxQueue += data;
+	}
+
+	void Application::waitForMessageBoxes()
+	{
+		hmutex::ScopeLock lock(&this->messageBoxMutex);
+		while (april::application->displayingMessageBox || this->messageBoxQueue.size() > 0)
+		{
+			lock.release();
+			hthread::sleep(0.001f);
+			lock.acquire(&this->messageBoxMutex);
+		}
+	}
+
+	void Application::messageBoxCallback(const MessageBoxButton& button)
+	{
+		hmutex::ScopeLock lock(&april::application->messageBoxMutex);
+		MessageBoxData data = april::application->messageBoxQueue.first();
+		if (data.callback != NULL)
+		{
+			lock.release();
+			data.callback(button);
+			lock.acquire(&april::application->messageBoxMutex);
+		}
+		april::application->displayingMessageBox = false;
+		april::application->messageBoxQueue.removeFirst();
+		if (data.applicationFinishAfterDisplay)
+		{
+			april::application->finish();
+		}
 	}
 
 }

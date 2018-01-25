@@ -117,6 +117,40 @@ namespace april
 		HL_ENUM_DECLARE(MessageBoxStyle, Question);
 	));
 
+	/// @brief Defines data for OS message box display.
+	class aprilExport MessageBoxData
+	{
+	public:
+		/// @brief title Text displayed in the title bar.
+		hstr title;
+		/// @brief text Text displayed within the message box.
+		hstr text;
+		/// @brief buttons Buttons which should be displayed.
+		MessageBoxButton buttons;
+		/// @brief style Style of the message box.
+		MessageBoxStyle style;
+		/// @brief customButtonTitles Custom texts for the buttons.
+		hmap<MessageBoxButton, hstr> customButtonTitles;
+		/// @brief callback Callback function to call once the message box was dismissed. Can be NULL if not needed.
+		void (*callback)(const MessageBoxButton&);
+		/// @brief modal Force modal message box.
+		bool modal;
+		/// @brief applicationFinishAfterDisplay Finishes calls Application:finish after display.
+		bool applicationFinishAfterDisplay;
+
+		/// @param[in] title Text displayed in the title bar.
+		/// @param[in] text Text displayed within the message box.
+		/// @param[in] buttons Buttons which should be displayed.
+		/// @param[in] style Style of the message box.
+		/// @param[in] customButtonTitles Custom texts for the buttons.
+		/// @param[in] callback Callback function to call once the message box was dismissed. Can be NULL if not needed.
+		/// @param[in] modal Force modal message box.
+		/// @param[in] applicationFinishAfterDisplay Finishes calls Application:finish after display.
+		MessageBoxData(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles,
+			void (*callback)(const MessageBoxButton&), bool modal, bool applicationFinishAfterDisplay);
+
+	};
+
 	/// @brief Get current OS's info.
 	/// @return Current OS's info.
 	aprilFnExport SystemInfo getSystemInfo();
@@ -148,16 +182,17 @@ namespace april
 	/// @param[in] customButtonTitles Custom texts for the buttons.
 	/// @param[in] callback Callback function to call once the message box was dismissed. Can be NULL if not needed.
 	/// @param[in] modal Force modal message box.
-	/// @param[in] terminateOnDisplay Close underlying application before showing the message box.
+	/// @param[in] applicationFinishAfterDisplay Calls Application::finish after display.
 	/// @note Modal means that the user cannot interact with the underlying window until the message box is closed. It's not available on all OSes and some OSes have always-modal message boxes.
-	/// @note terminateOnDisplay may not work the same way in all OSes.
+	/// @note applicationFinishAfterDisplay may not work the same way in all OSes.
 	/// @note "customButtonTitles" may not work on all OSes.
-	/// @note Depending on the OS, this function may return immediately. Write your code to assume that this function is asynchronous to avoid problems.
-	/// @note Expect that "callback" will be called asynchrously once the message box is dismissed.
+	/// @note This function is asynchronous and will return immediately.
 	aprilFnExport void showMessageBox(chstr title, chstr text, MessageBoxButton buttons = MessageBoxButton::Ok, MessageBoxStyle style = MessageBoxStyle::Normal,
-		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL, bool modal = false, bool terminateOnDisplay = false);
+		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void (*callback)(const MessageBoxButton&) = NULL, bool modal = false,
+		bool applicationFinishAfterDisplay = false);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
+	void _processMessageBox(const MessageBoxData& data);
 	void _makeButtonLabels(hstr* ok, hstr* yes, hstr* no, hstr* cancel, MessageBoxButton buttons, hmap<MessageBoxButton, hstr> customButtonTitles);
 #endif
 
