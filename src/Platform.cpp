@@ -21,13 +21,6 @@
 
 namespace april
 {
-	// DEPRECATED
-	void messageBox(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal, bool terminateOnDisplay)
-	{
-		showMessageBox(title, text, buttons, style, customButtonTitles, callback, modal, terminateOnDisplay);
-	}
-
 	HL_ENUM_CLASS_DEFINE(MessageBoxButton,
 	(
 		HL_ENUM_DEFINE(MessageBoxButton, Ok);

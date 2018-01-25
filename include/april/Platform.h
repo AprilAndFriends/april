@@ -158,12 +158,6 @@ namespace april
 		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL, bool modal = false, bool terminateOnDisplay = false);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-	HL_DEPRECATED("Deprecated API. Use showMessageBox() instead.")
-		aprilFnExport void messageBox(chstr title, chstr text, MessageBoxButton buttons = MessageBoxButton::Ok, MessageBoxStyle style = MessageBoxStyle::Normal,
-			hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL, bool modal = false, bool terminateOnDisplay = false);
-#endif
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
 	void _makeButtonLabels(hstr* ok, hstr* yes, hstr* no, hstr* cancel, MessageBoxButton buttons, hmap<MessageBoxButton, hstr> customButtonTitles);
 #endif
 
