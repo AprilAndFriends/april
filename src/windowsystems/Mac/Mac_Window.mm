@@ -54,15 +54,6 @@ namespace april
 		return (april::macGlView != NULL && april::macGlView->mDisplayLink != nil);
 	}
 	
-	Mac_Window::MessageBoxData::MessageBoxData(chstr title, chstr text, harray<hstr> buttons, harray<MessageBoxButton> buttonTypes, void (*callback)(MessageBoxButton))
-	{
-		this->title = title;
-		this->text = text;
-		this->buttons = buttons;
-		this->buttonTypes = buttonTypes;
-		this->callback = callback;
-	}
-
 	Mac_Window::Mac_Window() : Window()
 	{
 		this->ignoreUpdate = false;

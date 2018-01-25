@@ -27,6 +27,7 @@
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
+#include "Mac_CocoaWindow.h"
 #include "Mac_Window.h"
 
 #define MAC_WINDOW ((april::Mac_Window*)april::window)
@@ -214,7 +215,7 @@ namespace april
 		if (april::macCocoaWindow != NULL)
 		{
 #define ns(s) [NSString stringWithUTF8String:s.cStr()]
-			[april::macCocoaWindow showAlertView:ns(data.title) button1:ns(argButtons[0]) button2:ns(argButtons[1]) button3:ns(argButtons[2]) btn1_t:argButtonTypes[0] btn2_t:argButtonTypes[1] btn3_t:argButtonTypes[2] text:ns(data.text) callback:data.callback];
+			[AprilCocoaWindow showAlertView:ns(data.title) button1:ns(argButtons[0]) button2:ns(argButtons[1]) button3:ns(argButtons[2]) btn1_t:argButtonTypes[0] btn2_t:argButtonTypes[1] btn3_t:argButtonTypes[2] text:ns(data.text) callback:data.callback];
 		}
 		else
 		{

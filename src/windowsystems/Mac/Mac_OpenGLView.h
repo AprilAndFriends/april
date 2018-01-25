@@ -12,6 +12,7 @@
 #define APRIL_MAC_OPENGL_VIEW_H
 
 #import <AppKit/NSOpenGLView.h>
+#import <QuartzCore/CVDisplayLink.h>
 
 @interface AprilMacOpenGLView : NSOpenGLView
 {

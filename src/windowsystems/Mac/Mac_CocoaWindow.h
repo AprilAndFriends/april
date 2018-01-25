@@ -16,7 +16,7 @@
 #include "Keys.h"
 #include "Platform.h"
 
-typedef void (*MessageBoxCallback)(april::MessageBoxButton);
+typedef void (*MessageBoxCallback)(const april::MessageBoxButton&);
 struct MessageBoxParams
 {
     hstr title, button1, button2, button3, text;
