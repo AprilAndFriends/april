@@ -154,8 +154,8 @@ namespace april
 			TextureAsync::update();
 			april::window->checkEvents();
 			april::rendersys->update(0.0f); // might require some rendering
-			this->_updateMessageBoxQueue();
 		}
+		this->_updateMessageBoxQueue();
 	}
 
 	void Application::_updateFps()
@@ -293,13 +293,17 @@ namespace april
 
 	void Application::waitForMessageBoxes()
 	{
+		// for some reason this freezes Mac apps even though it's running on another thread
+#ifndef _MAC
 		hmutex::ScopeLock lock(&this->messageBoxMutex);
 		while (april::application->displayingMessageBox || this->messageBoxQueue.size() > 0)
 		{
 			lock.release();
-			hthread::sleep(0.001f);
+			//hthread::sleep(0.001f);
+			hthread::sleep(1000.0f);
 			lock.acquire(&this->messageBoxMutex);
 		}
+#endif
 	}
 
 	void Application::messageBoxCallback(const MessageBoxButton& button)
@@ -314,10 +318,6 @@ namespace april
 		}
 		april::application->displayingMessageBox = false;
 		april::application->messageBoxQueue.removeFirst();
-		if (data.applicationFinishAfterDisplay)
-		{
-			april::application->finish();
-		}
 	}
 
 }

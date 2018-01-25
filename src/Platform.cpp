@@ -191,6 +191,10 @@ namespace april
 		if (_showMessageBox != NULL)
 		{
 			april::application->queueMessageBox(MessageBoxData(title, text, buttons, style, customButtonTitles, callback, modal, applicationFinishAfterDisplay));
+			if (applicationFinishAfterDisplay)
+			{
+				april::application->finish();
+			}
 		}
 		else
 		{

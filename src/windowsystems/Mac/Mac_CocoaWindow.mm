@@ -536,33 +536,21 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	NSString* button2 = [NSString stringWithUTF8String:params.button2.cStr()];
 	NSString* button3 = [NSString stringWithUTF8String:params.button3.cStr()];
 	int clicked = (int)NSRunAlertPanel(title, @"%@", button1, button2, button3, text);
-	switch (clicked)
-	{
-	case NSAlertDefaultReturn:
-		clicked = 0;
-		break;
-	case NSAlertAlternateReturn:
-		clicked = 1;
-		break;
-	case NSAlertOtherReturn:
-		clicked = 2;
-		break;
-	}
 	if (params.callback != NULL)
 	{
-		MessageBoxCallback callback = params.callback;
-		april::MessageBoxButton btn = params.btnTypes[clicked];
-		__block bool dispatched = false;
-		dispatch_async(dispatch_get_main_queue(),
-		^{
-			dispatched = true;
-			(*callback)(btn);
-		});
-		while (!dispatched)
+		switch (clicked)
 		{
-			[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
-			hthread::sleep(10);
+		case NSAlertDefaultReturn:
+			clicked = 0;
+			break;
+		case NSAlertAlternateReturn:
+			clicked = 1;
+			break;
+		case NSAlertOtherReturn:
+			clicked = 2;
+			break;
 		}
+		april::Application::messageBoxCallback(params.btnTypes[clicked]);
 	}
 }
 
