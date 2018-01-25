@@ -145,7 +145,7 @@ namespace april
 
 	void Application::finish()
 	{
-		if (this->state != State::Stopped)
+		if (this->state == State::Running)
 		{
 			this->state = State::Stopping;
 		}

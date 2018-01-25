@@ -227,12 +227,12 @@ namespace april
 	return [NSArray arrayWithObjects:self, nil];
 }
 
-- (void)windowWillExitFullScreen:(NSNotification*) notification
+- (void) windowWillExitFullScreen:(NSNotification*) notification
 {
 	[self setWindowedStyleMask];
 }
 
-- (void)windowDidExitFullScreen:(NSNotification*) notification
+- (void) windowDidExitFullScreen:(NSNotification*) notification
 {
 	[[NSApplication sharedApplication] setPresentationOptions: NSApplicationPresentationDefault];
 	[self setWindowedStyleMask];
@@ -241,13 +241,13 @@ namespace april
 	[self setTitle:[NSString stringWithUTF8String:april::window->getTitle().cStr()]];
 }
 
-- (gvec2)transformCocoaPoint:(NSPoint) point
+- (gvec2) transformCocoaPoint:(NSPoint) point
 {
 	// TODOa - optimize
 	return gvec2(point.x, [self.contentView bounds].size.height - point.y);
 }
 
-- (april::Key)getMouseButtonCode:(NSEvent*) event
+- (april::Key) getMouseButtonCode:(NSEvent*) event
 {
 	april::Key button;
 	int n = (int)event.buttonNumber;
@@ -266,39 +266,39 @@ namespace april
 	return button;
 }
 
-- (void)mouseDown:(NSEvent*) event
+- (void) mouseDown:(NSEvent*) event
 {
 	gvec2 position = [self transformCocoaPoint:[event locationInWindow]];
 	april::window->queueMouseInput(april::MouseEvent::Type::Down, position * MAC_WINDOW->scalingFactor, [self getMouseButtonCode:event]);
 }
 
-- (void)rightMouseDown:(NSEvent*) event
+- (void) rightMouseDown:(NSEvent*) event
 {
 	[self mouseDown:event];
 }
 
-- (void)otherMouseDown:(NSEvent*) event
+- (void) otherMouseDown:(NSEvent*) event
 {
 	[self mouseDown:event];	
 }
 
-- (void)mouseUp:(NSEvent*) event
+- (void) mouseUp:(NSEvent*) event
 {
 	gvec2 position = [self transformCocoaPoint:[event locationInWindow]];
 	april::window->queueMouseInput(april::MouseEvent::Type::Up, position * MAC_WINDOW->scalingFactor, [self getMouseButtonCode:event]);
 }
 
-- (void)rightMouseUp:(NSEvent*) event
+- (void) rightMouseUp:(NSEvent*) event
 {
 	[self mouseUp:event];
 }
 
-- (void)otherMouseUp:(NSEvent*) event
+- (void) otherMouseUp:(NSEvent*) event
 {
 	[self mouseUp:event];
 }
 
-- (void)mouseMoved:(NSEvent*) event
+- (void) mouseMoved:(NSEvent*) event
 {
 	gvec2 position = [self transformCocoaPoint:[event locationInWindow]];
 	april::window->queueMouseInput(april::MouseEvent::Type::Move, position * MAC_WINDOW->scalingFactor, april::Key::None);
@@ -318,22 +318,22 @@ namespace april
 	}
 }
 
-- (void)mouseDragged:(NSEvent*) event
+- (void) mouseDragged:(NSEvent*) event
 {
 	[self mouseMoved:event];
 }
 
-- (void)rightMouseDragged:(NSEvent*) event
+- (void) rightMouseDragged:(NSEvent*) event
 {
 	[self mouseMoved:event];
 }
 
-- (void)otherMouseDragged:(NSEvent*) event
+- (void) otherMouseDragged:(NSEvent*) event
 {
 	[self mouseMoved:event];
 }
 
-- (void)onKeyDown:(unsigned int) keyCode unicode:(NSString*) unicode
+- (void) onKeyDown:(unsigned int) keyCode unicode:(NSString*) unicode
 {
 	unsigned int unichr = 0;
 	if ([unicode length] > 0)
@@ -343,7 +343,7 @@ namespace april
 	april::window->queueKeyInput(april::KeyEvent::Type::Down, april::Key::fromInt(keyCode), unichr);
 }
 
-- (void)onKeyUp:(unsigned int) keyCode
+- (void) onKeyUp:(unsigned int) keyCode
 {
 	april::window->queueKeyInput(april::KeyEvent::Type::Up, april::Key::fromInt(keyCode), 0);
 }
@@ -362,7 +362,7 @@ namespace april
 	return april::getAprilMacKeyCode([event keyCode]).value;
 }
 
-- (void)_preLionToggleFullscreen:(NSValue*) param
+- (void) _preLionToggleFullscreen:(NSValue*) param
 {
 	if ([self isFullScreen])
 	{
@@ -376,7 +376,7 @@ namespace april
 	}
 }
 
-- (void)platformToggleFullScreen
+- (void) platformToggleFullScreen
 {
 	if (isLionOrNewer())
 	{
@@ -435,7 +435,7 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	return result;
 }
 
-- (void)keyDown:(NSEvent*) event
+- (void) keyDown:(NSEvent*) event
 {
 	NSString* realString = translateInputForKeyDown(event);
 	if ((event.modifierFlags & (NSCommandKeyMask | NSControlKeyMask)) == (NSCommandKeyMask | NSControlKeyMask))
@@ -450,7 +450,7 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	[self onKeyDown:[self processKeyCode:event] unicode:realString];
 }
 
-- (void)keyUp:(NSEvent*) event
+- (void) keyUp:(NSEvent*) event
 {
 	if (event.modifierFlags & NSCommandKeyMask)
 	{
@@ -463,7 +463,7 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	[self onKeyUp:[self processKeyCode:event]];
 }
 
-- (void)scrollWheel:(NSEvent*) event
+- (void) scrollWheel:(NSEvent*) event
 {
 	gvec2 position(-[event deltaX], -[event deltaY]);
 	if (position.x != 0.0f || position.y != 0.0f)
@@ -472,7 +472,7 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	}
 }
 
-- (void)flagsChanged:(NSEvent*) event // special NSWindow function for modifier keys
+- (void) flagsChanged:(NSEvent*) event // special NSWindow function for modifier keys
 {
 	static unsigned int prevFlags = 0;
 	unsigned int flags = (unsigned int)[event modifierFlags];
@@ -488,7 +488,7 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	prevFlags = flags;
 }
 
-- (void)windowDidResignKey:(NSNotification*) notification
+- (void) windowDidResignKey:(NSNotification*) notification
 {
 	if (gReattachLoadingOverlay)
 	{
@@ -497,23 +497,23 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	}
 }
 
-- (BOOL)canBecomeKeyWindow
+- (BOOL) canBecomeKeyWindow
 {
 	return YES;
 }
 
-- (BOOL)acceptsFirstResponder
+- (BOOL) acceptsFirstResponder
 {
 	return YES;
 }
 
-- (void)setOpenGLView:(AprilMacOpenGLView*) view
+- (void) setOpenGLView:(AprilMacOpenGLView*) view
 {
 	mView = view;
 	self.contentView = view;
 }
 
-- (void)_setTitle:(NSString*) title
+- (void) _setTitle:(NSString*) title
 {
 	if (april::isUsingCVDisplayLink())
 	{
@@ -525,7 +525,7 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	}
 }
 
-+ (void)_showAlertView:(NSValue*) _params
++ (void) _showAlertView:(NSValue*) _params
 {
 	MessageBoxParams* p_params = (MessageBoxParams*)[_params pointerValue];
 	MessageBoxParams params = *p_params;
@@ -566,7 +566,7 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	}
 }
 
-+ (void)showAlertView:(NSString*) title button1:(NSString*) btn1 button2:(NSString*) btn2 button3:(NSString*) btn3 btn1_t:(april::MessageBoxButton) btn1_t btn2_t:(april::MessageBoxButton) btn2_t btn3_t:(april::MessageBoxButton) btn3_t text:(NSString*) text callback:(MessageBoxCallback) callback
++ (void) showAlertView:(NSString*) title button1:(NSString*) btn1 button2:(NSString*) btn2 button3:(NSString*) btn3 btn1_t:(april::MessageBoxButton) btn1_t btn2_t:(april::MessageBoxButton) btn2_t btn3_t:(april::MessageBoxButton) btn3_t text:(NSString*) text callback:(MessageBoxCallback) callback
 {
 	MessageBoxParams* p = new MessageBoxParams();
 	p->title = [title UTF8String];
@@ -588,12 +588,12 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	}
 }
 
-- (void)_terminateMainLoop:(void*) param
+- (void) _terminateMainLoop:(void*) param
 {
 	[[NSApplication sharedApplication] terminate:nil];
 }
 
-- (void)terminateMainLoop
+- (void) terminateMainLoop
 {
 	if (april::isUsingCVDisplayLink())
 	{
@@ -605,7 +605,7 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	}
 }
 
-- (void)destroy
+- (void) destroy
 {
 	if (mTimer != nil)
 	{
@@ -619,7 +619,7 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	}
 }
 
-- (void)dealloc
+- (void) dealloc
 {
 	[self destroy];
 	[super dealloc];

@@ -372,11 +372,11 @@ namespace april
 				return;
 			}
 			this->fpsTitle = newTitle;
-			[april::macCocoaWindow  _setTitle:[NSString stringWithUTF8String:newTitle.cStr()]];
+			[april::macCocoaWindow _setTitle:[NSString stringWithUTF8String:newTitle.cStr()]];
 		}
 		else
 		{
-			[april::macCocoaWindow  _setTitle:[NSString stringWithUTF8String:title.cStr()]];
+			[april::macCocoaWindow _setTitle:[NSString stringWithUTF8String:title.cStr()]];
 		}
 		this->title = title;
 	}
