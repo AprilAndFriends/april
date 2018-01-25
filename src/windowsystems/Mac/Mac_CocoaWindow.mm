@@ -530,28 +530,31 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	MessageBoxParams* p_params = (MessageBoxParams*)[_params pointerValue];
 	MessageBoxParams params = *p_params;
 	delete p_params;
-	NSString* title = [NSString stringWithUTF8String:params.title.cStr()];
-	NSString* text = [NSString stringWithUTF8String:params.text.cStr()];
-	NSString* button1 = [NSString stringWithUTF8String:params.button1.cStr()];
-	NSString* button2 = [NSString stringWithUTF8String:params.button2.cStr()];
-	NSString* button3 = [NSString stringWithUTF8String:params.button3.cStr()];
-	int clicked = (int)NSRunAlertPanel(title, @"%@", button1, button2, button3, text);
-	if (params.callback != NULL)
-	{
-		switch (clicked)
+	dispatch_async(dispatch_get_main_queue(),
+	^{
+		NSString* title = [NSString stringWithUTF8String:params.title.cStr()];
+		NSString* text = [NSString stringWithUTF8String:params.text.cStr()];
+		NSString* button1 = [NSString stringWithUTF8String:params.button1.cStr()];
+		NSString* button2 = [NSString stringWithUTF8String:params.button2.cStr()];
+		NSString* button3 = [NSString stringWithUTF8String:params.button3.cStr()];
+		int clicked = (int)NSRunAlertPanel(title, @"%@", button1, button2, button3, text);
+		if (params.callback != NULL)
 		{
-		case NSAlertDefaultReturn:
-			clicked = 0;
-			break;
-		case NSAlertAlternateReturn:
-			clicked = 1;
-			break;
-		case NSAlertOtherReturn:
-			clicked = 2;
-			break;
+			switch (clicked)
+			{
+			case NSAlertDefaultReturn:
+				clicked = 0;
+				break;
+			case NSAlertAlternateReturn:
+				clicked = 1;
+				break;
+			case NSAlertOtherReturn:
+				clicked = 2;
+				break;
+			}
+			april::Application::messageBoxCallback(params.btnTypes[clicked]);
 		}
-		april::Application::messageBoxCallback(params.btnTypes[clicked]);
-	}
+	});
 }
 
 + (void) showAlertView:(NSString*) title button1:(NSString*) btn1 button2:(NSString*) btn2 button3:(NSString*) btn3 btn1_t:(april::MessageBoxButton) btn1_t btn2_t:(april::MessageBoxButton) btn2_t btn3_t:(april::MessageBoxButton) btn3_t text:(NSString*) text callback:(MessageBoxCallback) callback
@@ -572,7 +575,8 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	}
 	else
 	{
-		[self _showAlertView:[NSValue valueWithPointer:p]];
+		[self performSelectorOnMainThread:@selector(_showAlertView:) withObject:[NSValue valueWithPointer:p] waitUntilDone:YES];
+		//[self _showAlertView:[NSValue valueWithPointer:p]];
 	}
 }
 

@@ -30,12 +30,11 @@ int gAprilShouldInvokeQuitCallback = 0;
 static NSString* getLocalizedString(NSString* key, NSString* fallback)
 {
 	NSString* s = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:key];
-	return (s == nil || [s length] == 0) ? fallback : s;
+	return (s == nil || [s length] == 0 ? fallback : s);
 }
 
-/* For some reason, Apple removed setAppleMenu from the headers in 10.4,
- but the method still is there and works. To avoid warnings, we declare
- it ourselves here. */
+// For some reason, Apple removed setAppleMenu from the headers in 10.4, but the method still is there and works.
+// To avoid warnings, we declare it ourselves here.
 @interface NSApplication(April_Missing_Methods)
 - (void)setAppleMenu:(NSMenu*) menu;
 @end
@@ -92,7 +91,6 @@ NSString* getApplicationName()
 {
 	NSDictionary* dict;
 	NSString* appName = 0;
-	/* Determine the application name */
 	appName = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
 	if (!appName || [appName length] == 0)
 	{
@@ -111,15 +109,12 @@ NSString* getApplicationName()
 
 static void setApplicationMenu()
 {
-	/* warning: this code is very odd */
 	NSMenu* appleMenu;
 	NSMenuItem* menuItem;
 	NSString* title;
 	NSString* appName;
 	appName = getApplicationName();
 	appleMenu = [[NSMenu alloc] initWithTitle:@""];
-	/* Add menu items */
-//	[NSApp showAprilAboutMenu];
 	title = [getLocalizedString(@"MenuAbout", @"About ") stringByAppendingString:appName];
 	[appleMenu addItemWithTitle:title action:@selector(showAprilAboutMenu) keyEquivalent:@""];
 	[appleMenu addItem:[NSMenuItem separatorItem]];
@@ -133,26 +128,21 @@ static void setApplicationMenu()
 	[appleMenu addItem:[NSMenuItem separatorItem]];
 	title = [getLocalizedString(@"MenuQuit", @"Quit ") stringByAppendingString:appName];
 	[appleMenu addItemWithTitle:title action:@selector(terminate:) keyEquivalent:@"q"];
-	/* Put menu into the menubar */
 	menuItem = [[NSMenuItem alloc] initWithTitle:@"" action:nil keyEquivalent:@""];
 	[menuItem setSubmenu:appleMenu];
 	[[NSApp mainMenu] addItem:menuItem];
-	/* Tell the application object that this is now the application menu */
 	[NSApp setAppleMenu:appleMenu];
-	/* Finally give up our references to the objects */
 	[appleMenu release];
 	[menuItem release];
 }
 
-/* Replacement for NSApplicationMain */
+// Replacement for NSApplicationMain
 static void CustomApplicationMain()
 {
 	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 	AprilAppDelegate* appDelegate;
-	// limit GCD from spawning too much threads
 	[[NSOperationQueue mainQueue] setMaxConcurrentOperationCount:1];
 	[[NSOperationQueue currentQueue] setMaxConcurrentOperationCount:1];
-	/* Ensure the application object is initialised */
 	[AprilApplication sharedApplication];
 #ifdef SDL_USE_CPS
 	{
@@ -169,15 +159,12 @@ static void CustomApplicationMain()
 			}
 		}
 	}
-#endif /* SDL_USE_CPS */
-	/* Set up the menubar */
+#endif
 	[NSApp setMainMenu:[[NSMenu alloc] init]];
 	setApplicationMenu();
-	/* Create AprilAppDelegate and make it the app delegate */
 	appDelegate = [[AprilAppDelegate alloc] init];
 	[NSApplication sharedApplication].delegate = appDelegate;
 	[NSApp activateIgnoringOtherApps:YES];
-	/* Start the main event loop */
 	[NSApp run];
 	[appDelegate release];
 	[pool release];
@@ -185,11 +172,8 @@ static void CustomApplicationMain()
 
 namespace april
 {
-	/* Main entry point to executable - should *not* be SDL_main! */
 	int __mainStandard(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)(), int argc, char** argv)
 	{
-		/* Copy the arguments into a global variable */
-		/* This is passed if we are launched by double-clicking */
 		gAprilShouldInvokeQuitCallback = 0;
 		harray<hstr> args;
 		if (argc >= 2 && strncmp(argv[1], "-psn", 4) == 0)

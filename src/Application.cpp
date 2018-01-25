@@ -115,6 +115,7 @@ namespace april
 
 	bool Application::update()
 	{
+		this->_updateMessageBoxQueue();
 		TextureAsync::update();
 		april::window->checkEvents();
 		float timeDelta = (float)this->timer.diff(true);
@@ -130,9 +131,7 @@ namespace april
 		hmutex::ScopeLock lock(&this->timeDeltaMutex);
 		this->timeDelta += timeDelta;
 		lock.release();
-		bool result = april::rendersys->update(timeDelta);
-		this->_updateMessageBoxQueue();
-		return result;
+		return april::rendersys->update(timeDelta);
 	}
 
 	void Application::_updateMessageBoxQueue()
@@ -149,13 +148,13 @@ namespace april
 
 	void Application::_updateSystem()
 	{
+		this->_updateMessageBoxQueue();
 		if (april::window != NULL && april::rendersys != NULL)
 		{
 			TextureAsync::update();
 			april::window->checkEvents();
 			april::rendersys->update(0.0f); // might require some rendering
 		}
-		this->_updateMessageBoxQueue();
 	}
 
 	void Application::_updateFps()
@@ -247,6 +246,14 @@ namespace april
 		}
 		else
 		{
+			/*
+			while (april::application->getState() != State::Stopping)
+			{
+				hthread::sleep(0.001f);
+				//april::window->_processEvents();
+			}
+
+			*/
 			april::application->state = State::Stopping;
 			lock.release();
 			april::window->_processEvents();
@@ -299,8 +306,7 @@ namespace april
 		while (april::application->displayingMessageBox || this->messageBoxQueue.size() > 0)
 		{
 			lock.release();
-			//hthread::sleep(0.001f);
-			hthread::sleep(1000.0f);
+			hthread::sleep(0.001f);
 			lock.acquire(&this->messageBoxMutex);
 		}
 #endif
@@ -318,6 +324,10 @@ namespace april
 		}
 		april::application->displayingMessageBox = false;
 		april::application->messageBoxQueue.removeFirst();
+		if (data.applicationFinishAfterDisplay)
+		{
+			april::application->finish();
+		}
 	}
 
 }
