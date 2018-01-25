@@ -17,6 +17,7 @@
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
+#include "Application.h"
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
@@ -38,7 +39,7 @@ namespace april
 		if (info.locale == "")
 		{
 			info.name = "winrt";
-			info.deviceName = "unnamedWinUWPDevice";
+			info.deviceName = "unnamedUWPDevice";
 #ifdef _ARM
 			info.architecture = "ARM";
 #else
@@ -50,7 +51,7 @@ namespace april
 			info.cpuCores = w32info.dwNumberOfProcessors;
 			// RAM size
 #ifndef _WINP8
-			// pure WinUWP can't retrieve this information so some arbitrary value is used
+			// pure UWP can't retrieve this information so some arbitrary value is used
 #ifndef _ARM
 			info.ram = 2048;
 #else
@@ -106,7 +107,7 @@ namespace april
 		}
 #ifdef _WINUWP_WINDOW
 		// display resolution
-		float dpiRatio = WinUWP::getDpiRatio();
+		float dpiRatio = UWP::getDpiRatio();
 		CoreWindow^ window = CoreWindow::GetForCurrentThread();
 		int width = hround(window->Bounds.Width * dpiRatio);
 		int height = hround(window->Bounds.Height * dpiRatio);
@@ -153,36 +154,24 @@ namespace april
 
 	static void(*_currentDialogCallback)(MessageBoxButton) = NULL;
 
-	void _showMessageBoxResult(int button)
+	static void _showMessageBoxResult(int button)
 	{
 		switch (button)
 		{
 		case IDOK:
-			if (_currentDialogCallback != NULL)
-			{
-				(*_currentDialogCallback)(MessageBoxButton::Ok);
-			}
+			Application::messageBoxCallback(MessageBoxButton::Ok);
 			break;
 		case IDYES:
-			if (_currentDialogCallback != NULL)
-			{
-				(*_currentDialogCallback)(MessageBoxButton::Yes);
-			}
+			Application::messageBoxCallback(MessageBoxButton::Yes);
 			break;
 		case IDNO:
-			if (_currentDialogCallback != NULL)
-			{
-				(*_currentDialogCallback)(MessageBoxButton::No);
-			}
+			Application::messageBoxCallback(MessageBoxButton::No);
 			break;
 		case IDCANCEL:
-			if (_currentDialogCallback != NULL)
-			{
-				(*_currentDialogCallback)(MessageBoxButton::Cancel);
-			}
+			Application::messageBoxCallback(MessageBoxButton::Cancel);
 			break;
 		default:
-			hlog::error(logTag, "Unknown message box callback: " + hstr(button));
+			Application::messageBoxCallback(MessageBoxButton::Ok);
 			break;
 		}
 	}
@@ -193,11 +182,10 @@ namespace april
 	void _showMessageBox_platform(const MessageBoxData& data)
 	{
 		DispatchedHandler^ handler = ref new DispatchedHandler(
-			[title, text, buttons, style, customButtonTitles, callback]()
+			[data]()
 		{
-			_currentDialogCallback = data.callback;
-			_HL_HSTR_TO_PSTR_DEF(data.text);
-			_HL_HSTR_TO_PSTR_DEF(data.title);
+			Platform::String^ ptitle = _HL_HSTR_TO_PSTR(data.title);
+			Platform::String^ ptext = _HL_HSTR_TO_PSTR(data.text);
 			MessageDialog^ dialog = ref new MessageDialog(ptext, ptitle);
 			UICommandInvokedHandler^ commandHandler = ref new UICommandInvokedHandler(
 				[](IUICommand^ command)
@@ -260,7 +248,7 @@ namespace april
 		}
 		catch (Platform::AccessDeniedException^ e)
 		{
-			hlog::warn(logTag, "messagebox() on WinUWP called \"recursively\"! Queueing to UI thread now...");
+			hlog::warn(logTag, "messagebox() on UWP called \"recursively\"! Queueing to UI thread now...");
 			messageBoxQueueMutex.lock();
 			messageBoxQueue += handler;
 			messageBoxQueueMutex.unlock();
