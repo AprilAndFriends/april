@@ -206,6 +206,10 @@ namespace april
 				}
 			}
 		}
+		else
+		{
+			april::application->state = State::Stopping;
+		}
 		(*april::application->aprilApplicationDestroy)();
 #ifdef _ANDROID
 		((JavaVM*)april::javaVM)->DetachCurrentThread();
