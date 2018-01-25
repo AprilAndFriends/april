@@ -150,7 +150,7 @@ namespace april
 		return true;
 	}
 	
-	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
+	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(const MessageBoxButton&), bool modal)
 	{
 		// fugly implementation of showing messagebox on mac os
 		// ideas:

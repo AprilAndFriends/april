@@ -134,7 +134,7 @@ namespace april
 		return true;
 	}
 
-	static void (*_currentMessageBoxCallback)(MessageBoxButton) = NULL;
+	static void (*_currentMessageBoxCallback)(const MessageBoxButton&) = NULL;
 
 	void _showMessageBoxResult(int button)
 	{
@@ -171,7 +171,7 @@ namespace april
 	}
 
 	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
+		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(const MessageBoxButton&), bool modal)
 	{
 		_currentMessageBoxCallback = callback;
 		int type = 0;

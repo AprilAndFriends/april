@@ -30,14 +30,14 @@
 void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 
 @interface AprilMessageBoxDelegate : NSObject<UIAlertViewDelegate> {
-	void(*callback)(april::MessageBoxButton);
+	void (*callback)(const april::MessageBoxButton&);
 	april::MessageBoxButton buttonTypes[3];
 	
 	CFRunLoopRef runLoop;
 	BOOL isModal;
 	april::MessageBoxButton selectedButton;
 }
-@property (nonatomic, assign) void(*callback)(april::MessageBoxButton);
+@property (nonatomic, assign) void (*callback)(const april::MessageBoxButton&);
 @property (nonatomic, assign) april::MessageBoxButton *buttonTypes;
 @property (nonatomic, readonly) april::MessageBoxButton selectedButton;
 @end
@@ -229,7 +229,7 @@ namespace april
 		return false;
 	}
 	
-	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
+	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(const MessageBoxButton&), bool modal)
 	{
 		NSString *nsButtons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[3] = {MessageBoxButton::Ok, MessageBoxButton::Ok, MessageBoxButton::Ok};

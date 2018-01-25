@@ -143,7 +143,7 @@ namespace april
 		return true;
 	}
 
-	static void(*currentCallback)(MessageBoxButton) = NULL;
+	static void(*currentCallback)(const MessageBoxButton&) = NULL;
 
 	void _showMessageBoxResult(int button)
 	{
@@ -183,7 +183,7 @@ namespace april
 	static hmutex messageBoxQueueMutex;
 
 	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(MessageBoxButton), bool modal)
+		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(const MessageBoxButton&), bool modal)
 	{
 		DispatchedHandler^ handler = ref new DispatchedHandler(
 			[title, text, buttons, style, customButtonTitles, callback]()

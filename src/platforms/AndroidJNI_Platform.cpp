@@ -21,7 +21,7 @@
 namespace april
 {
 	void* javaVM = NULL;
-	void (*dialogCallback)(MessageBoxButton) = NULL;
+	void (*dialogCallback)(const MessageBoxButton&) = NULL;
 	jobject classLoader = NULL;
 
 	hstr _jstringToHstr(JNIEnv* env, jstring string)

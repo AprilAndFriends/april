@@ -23,7 +23,7 @@
 
 namespace april
 {
-	extern void (*dialogCallback)(MessageBoxButton);
+	extern void (*dialogCallback)(const MessageBoxButton&);
 	
 	void _setupSystemInfo_platform(SystemInfo& info)
 	{
@@ -108,7 +108,7 @@ namespace april
 	}
 
 	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal)
+		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(const MessageBoxButton&), bool modal)
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodShowMessageBox, "showMessageBox", _JARGS(_JVOID, _JSTR _JSTR _JSTR _JSTR _JSTR _JSTR _JINT));
 		// determine ok/yes/no/cancel texts

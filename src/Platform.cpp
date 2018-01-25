@@ -22,7 +22,7 @@ namespace april
 {
 	// DEPRECATED
 	void messageBox(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void(*callback)(MessageBoxButton), bool modal, bool terminateOnDisplay)
+		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(const MessageBoxButton&), bool modal, bool terminateOnDisplay)
 	{
 		showMessageBox(title, text, buttons, style, customButtonTitles, callback, modal, terminateOnDisplay);
 	}
@@ -73,14 +73,14 @@ namespace april
 	extern hstr _getUserDataPath_platform();
 	extern int64_t _getRamConsumption_platform();
 	extern bool _openUrl_platform(chstr url);
-	extern void _showMessageBox_platform(chstr, chstr, MessageBoxButton, MessageBoxStyle, hmap<MessageBoxButton, hstr>, void(*)(MessageBoxButton), bool);
+	extern void _showMessageBox_platform(chstr, chstr, MessageBoxButton, MessageBoxStyle, hmap<MessageBoxButton, hstr>, void(*)(const MessageBoxButton&), bool);
 
 	void (*_setupSystemInfo)(SystemInfo& info) = &_setupSystemInfo_platform;
 	hstr (*_getPackageName)() = &_getPackageName_platform;
 	hstr (*_getUserDataPath)() = &_getUserDataPath_platform;
 	int64_t (*_getRamConsumption)() = &_getRamConsumption_platform;
 	bool (*_openUrl)(chstr) = &_openUrl_platform;
-	void (*_showMessageBox)(chstr, chstr, MessageBoxButton, MessageBoxStyle, hmap<MessageBoxButton, hstr>, void (*)(MessageBoxButton), bool) = &_showMessageBox_platform;
+	void (*_showMessageBox)(chstr, chstr, MessageBoxButton, MessageBoxStyle, hmap<MessageBoxButton, hstr>, void (*)(const MessageBoxButton&), bool) = &_showMessageBox_platform;
 
 	SystemInfo info;
 	harray<hstr> args;
@@ -179,7 +179,7 @@ namespace april
 	}
 
 	void showMessageBox(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(MessageBoxButton), bool modal, bool terminateOnDisplay)
+		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(const MessageBoxButton&), bool modal, bool terminateOnDisplay)
 	{
 		if (terminateOnDisplay)
 		{

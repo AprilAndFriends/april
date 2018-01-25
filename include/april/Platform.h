@@ -155,12 +155,12 @@ namespace april
 	/// @note Depending on the OS, this function may return immediately. Write your code to assume that this function is asynchronous to avoid problems.
 	/// @note Expect that "callback" will be called asynchrously once the message box is dismissed.
 	aprilFnExport void showMessageBox(chstr title, chstr text, MessageBoxButton buttons = MessageBoxButton::Ok, MessageBoxStyle style = MessageBoxStyle::Normal,
-		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL, bool modal = false, bool terminateOnDisplay = false);
+		hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(const MessageBoxButton&) = NULL, bool modal = false, bool terminateOnDisplay = false);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 	HL_DEPRECATED("Deprecated API. Use showMessageBox() instead.")
 		aprilFnExport void messageBox(chstr title, chstr text, MessageBoxButton buttons = MessageBoxButton::Ok, MessageBoxStyle style = MessageBoxStyle::Normal,
-			hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(MessageBoxButton) = NULL, bool modal = false, bool terminateOnDisplay = false);
+			hmap<MessageBoxButton, hstr> customButtonTitles = hmap<MessageBoxButton, hstr>(), void(*callback)(const MessageBoxButton&) = NULL, bool modal = false, bool terminateOnDisplay = false);
 #endif
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
