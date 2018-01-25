@@ -717,7 +717,7 @@
 		D13681A1187BFB6600E66E32 /* Win32_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Win32_main.h; path = include/april/Win32_main.h; sourceTree = "<group>"; };
 		D13681A2187BFB6600E66E32 /* WinRT_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WinRT_main.h; path = include/april/WinRT_main.h; sourceTree = "<group>"; };
 		D137B93C1A0A417900C4102E /* ImagePvr.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ImagePvr.mm; path = src/images/ImagePvr.mm; sourceTree = "<group>"; };
-		D14BF818158737A000D31573 /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Platform.cpp; path = src/Platform.cpp; sourceTree = "<group>"; };
+		D14BF818158737A000D31573 /* Platform.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Platform.cpp; path = src/Platform.cpp; sourceTree = "<group>"; };
 		D14BF81E158737B300D31573 /* aprilUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = aprilUtil.h; path = include/april/aprilUtil.h; sourceTree = "<group>"; };
 		D14BF96915875F3300D31573 /* aprilUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = aprilUtil.cpp; path = src/aprilUtil.cpp; sourceTree = "<group>"; };
 		D1534776178AD62A00151D1A /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };

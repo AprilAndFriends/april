@@ -81,7 +81,7 @@ bool g_WindowFocusedBeforeSleep = false;
 	april::application->destroy();
 }
 
-- (void)applicationDidBecomeActive:(NSNotification *)aNotification
+- (void) applicationDidBecomeActive:(NSNotification *)aNotification
 {
 	if (mAppFocused)
 	{
@@ -99,7 +99,7 @@ bool g_WindowFocusedBeforeSleep = false;
 	}
 }
 
-- (void)applicationDidResignActive:(NSNotification *)aNotification
+- (void) applicationDidResignActive:(NSNotification *)aNotification
 {
 	if (!mAppFocused)
 	{

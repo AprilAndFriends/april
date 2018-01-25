@@ -60,6 +60,12 @@ namespace april
 		hmutex::ScopeLock lock(&this->stateMutex);
 		this->state = value;
 	}
+	
+	bool Application::isAnyMessageBoxQueued()
+	{
+		hmutex::ScopeLock lock(&this->messageBoxMutex);
+		return (!this->displayingMessageBox && this->messageBoxQueue.size() > 0);
+	}
 
 	void Application::init()
 	{

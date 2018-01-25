@@ -76,6 +76,8 @@ namespace april
 		/// @brief The maximum allowed time-delta between frames.
 		/// @note Limiting this makes sense, because on weak hardware configurations it allows that large frameskips don't result in too large time skips.
 		HL_DEFINE_GETSET(float, timeDeltaMaxLimit, TimeDeltaMaxLimit);
+		/// @brief Checks whether any OS message boxes are queued for display.
+		bool isAnyMessageBoxQueued();
 
 		/// @brief Calls the initialization procedure defined by the user.
 		/// @param[in] args Launch arguments.
