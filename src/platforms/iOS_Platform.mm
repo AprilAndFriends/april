@@ -20,24 +20,24 @@
 
 #import <OpenGLES/ES1/gl.h>
 
+#include "Application.h"
 #include "april.h"
-#include "RenderSystem.h"
 #include "Image.h"
 #include "iOS_Window.h"
 #include "Platform.h"
-#include "april.h"
+#include "RenderSystem.h"
 
 void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 
 @interface AprilMessageBoxDelegate : NSObject<UIAlertViewDelegate> {
-	void(*callback)(april::MessageBoxButton);
+	void(*callback)(const april::MessageBoxButton&);
 	april::MessageBoxButton buttonTypes[3];
 	
 	CFRunLoopRef runLoop;
 	BOOL isModal;
 	april::MessageBoxButton selectedButton;
 }
-@property (nonatomic, assign) void(*callback)(april::MessageBoxButton);
+@property (nonatomic, assign) void(*callback)(const april::MessageBoxButton&);
 @property (nonatomic, assign) april::MessageBoxButton *buttonTypes;
 @property (nonatomic, readonly) april::MessageBoxButton selectedButton;
 @end
@@ -282,7 +282,7 @@ namespace april
 		NSString *titlens = [NSString stringWithUTF8String:data.title.cStr()];
 		NSString *textns = [NSString stringWithUTF8String:data.text.cStr()];
 		AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] initWithModality:data.modal] autorelease];
-		mbd.callback = data.callback;
+		mbd.callback = april::Application::messageBoxCallback;
 		[mbd setButtonTypes:buttonTypes];
 		[mbd retain];
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:titlens message:textns delegate:mbd cancelButtonTitle:nsButtons[i0] otherButtonTitles:nsButtons[i1], nsButtons[i2], nil];
