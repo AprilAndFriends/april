@@ -36,7 +36,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 
 @implementation AprilMacOpenGLView
 
--(void)cursorCheck:(NSTimer*) t
+-(void) cursorCheck:(NSTimer*) t
 {
 	// kspes@20150819 - Starting MacOS 10.10.5 I've noticed cursor rects getting messed up in fullscreen mode (windowed works fine). So this code here is a hack/workarround that problem
 	// Analyzing the code everything seems to be in order, regardless if I use the old cursor rect logic or newer NSTrackingArea, the effect is the same. if this is a bug in apple or our code
@@ -172,35 +172,19 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 #endif
 			CGLFlushDrawable([context CGLContextObj]);
 			CGLUnlockContext([context CGLContextObj]);
-			// check state again, don't cache!
-			if (april::application->getState() != april::Application::State::Running)
-			{
-				[april::macCocoaWindow terminateMainLoop];
-			}
 		}
 	}
 	else
 	{
-		if (MAC_WINDOW->shouldIgnoreUpdate())
+		if (!MAC_WINDOW->shouldIgnoreUpdate())
 		{
-			mStartedDrawing = false;
-			return;
-		}
-		NSOpenGLContext* context = [self openGLContext];
-		[context makeCurrentContext];
-		if (april::application != NULL)
-		{
-			if (april::application->getState() == april::Application::State::Running)
+			NSOpenGLContext* context = [self openGLContext];
+			[context makeCurrentContext];
+			if (april::application != NULL && april::application->getState() == april::Application::State::Running)
 			{
 				april::application->update();
 			}
-			// check state again, don't cache!
-			if (april::application->getState() != april::Application::State::Running)
-			{
-				[april::macCocoaWindow terminateMainLoop];
-			}
 		}
-		mStartedDrawing = false;
 	}
 	if (MAC_WINDOW->messageBoxQueue.size() > 0)
 	{
@@ -208,6 +192,12 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 		april::Mac_Window::MessageBoxData data = MAC_WINDOW->messageBoxQueue.removeFirst();
 		[AprilCocoaWindow showAlertView:ns(data.title) button1:ns(data.buttons[0]) button2:ns(data.buttons[1]) button3:ns(data.buttons[2]) btn1_t:data.buttonTypes[0] btn2_t:data.buttonTypes[1] btn3_t:data.buttonTypes[2] text:ns(data.text) callback:data.callback];
 	}
+	// check state again, don't cache!
+	if (april::application != NULL && april::application->getState() != april::Application::State::Running)
+	{
+		[april::macCocoaWindow terminateMainLoop];
+	}
+	mStartedDrawing = false;
 }
 
 -(void)drawRect:(NSRect)dirtyRect

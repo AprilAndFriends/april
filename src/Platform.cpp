@@ -184,16 +184,7 @@ namespace april
 	{
 		if (terminateOnDisplay)
 		{
-#if !defined(_IOS) && !defined(_COCOA_WINDOW)
 			april::application->finish();
-#endif
-			// TODOx - this is likely very unsafe and needs refactoring
-#if !defined(_IOS) || defined(_COCOA_WINDOW)
-			if (window != NULL)
-			{
-				window->destroy();
-			}
-#endif
 			modal = true;
 		}
 		if (_showMessageBox != NULL)
@@ -203,10 +194,6 @@ namespace april
 		else
 		{
 			hlog::warn(logTag, "Cannot use showMessageBox() on this platform.");
-		}
-		if (terminateOnDisplay)
-		{
-			exit(0);
 		}
 	}
 

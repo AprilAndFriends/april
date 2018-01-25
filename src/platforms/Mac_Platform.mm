@@ -122,7 +122,7 @@ namespace april
 		static hstr bundleID;
 		if (bundleID == "")
 		{
-			NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+			NSString* bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
 			bundleID = [bundleIdentifier UTF8String];
 		}
 		return bundleID;
@@ -210,8 +210,8 @@ namespace april
         harray<hstr> argButtons;
         harray<MessageBoxButton> argButtonTypes;
         argButtons += [nsButtons[i0] UTF8String];
-        argButtons += nsButtons[i1] == 0 ? "" : [nsButtons[i1] UTF8String];
-        argButtons += nsButtons[i2] == 0 ? "" : [nsButtons[i2] UTF8String];
+        argButtons += (nsButtons[i1] == 0 ? "" : [nsButtons[i1] UTF8String]);
+        argButtons += (nsButtons[i2] == 0 ? "" : [nsButtons[i2] UTF8String]);
         argButtonTypes += buttonTypes[i0];
         argButtonTypes += buttonTypes[i1];
         argButtonTypes += buttonTypes[i2];

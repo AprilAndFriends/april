@@ -38,7 +38,7 @@ namespace april
 
 @implementation AprilCocoaWindow
 
-- (void)timerEvent:(NSTimer*) t
+- (void) timerEvent:(NSTimer*) t
 {
 	// Avoid CPU overload while the app is waiting for screen to refresh
 	if (mView->mStartedDrawing || (april::rendersys->getAsyncQueuesCount() <= 0 && !april::rendersys->hasAsyncTexturesUploadQueued()))
@@ -55,13 +55,13 @@ namespace april
 	}
 }
 
-- (void)queryUpdated:(NSNotification*) note
+- (void) queryUpdated:(NSNotification*) note
 {
 	// needed for screenshot notifications because mac messes up the custom cursor when making a screenshot in fullscreen...sigh..
 	[self invalidateCursorRectsForView:mView];
 }
 
-- (void)configure
+- (void) configure
 {
 	april::initMacKeyMap();
 	mCustomFullscreenExitAnimation = false;
@@ -79,14 +79,14 @@ namespace april
 	[mMetadataQuery startQuery];
 }
 
-- (void)startRenderLoop
+- (void) startRenderLoop
 {
 	mTimer = [NSTimer timerWithTimeInterval:1 / 1000.0f target:self selector:@selector(timerEvent:) userInfo:nil repeats:YES];
 	[[NSRunLoop currentRunLoop] addTimer:mTimer forMode:NSDefaultRunLoopMode];
 	[[NSRunLoop currentRunLoop] addTimer:mTimer forMode:NSEventTrackingRunLoopMode];
 }
 
-- (BOOL)windowShouldClose:(NSWindow*) sender
+- (BOOL) windowShouldClose:(NSWindow*) sender
 {
 	bool displayLink = april::isUsingCVDisplayLink();
 	hmutex::ScopeLock lock;
@@ -107,7 +107,7 @@ namespace april
 	return NO;
 }
 
-- (void)onWindowSizeChange
+- (void) onWindowSizeChange
 {
 	NSSize size = [mView bounds].size;
 	if (size.width == 0 || size.height == 0)
@@ -125,13 +125,13 @@ namespace april
 	april::window->queueSizeChange(width, height, fullscreen);
 }
 
-- (void)windowDidResize:(NSNotification*) notification
+- (void) windowDidResize:(NSNotification*) notification
 {
 	[self onWindowSizeChange];
 	updateLoadingOverlay(0.0f);
 }
 
-- (void)windowDidMiniaturize:(NSNotification *)notification
+- (void) windowDidMiniaturize:(NSNotification *)notification
 {
 #ifdef _DEBUG
 	hlog::write(april::logTag, "User minimized window.");
@@ -139,7 +139,7 @@ namespace april
 	MAC_WINDOW->onFocusChanged(false);
 }
 
-- (void)windowDidDeminiaturize:(NSNotification *)notification
+- (void) windowDidDeminiaturize:(NSNotification *)notification
 {
 #ifdef _DEBUG
 	hlog::write(april::logTag, "User unminimized window.");
@@ -147,13 +147,13 @@ namespace april
 	MAC_WINDOW->onFocusChanged(true);
 }
 
-- (BOOL)isFullScreen
+- (BOOL) isFullScreen
 {
 	int style = (int)[self styleMask];
 	return (style == NSBorderlessWindowMask || style == NSFullScreenWindowMask); // this covers both 10.7 and older macs
 }
 
-- (void)enterFullScreen
+- (void) enterFullScreen
 {
 	MAC_WINDOW->setFullscreenFlag(true);
 	NSRect prevFrame = [self frame];
@@ -169,17 +169,17 @@ namespace april
 	}
 }
 
-- (NSApplicationPresentationOptions)window:(NSWindow*) window willUseFullScreenPresentationOptions:(NSApplicationPresentationOptions) proposedOptions
+- (NSApplicationPresentationOptions) window:(NSWindow*) window willUseFullScreenPresentationOptions:(NSApplicationPresentationOptions) proposedOptions
 {
 	return (proposedOptions| NSApplicationPresentationAutoHideToolbar | NSApplicationPresentationAutoHideMenuBar);
 }
 
-- (void)windowWillEnterFullScreen:(NSNotification*) notification
+- (void) windowWillEnterFullScreen:(NSNotification*) notification
 {
 	[self enterFullScreen]; // this gets called on 10.7+, while < 10.7 call enterFullScreen directly
 }
 
-- (void)setWindowedStyleMask
+- (void) setWindowedStyleMask
 {
 	NSUInteger mask;
 	mask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
@@ -194,7 +194,7 @@ namespace april
 	}
 }
 
-- (void)exitFullScreen
+- (void) exitFullScreen
 {
 	NSRect prevFrame = [self frame];
 	[[NSApplication sharedApplication] setPresentationOptions: NSApplicationPresentationDefault];
@@ -207,7 +207,7 @@ namespace april
 	MAC_WINDOW->setFullscreenFlag(false);
 }
 
-- (void)window:(NSWindow*) window startCustomAnimationToExitFullScreenWithDuration:(NSTimeInterval) duration
+- (void) window:(NSWindow*) window startCustomAnimationToExitFullScreenWithDuration:(NSTimeInterval) duration
 {
 	[NSAnimationContext beginGrouping];
 	[[NSAnimationContext currentContext] setDuration:duration];

@@ -216,7 +216,7 @@ namespace april
 	
 	void* Mac_Window::getBackendId() const
 	{
-		return (void*)april::macCocoaWindow ;
+		return (void*)april::macCocoaWindow;
 	}
 
 	hstr Mac_Window::getParam(chstr param)
@@ -308,7 +308,7 @@ namespace april
 		{
 			[april::macGlView setCursor:NULL];
 		}
-		[april::macCocoaWindow  invalidateCursorRectsForView:april::macGlView];
+		[april::macCocoaWindow invalidateCursorRectsForView:april::macGlView];
 	}
 
 	void Mac_Window::setCursorVisible(bool value)
@@ -438,6 +438,7 @@ namespace april
 	void Mac_Window::queueMessageBox(chstr title, chstr text, harray<hstr> buttons, harray<MessageBoxButton> buttonTypes, void (*callback)(MessageBoxButton))
 	{
 		this->messageBoxQueue += MessageBoxData(title, text, buttons, buttonTypes, callback);
+		[april::macGlView setNeedsDisplay:YES]; // required so the draw command is called where message boxes are actually processed
 	}
 	
 	Cursor* Mac_Window::_createCursor(bool fromResource)
