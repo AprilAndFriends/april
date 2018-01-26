@@ -279,8 +279,8 @@ namespace april
 
 	void Application::renderFrameSync()
 	{
-		hmutex::ScopeLock lock(&this->updateMutex);
 		// TODO - can this even work?
+		//hmutex::ScopeLock lock(&this->updateMutex);
 		//april::rendersys->_repeatLastFrame();
 	}
 
