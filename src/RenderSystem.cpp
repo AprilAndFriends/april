@@ -976,6 +976,7 @@ namespace april
 			}
 			delete (*it);
 		}
+		TextureAsync::update();
 	}
 
 	void RenderSystem::waitForAsyncCommands(bool forced)

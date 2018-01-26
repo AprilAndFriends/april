@@ -260,6 +260,7 @@ namespace april
 	{
 		if (!this->suspended)
 		{
+			april::rendersys->_flushAsyncCommands(); // TODO - this is here for safe-guard and should be removed later
 			this->updateMutex.lock();
 			hlog::write(logTag, "Application suspend.");
 			this->suspended = true;
