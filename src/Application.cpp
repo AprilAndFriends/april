@@ -246,14 +246,6 @@ namespace april
 		}
 		else
 		{
-			/*
-			while (april::application->getState() != State::Stopping)
-			{
-				hthread::sleep(0.001f);
-				//april::window->_processEvents();
-			}
-
-			*/
 			april::application->state = State::Stopping;
 			lock.release();
 			april::window->_processEvents();
