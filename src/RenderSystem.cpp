@@ -333,12 +333,7 @@ namespace april
 	int RenderSystem::getAsyncQueuesCount()
 	{
 		hmutex::ScopeLock lock(&this->asyncMutex);
-		int result = hmax(this->asyncCommandQueues.size() - 1, 0);
-		if (this->frameDuplicates > 0 && this->lastAsyncCommandQueue->getRepeatCount() > 0)
-		{
-			++result;
-		}
-		return result;
+		return hmax(this->asyncCommandQueues.size() - 1, 0);
 	}
 
 	harray<Texture*> RenderSystem::getTextures()
