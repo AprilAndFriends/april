@@ -389,7 +389,7 @@ namespace april
 		return TextureAsync::isRunning();
 	}
 
-	bool RenderSystem::hasAsyncTexturesUploadQueued() const
+	bool RenderSystem::hasTexturesReadyForUpload() const
 	{
 		harray<Texture*> textures = april::rendersys->getTextures();
 		foreach (Texture*, it, textures)

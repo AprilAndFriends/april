@@ -142,17 +142,17 @@ namespace april
 		/// @brief Gets the current RAM consumption of the asynchronously loaded data.
 		/// @return The current RAM consumption of the asynchronously loaded data.
 		int getCurrentAsyncRamSize();
-		/// @brief Checks whether the texture has been loaded and uploaded to the GPU.
-		/// @return True if the texture has been loaded and uploaded to the GPU.
+		/// @brief Checks whether the texture has been uploaded to the GPU.
+		/// @return True if the texture has been uploaded to the GPU.
 		bool isUploaded();
-		/// @brief Checks whether the texture has been loaded asynchronously and is waiting for the upload to the GPU.
-		/// @return True if the texture has been loaded asynchronously and is waiting for the upload to the GPU.
+		/// @brief Checks whether the texture is ready to be uploaded to the GPU.
+		/// @return True if the texture is ready to be uploaded to the GPU.
 		bool isReadyForUpload();
 		/// @brief Checks whether the texture is waiting to be loaded asynchronously.
 		/// @return True if the texture is waiting to be loaded asynchronously.
 		bool isAsyncLoadQueued();
 		/// @brief Checks whether the texture is completely unloaded.
-		/// @return True if the texture is fully unloaded.
+		/// @return True if the texture is completely unloaded.
 		/// @see isUploaded()
 		/// @see isReadyForUpload()
 		/// @see isAsyncLoadQueued()
@@ -808,9 +808,9 @@ namespace april
 		/// @brief Uploads the texture data to the GPU. Used internally only.
 		/// @return True if successful or already loaded.
 		bool _upload();
-		/// @brief Waits for the texture to be ready for upload.
-		/// @note This should usually not be used externally.
-		/// @see loadAsyncAsync
+		/// @brief Waits for the texture to be ready for upload. Used internally only.
+		/// @see loadAsync
+		/// @see _upload
 		void _ensureReadyForUpload();
 
 		/// @brief Clears the entire image and sets all image data to zeroes without safety checks. Used internally only.

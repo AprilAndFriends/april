@@ -45,6 +45,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
@@ -77,12 +78,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8c60d2f7ff26a1594d0e6d5213b86457"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3745e00d17669941eb8e5dfe57fea419"><td class="memItemLeft" align="right" valign="top"><a id="a3745e00d17669941eb8e5dfe57fea419"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a3745e00d17669941eb8e5dfe57fea419">HL_DEFINE_GETSET</a> (harray&lt; hstr &gt;, <a class="el" href="classapril_1_1_application.html#a0fdc7190914bf66747eedb45e129395e">args</a>, Args)</td></tr>
-<tr class="memdesc:a3745e00d17669941eb8e5dfe57fea419"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get launch arguments. <br /></td></tr>
+<tr class="memdesc:a3745e00d17669941eb8e5dfe57fea419"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get/Set launch arguments. <br /></td></tr>
 <tr class="separator:a3745e00d17669941eb8e5dfe57fea419"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae393e2bbc0b23a2fd4c9f6b61a6dca69"><td class="memItemLeft" align="right" valign="top"><a id="ae393e2bbc0b23a2fd4c9f6b61a6dca69"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#ae393e2bbc0b23a2fd4c9f6b61a6dca69">HL_DEFINE_GET</a> (<a class="el" href="classapril_1_1_application_1_1_state.html">State</a>, <a class="el" href="classapril_1_1_application.html#af05c82b2079daa1a83b73e01f24abbec">state</a>, <a class="el" href="classapril_1_1_application_1_1_state.html">State</a>)</td></tr>
-<tr class="memdesc:ae393e2bbc0b23a2fd4c9f6b61a6dca69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get running flag. <br /></td></tr>
-<tr class="separator:ae393e2bbc0b23a2fd4c9f6b61a6dca69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e41f2963b97b273a44ca43c3aef1e48"><td class="memItemLeft" align="right" valign="top"><a id="a8e41f2963b97b273a44ca43c3aef1e48"></a>
+<a class="el" href="classapril_1_1_application_1_1_state.html">State</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a8e41f2963b97b273a44ca43c3aef1e48">getState</a> ()</td></tr>
+<tr class="memdesc:a8e41f2963b97b273a44ca43c3aef1e48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get running flag. <br /></td></tr>
+<tr class="separator:a8e41f2963b97b273a44ca43c3aef1e48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d22bdd7affe13de9f4dc3ebf5c1c6b4"><td class="memItemLeft" align="right" valign="top"><a id="a5d22bdd7affe13de9f4dc3ebf5c1c6b4"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a5d22bdd7affe13de9f4dc3ebf5c1c6b4">HL_DEFINE_GETSET</a> (int, <a class="el" href="classapril_1_1_application.html#ae4c8060c3475d88670d6649e51cc086d">fps</a>, Fps)</td></tr>
 <tr class="memdesc:a5d22bdd7affe13de9f4dc3ebf5c1c6b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current FPS. <br /></td></tr>
@@ -94,6 +95,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0c360db8268ff6a0c62de63fbc18ceb1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a0c360db8268ff6a0c62de63fbc18ceb1">HL_DEFINE_GETSET</a> (float, <a class="el" href="classapril_1_1_application.html#a1c385e70afb6f01232627a2651fd76ef">timeDeltaMaxLimit</a>, TimeDeltaMaxLimit)</td></tr>
 <tr class="memdesc:a0c360db8268ff6a0c62de63fbc18ceb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The maximum allowed time-delta between frames.  <a href="#a0c360db8268ff6a0c62de63fbc18ceb1">More...</a><br /></td></tr>
 <tr class="separator:a0c360db8268ff6a0c62de63fbc18ceb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4abf8f12cad6c55eed3a24db01008fbf"><td class="memItemLeft" align="right" valign="top"><a id="a4abf8f12cad6c55eed3a24db01008fbf"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a4abf8f12cad6c55eed3a24db01008fbf">isAnyMessageBoxQueued</a> ()</td></tr>
+<tr class="memdesc:a4abf8f12cad6c55eed3a24db01008fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether any OS message boxes are queued for display. <br /></td></tr>
+<tr class="separator:a4abf8f12cad6c55eed3a24db01008fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a247770a9094842100fef614f99261b4d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a247770a9094842100fef614f99261b4d">init</a> ()</td></tr>
 <tr class="memdesc:a247770a9094842100fef614f99261b4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the initialization procedure defined by the user.  <a href="#a247770a9094842100fef614f99261b4d">More...</a><br /></td></tr>
 <tr class="separator:a247770a9094842100fef614f99261b4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -127,14 +132,36 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a4e09ae655e30a8f05a60e17f280bfcbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a4e09ae655e30a8f05a60e17f280bfcbf">renderFrameSync</a> ()</td></tr>
 <tr class="memdesc:a4e09ae655e30a8f05a60e17f280bfcbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes and render a single frame.  <a href="#a4e09ae655e30a8f05a60e17f280bfcbf">More...</a><br /></td></tr>
 <tr class="separator:a4e09ae655e30a8f05a60e17f280bfcbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ad3e7115aee0b8081e59dc34ffe7f9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a7ad3e7115aee0b8081e59dc34ffe7f9f">queueMessageBox</a> (const <a class="el" href="classapril_1_1_message_box_data.html">MessageBoxData</a> &amp;data)</td></tr>
+<tr class="memdesc:a7ad3e7115aee0b8081e59dc34ffe7f9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a message box display.  <a href="#a7ad3e7115aee0b8081e59dc34ffe7f9f">More...</a><br /></td></tr>
+<tr class="separator:a7ad3e7115aee0b8081e59dc34ffe7f9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22d5384540b52db975c7c730abfa514b"><td class="memItemLeft" align="right" valign="top"><a id="a22d5384540b52db975c7c730abfa514b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a22d5384540b52db975c7c730abfa514b">waitForMessageBoxes</a> ()</td></tr>
+<tr class="memdesc:a22d5384540b52db975c7c730abfa514b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits until all OS message boxes have finished displaying. <br /></td></tr>
+<tr class="separator:a22d5384540b52db975c7c730abfa514b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a4b622a5b5c8e6008d8a0645e143cb0d2"><td class="memItemLeft" align="right" valign="top"><a id="a4b622a5b5c8e6008d8a0645e143cb0d2"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>messageBoxCallback</b> (const <a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a> &amp;button)</td></tr>
+<tr class="separator:a4b622a5b5c8e6008d8a0645e143cb0d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:ae7a60208dfe080f933735ec454a7a13f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#ae7a60208dfe080f933735ec454a7a13f">_updateSystem</a> ()</td></tr>
-<tr class="memdesc:ae7a60208dfe080f933735ec454a7a13f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs the update of one frame, but without any timer.  <a href="#ae7a60208dfe080f933735ec454a7a13f">More...</a><br /></td></tr>
+<tr class="memitem:a0efb3c5a19f6ebed3634414eace4b904"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a0efb3c5a19f6ebed3634414eace4b904">_setState</a> (const <a class="el" href="classapril_1_1_application_1_1_state.html">State</a> &amp;value)</td></tr>
+<tr class="memdesc:a0efb3c5a19f6ebed3634414eace4b904"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classapril_1_1_application_1_1_state.html" title="Defines application states. ">State</a>.  <a href="#a0efb3c5a19f6ebed3634414eace4b904">More...</a><br /></td></tr>
+<tr class="separator:a0efb3c5a19f6ebed3634414eace4b904"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7a60208dfe080f933735ec454a7a13f"><td class="memItemLeft" align="right" valign="top"><a id="ae7a60208dfe080f933735ec454a7a13f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#ae7a60208dfe080f933735ec454a7a13f">_updateSystem</a> ()</td></tr>
+<tr class="memdesc:ae7a60208dfe080f933735ec454a7a13f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs the update of one frame, but without any timer. <br /></td></tr>
 <tr class="separator:ae7a60208dfe080f933735ec454a7a13f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa701fe3b89e3b09bc39c5219aa79786f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#aa701fe3b89e3b09bc39c5219aa79786f">_updateFps</a> ()</td></tr>
-<tr class="memdesc:aa701fe3b89e3b09bc39c5219aa79786f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs FPS counter update.  <a href="#aa701fe3b89e3b09bc39c5219aa79786f">More...</a><br /></td></tr>
+<tr class="memitem:a6ca5e56b796b7f289819f7d21710ba06"><td class="memItemLeft" align="right" valign="top"><a id="a6ca5e56b796b7f289819f7d21710ba06"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a6ca5e56b796b7f289819f7d21710ba06">_updateMessageBoxQueue</a> ()</td></tr>
+<tr class="memdesc:a6ca5e56b796b7f289819f7d21710ba06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes message box displays. <br /></td></tr>
+<tr class="separator:a6ca5e56b796b7f289819f7d21710ba06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa701fe3b89e3b09bc39c5219aa79786f"><td class="memItemLeft" align="right" valign="top"><a id="aa701fe3b89e3b09bc39c5219aa79786f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#aa701fe3b89e3b09bc39c5219aa79786f">_updateFps</a> ()</td></tr>
+<tr class="memdesc:aa701fe3b89e3b09bc39c5219aa79786f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs FPS counter update. <br /></td></tr>
 <tr class="separator:aa701fe3b89e3b09bc39c5219aa79786f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
@@ -192,6 +219,14 @@ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr class="memitem:a1c385e70afb6f01232627a2651fd76ef"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a1c385e70afb6f01232627a2651fd76ef">timeDeltaMaxLimit</a></td></tr>
 <tr class="memdesc:a1c385e70afb6f01232627a2651fd76ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum allowed time-delta that are propagated into the <a class="el" href="classapril_1_1_update_delegate.html" title="Defines a delegate for the update callback for the render loop. ">UpdateDelegate</a>.  <a href="#a1c385e70afb6f01232627a2651fd76ef">More...</a><br /></td></tr>
 <tr class="separator:a1c385e70afb6f01232627a2651fd76ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cbeea935ffc85fe052c934abfea6cc6"><td class="memItemLeft" align="right" valign="top"><a id="a0cbeea935ffc85fe052c934abfea6cc6"></a>
+harray&lt; <a class="el" href="classapril_1_1_message_box_data.html">MessageBoxData</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a0cbeea935ffc85fe052c934abfea6cc6">messageBoxQueue</a></td></tr>
+<tr class="memdesc:a0cbeea935ffc85fe052c934abfea6cc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queue for message box displays. <br /></td></tr>
+<tr class="separator:a0cbeea935ffc85fe052c934abfea6cc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaecd84a3575e4c19d1832e1a355083f4"><td class="memItemLeft" align="right" valign="top"><a id="aaecd84a3575e4c19d1832e1a355083f4"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#aaecd84a3575e4c19d1832e1a355083f4">displayingMessageBox</a></td></tr>
+<tr class="memdesc:aaecd84a3575e4c19d1832e1a355083f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether OS message box is being displayed at this moment or not. <br /></td></tr>
+<tr class="separator:aaecd84a3575e4c19d1832e1a355083f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3facd0f96afc7f5b29ad59c4b0b551eb"><td class="memItemLeft" align="right" valign="top"><a id="a3facd0f96afc7f5b29ad59c4b0b551eb"></a>
 hthread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a3facd0f96afc7f5b29ad59c4b0b551eb">updateThread</a></td></tr>
 <tr class="memdesc:a3facd0f96afc7f5b29ad59c4b0b551eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">The update thread. <br /></td></tr>
@@ -200,10 +235,18 @@ hthread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 hmutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#aa4ddf3e221dda04cfaa03d8598c37538">updateMutex</a></td></tr>
 <tr class="memdesc:aa4ddf3e221dda04cfaa03d8598c37538"><td class="mdescLeft">&#160;</td><td class="mdescRight">The update mutex. <br /></td></tr>
 <tr class="separator:aa4ddf3e221dda04cfaa03d8598c37538"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5af79f524d9fbedfb5de81f7acc433c7"><td class="memItemLeft" align="right" valign="top"><a id="a5af79f524d9fbedfb5de81f7acc433c7"></a>
+hmutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a5af79f524d9fbedfb5de81f7acc433c7">stateMutex</a></td></tr>
+<tr class="memdesc:a5af79f524d9fbedfb5de81f7acc433c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The update mutex. <br /></td></tr>
+<tr class="separator:a5af79f524d9fbedfb5de81f7acc433c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed02726038fade8785ec98ea660cbc74"><td class="memItemLeft" align="right" valign="top"><a id="aed02726038fade8785ec98ea660cbc74"></a>
 hmutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#aed02726038fade8785ec98ea660cbc74">timeDeltaMutex</a></td></tr>
 <tr class="memdesc:aed02726038fade8785ec98ea660cbc74"><td class="mdescLeft">&#160;</td><td class="mdescRight">The time-delta mutex. <br /></td></tr>
 <tr class="separator:aed02726038fade8785ec98ea660cbc74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9df16ed0c118a99c799538408de42515"><td class="memItemLeft" align="right" valign="top"><a id="a9df16ed0c118a99c799538408de42515"></a>
+hmutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a9df16ed0c118a99c799538408de42515">messageBoxMutex</a></td></tr>
+<tr class="memdesc:a9df16ed0c118a99c799538408de42515"><td class="mdescLeft">&#160;</td><td class="mdescRight">The message-box queue mutex. <br /></td></tr>
+<tr class="separator:a9df16ed0c118a99c799538408de42515"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
@@ -286,8 +329,8 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 
 </div>
 </div>
-<a id="aa701fe3b89e3b09bc39c5219aa79786f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa701fe3b89e3b09bc39c5219aa79786f">&#9670;&nbsp;</a></span>_updateFps()</h2>
+<a id="a0efb3c5a19f6ebed3634414eace4b904"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0efb3c5a19f6ebed3634414eace4b904">&#9670;&nbsp;</a></span>_setState()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -296,9 +339,10 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void april::Application::_updateFps </td>
+          <td class="memname">void april::Application::_setState </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="classapril_1_1_application_1_1_state.html">State</a> &amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -309,36 +353,13 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Performs FPS counter update. </p>
-<dl class="section note"><dt>Note</dt><dd>This is usually called internally. </dd></dl>
-
-</div>
-</div>
-<a id="ae7a60208dfe080f933735ec454a7a13f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7a60208dfe080f933735ec454a7a13f">&#9670;&nbsp;</a></span>_updateSystem()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void april::Application::_updateSystem </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Performs the update of one frame, but without any timer. </p>
-<dl class="section note"><dt>Note</dt><dd>This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used. </dd></dl>
+<p>Set <a class="el" href="classapril_1_1_application_1_1_state.html" title="Defines application states. ">State</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>New <a class="el" href="classapril_1_1_application_1_1_state.html" title="Defines application states. ">State</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -421,6 +442,33 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a7ad3e7115aee0b8081e59dc34ffe7f9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ad3e7115aee0b8081e59dc34ffe7f9f">&#9670;&nbsp;</a></span>queueMessageBox()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void april::Application::queueMessageBox </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classapril_1_1_message_box_data.html">MessageBoxData</a> &amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Queues a message box display. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>The data for the message box display. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This is usually called internally only. </dd></dl>
 
 </div>
 </div>

@@ -245,9 +245,9 @@ namespace april
 		/// @brief Checks if there are any textures queued to be loaded asynchronously.
 		/// @return True if there are any textures queued to be loaded asynchronously.
 		bool hasAsyncTexturesQueued() const;
-		/// @brief Checks if there are any textures queued to be uploaded.
-		/// @return True if there are any textures queued to be uploaded.
-		bool hasAsyncTexturesUploadQueued() const;
+		/// @brief Checks if there are any textures ready to be uploaded.
+		/// @return True if there are any textures ready to be uploaded.
+		bool hasTexturesReadyForUpload() const;
 		/// @brief Gets the render viewport.
 		/// @return The render viewport.
 		grect getViewport() const;

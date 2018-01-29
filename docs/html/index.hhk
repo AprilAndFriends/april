@@ -66,7 +66,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_virtual_keyboard.html#aa53327f887e2c0b29b40b46f96ea64e3"><param name="Name" value="_drawKeyboard"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a3e1a9e4a2bf54ca92aaacd88ff6ac4a4"><param name="Name" value="_drawRectInternal"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#acfa11711dde11084d40531021d6de48d"><param name="Name" value="_drawTexturedRectInternal"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a60440d2efcc755a8bbe01431e959bfe3"><param name="Name" value="_ensureInternalLoaded"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a5c481e8a7ac8880a940a944420cece4d"><param name="Name" value="_ensureReadyForUpload"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a49ee82604acbaa55982a7a50bc785a71"><param name="Name" value="_flushAsyncCommands"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#a99efbd1db01d91cdda534754f66e3c9d"><param name="Name" value="_getInstances"></OBJECT>
   <UL>
@@ -140,6 +140,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a3838169816fa330ed28ae4984e835518"><param name="Name" value="_setDeviceTextureFilter"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#af2bf2519ae8b1378cc8d8e930bd1ad8f"><param name="Name" value="_setDeviceViewport"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a6d6863c950b9ac97b125861a02dae831"><param name="Name" value="_setRenderSystemResolution"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a0efb3c5a19f6ebed3634414eace4b904"><param name="Name" value="_setState"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#aeaa3bd07b92854dd75f9f33ffa985b48"><param name="Name" value="_setupPot"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_virtual_keyboard.html#ad281b4907a7ca818d52e39d6a3010a40"><param name="Name" value="_showKeyboard"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#afedfe55dc0dbe1add7dac2d5eecbd48d"><param name="Name" value="_systemAssignWindow"></OBJECT>
@@ -160,11 +161,11 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a365248d5a151e9fdd8ada0aa2493040a"><param name="Name" value="_unregisterTexture"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a25a9c5c8456f68a32afe48bb8783b0df"><param name="Name" value="_updateDeviceState"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#aa701fe3b89e3b09bc39c5219aa79786f"><param name="Name" value="_updateFps"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a6ca5e56b796b7f289819f7d21710ba06"><param name="Name" value="_updateMessageBoxQueue"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#ae7a60208dfe080f933735ec454a7a13f"><param name="Name" value="_updateSystem"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#ae70027fda722182ffea1e1596be89685"><param name="Name" value="_upload"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a5cd9e3647dcf9af49967898c1582ac6a"><param name="Name" value="_uploadDataToGpu"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a732bf8c7af363b32ce4edd35fd98db96"><param name="Name" value="_uploadToGpu"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#abfdcd7e280903b391d3083444b0ce072"><param name="Name" value="_waitForInternalAsyncLoad"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_button.html#a57b4898b71541926ad0a96757164fe90"><param name="Name" value="A"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_color.html#a65f53d1e5aac7fb4e4a7c9643a76bf50"><param name="Name" value="a"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#ad9194fe750bf2040b8b5bf1fd6560e94"><param name="Name" value="A"></OBJECT>
@@ -205,6 +206,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a23f25bcc02a0e94c2f5a4188496b04d0"><param name="Name" value="april::RenderSystem"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a23f25bcc02a0e94c2f5a4188496b04d0"><param name="Name" value="april::Window"></OBJECT>
   </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#aa67786ea741263edbb88cdbb09fbceea"><param name="Name" value="applicationFinishAfterDisplay"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#afb6fb8efbc2bf018d2dfb450e7f7fa59"><param name="Name" value="Apps"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="april_8h.html"><param name="Name" value="april.h"></OBJECT>
   <UL>
@@ -248,6 +250,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#a6e430e47aef36a7c5bc5d9d15961f6b2"><param name="Name" value="operator>="></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#a7bbcd11ea93e25582fc34aad830e2c8e"><param name="Name" value="previous"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#a8b6d3aa9d438b2dab94d7cf660eb1379"><param name="Name" value="Running"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#ace13b6d6f086ab460d8ea4f32610caed"><param name="Name" value="StartedWaiting"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#a2874270fe4af4186501054d26cb3e688"><param name="Name" value="Starting"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#a77ef7ffa0ed41ff62285c6a38104ef75"><param name="Name" value="State"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#af7b988c8914cdd0a2fc5dbcaab3016b8"><param name="Name" value="Stopped"></OBJECT>
@@ -256,13 +259,16 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html"><param name="Name" value="april::Application"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a299821b51b8c15395784c55dbf988b2e"><param name="Name" value="_asyncUpdate"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a0efb3c5a19f6ebed3634414eace4b904"><param name="Name" value="_setState"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#aa701fe3b89e3b09bc39c5219aa79786f"><param name="Name" value="_updateFps"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a6ca5e56b796b7f289819f7d21710ba06"><param name="Name" value="_updateMessageBoxQueue"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#ae7a60208dfe080f933735ec454a7a13f"><param name="Name" value="_updateSystem"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#aa5e4d0f839ef6925a425c20c1a77694e"><param name="Name" value="Application"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#af1ee6abe9e0f96f4288c51338dd02471"><param name="Name" value="aprilApplicationDestroy"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a82b7560a44f7a03e9b236b7106b395fe"><param name="Name" value="aprilApplicationInit"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a0fdc7190914bf66747eedb45e129395e"><param name="Name" value="args"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a68c90c12d79334096257b8d5610bb835"><param name="Name" value="destroy"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#aaecd84a3575e4c19d1832e1a355083f4"><param name="Name" value="displayingMessageBox"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a3c01ab11741fcb2207bd9c57ebd2713f"><param name="Name" value="enterMainLoop"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#ab8e41b574992ed4554372b19f1c734e3"><param name="Name" value="finalize"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a10b0f5c016a52a8f00f50c4b20f67e3d"><param name="Name" value="finish"></OBJECT>
@@ -270,12 +276,18 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#aa97a62d111f1940930afe08a5563f5a8"><param name="Name" value="fpsCount"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a966b47ecac1de8cec82a478adfdc04d7"><param name="Name" value="fpsResolution"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a8f24755967b0cef205a481b222cff8bd"><param name="Name" value="fpsTimer"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#ae393e2bbc0b23a2fd4c9f6b61a6dca69"><param name="Name" value="HL_DEFINE_GET"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a8e41f2963b97b273a44ca43c3aef1e48"><param name="Name" value="getState"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a3745e00d17669941eb8e5dfe57fea419"><param name="Name" value="HL_DEFINE_GETSET"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a247770a9094842100fef614f99261b4d"><param name="Name" value="init"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a4abf8f12cad6c55eed3a24db01008fbf"><param name="Name" value="isAnyMessageBoxQueued"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a4b622a5b5c8e6008d8a0645e143cb0d2"><param name="Name" value="messageBoxCallback"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a9df16ed0c118a99c799538408de42515"><param name="Name" value="messageBoxMutex"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a0cbeea935ffc85fe052c934abfea6cc6"><param name="Name" value="messageBoxQueue"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a7ad3e7115aee0b8081e59dc34ffe7f9f"><param name="Name" value="queueMessageBox"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a4e09ae655e30a8f05a60e17f280bfcbf"><param name="Name" value="renderFrameSync"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a12a2a443d1e09b247e9d13e2ccb4726f"><param name="Name" value="resume"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#af05c82b2079daa1a83b73e01f24abbec"><param name="Name" value="state"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a5af79f524d9fbedfb5de81f7acc433c7"><param name="Name" value="stateMutex"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a5c390afb73f0885594dd36e4956fce74"><param name="Name" value="suspend"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#ab9bcc76c282fee27b29d87fcc6799e1e"><param name="Name" value="suspended"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a14ab6ad553b7a078c46e42c506b51cc2"><param name="Name" value="timeDelta"></OBJECT>
@@ -286,6 +298,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#ae32840242307739cac1f660e041df7a4"><param name="Name" value="updateFinishing"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#aa4ddf3e221dda04cfaa03d8598c37538"><param name="Name" value="updateMutex"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a3facd0f96afc7f5b29ad59c4b0b551eb"><param name="Name" value="updateThread"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a22d5384540b52db975c7c730abfa514b"><param name="Name" value="waitForMessageBoxes"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a553f958a25683445088050a69d3de8e9"><param name="Name" value="Window"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a8c60d2f7ff26a1594d0e6d5213b86457"><param name="Name" value="~Application"></OBJECT>
   </UL>
@@ -1059,6 +1072,18 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_button.html#a32ffde20a81b66e73116b1cccfd8c4bc"><param name="Name" value="YesNo"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_button.html#a3ceea95a247c78ff5b0eedf1bbff4d62"><param name="Name" value="YesNoCancel"></OBJECT>
   </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html"><param name="Name" value="april::MessageBoxData"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#aa67786ea741263edbb88cdbb09fbceea"><param name="Name" value="applicationFinishAfterDisplay"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#aa8d89ff6c57bf9b65c2e65159e88f017"><param name="Name" value="buttons"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#a1c975fc29e7a62a6e19e4da14127aaee"><param name="Name" value="callback"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#a2bd4e17dbb4672ede71e9d61d00d1518"><param name="Name" value="customButtonTitles"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#a7cfe611f23279dac76d3fecd8107b3ef"><param name="Name" value="MessageBoxData"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#ae7011b7e8b9ca713e8ac31b21410fba5"><param name="Name" value="modal"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#a4fdf472e70c6776c414454a09ed3bd9c"><param name="Name" value="style"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#a611f856a12ffc0da3f7e72b79ef77cc8"><param name="Name" value="text"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#a2a3382069525cc044d4130e9c2e18091"><param name="Name" value="title"></OBJECT>
+  </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_style.html"><param name="Name" value="april::MessageBoxStyle"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_style.html#abb3ee17e189ddfc5f92a335059170bac"><param name="Name" value="_getInstances"></OBJECT>
@@ -1411,7 +1436,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a98f8658c1b500913d54c6ee3348be75f"><param name="Name" value="getVRam"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#ab760676f58fc12dafbbc6a5870f486cc"><param name="Name" value="getVRamConsumption"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#aa34b8fc2d613583b4eae286a2cf446a0"><param name="Name" value="hasAsyncTexturesQueued"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a5d1d29e809e36da59e58a2694e2a11b3"><param name="Name" value="hasAsyncTexturesUploadQueued"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#aea333b36ba2bb0f1bc6f65beb3217ac6"><param name="Name" value="hasTexturesReadyForUpload"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#acf7b1d729a5ef9b3c28a47a0366319ef"><param name="Name" value="HL_DEFINE_GET"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#af247b80ba8a681bd6e2ebb2dd0887762"><param name="Name" value="HL_DEFINE_GETSET"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a96d3ff5331a8eb61c9186b778a1db26d"><param name="Name" value="init"></OBJECT>
@@ -1655,7 +1680,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a0fd0136f94f98c62eb35b015bbfd9c88"><param name="Name" value="_deviceCreateTexture"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a722ac5332a6419b58d15fa0a3e7897f3"><param name="Name" value="_deviceDestroyTexture"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a0d3101334b0cce9661b905ac206664d5"><param name="Name" value="_deviceUnloadTexture"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a60440d2efcc755a8bbe01431e959bfe3"><param name="Name" value="_ensureInternalLoaded"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a5c481e8a7ac8880a940a944420cece4d"><param name="Name" value="_ensureReadyForUpload"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a89ac861fedfde6912ac6f061685f9741"><param name="Name" value="_getInternalName"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#ae7d8e82cd3d1db4c51e3c75013af99ff"><param name="Name" value="_isAlterable"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#aeb2237ec7a6779b326110e1ff576a9dd"><param name="Name" value="_isReadable"></OBJECT>
@@ -1675,7 +1700,6 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#ae70027fda722182ffea1e1596be89685"><param name="Name" value="_upload"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a5cd9e3647dcf9af49967898c1582ac6a"><param name="Name" value="_uploadDataToGpu"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a732bf8c7af363b32ce4edd35fd98db96"><param name="Name" value="_uploadToGpu"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#abfdcd7e280903b391d3083444b0ce072"><param name="Name" value="_waitForInternalAsyncLoad"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a974f669fee676523b8915c8b97f52aa9"><param name="Name" value="addressMode"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#ad9760c0b1bff2e9962a58ac374dfa183"><param name="Name" value="asyncDataMutex"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#ae6f7cfc32061f76e5bf9339a4748875f"><param name="Name" value="asyncLoadDiscarded"></OBJECT>
@@ -1694,7 +1718,6 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#aea9bf141aa54773947deeec9ce3525f7"><param name="Name" value="dirty"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a932844d1b31fb03cc98e9bcecfd0030b"><param name="Name" value="effectiveHeight"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a21d6a88040bf07e172c64fcdf2fd12f1"><param name="Name" value="effectiveWidth"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#aac617161df03156b42fd89864b73b80a"><param name="Name" value="ensureLoaded"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#aadc2273828304fa3d8382a604860d4f0"><param name="Name" value="filename"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#aded9ee95a3a35dab461e55e4056f2cd7"><param name="Name" value="fillRect"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#ad9606952f824cf4b7311a67ee736dcfc"><param name="Name" value="filter"></OBJECT>
@@ -1717,11 +1740,10 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a22dc126f8070ab9326c112578d206597"><param name="Name" value="insertAlphaMap"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a18f2f4d50f387abe2da2fccd1dd28708"><param name="Name" value="invert"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a81a5e3a3e75111d9d07976365b639107"><param name="Name" value="isAsyncLoadQueued"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a0a68207f2466569e1f2afd4adca51fd2"><param name="Name" value="isLoaded"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a16f8b76c1dbb9eb835fa4414785c4f78"><param name="Name" value="isLoadedAny"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a5be2063bbfba9a4dab22ac9b1bcfec38"><param name="Name" value="isLoadedAsync"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a6d1c6340963af312b6a61a620a3d74ca"><param name="Name" value="isReadyForUpload"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#abfffb86aeb309fa559beb17792629404"><param name="Name" value="isUnloaded"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a5803151a2e1e55a5e4cb12fafaedae0d"><param name="Name" value="isUploaded"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a85b289c509490cf94438c5f2b04318c4"><param name="Name" value="loadAsync"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#acad43a40139266926cbf82126b26b354"><param name="Name" value="loaded"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a4797d46935a644eb4eb3ebd03ed15488"><param name="Name" value="loadMetaData"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#ade3b407072ab6a55757599075b0c2a00"><param name="Name" value="loadMode"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a124c71cd2443f36da6db2c449c046067"><param name="Name" value="locked"></OBJECT>
@@ -1736,6 +1758,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a1e03a6060369015ccc2db32979b4773c"><param name="Name" value="type"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a1941d0617b322dde753bca9a54634b61"><param name="Name" value="unload"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a2e7b763581041025647036b448d7add0"><param name="Name" value="UnloadTextureCommand"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a43fa820ca2467cd344d5496f256e614e"><param name="Name" value="uploaded"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a5ff23d4829eee47302e20540319bc11b"><param name="Name" value="waitForAsyncLoad"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#aae6f21b8854a6950b6b327bae93c04d9"><param name="Name" value="width"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a83941483951c98e16a7c17be5a55aad6"><param name="Name" value="write"></OBJECT>
@@ -2058,11 +2081,13 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#a9537a065738f37d97bbbea36a73bea57"><param name="Name" value="BrowserStop"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_button.html#aaeff67302b01b4a17d89f3a6c08df4a7"><param name="Name" value="Button"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_controller_event.html#a10386323a1950e57b4b50dd352eb06ec"><param name="Name" value="buttonCode"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#aa8d89ff6c57bf9b65c2e65159e88f017"><param name="Name" value="buttons"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_button.html#a2c88467976afb0c6da6e1da3790d8e88"><param name="Name" value="C"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_button.html#a2c88467976afb0c6da6e1da3790d8e88"><param name="Name" value="april::Button"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#a37170cd703a0b46272635f448b42cb21"><param name="Name" value="april::Key"></OBJECT>
   </UL>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#a1c975fc29e7a62a6e19e4da14127aaee"><param name="Name" value="callback"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#af1ef5c6c354808df3c71deb40a7ad8fa"><param name="Name" value="Cancel"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#af1ef5c6c354808df3c71deb40a7ad8fa"><param name="Name" value="april::Key"></OBJECT>
@@ -2173,6 +2198,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a0164f0f458a53b80171700b96ecc908a"><param name="Name" value="cursorPosition"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#ab1d222d76fbc37d5f8c851b1fbe32caf"><param name="Name" value="cursorVisible"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_image_1_1_file_format.html#a8f17651355dc9511a58d708c6de02aca"><param name="Name" value="Custom"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#a2bd4e17dbb4672ede71e9d61d00d1518"><param name="Name" value="customButtonTitles"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_image.html#a7a05b71d9c66e3ae0347ee2a044fcac7"><param name="Name" value="customLoaders"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_image.html#ac86d0bfb15987fa236ed1daaf5e0cc56"><param name="Name" value="customMetaDataLoaders"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_image.html#a22ead065ce422333cd9db565e7dc3faf"><param name="Name" value="customSavers"></OBJECT>
@@ -2241,6 +2267,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#aea9bf141aa54773947deeec9ce3525f7"><param name="Name" value="dirty"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_controller_event_1_1_type.html#a18b56a898fab52e1abd79980a54542b8"><param name="Name" value="Disconnected"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structapril_1_1_system_info.html#ad557dea09f892186fc42b2a841dfdcb1"><param name="Name" value="displayDpi"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#aaecd84a3575e4c19d1832e1a355083f4"><param name="Name" value="displayingMessageBox"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structapril_1_1_render_system_1_1_display_mode.html#a1d13bc01a28389d567b2e9778343052c"><param name="Name" value="DisplayMode"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#ac42bf41be6fce7524bcbf1459b30157c"><param name="Name" value="displayModes"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structapril_1_1_system_info.html#ad9203dc36168303b5649f01ea833fc29"><param name="Name" value="displayResolution"></OBJECT>
@@ -2266,7 +2293,6 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a932844d1b31fb03cc98e9bcecfd0030b"><param name="Name" value="effectiveHeight"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a21d6a88040bf07e172c64fcdf2fd12f1"><param name="Name" value="effectiveWidth"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#a8e61f6614b4fc3aed31390b960a54d8e"><param name="Name" value="End"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#aac617161df03156b42fd89864b73b80a"><param name="Name" value="ensureLoaded"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a3c01ab11741fcb2207bd9c57ebd2713f"><param name="Name" value="enterMainLoop"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#ac8e3ee9d810343f4285956fab4bc5aa8"><param name="Name" value="Ereof"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#a10e25247d07aa36650a4738480d182d1"><param name="Name" value="Escape"></OBJECT>
@@ -2544,6 +2570,7 @@
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a5223ce254a96538b86211184db4f64e2"><param name="Name" value="getRenderTarget"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#aba7ee58289f836bd0a3a01b753dbd033"><param name="Name" value="getSize"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a8e41f2963b97b273a44ca43c3aef1e48"><param name="Name" value="getState"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_platform_8h.html#ae8267173b6c6129d6611f4775afea1a5"><param name="Name" value="getSystemInfo"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="april_8h.html#aaf5a39686cc24a6cf62d00a8601c453f"><param name="Name" value="getTextureExtensions"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a7d3b4b415cf64f70c0ae5d41a23904a4"><param name="Name" value="getTextures"></OBJECT>
@@ -2623,10 +2650,10 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a53fe4fa151f241b660d0f273c94e6ff0"><param name="Name" value="handleVirtualKeyboardChange"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#a2c93ff75a82c7ade74546dacbbef771a"><param name="Name" value="HanjaKanji"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#aa34b8fc2d613583b4eae286a2cf446a0"><param name="Name" value="hasAsyncTexturesQueued"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a5d1d29e809e36da59e58a2694e2a11b3"><param name="Name" value="hasAsyncTexturesUploadQueued"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_button.html#acd82c18eb965a0616bbd47ce891b83ae"><param name="Name" value="hasCancel"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_button.html#aee38484a8733783f741a137c6cf4ce99"><param name="Name" value="hasNo"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_button.html#ab9b795b79a6bf13d9773a82fa0272ba0"><param name="Name" value="hasOk"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#aea333b36ba2bb0f1bc6f65beb3217ac6"><param name="Name" value="hasTexturesReadyForUpload"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#aa69f8d74080b17e606bfb41e1d0a5b8d"><param name="Name" value="hasValue"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#aa69f8d74080b17e606bfb41e1d0a5b8d"><param name="Name" value="april::Application::State"></OBJECT>
@@ -2691,9 +2718,8 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_virtual_keyboard.html#a13851a8484641608af8aa01b0289ed64"><param name="Name" value="hideKeyboard"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a5bf3ed251fb24a47eb9a4f8619ea1587"><param name="Name" value="hideVirtualKeyboard"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a28a3aa528aba074fae693a97260d0f98"><param name="Name" value="HL_DEFINE_GET2"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#ae393e2bbc0b23a2fd4c9f6b61a6dca69"><param name="Name" value="HL_DEFINE_GET"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_cursor.html#a4d1653b88d63800ccfb5929df7c2b3a8"><param name="Name" value="HL_DEFINE_GET"></OBJECT>
   <UL>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#ae393e2bbc0b23a2fd4c9f6b61a6dca69"><param name="Name" value="april::Application"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_cursor.html#a4d1653b88d63800ccfb5929df7c2b3a8"><param name="Name" value="april::Cursor"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#acf7b1d729a5ef9b3c28a47a0366319ef"><param name="Name" value="april::RenderSystem"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a3638d4568515527f1dfa35184134b75a"><param name="Name" value="april::Texture"></OBJECT>
@@ -2762,6 +2788,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a18f2f4d50f387abe2da2fccd1dd28708"><param name="Name" value="april::Texture"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window_type.html#a06ba85f49d7d6d6a70f379b435b90e1d"><param name="Name" value="iOS"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a4abf8f12cad6c55eed3a24db01008fbf"><param name="Name" value="isAnyMessageBoxQueued"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a81a5e3a3e75111d9d07976365b639107"><param name="Name" value="isAsyncLoadQueued"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#aa7a3b21bef2a04c1772d869ed19fd1eb"><param name="Name" value="isCursorInside"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a9a11dfcbb21d9a00f96574029857ac8e"><param name="Name" value="isCursorVisible"></OBJECT>
@@ -2769,14 +2796,14 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_pixel_shader.html#a05f8125e56a2d498e4d542cc442d6764"><param name="Name" value="isLoaded"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_pixel_shader.html#a05f8125e56a2d498e4d542cc442d6764"><param name="Name" value="april::PixelShader"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a0a68207f2466569e1f2afd4adca51fd2"><param name="Name" value="april::Texture"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_vertex_shader.html#a5161003a75ac74dd6e75644cc63fcfe6"><param name="Name" value="april::VertexShader"></OBJECT>
   </UL>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a16f8b76c1dbb9eb835fa4414785c4f78"><param name="Name" value="isLoadedAny"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a5be2063bbfba9a4dab22ac9b1bcfec38"><param name="Name" value="isLoadedAsync"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_operation.html#a2df91f275101f33ce90228cbf3a62fc9"><param name="Name" value="isPoint"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a6d1c6340963af312b6a61a620a3d74ca"><param name="Name" value="isReadyForUpload"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a9c45e43fbf278ecd192da1cb8943e43c"><param name="Name" value="isRotating"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_operation.html#a1ac91127dc4a26912963f620da2df668"><param name="Name" value="isTriangle"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#abfffb86aeb309fa559beb17792629404"><param name="Name" value="isUnloaded"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a5803151a2e1e55a5e4cb12fafaedae0d"><param name="Name" value="isUploaded"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_image.html#a385c460096213280b8a41022e6bfaf47"><param name="Name" value="isValid"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#a1f817de1487454d6158a0a36c8be7c35"><param name="Name" value="J"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#a33865207d6f3427a4f19334b7c43ed6d"><param name="Name" value="Junja"></OBJECT>
@@ -2835,7 +2862,6 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_vertex_shader.html#a9c1992975bb23e9e36f140ccd78ef15d"><param name="Name" value="april::VertexShader"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a85b289c509490cf94438c5f2b04318c4"><param name="Name" value="loadAsync"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#acad43a40139266926cbf82126b26b354"><param name="Name" value="loaded"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_pixel_shader.html#a50dd26cb3010e3a784c41e93a1dde1f8"><param name="Name" value="loadFile"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_pixel_shader.html#a50dd26cb3010e3a784c41e93a1dde1f8"><param name="Name" value="april::PixelShader"></OBJECT>
@@ -2887,7 +2913,12 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#afd8ba6f66ed7f3f9f434d0a7e6d71c93"><param name="Name" value="MenuL"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#a8b74b62b701146623311c5215f0206a1"><param name="Name" value="MenuR"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_button.html#a79e656bb8dd39147d903743359fb41e3"><param name="Name" value="MessageBoxButton"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a4b622a5b5c8e6008d8a0645e143cb0d2"><param name="Name" value="messageBoxCallback"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#a7cfe611f23279dac76d3fecd8107b3ef"><param name="Name" value="MessageBoxData"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a9df16ed0c118a99c799538408de42515"><param name="Name" value="messageBoxMutex"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a0cbeea935ffc85fe052c934abfea6cc6"><param name="Name" value="messageBoxQueue"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_style.html#a70cb7282e6f926c74dd1926341a296dd"><param name="Name" value="MessageBoxStyle"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#ae7011b7e8b9ca713e8ac31b21410fba5"><param name="Name" value="modal"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_button.html#a91fe13930c44820e153ea7d40600c048"><param name="Name" value="Mode"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#ab22edd9b27f5ba3c7a830c62400c82be"><param name="Name" value="ModeChange"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_state.html#a62b81b5f8ecc023582ff235101767606"><param name="Name" value="modelviewMatrix"></OBJECT>
@@ -3353,7 +3384,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="_platform_8h.html#ae8267173b6c6129d6611f4775afea1a5"><param name="Name" value="getSystemInfo"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="_platform_8h.html#a22f30fb2b268aa70b9d535cc95ba27ce"><param name="Name" value="getUserDataPath"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="_platform_8h.html#a8234d39601622f2dd10867f21ac6380f"><param name="Name" value="openUrl"></OBJECT>
-    <LI><OBJECT type="text/sitemap"><param name="Local" value="_platform_8h.html#a7d303a5c29fa821567711d70e5321714"><param name="Name" value="showMessageBox"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="_platform_8h.html#a5a8b285321285b7c559b97668423b1b8"><param name="Name" value="showMessageBox"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#ab77fb5dbe18aeaac41c4e0d907daf495"><param name="Name" value="Play"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_image_1_1_file_format.html#a1a9fa0f3ad9b0bc0939674fed455ad85"><param name="Name" value="Png"></OBJECT>
@@ -3403,6 +3434,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a2edbf53593b7c803ce24b473ca50742e"><param name="Name" value="queueInputModeChange"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a84a66e4e8132a86654cdb75a110abbcc"><param name="Name" value="queueKeyInput"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#add8b8b8d1c093be0dc4e0f817c2c9859"><param name="Name" value="queueLowMemoryWarning"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a7ad3e7115aee0b8081e59dc34ffe7f9f"><param name="Name" value="queueMessageBox"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#aa4047dff2c3919edbcd1e98a5eea6354"><param name="Name" value="queueMotionInput"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a360b2e9bc0aeb13e00f18a6f95fcbb3c"><param name="Name" value="queueMouseInput"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a267f34e6318f4e0388c79047fcb54325"><param name="Name" value="queueQuitRequest"></OBJECT>
@@ -3426,8 +3458,8 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#ad22f8e16faa525eb1be85bab417d598e"><param name="Name" value="render"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a4f632c0d342d5f5809141db93d2b847b"><param name="Name" value="RenderCommand"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a4e09ae655e30a8f05a60e17f280bfcbf"><param name="Name" value="renderFrameSync"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#ae711f4083c29b7585967539facb2eb5a"><param name="Name" value="RenderHelper"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#abef6cff53a1d83b1fd2ab4d9d1fbb565"><param name="Name" value="renderHelper"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#ae711f4083c29b7585967539facb2eb5a"><param name="Name" value="RenderHelper"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a3ed14252d3f153a62890f6a6c4189272"><param name="Name" value="RenderHelperLayered2D"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a18f7e7e8f1ac5d159846bb249a4f85fc"><param name="Name" value="renderMode"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system_1_1_render_mode.html#a14057c09e5a6df3a1a530b1fd4c64a38"><param name="Name" value="RenderMode"></OBJECT>
@@ -3556,7 +3588,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#a214381950a2a7cba2e59a350d06815f3"><param name="Name" value="ShiftL"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#a929872393e2a2c531d9d8d462c476b7e"><param name="Name" value="ShiftR"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_virtual_keyboard.html#a32894d13479d423378133e27317eba61"><param name="Name" value="showKeyboard"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="_platform_8h.html#a7d303a5c29fa821567711d70e5321714"><param name="Name" value="showMessageBox"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="_platform_8h.html#a5a8b285321285b7c559b97668423b1b8"><param name="Name" value="showMessageBox"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a55e5e12434023d6c6ec246bee8475423"><param name="Name" value="showVirtualKeyboard"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_generic_event_1_1_type.html#a0c3b065e24bc0bf53c11c5b02146acc5"><param name="Name" value="SizeChange"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_key.html#ae3148d77aef9556f8b14a9932cca1cd8"><param name="Name" value="Sleep"></OBJECT>
@@ -3564,6 +3596,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="_standard__main_8h.html#a3c04138a5bfe5d72780bb7e82a18e627"><param name="Name" value="Standard_main.h"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_button.html#a12e1c52eadda448ec226f23a149c43f3"><param name="Name" value="Start"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_timer.html#a63ffbc5ac89aab91fd6101a7199b0c0d"><param name="Name" value="start"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#ace13b6d6f086ab460d8ea4f32610caed"><param name="Name" value="StartedWaiting"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#a2874270fe4af4186501054d26cb3e688"><param name="Name" value="Starting"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a819be1ed4f0836e6f6913caef72d0c58"><param name="Name" value="statCurrentFrameLineCount"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#ab1eec2d11c5ba510f4fdee87fff8bca6"><param name="Name" value="statCurrentFrameRenderCalls"></OBJECT>
@@ -3573,6 +3606,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#af05c82b2079daa1a83b73e01f24abbec"><param name="Name" value="state"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#a77ef7ffa0ed41ff62285c6a38104ef75"><param name="Name" value="State"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a062cbb8d1665e0cb969d157fc1d3e2a5"><param name="Name" value="state"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a5af79f524d9fbedfb5de81f7acc433c7"><param name="Name" value="stateMutex"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#aef538e0480b7d2d96b717aab79884926"><param name="Name" value="StateUpdateCommand"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#afceae6e2d058baedea04ab929d7a4c2c"><param name="Name" value="statLastFrameLineCount"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a794a72d24c12b76f7956ba2d7f54593c"><param name="Name" value="statLastFrameRenderCalls"></OBJECT>
@@ -3581,6 +3615,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#ad1ed081229c21e6168dd99d7623677c2"><param name="Name" value="statLastFrameVertexCount"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#af7b988c8914cdd0a2fc5dbcaab3016b8"><param name="Name" value="Stopped"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#ab96fdc27f604f9f4b76d0d9132f358dc"><param name="Name" value="Stopping"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#a4fdf472e70c6776c414454a09ed3bd9c"><param name="Name" value="style"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_blend_mode.html#a5e7c045a16edde5b37269ae339c897b8"><param name="Name" value="Subtract"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_blend_mode.html#a5e7c045a16edde5b37269ae339c897b8"><param name="Name" value="april::BlendMode"></OBJECT>
@@ -3605,6 +3640,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_timer.html#a643e094ad70bf241236b852f44b9f9e5"><param name="Name" value="td2"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_color.html#a3b4bbd66a0130eaaefe697ca0834935e"><param name="Name" value="Teal"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a2f8d10a982dc966c3c8963c6bcdd414f"><param name="Name" value="terminateMainLoop"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#a611f856a12ffc0da3f7e72b79ef77cc8"><param name="Name" value="text"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_state.html#a8f92d0d27d51e7de16b45465f3242b72"><param name="Name" value="texture"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#af7f909106d08e36cd50aa58e36f9bf47"><param name="Name" value="Texture"></OBJECT>
   <UL>
@@ -3621,7 +3657,11 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#aed02726038fade8785ec98ea660cbc74"><param name="Name" value="timeDeltaMutex"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#aef00c3064da84c2ec0d6924f5ce4bc3a"><param name="Name" value="timer"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_timer.html#a1257ddae8cea39b6df92bd564670c94d"><param name="Name" value="Timer"></OBJECT>
-  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#adc6f3fde6508de91fee758b244658e0c"><param name="Name" value="title"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#a2a3382069525cc044d4130e9c2e18091"><param name="Name" value="title"></OBJECT>
+  <UL>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_data.html#a2a3382069525cc044d4130e9c2e18091"><param name="Name" value="april::MessageBoxData"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#adc6f3fde6508de91fee758b244658e0c"><param name="Name" value="april::Window"></OBJECT>
+  </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_window.html#a0e5985e14de19c97a0adf92053b54e0d"><param name="Name" value="toggleHotkeyFullscreen"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_plain_vertex.html#a4aabe2036b358ee8700c774ea2084aca"><param name="Name" value="toGvec3"></OBJECT>
   <UL>
@@ -3691,6 +3731,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#ae32840242307739cac1f660e041df7a4"><param name="Name" value="updateFinishing"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#aa4ddf3e221dda04cfaa03d8598c37538"><param name="Name" value="updateMutex"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a3facd0f96afc7f5b29ad59c4b0b551eb"><param name="Name" value="updateThread"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a43fa820ca2467cd344d5496f256e614e"><param name="Name" value="uploaded"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_state.html#ad2483513b873cbb721546aaffb0cd19b"><param name="Name" value="useColor"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_state.html#a99af4958626f91dc3cf0c276b7b6814e"><param name="Name" value="useTexture"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_colored_textured_vertex.html#a7d12d6e543d08fae46ce1902524db59c"><param name="Name" value="v"></OBJECT>
@@ -3716,6 +3757,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#ad71960383c11c9404de236906124161b"><param name="Name" value="waitForAsyncCommands"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a5ff23d4829eee47302e20540319bc11b"><param name="Name" value="waitForAsyncLoad"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a37a75d05eba644bfb8637ad6a24d6fe2"><param name="Name" value="waitForAsyncTextures"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application.html#a22d5384540b52db975c7c730abfa514b"><param name="Name" value="waitForMessageBoxes"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_message_box_style.html#a27b5b10db40127fc496be10a61436893"><param name="Name" value="Warning"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_color.html#a1c2d349f740d48a43ce31d68f5b41dc9"><param name="Name" value="White"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="structapril_1_1_render_system_1_1_display_mode.html#add8d8003c23d086977e9bf66cf371766"><param name="Name" value="width"></OBJECT>
