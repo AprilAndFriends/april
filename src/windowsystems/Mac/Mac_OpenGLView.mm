@@ -191,6 +191,15 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 	{
 		[april::macCocoaWindow terminateMainLoop];
 	}
+	if (MAC_WINDOW->fpsCounter)
+	{
+		hstr newTitle = april::window->getTitle() + hsprintf(" [FPS: %d]", april::application->getFps());
+		[april::macCocoaWindow _setTitle:[NSString stringWithUTF8String:newTitle.cStr()]];
+	}
+	else
+	{
+		[april::macCocoaWindow _setTitle:[NSString stringWithUTF8String:april::window->getTitle().cStr()]];
+	}
 	mStartedDrawing = false;
 }
 

@@ -352,22 +352,7 @@ namespace april
 	}
 	
 	void Mac_Window::setTitle(chstr title)
-	{
-		if (this->fpsCounter)
-		{
-			hstr newTitle = title + hsprintf(" [FPS: %d]", april::application->getFps());
-			// optimization to prevent setting title every frame
-			if (newTitle == this->fpsTitle)
-			{
-				return;
-			}
-			this->fpsTitle = newTitle;
-			[april::macCocoaWindow _setTitle:[NSString stringWithUTF8String:newTitle.cStr()]];
-		}
-		else
-		{
-			[april::macCocoaWindow _setTitle:[NSString stringWithUTF8String:title.cStr()]];
-		}
+	{		
 		this->title = title;
 	}
 	
@@ -395,11 +380,7 @@ namespace april
 		if (result && gOverlayWindow != nil)
 		{
 			updateLoadingOverlay(timeDelta);
-		}
-		if (this->fpsCounter)
-		{
-			this->setTitle(this->title);
-		}
+		}		
 		return result;
 	}
 	
