@@ -144,19 +144,19 @@ namespace april
 		int getCurrentAsyncRamSize();
 		/// @brief Checks whether the texture has been loaded and uploaded to the GPU.
 		/// @return True if the texture has been loaded and uploaded to the GPU.
-		bool isLoaded();
+		bool isUploaded();
 		/// @brief Checks whether the texture has been loaded asynchronously and is waiting for the upload to the GPU.
 		/// @return True if the texture has been loaded asynchronously and is waiting for the upload to the GPU.
-		bool isLoadedAsync();
+		bool isReadyForUpload();
 		/// @brief Checks whether the texture is waiting to be loaded asynchronously.
 		/// @return True if the texture is waiting to be loaded asynchronously.
 		bool isAsyncLoadQueued();
-		/// @brief Checks whether the texture is loaded in any way, is being loaded or queued to be loaded.
-		/// @return True if the texture is loaded in any way, is being loaded or queued to be loaded.
-		/// @see isLoaded()
-		/// @see isLoadedAsync()
+		/// @brief Checks whether the texture is completely unloaded.
+		/// @return True if the texture is fully unloaded.
+		/// @see isUploaded()
+		/// @see isReadyForUpload()
 		/// @see isAsyncLoadQueued()
-		bool isLoadedAny();
+		bool isUnloaded();
 
 		/// @brief Loads the texture asynchronously.
 		/// @return True if queueing was successful.
@@ -168,16 +168,11 @@ namespace april
 		/// @brief Unloads the texture from the GPU.
 		/// @note When type is Type::Managed, the raw image data remains in RAM.
 		void unload();
-		/// @brief Makes sure the texture is loaded if it can be loaded or was async queued.
-		/// @see load
-		/// @see waitForAsyncLoad
-		/// @return True if successful or already loaded.
-		bool ensureLoaded();
 		/// @brief Waits for the texture to load asynchronously.
 		/// @param[in] timeout How long to wait maximally in seconds.
 		/// @note A timeout value of 0.0 means indefinitely.
 		/// @note This should usually not be used externally. load() uses this internally when the texture was already queued to be loaded asynchronously.
-		/// @see load
+		/// @see loadAsync
 		void waitForAsyncLoad(float timeout = 0.0f);
 
 		/// @brief Clears the entire image and sets all image data to zeroes.
@@ -677,7 +672,7 @@ namespace april
 		/// @brief The texture type.
 		Type type;
 		/// @brief Whether the texture was uploaded to the GPU.
-		bool loaded;
+		bool uploaded;
 		/// @brief The texture load mode.
 		LoadMode loadMode;
 		/// @brief The texture's image data pixel format.
@@ -813,16 +808,10 @@ namespace april
 		/// @brief Uploads the texture data to the GPU. Used internally only.
 		/// @return True if successful or already loaded.
 		bool _upload();
-		/// @brief Makes sure the texture is loaded and handles Texture update. Used internally only.
-		/// @see load
-		/// @see ensureLoaded
-		/// @see waitForAsyncLoad
-		/// @return True if successful or already loaded.
-		bool _ensureInternalLoaded();
-		/// @brief Waits for the texture to load asynchronously.
+		/// @brief Waits for the texture to be ready for upload.
 		/// @note This should usually not be used externally.
-		/// @see load
-		void _waitForInternalAsyncLoad();
+		/// @see loadAsyncAsync
+		void _ensureReadyForUpload();
 
 		/// @brief Clears the entire image and sets all image data to zeroes without safety checks. Used internally only.
 		/// @return True if successful.

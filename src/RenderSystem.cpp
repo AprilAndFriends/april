@@ -229,7 +229,7 @@ namespace april
 		foreach (Texture*, it, textures)
 		{
 			(*it)->_deviceUnloadTexture();
-			(*it)->_waitForInternalAsyncLoad();
+			(*it)->_ensureReadyForUpload();; // waiting for all async stuff to finish
 			delete (*it);
 		}
 		// misc
@@ -394,7 +394,7 @@ namespace april
 		harray<Texture*> textures = april::rendersys->getTextures();
 		foreach (Texture*, it, textures)
 		{
-			if ((*it)->getLoadMode() != Texture::LoadMode::AsyncDeferredUpload && (*it)->isLoadedAsync())
+			if ((*it)->getLoadMode() != Texture::LoadMode::AsyncDeferredUpload && (*it)->isReadyForUpload())
 			{
 				return true;
 			}
@@ -890,7 +890,7 @@ namespace april
 			if (state->texture != NULL && state->useTexture)
 			{
 				++this->statCurrentFrameTextureSwitches;
-				state->texture->_ensureInternalLoaded();
+				state->texture->_ensureReadyForUpload();
 				state->texture->_upload();
 				// filtering and address mode applied before loading texture data, some systems are optimized to work like this (e.g. iOS OpenGLES guidelines suggest it)
 				this->_setDeviceTextureFilter(state->texture->getFilter());
