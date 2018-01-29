@@ -29,6 +29,178 @@
 		8404CC191F951AC800272BF4 /* MotionDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8404CC151F951AB600272BF4 /* MotionDelegate.cpp */; };
 		8404CC1B1F951AEB00272BF4 /* MotionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 8404CC1A1F951AEB00272BF4 /* MotionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8404CC1C1F951B1400272BF4 /* MotionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 8404CC1A1F951AEB00272BF4 /* MotionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209101FF4EE5A003A0539 /* AssignWindowCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208ED1FF4EE5A003A0539 /* AssignWindowCommand.h */; };
+		843209121FF4EE5A003A0539 /* AsyncCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208EF1FF4EE5A003A0539 /* AsyncCommand.h */; };
+		843209141FF4EE5A003A0539 /* AsyncCommandQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208F11FF4EE5A003A0539 /* AsyncCommandQueue.h */; };
+		843209151FF4EE5A003A0539 /* AsyncCommands.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208F21FF4EE5A003A0539 /* AsyncCommands.h */; };
+		843209171FF4EE5A003A0539 /* ClearColorCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208F41FF4EE5A003A0539 /* ClearColorCommand.h */; };
+		843209191FF4EE5A003A0539 /* ClearCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208F61FF4EE5A003A0539 /* ClearCommand.h */; };
+		8432091B1FF4EE5A003A0539 /* ClearDepthCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208F81FF4EE5A003A0539 /* ClearDepthCommand.h */; };
+		8432091D1FF4EE5A003A0539 /* CreateCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208FA1FF4EE5A003A0539 /* CreateCommand.h */; };
+		8432091F1FF4EE5A003A0539 /* CreateWindowCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208FC1FF4EE5A003A0539 /* CreateWindowCommand.h */; };
+		843209211FF4EE5A003A0539 /* DestroyCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208FE1FF4EE5A003A0539 /* DestroyCommand.h */; };
+		843209231FF4EE5A003A0539 /* DestroyTextureCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209001FF4EE5A003A0539 /* DestroyTextureCommand.h */; };
+		843209251FF4EE5A003A0539 /* DestroyWindowCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209021FF4EE5A003A0539 /* DestroyWindowCommand.h */; };
+		843209271FF4EE5A003A0539 /* PresentFrameCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209041FF4EE5A003A0539 /* PresentFrameCommand.h */; };
+		843209291FF4EE5A003A0539 /* RenderCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209061FF4EE5A003A0539 /* RenderCommand.h */; };
+		8432092B1FF4EE5A003A0539 /* ResetCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209081FF4EE5A003A0539 /* ResetCommand.h */; };
+		8432092D1FF4EE5A003A0539 /* StateUpdateCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 8432090A1FF4EE5A003A0539 /* StateUpdateCommand.h */; };
+		8432092F1FF4EE5A003A0539 /* SuspendCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 8432090C1FF4EE5A003A0539 /* SuspendCommand.h */; };
+		843209311FF4EE5A003A0539 /* UnassignWindowCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 8432090E1FF4EE5A003A0539 /* UnassignWindowCommand.h */; };
+		843209321FF4EE5A003A0539 /* VertexRenderCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 8432090F1FF4EE5A003A0539 /* VertexRenderCommand.h */; };
+		843209331FF4EE71003A0539 /* AsyncCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208EE1FF4EE5A003A0539 /* AsyncCommand.cpp */; };
+		843209341FF4EE71003A0539 /* AsyncCommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F01FF4EE5A003A0539 /* AsyncCommandQueue.cpp */; };
+		843209351FF4EE71003A0539 /* ClearColorCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F31FF4EE5A003A0539 /* ClearColorCommand.cpp */; };
+		843209361FF4EE71003A0539 /* ClearCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F51FF4EE5A003A0539 /* ClearCommand.cpp */; };
+		843209371FF4EE71003A0539 /* ClearDepthCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F71FF4EE5A003A0539 /* ClearDepthCommand.cpp */; };
+		843209381FF4EE71003A0539 /* CreateCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F91FF4EE5A003A0539 /* CreateCommand.cpp */; };
+		843209391FF4EE71003A0539 /* CreateWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FB1FF4EE5A003A0539 /* CreateWindowCommand.cpp */; };
+		8432093A1FF4EE71003A0539 /* DestroyCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FD1FF4EE5A003A0539 /* DestroyCommand.cpp */; };
+		8432093B1FF4EE71003A0539 /* DestroyTextureCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FF1FF4EE5A003A0539 /* DestroyTextureCommand.cpp */; };
+		8432093C1FF4EE71003A0539 /* DestroyWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209011FF4EE5A003A0539 /* DestroyWindowCommand.cpp */; };
+		8432093D1FF4EE71003A0539 /* PresentFrameCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209031FF4EE5A003A0539 /* PresentFrameCommand.cpp */; };
+		8432093E1FF4EE71003A0539 /* RenderCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209051FF4EE5A003A0539 /* RenderCommand.cpp */; };
+		8432093F1FF4EE71003A0539 /* ResetCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209071FF4EE5A003A0539 /* ResetCommand.cpp */; };
+		843209401FF4EE71003A0539 /* StateUpdateCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209091FF4EE5A003A0539 /* StateUpdateCommand.cpp */; };
+		843209411FF4EE71003A0539 /* SuspendCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432090B1FF4EE5A003A0539 /* SuspendCommand.cpp */; };
+		843209421FF4EE71003A0539 /* UnassignWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432090D1FF4EE5A003A0539 /* UnassignWindowCommand.cpp */; };
+		843209431FF4EE71003A0539 /* AssignWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208EB1FF4EE42003A0539 /* AssignWindowCommand.cpp */; };
+		843209441FF4EE72003A0539 /* AsyncCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208EE1FF4EE5A003A0539 /* AsyncCommand.cpp */; };
+		843209451FF4EE72003A0539 /* AsyncCommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F01FF4EE5A003A0539 /* AsyncCommandQueue.cpp */; };
+		843209461FF4EE72003A0539 /* ClearColorCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F31FF4EE5A003A0539 /* ClearColorCommand.cpp */; };
+		843209471FF4EE72003A0539 /* ClearCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F51FF4EE5A003A0539 /* ClearCommand.cpp */; };
+		843209481FF4EE72003A0539 /* ClearDepthCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F71FF4EE5A003A0539 /* ClearDepthCommand.cpp */; };
+		843209491FF4EE72003A0539 /* CreateCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F91FF4EE5A003A0539 /* CreateCommand.cpp */; };
+		8432094A1FF4EE72003A0539 /* CreateWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FB1FF4EE5A003A0539 /* CreateWindowCommand.cpp */; };
+		8432094B1FF4EE72003A0539 /* DestroyCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FD1FF4EE5A003A0539 /* DestroyCommand.cpp */; };
+		8432094C1FF4EE72003A0539 /* DestroyTextureCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FF1FF4EE5A003A0539 /* DestroyTextureCommand.cpp */; };
+		8432094D1FF4EE72003A0539 /* DestroyWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209011FF4EE5A003A0539 /* DestroyWindowCommand.cpp */; };
+		8432094E1FF4EE72003A0539 /* PresentFrameCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209031FF4EE5A003A0539 /* PresentFrameCommand.cpp */; };
+		8432094F1FF4EE72003A0539 /* RenderCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209051FF4EE5A003A0539 /* RenderCommand.cpp */; };
+		843209501FF4EE72003A0539 /* ResetCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209071FF4EE5A003A0539 /* ResetCommand.cpp */; };
+		843209511FF4EE72003A0539 /* StateUpdateCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209091FF4EE5A003A0539 /* StateUpdateCommand.cpp */; };
+		843209521FF4EE72003A0539 /* SuspendCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432090B1FF4EE5A003A0539 /* SuspendCommand.cpp */; };
+		843209531FF4EE72003A0539 /* UnassignWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432090D1FF4EE5A003A0539 /* UnassignWindowCommand.cpp */; };
+		843209541FF4EE72003A0539 /* AssignWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208EB1FF4EE42003A0539 /* AssignWindowCommand.cpp */; };
+		843209551FF4EEAB003A0539 /* AssignWindowCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208ED1FF4EE5A003A0539 /* AssignWindowCommand.h */; };
+		843209561FF4EEAB003A0539 /* AsyncCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208EF1FF4EE5A003A0539 /* AsyncCommand.h */; };
+		843209571FF4EEAB003A0539 /* AsyncCommandQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208F11FF4EE5A003A0539 /* AsyncCommandQueue.h */; };
+		843209581FF4EEAB003A0539 /* AsyncCommands.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208F21FF4EE5A003A0539 /* AsyncCommands.h */; };
+		843209591FF4EEAB003A0539 /* ClearColorCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208F41FF4EE5A003A0539 /* ClearColorCommand.h */; };
+		8432095A1FF4EEAB003A0539 /* ClearCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208F61FF4EE5A003A0539 /* ClearCommand.h */; };
+		8432095B1FF4EEAB003A0539 /* ClearDepthCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208F81FF4EE5A003A0539 /* ClearDepthCommand.h */; };
+		8432095C1FF4EEAB003A0539 /* CreateCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208FA1FF4EE5A003A0539 /* CreateCommand.h */; };
+		8432095D1FF4EEAB003A0539 /* CreateWindowCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208FC1FF4EE5A003A0539 /* CreateWindowCommand.h */; };
+		8432095E1FF4EEAB003A0539 /* DestroyCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208FE1FF4EE5A003A0539 /* DestroyCommand.h */; };
+		8432095F1FF4EEAB003A0539 /* DestroyTextureCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209001FF4EE5A003A0539 /* DestroyTextureCommand.h */; };
+		843209601FF4EEAB003A0539 /* DestroyWindowCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209021FF4EE5A003A0539 /* DestroyWindowCommand.h */; };
+		843209611FF4EEAB003A0539 /* PresentFrameCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209041FF4EE5A003A0539 /* PresentFrameCommand.h */; };
+		843209621FF4EEAB003A0539 /* RenderCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209061FF4EE5A003A0539 /* RenderCommand.h */; };
+		843209631FF4EEAB003A0539 /* ResetCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209081FF4EE5A003A0539 /* ResetCommand.h */; };
+		843209641FF4EEAB003A0539 /* StateUpdateCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 8432090A1FF4EE5A003A0539 /* StateUpdateCommand.h */; };
+		843209651FF4EEAB003A0539 /* SuspendCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 8432090C1FF4EE5A003A0539 /* SuspendCommand.h */; };
+		843209661FF4EEAB003A0539 /* UnassignWindowCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 8432090E1FF4EE5A003A0539 /* UnassignWindowCommand.h */; };
+		843209671FF4EEAB003A0539 /* VertexRenderCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 8432090F1FF4EE5A003A0539 /* VertexRenderCommand.h */; };
+		843209681FF4EEC2003A0539 /* AsyncCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208EE1FF4EE5A003A0539 /* AsyncCommand.cpp */; };
+		843209691FF4EEC2003A0539 /* AsyncCommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F01FF4EE5A003A0539 /* AsyncCommandQueue.cpp */; };
+		8432096A1FF4EEC2003A0539 /* ClearColorCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F31FF4EE5A003A0539 /* ClearColorCommand.cpp */; };
+		8432096B1FF4EEC2003A0539 /* ClearCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F51FF4EE5A003A0539 /* ClearCommand.cpp */; };
+		8432096C1FF4EEC2003A0539 /* ClearDepthCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F71FF4EE5A003A0539 /* ClearDepthCommand.cpp */; };
+		8432096D1FF4EEC2003A0539 /* CreateCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F91FF4EE5A003A0539 /* CreateCommand.cpp */; };
+		8432096E1FF4EEC2003A0539 /* CreateWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FB1FF4EE5A003A0539 /* CreateWindowCommand.cpp */; };
+		8432096F1FF4EEC2003A0539 /* DestroyCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FD1FF4EE5A003A0539 /* DestroyCommand.cpp */; };
+		843209701FF4EEC2003A0539 /* DestroyTextureCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FF1FF4EE5A003A0539 /* DestroyTextureCommand.cpp */; };
+		843209711FF4EEC2003A0539 /* DestroyWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209011FF4EE5A003A0539 /* DestroyWindowCommand.cpp */; };
+		843209721FF4EEC2003A0539 /* PresentFrameCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209031FF4EE5A003A0539 /* PresentFrameCommand.cpp */; };
+		843209731FF4EEC2003A0539 /* RenderCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209051FF4EE5A003A0539 /* RenderCommand.cpp */; };
+		843209741FF4EEC2003A0539 /* ResetCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209071FF4EE5A003A0539 /* ResetCommand.cpp */; };
+		843209751FF4EEC2003A0539 /* StateUpdateCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209091FF4EE5A003A0539 /* StateUpdateCommand.cpp */; };
+		843209761FF4EEC2003A0539 /* SuspendCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432090B1FF4EE5A003A0539 /* SuspendCommand.cpp */; };
+		843209771FF4EEC2003A0539 /* UnassignWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432090D1FF4EE5A003A0539 /* UnassignWindowCommand.cpp */; };
+		843209781FF4EEC2003A0539 /* AssignWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208EB1FF4EE42003A0539 /* AssignWindowCommand.cpp */; };
+		843209791FF4EEC3003A0539 /* AsyncCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208EE1FF4EE5A003A0539 /* AsyncCommand.cpp */; };
+		8432097A1FF4EEC3003A0539 /* AsyncCommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F01FF4EE5A003A0539 /* AsyncCommandQueue.cpp */; };
+		8432097B1FF4EEC3003A0539 /* ClearColorCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F31FF4EE5A003A0539 /* ClearColorCommand.cpp */; };
+		8432097C1FF4EEC3003A0539 /* ClearCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F51FF4EE5A003A0539 /* ClearCommand.cpp */; };
+		8432097D1FF4EEC3003A0539 /* ClearDepthCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F71FF4EE5A003A0539 /* ClearDepthCommand.cpp */; };
+		8432097E1FF4EEC3003A0539 /* CreateCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F91FF4EE5A003A0539 /* CreateCommand.cpp */; };
+		8432097F1FF4EEC3003A0539 /* CreateWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FB1FF4EE5A003A0539 /* CreateWindowCommand.cpp */; };
+		843209801FF4EEC3003A0539 /* DestroyCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FD1FF4EE5A003A0539 /* DestroyCommand.cpp */; };
+		843209811FF4EEC3003A0539 /* DestroyTextureCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FF1FF4EE5A003A0539 /* DestroyTextureCommand.cpp */; };
+		843209821FF4EEC3003A0539 /* DestroyWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209011FF4EE5A003A0539 /* DestroyWindowCommand.cpp */; };
+		843209831FF4EEC3003A0539 /* PresentFrameCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209031FF4EE5A003A0539 /* PresentFrameCommand.cpp */; };
+		843209841FF4EEC3003A0539 /* RenderCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209051FF4EE5A003A0539 /* RenderCommand.cpp */; };
+		843209851FF4EEC3003A0539 /* ResetCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209071FF4EE5A003A0539 /* ResetCommand.cpp */; };
+		843209861FF4EEC3003A0539 /* StateUpdateCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209091FF4EE5A003A0539 /* StateUpdateCommand.cpp */; };
+		843209871FF4EEC3003A0539 /* SuspendCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432090B1FF4EE5A003A0539 /* SuspendCommand.cpp */; };
+		843209881FF4EEC3003A0539 /* UnassignWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432090D1FF4EE5A003A0539 /* UnassignWindowCommand.cpp */; };
+		843209891FF4EEC3003A0539 /* AssignWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208EB1FF4EE42003A0539 /* AssignWindowCommand.cpp */; };
+		8432098B1FF4EEFF003A0539 /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432098A1FF4EEFF003A0539 /* Application.cpp */; };
+		8432098C1FF4EF04003A0539 /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432098A1FF4EEFF003A0539 /* Application.cpp */; };
+		8432098D1FF4EF05003A0539 /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432098A1FF4EEFF003A0539 /* Application.cpp */; };
+		8432098E1FF4EF06003A0539 /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432098A1FF4EEFF003A0539 /* Application.cpp */; };
+		843209991FF4EF27003A0539 /* Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 8432098F1FF4EF27003A0539 /* Application.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8432099A1FF4EF27003A0539 /* ControllerEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209901FF4EF27003A0539 /* ControllerEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8432099B1FF4EF27003A0539 /* Events.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209911FF4EF27003A0539 /* Events.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8432099C1FF4EF27003A0539 /* GenericEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209921FF4EF27003A0539 /* GenericEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8432099D1FF4EF27003A0539 /* KeyDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209931FF4EF27003A0539 /* KeyDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8432099E1FF4EF27003A0539 /* KeyEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209941FF4EF27003A0539 /* KeyEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8432099F1FF4EF27003A0539 /* MotionEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209951FF4EF27003A0539 /* MotionEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209A01FF4EF27003A0539 /* MouseEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209961FF4EF27003A0539 /* MouseEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209A11FF4EF27003A0539 /* TouchEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209971FF4EF27003A0539 /* TouchEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209A21FF4EF27003A0539 /* WinUWP_main.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209981FF4EF27003A0539 /* WinUWP_main.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209A31FF4EF2C003A0539 /* Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 8432098F1FF4EF27003A0539 /* Application.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209A41FF4EF2C003A0539 /* ControllerEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209901FF4EF27003A0539 /* ControllerEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209A51FF4EF2C003A0539 /* Events.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209911FF4EF27003A0539 /* Events.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209A61FF4EF2C003A0539 /* GenericEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209921FF4EF27003A0539 /* GenericEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209A71FF4EF2C003A0539 /* KeyDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209931FF4EF27003A0539 /* KeyDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209A81FF4EF2C003A0539 /* KeyEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209941FF4EF27003A0539 /* KeyEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209A91FF4EF2C003A0539 /* MotionEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209951FF4EF27003A0539 /* MotionEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209AA1FF4EF2C003A0539 /* MouseEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209961FF4EF27003A0539 /* MouseEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209AB1FF4EF2C003A0539 /* TouchEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209971FF4EF27003A0539 /* TouchEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209AC1FF4EF2C003A0539 /* WinUWP_main.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209981FF4EF27003A0539 /* WinUWP_main.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		843209B51FF4EF76003A0539 /* ControllerEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209AF1FF4EF76003A0539 /* ControllerEvent.cpp */; };
+		843209B61FF4EF76003A0539 /* GenericEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B01FF4EF76003A0539 /* GenericEvent.cpp */; };
+		843209B71FF4EF76003A0539 /* KeyEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B11FF4EF76003A0539 /* KeyEvent.cpp */; };
+		843209B81FF4EF76003A0539 /* MotionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B21FF4EF76003A0539 /* MotionEvent.cpp */; };
+		843209B91FF4EF76003A0539 /* MouseEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B31FF4EF76003A0539 /* MouseEvent.cpp */; };
+		843209BA1FF4EF76003A0539 /* TouchEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B41FF4EF76003A0539 /* TouchEvent.cpp */; };
+		843209BB1FF4EF7A003A0539 /* ControllerEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209AF1FF4EF76003A0539 /* ControllerEvent.cpp */; };
+		843209BC1FF4EF7A003A0539 /* GenericEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B01FF4EF76003A0539 /* GenericEvent.cpp */; };
+		843209BD1FF4EF7A003A0539 /* KeyEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B11FF4EF76003A0539 /* KeyEvent.cpp */; };
+		843209BE1FF4EF7A003A0539 /* MotionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B21FF4EF76003A0539 /* MotionEvent.cpp */; };
+		843209BF1FF4EF7A003A0539 /* MouseEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B31FF4EF76003A0539 /* MouseEvent.cpp */; };
+		843209C01FF4EF7A003A0539 /* TouchEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B41FF4EF76003A0539 /* TouchEvent.cpp */; };
+		843209C11FF4EF7A003A0539 /* ControllerEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209AF1FF4EF76003A0539 /* ControllerEvent.cpp */; };
+		843209C21FF4EF7A003A0539 /* GenericEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B01FF4EF76003A0539 /* GenericEvent.cpp */; };
+		843209C31FF4EF7A003A0539 /* KeyEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B11FF4EF76003A0539 /* KeyEvent.cpp */; };
+		843209C41FF4EF7A003A0539 /* MotionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B21FF4EF76003A0539 /* MotionEvent.cpp */; };
+		843209C51FF4EF7A003A0539 /* MouseEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B31FF4EF76003A0539 /* MouseEvent.cpp */; };
+		843209C61FF4EF7A003A0539 /* TouchEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B41FF4EF76003A0539 /* TouchEvent.cpp */; };
+		843209C71FF4EF7B003A0539 /* ControllerEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209AF1FF4EF76003A0539 /* ControllerEvent.cpp */; };
+		843209C81FF4EF7B003A0539 /* GenericEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B01FF4EF76003A0539 /* GenericEvent.cpp */; };
+		843209C91FF4EF7B003A0539 /* KeyEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B11FF4EF76003A0539 /* KeyEvent.cpp */; };
+		843209CA1FF4EF7B003A0539 /* MotionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B21FF4EF76003A0539 /* MotionEvent.cpp */; };
+		843209CB1FF4EF7B003A0539 /* MouseEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B31FF4EF76003A0539 /* MouseEvent.cpp */; };
+		843209CC1FF4EF7B003A0539 /* TouchEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B41FF4EF76003A0539 /* TouchEvent.cpp */; };
+		84320A021FF4F19F003A0539 /* KeyDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A011FF4F19F003A0539 /* KeyDelegate.cpp */; };
+		84320A031FF4F1A1003A0539 /* KeyDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A011FF4F19F003A0539 /* KeyDelegate.cpp */; };
+		84320A041FF4F1A2003A0539 /* KeyDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A011FF4F19F003A0539 /* KeyDelegate.cpp */; };
+		84320A051FF4F1A3003A0539 /* KeyDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A011FF4F19F003A0539 /* KeyDelegate.cpp */; };
+		84320A2D1FF524AE003A0539 /* WinUWP_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2B1FF524AE003A0539 /* WinUWP_main.cpp */; };
+		84320A2E1FF524AE003A0539 /* WinUWP_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */; };
+		84320A2F1FF524B2003A0539 /* WinUWP_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2B1FF524AE003A0539 /* WinUWP_main.cpp */; };
+		84320A301FF524B3003A0539 /* WinUWP_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2B1FF524AE003A0539 /* WinUWP_main.cpp */; };
+		84320A311FF524B3003A0539 /* WinUWP_main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2B1FF524AE003A0539 /* WinUWP_main.cpp */; };
+		84320A321FF524B6003A0539 /* WinUWP_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */; };
+		84320A331FF524B6003A0539 /* WinUWP_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */; };
+		84320A341FF524B7003A0539 /* WinUWP_Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */; };
+		84320A371FF66B62003A0539 /* UnloadTextureCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A351FF66B62003A0539 /* UnloadTextureCommand.cpp */; };
+		84320A381FF66B62003A0539 /* UnloadTextureCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 84320A361FF66B62003A0539 /* UnloadTextureCommand.h */; };
+		84320A391FF66B74003A0539 /* UnloadTextureCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A351FF66B62003A0539 /* UnloadTextureCommand.cpp */; };
+		84320A3A1FF66B75003A0539 /* UnloadTextureCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A351FF66B62003A0539 /* UnloadTextureCommand.cpp */; };
+		84320A3B1FF66B75003A0539 /* UnloadTextureCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A351FF66B62003A0539 /* UnloadTextureCommand.cpp */; };
+		84320A3C1FF66B79003A0539 /* UnloadTextureCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 84320A361FF66B62003A0539 /* UnloadTextureCommand.h */; };
 		B4046B361ECDCA3C00F85550 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B321ECDCA3C00F85550 /* egl.cpp */; };
 		B4046B371ECDCA3C00F85550 /* egl.h in Headers */ = {isa = PBXBuildFile; fileRef = B4046B331ECDCA3C00F85550 /* egl.h */; };
 		B4046B381ECDCA3C00F85550 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */; };
@@ -80,7 +252,6 @@
 		B44FBDA91BE0E44A00DD8995 /* OpenGLES1_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45500FD1BD7A7C500E75E43 /* OpenGLES1_RenderSystem.cpp */; };
 		B44FBDAA1BE0E44A00DD8995 /* OpenGL1_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45500E91BD7A7BA00E75E43 /* OpenGL1_RenderSystem.cpp */; };
 		B44FBDAB1BE0E44A00DD8995 /* OpenGLES1_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45500FF1BD7A7C500E75E43 /* OpenGLES1_Texture.cpp */; };
-		B44FBDAC1BE0E44A00DD8995 /* KeyboardDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204616D37C2300B9C9AD /* KeyboardDelegate.cpp */; };
 		B44FBDAD1BE0E44A00DD8995 /* MouseDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204716D37C2300B9C9AD /* MouseDelegate.cpp */; };
 		B44FBDAE1BE0E44A00DD8995 /* SystemDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204816D37C2300B9C9AD /* SystemDelegate.cpp */; };
 		B44FBDAF1BE0E44A00DD8995 /* TouchDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204916D37C2300B9C9AD /* TouchDelegate.cpp */; };
@@ -241,7 +412,6 @@
 		D153475A178AD62A00151D1A /* aprilUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF96915875F3300D31573 /* aprilUtil.cpp */; };
 		D153475B178AD62A00151D1A /* EventDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204416D37C2300B9C9AD /* EventDelegate.cpp */; };
 		D153475C178AD62A00151D1A /* InputDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204516D37C2300B9C9AD /* InputDelegate.cpp */; };
-		D153475D178AD62A00151D1A /* KeyboardDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204616D37C2300B9C9AD /* KeyboardDelegate.cpp */; };
 		D153475E178AD62A00151D1A /* MouseDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204716D37C2300B9C9AD /* MouseDelegate.cpp */; };
 		D153475F178AD62A00151D1A /* SystemDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204816D37C2300B9C9AD /* SystemDelegate.cpp */; };
 		D1534760178AD62A00151D1A /* TouchDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204916D37C2300B9C9AD /* TouchDelegate.cpp */; };
@@ -274,7 +444,6 @@
 		D1AF66AD170B1E5900A43743 /* aprilUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF96915875F3300D31573 /* aprilUtil.cpp */; };
 		D1AF66AE170B1E5900A43743 /* EventDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204416D37C2300B9C9AD /* EventDelegate.cpp */; };
 		D1AF66AF170B1E5900A43743 /* InputDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204516D37C2300B9C9AD /* InputDelegate.cpp */; };
-		D1AF66B0170B1E5900A43743 /* KeyboardDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204616D37C2300B9C9AD /* KeyboardDelegate.cpp */; };
 		D1AF66B1170B1E5900A43743 /* MouseDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204716D37C2300B9C9AD /* MouseDelegate.cpp */; };
 		D1AF66B2170B1E5900A43743 /* SystemDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204816D37C2300B9C9AD /* SystemDelegate.cpp */; };
 		D1AF66B3170B1E5900A43743 /* TouchDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204916D37C2300B9C9AD /* TouchDelegate.cpp */; };
@@ -345,9 +514,6 @@
 		D1B4873919337479004674EB /* Mac_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873319337479004674EB /* Mac_Platform.mm */; };
 		D1B4873A19337479004674EB /* Mac_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873319337479004674EB /* Mac_Platform.mm */; };
 		D1CB6B6515CA905900B927BC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1CB6B6415CA905900B927BC /* Foundation.framework */; };
-		D1E2447A1A3104C300586FAC /* Mac_QueuedEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E244781A3104C300586FAC /* Mac_QueuedEvents.h */; };
-		D1E2447B1A3104C300586FAC /* Mac_QueuedEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1E244791A3104C300586FAC /* Mac_QueuedEvents.mm */; };
-		D1E2447C1A3104C300586FAC /* Mac_QueuedEvents.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1E244791A3104C300586FAC /* Mac_QueuedEvents.mm */; };
 		D1E7203916D37B2700B9C9AD /* EventDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E7203116D37B2700B9C9AD /* EventDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1E7203A16D37B2700B9C9AD /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E7203216D37B2700B9C9AD /* Image.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1E7203B16D37B2700B9C9AD /* InputDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E7203316D37B2700B9C9AD /* InputDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -358,7 +524,6 @@
 		D1E7204016D37B2700B9C9AD /* UpdateDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = D1E7203816D37B2700B9C9AD /* UpdateDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1E7204B16D37C2300B9C9AD /* EventDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204416D37C2300B9C9AD /* EventDelegate.cpp */; };
 		D1E7204E16D37C2300B9C9AD /* InputDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204516D37C2300B9C9AD /* InputDelegate.cpp */; };
-		D1E7205116D37C2300B9C9AD /* KeyboardDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204616D37C2300B9C9AD /* KeyboardDelegate.cpp */; };
 		D1E7205416D37C2300B9C9AD /* MouseDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204716D37C2300B9C9AD /* MouseDelegate.cpp */; };
 		D1E7205716D37C2300B9C9AD /* SystemDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204816D37C2300B9C9AD /* SystemDelegate.cpp */; };
 		D1E7205A16D37C2300B9C9AD /* TouchDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204916D37C2300B9C9AD /* TouchDelegate.cpp */; };
@@ -394,6 +559,64 @@
 		7FC8FA28122FA58F0092964C /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = include/april/Timer.h; sourceTree = "<group>"; };
 		8404CC151F951AB600272BF4 /* MotionDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MotionDelegate.cpp; path = src/delegates/MotionDelegate.cpp; sourceTree = "<group>"; };
 		8404CC1A1F951AEB00272BF4 /* MotionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MotionDelegate.h; path = include/april/MotionDelegate.h; sourceTree = "<group>"; };
+		843208EB1FF4EE42003A0539 /* AssignWindowCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AssignWindowCommand.cpp; path = src/async/AssignWindowCommand.cpp; sourceTree = "<group>"; };
+		843208ED1FF4EE5A003A0539 /* AssignWindowCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AssignWindowCommand.h; path = src/async/AssignWindowCommand.h; sourceTree = "<group>"; };
+		843208EE1FF4EE5A003A0539 /* AsyncCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AsyncCommand.cpp; path = src/async/AsyncCommand.cpp; sourceTree = "<group>"; };
+		843208EF1FF4EE5A003A0539 /* AsyncCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncCommand.h; path = src/async/AsyncCommand.h; sourceTree = "<group>"; };
+		843208F01FF4EE5A003A0539 /* AsyncCommandQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AsyncCommandQueue.cpp; path = src/async/AsyncCommandQueue.cpp; sourceTree = "<group>"; };
+		843208F11FF4EE5A003A0539 /* AsyncCommandQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncCommandQueue.h; path = src/async/AsyncCommandQueue.h; sourceTree = "<group>"; };
+		843208F21FF4EE5A003A0539 /* AsyncCommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncCommands.h; path = src/async/AsyncCommands.h; sourceTree = "<group>"; };
+		843208F31FF4EE5A003A0539 /* ClearColorCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClearColorCommand.cpp; path = src/async/ClearColorCommand.cpp; sourceTree = "<group>"; };
+		843208F41FF4EE5A003A0539 /* ClearColorCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClearColorCommand.h; path = src/async/ClearColorCommand.h; sourceTree = "<group>"; };
+		843208F51FF4EE5A003A0539 /* ClearCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClearCommand.cpp; path = src/async/ClearCommand.cpp; sourceTree = "<group>"; };
+		843208F61FF4EE5A003A0539 /* ClearCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClearCommand.h; path = src/async/ClearCommand.h; sourceTree = "<group>"; };
+		843208F71FF4EE5A003A0539 /* ClearDepthCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClearDepthCommand.cpp; path = src/async/ClearDepthCommand.cpp; sourceTree = "<group>"; };
+		843208F81FF4EE5A003A0539 /* ClearDepthCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClearDepthCommand.h; path = src/async/ClearDepthCommand.h; sourceTree = "<group>"; };
+		843208F91FF4EE5A003A0539 /* CreateCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CreateCommand.cpp; path = src/async/CreateCommand.cpp; sourceTree = "<group>"; };
+		843208FA1FF4EE5A003A0539 /* CreateCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreateCommand.h; path = src/async/CreateCommand.h; sourceTree = "<group>"; };
+		843208FB1FF4EE5A003A0539 /* CreateWindowCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CreateWindowCommand.cpp; path = src/async/CreateWindowCommand.cpp; sourceTree = "<group>"; };
+		843208FC1FF4EE5A003A0539 /* CreateWindowCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreateWindowCommand.h; path = src/async/CreateWindowCommand.h; sourceTree = "<group>"; };
+		843208FD1FF4EE5A003A0539 /* DestroyCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DestroyCommand.cpp; path = src/async/DestroyCommand.cpp; sourceTree = "<group>"; };
+		843208FE1FF4EE5A003A0539 /* DestroyCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DestroyCommand.h; path = src/async/DestroyCommand.h; sourceTree = "<group>"; };
+		843208FF1FF4EE5A003A0539 /* DestroyTextureCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DestroyTextureCommand.cpp; path = src/async/DestroyTextureCommand.cpp; sourceTree = "<group>"; };
+		843209001FF4EE5A003A0539 /* DestroyTextureCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DestroyTextureCommand.h; path = src/async/DestroyTextureCommand.h; sourceTree = "<group>"; };
+		843209011FF4EE5A003A0539 /* DestroyWindowCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DestroyWindowCommand.cpp; path = src/async/DestroyWindowCommand.cpp; sourceTree = "<group>"; };
+		843209021FF4EE5A003A0539 /* DestroyWindowCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DestroyWindowCommand.h; path = src/async/DestroyWindowCommand.h; sourceTree = "<group>"; };
+		843209031FF4EE5A003A0539 /* PresentFrameCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PresentFrameCommand.cpp; path = src/async/PresentFrameCommand.cpp; sourceTree = "<group>"; };
+		843209041FF4EE5A003A0539 /* PresentFrameCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PresentFrameCommand.h; path = src/async/PresentFrameCommand.h; sourceTree = "<group>"; };
+		843209051FF4EE5A003A0539 /* RenderCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderCommand.cpp; path = src/async/RenderCommand.cpp; sourceTree = "<group>"; };
+		843209061FF4EE5A003A0539 /* RenderCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderCommand.h; path = src/async/RenderCommand.h; sourceTree = "<group>"; };
+		843209071FF4EE5A003A0539 /* ResetCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ResetCommand.cpp; path = src/async/ResetCommand.cpp; sourceTree = "<group>"; };
+		843209081FF4EE5A003A0539 /* ResetCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResetCommand.h; path = src/async/ResetCommand.h; sourceTree = "<group>"; };
+		843209091FF4EE5A003A0539 /* StateUpdateCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StateUpdateCommand.cpp; path = src/async/StateUpdateCommand.cpp; sourceTree = "<group>"; };
+		8432090A1FF4EE5A003A0539 /* StateUpdateCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StateUpdateCommand.h; path = src/async/StateUpdateCommand.h; sourceTree = "<group>"; };
+		8432090B1FF4EE5A003A0539 /* SuspendCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SuspendCommand.cpp; path = src/async/SuspendCommand.cpp; sourceTree = "<group>"; };
+		8432090C1FF4EE5A003A0539 /* SuspendCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SuspendCommand.h; path = src/async/SuspendCommand.h; sourceTree = "<group>"; };
+		8432090D1FF4EE5A003A0539 /* UnassignWindowCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnassignWindowCommand.cpp; path = src/async/UnassignWindowCommand.cpp; sourceTree = "<group>"; };
+		8432090E1FF4EE5A003A0539 /* UnassignWindowCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnassignWindowCommand.h; path = src/async/UnassignWindowCommand.h; sourceTree = "<group>"; };
+		8432090F1FF4EE5A003A0539 /* VertexRenderCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VertexRenderCommand.h; path = src/async/VertexRenderCommand.h; sourceTree = "<group>"; };
+		8432098A1FF4EEFF003A0539 /* Application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Application.cpp; path = src/Application.cpp; sourceTree = "<group>"; };
+		8432098F1FF4EF27003A0539 /* Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Application.h; path = include/april/Application.h; sourceTree = "<group>"; };
+		843209901FF4EF27003A0539 /* ControllerEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControllerEvent.h; path = include/april/ControllerEvent.h; sourceTree = "<group>"; };
+		843209911FF4EF27003A0539 /* Events.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Events.h; path = include/april/Events.h; sourceTree = "<group>"; };
+		843209921FF4EF27003A0539 /* GenericEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GenericEvent.h; path = include/april/GenericEvent.h; sourceTree = "<group>"; };
+		843209931FF4EF27003A0539 /* KeyDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeyDelegate.h; path = include/april/KeyDelegate.h; sourceTree = "<group>"; };
+		843209941FF4EF27003A0539 /* KeyEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeyEvent.h; path = include/april/KeyEvent.h; sourceTree = "<group>"; };
+		843209951FF4EF27003A0539 /* MotionEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MotionEvent.h; path = include/april/MotionEvent.h; sourceTree = "<group>"; };
+		843209961FF4EF27003A0539 /* MouseEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MouseEvent.h; path = include/april/MouseEvent.h; sourceTree = "<group>"; };
+		843209971FF4EF27003A0539 /* TouchEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchEvent.h; path = include/april/TouchEvent.h; sourceTree = "<group>"; };
+		843209981FF4EF27003A0539 /* WinUWP_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WinUWP_main.h; path = include/april/WinUWP_main.h; sourceTree = "<group>"; };
+		843209AF1FF4EF76003A0539 /* ControllerEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControllerEvent.cpp; path = src/events/ControllerEvent.cpp; sourceTree = "<group>"; };
+		843209B01FF4EF76003A0539 /* GenericEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GenericEvent.cpp; path = src/events/GenericEvent.cpp; sourceTree = "<group>"; };
+		843209B11FF4EF76003A0539 /* KeyEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KeyEvent.cpp; path = src/events/KeyEvent.cpp; sourceTree = "<group>"; };
+		843209B21FF4EF76003A0539 /* MotionEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MotionEvent.cpp; path = src/events/MotionEvent.cpp; sourceTree = "<group>"; };
+		843209B31FF4EF76003A0539 /* MouseEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MouseEvent.cpp; path = src/events/MouseEvent.cpp; sourceTree = "<group>"; };
+		843209B41FF4EF76003A0539 /* TouchEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TouchEvent.cpp; path = src/events/TouchEvent.cpp; sourceTree = "<group>"; };
+		84320A011FF4F19F003A0539 /* KeyDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KeyDelegate.cpp; path = src/delegates/KeyDelegate.cpp; sourceTree = "<group>"; };
+		84320A2B1FF524AE003A0539 /* WinUWP_main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WinUWP_main.cpp; path = src/platforms/WinUWP_main.cpp; sourceTree = "<group>"; };
+		84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WinUWP_Platform.cpp; path = src/platforms/WinUWP_Platform.cpp; sourceTree = "<group>"; };
+		84320A351FF66B62003A0539 /* UnloadTextureCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnloadTextureCommand.cpp; path = src/async/UnloadTextureCommand.cpp; sourceTree = "<group>"; };
+		84320A361FF66B62003A0539 /* UnloadTextureCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnloadTextureCommand.h; path = src/async/UnloadTextureCommand.h; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* april.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = april.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4046B321ECDCA3C00F85550 /* egl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = egl.cpp; path = src/util/egl.cpp; sourceTree = "<group>"; };
@@ -494,7 +717,7 @@
 		D13681A1187BFB6600E66E32 /* Win32_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Win32_main.h; path = include/april/Win32_main.h; sourceTree = "<group>"; };
 		D13681A2187BFB6600E66E32 /* WinRT_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WinRT_main.h; path = include/april/WinRT_main.h; sourceTree = "<group>"; };
 		D137B93C1A0A417900C4102E /* ImagePvr.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ImagePvr.mm; path = src/images/ImagePvr.mm; sourceTree = "<group>"; };
-		D14BF818158737A000D31573 /* Platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Platform.cpp; path = src/Platform.cpp; sourceTree = "<group>"; };
+		D14BF818158737A000D31573 /* Platform.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = Platform.cpp; path = src/Platform.cpp; sourceTree = "<group>"; };
 		D14BF81E158737B300D31573 /* aprilUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = aprilUtil.h; path = include/april/aprilUtil.h; sourceTree = "<group>"; };
 		D14BF96915875F3300D31573 /* aprilUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = aprilUtil.cpp; path = src/aprilUtil.cpp; sourceTree = "<group>"; };
 		D1534776178AD62A00151D1A /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -586,8 +809,6 @@
 		D1B4873D19337483004674EB /* iOS_main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_main.mm; path = src/platforms/iOS_main.mm; sourceTree = "<group>"; };
 		D1B4873E19337483004674EB /* iOS_Platform.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS_Platform.mm; path = src/platforms/iOS_Platform.mm; sourceTree = "<group>"; };
 		D1CB6B6415CA905900B927BC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		D1E244781A3104C300586FAC /* Mac_QueuedEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mac_QueuedEvents.h; path = src/windowsystems/Mac/Mac_QueuedEvents.h; sourceTree = "<group>"; };
-		D1E244791A3104C300586FAC /* Mac_QueuedEvents.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac_QueuedEvents.mm; path = src/windowsystems/Mac/Mac_QueuedEvents.mm; sourceTree = "<group>"; };
 		D1E7203116D37B2700B9C9AD /* EventDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventDelegate.h; path = include/april/EventDelegate.h; sourceTree = "<group>"; };
 		D1E7203216D37B2700B9C9AD /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Image.h; path = include/april/Image.h; sourceTree = "<group>"; };
 		D1E7203316D37B2700B9C9AD /* InputDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputDelegate.h; path = include/april/InputDelegate.h; sourceTree = "<group>"; };
@@ -598,7 +819,6 @@
 		D1E7203816D37B2700B9C9AD /* UpdateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UpdateDelegate.h; path = include/april/UpdateDelegate.h; sourceTree = "<group>"; };
 		D1E7204416D37C2300B9C9AD /* EventDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventDelegate.cpp; path = src/delegates/EventDelegate.cpp; sourceTree = "<group>"; };
 		D1E7204516D37C2300B9C9AD /* InputDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InputDelegate.cpp; path = src/delegates/InputDelegate.cpp; sourceTree = "<group>"; };
-		D1E7204616D37C2300B9C9AD /* KeyboardDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KeyboardDelegate.cpp; path = src/delegates/KeyboardDelegate.cpp; sourceTree = "<group>"; };
 		D1E7204716D37C2300B9C9AD /* MouseDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MouseDelegate.cpp; path = src/delegates/MouseDelegate.cpp; sourceTree = "<group>"; };
 		D1E7204816D37C2300B9C9AD /* SystemDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SystemDelegate.cpp; path = src/delegates/SystemDelegate.cpp; sourceTree = "<group>"; };
 		D1E7204916D37C2300B9C9AD /* TouchDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TouchDelegate.cpp; path = src/delegates/TouchDelegate.cpp; sourceTree = "<group>"; };
@@ -608,7 +828,7 @@
 		D1E7206216D37C5600B9C9AD /* ImageJpt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageJpt.cpp; path = src/images/ImageJpt.cpp; sourceTree = "<group>"; };
 		D1E7206316D37C5600B9C9AD /* ImagePng.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImagePng.cpp; path = src/images/ImagePng.cpp; sourceTree = "<group>"; };
 		D1E7207116D37C6A00B9C9AD /* TimerSDL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerSDL.cpp; path = src/timers/TimerSDL.cpp; sourceTree = "<group>"; };
-		D1E7207316D37C7000B9C9AD /* TimerPosix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimerPosix.cpp; path = src/timers/TimerPosix.cpp; sourceTree = "<group>"; };
+		D1E7207316D37C7000B9C9AD /* TimerPosix.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = TimerPosix.cpp; path = src/timers/TimerPosix.cpp; sourceTree = "<group>"; };
 		D1E7207616D37C7800B9C9AD /* TimerWin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TimerWin.cpp; path = src/timers/TimerWin.cpp; sourceTree = "<group>"; };
 		D1FED157192A3B5F00BE6A6D /* Cursor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cursor.cpp; path = src/Cursor.cpp; sourceTree = "<group>"; };
 		D1FED15E192A3B7B00BE6A6D /* Cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cursor.h; path = include/april/Cursor.h; sourceTree = "<group>"; };
@@ -718,28 +938,31 @@
 		7F42F79F11EB177B00B1C1DF /* src */ = {
 			isa = PBXGroup;
 			children = (
-				B4046B311ECDCA1800F85550 /* util */,
-				D1E7204116D37BF900B9C9AD /* delegates */,
-				D1E7204216D37C0200B9C9AD /* images */,
-				D1E7204316D37C0B00B9C9AD /* timers */,
-				D136818C187BFB3E00E66E32 /* main_base.cpp */,
-				D17F3E931D79D4F60045F39D /* VirtualKeyboard.cpp */,
-				D136818D187BFB3E00E66E32 /* RenderState.cpp */,
-				D14BF96915875F3300D31573 /* aprilUtil.cpp */,
-				D11FB8F21E6866D0001A7E9A /* InputMode.cpp */,
-				D14BF818158737A000D31573 /* Platform.cpp */,
+				8432098A1FF4EEFF003A0539 /* Application.cpp */,
 				C9E6097C150518B400EB077F /* april.cpp */,
-				C9C04F8A14BB106F005BD333 /* PixelShader.cpp */,
-				C9C04F9214BB109B005BD333 /* VertexShader.cpp */,
+				D14BF96915875F3300D31573 /* aprilUtil.cpp */,
+				843208EA1FF4EE23003A0539 /* async */,
 				7F1B522E12E4713600E958D8 /* Color.cpp */,
 				D1FED157192A3B5F00BE6A6D /* Cursor.cpp */,
+				D1E7204116D37BF900B9C9AD /* delegates */,
+				843209AE1FF4EF66003A0539 /* events */,
+				D1E7204216D37C0200B9C9AD /* images */,
+				D11FB8F21E6866D0001A7E9A /* InputMode.cpp */,
 				B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */,
+				D136818C187BFB3E00E66E32 /* main_base.cpp */,
+				C9C04F8A14BB106F005BD333 /* PixelShader.cpp */,
+				D14BF818158737A000D31573 /* Platform.cpp */,
+				B436D2DD1D05AE8800DA2C15 /* RenderHelper.cpp */,
+				B436D2DE1D05AE8800DA2C15 /* RenderHelperLayered2D.cpp */,
+				D136818D187BFB3E00E66E32 /* RenderState.cpp */,
+				7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */,
 				7F1B522F12E4713600E958D8 /* Texture.cpp */,
 				D102CFF419B7284500948584 /* TextureAsync.cpp */,
 				D102CFF519B7284500948584 /* TextureAsync.h */,
-				7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */,
-				B436D2DD1D05AE8800DA2C15 /* RenderHelper.cpp */,
-				B436D2DE1D05AE8800DA2C15 /* RenderHelperLayered2D.cpp */,
+				D1E7204316D37C0B00B9C9AD /* timers */,
+				B4046B311ECDCA1800F85550 /* util */,
+				C9C04F9214BB109B005BD333 /* VertexShader.cpp */,
+				D17F3E931D79D4F60045F39D /* VirtualKeyboard.cpp */,
 				7FA3ED2611F98BAE001D1DDD /* Window.cpp */,
 			);
 			name = src;
@@ -748,33 +971,36 @@
 		7F42F7A011EB177F00B1C1DF /* include */ = {
 			isa = PBXGroup;
 			children = (
-				D1049F6316D39E870058C514 /* delegates */,
-				D17F3E951D79D5010045F39D /* VirtualKeyboard.h */,
-				B436D2ED1D05AEB000DA2C15 /* RenderHelper.h */,
-				D11FB8FA1E6866DD001A7E9A /* InputMode.h */,
-				B436D2EE1D05AEB000DA2C15 /* RenderHelperLayered2D.h */,
 				D136819A187BFB6600E66E32 /* Android_main.h */,
 				D136819B187BFB6600E66E32 /* androidUtilJNI.h */,
-				D136819D187BFB6600E66E32 /* main_base.h */,
-				D136819F187BFB6600E66E32 /* RenderState.h */,
-				D13681A0187BFB6600E66E32 /* Standard_main.h */,
-				D13681A1187BFB6600E66E32 /* Win32_main.h */,
-				D13681A2187BFB6600E66E32 /* WinRT_main.h */,
-				D14BF81E158737B300D31573 /* aprilUtil.h */,
+				8432098F1FF4EF27003A0539 /* Application.h */,
 				C9E6098D1505191800EB077F /* april.h */,
-				C9E6098E1505191800EB077F /* Platform.h */,
-				C9C04F8E14BB1091005BD333 /* PixelShader.h */,
-				C9C04F8F14BB1091005BD333 /* VertexShader.h */,
 				7F1B522712E4710D00E958D8 /* aprilExport.h */,
+				D14BF81E158737B300D31573 /* aprilUtil.h */,
 				7F1B522812E4710D00E958D8 /* Color.h */,
 				D1FED15E192A3B7B00BE6A6D /* Cursor.h */,
+				D1049F6316D39E870058C514 /* delegates */,
+				843209AD1FF4EF39003A0539 /* events */,
+				D1E7203216D37B2700B9C9AD /* Image.h */,
+				D11FB8FA1E6866DD001A7E9A /* InputMode.h */,
+				7F42F7A311EB178C00B1C1DF /* Keys.h */,
+				D136819D187BFB6600E66E32 /* main_base.h */,
+				7F4D0FE911FEE6C500F2F9F5 /* main.h */,
+				C9C04F8E14BB1091005BD333 /* PixelShader.h */,
+				C9E6098E1505191800EB077F /* Platform.h */,
+				B436D2ED1D05AEB000DA2C15 /* RenderHelper.h */,
+				B436D2EE1D05AEB000DA2C15 /* RenderHelperLayered2D.h */,
+				D136819F187BFB6600E66E32 /* RenderState.h */,
+				7F42F7A411EB178C00B1C1DF /* RenderSystem.h */,
+				D13681A0187BFB6600E66E32 /* Standard_main.h */,
 				7F1B522912E4710D00E958D8 /* Texture.h */,
 				7FC8FA28122FA58F0092964C /* Timer.h */,
-				7F4D0FE911FEE6C500F2F9F5 /* main.h */,
-				7F42F7A311EB178C00B1C1DF /* Keys.h */,
-				7F42F7A411EB178C00B1C1DF /* RenderSystem.h */,
+				C9C04F8F14BB1091005BD333 /* VertexShader.h */,
+				D17F3E951D79D5010045F39D /* VirtualKeyboard.h */,
+				D13681A1187BFB6600E66E32 /* Win32_main.h */,
 				7FA3ED1711F9817A001D1DDD /* Window.h */,
-				D1E7203216D37B2700B9C9AD /* Image.h */,
+				D13681A2187BFB6600E66E32 /* WinRT_main.h */,
+				843209981FF4EF27003A0539 /* WinUWP_main.h */,
 			);
 			name = include;
 			sourceTree = "<group>";
@@ -810,6 +1036,88 @@
 				D1B486C619337393004674EB /* SDL_Window.h */,
 			);
 			name = SDL;
+			sourceTree = "<group>";
+		};
+		843208EA1FF4EE23003A0539 /* async */ = {
+			isa = PBXGroup;
+			children = (
+				843208EB1FF4EE42003A0539 /* AssignWindowCommand.cpp */,
+				843208ED1FF4EE5A003A0539 /* AssignWindowCommand.h */,
+				843208EE1FF4EE5A003A0539 /* AsyncCommand.cpp */,
+				843208EF1FF4EE5A003A0539 /* AsyncCommand.h */,
+				843208F01FF4EE5A003A0539 /* AsyncCommandQueue.cpp */,
+				843208F11FF4EE5A003A0539 /* AsyncCommandQueue.h */,
+				843208F21FF4EE5A003A0539 /* AsyncCommands.h */,
+				843208F31FF4EE5A003A0539 /* ClearColorCommand.cpp */,
+				843208F41FF4EE5A003A0539 /* ClearColorCommand.h */,
+				843208F51FF4EE5A003A0539 /* ClearCommand.cpp */,
+				843208F61FF4EE5A003A0539 /* ClearCommand.h */,
+				843208F71FF4EE5A003A0539 /* ClearDepthCommand.cpp */,
+				843208F81FF4EE5A003A0539 /* ClearDepthCommand.h */,
+				843208F91FF4EE5A003A0539 /* CreateCommand.cpp */,
+				843208FA1FF4EE5A003A0539 /* CreateCommand.h */,
+				843208FB1FF4EE5A003A0539 /* CreateWindowCommand.cpp */,
+				843208FC1FF4EE5A003A0539 /* CreateWindowCommand.h */,
+				843208FD1FF4EE5A003A0539 /* DestroyCommand.cpp */,
+				843208FE1FF4EE5A003A0539 /* DestroyCommand.h */,
+				843208FF1FF4EE5A003A0539 /* DestroyTextureCommand.cpp */,
+				843209001FF4EE5A003A0539 /* DestroyTextureCommand.h */,
+				843209011FF4EE5A003A0539 /* DestroyWindowCommand.cpp */,
+				843209021FF4EE5A003A0539 /* DestroyWindowCommand.h */,
+				843209031FF4EE5A003A0539 /* PresentFrameCommand.cpp */,
+				843209041FF4EE5A003A0539 /* PresentFrameCommand.h */,
+				843209051FF4EE5A003A0539 /* RenderCommand.cpp */,
+				843209061FF4EE5A003A0539 /* RenderCommand.h */,
+				843209071FF4EE5A003A0539 /* ResetCommand.cpp */,
+				843209081FF4EE5A003A0539 /* ResetCommand.h */,
+				843209091FF4EE5A003A0539 /* StateUpdateCommand.cpp */,
+				8432090A1FF4EE5A003A0539 /* StateUpdateCommand.h */,
+				8432090B1FF4EE5A003A0539 /* SuspendCommand.cpp */,
+				8432090C1FF4EE5A003A0539 /* SuspendCommand.h */,
+				8432090D1FF4EE5A003A0539 /* UnassignWindowCommand.cpp */,
+				8432090E1FF4EE5A003A0539 /* UnassignWindowCommand.h */,
+				84320A351FF66B62003A0539 /* UnloadTextureCommand.cpp */,
+				84320A361FF66B62003A0539 /* UnloadTextureCommand.h */,
+				8432090F1FF4EE5A003A0539 /* VertexRenderCommand.h */,
+			);
+			name = async;
+			sourceTree = "<group>";
+		};
+		843209AD1FF4EF39003A0539 /* events */ = {
+			isa = PBXGroup;
+			children = (
+				843209901FF4EF27003A0539 /* ControllerEvent.h */,
+				843209911FF4EF27003A0539 /* Events.h */,
+				843209921FF4EF27003A0539 /* GenericEvent.h */,
+				843209931FF4EF27003A0539 /* KeyDelegate.h */,
+				843209941FF4EF27003A0539 /* KeyEvent.h */,
+				843209951FF4EF27003A0539 /* MotionEvent.h */,
+				843209961FF4EF27003A0539 /* MouseEvent.h */,
+				843209971FF4EF27003A0539 /* TouchEvent.h */,
+			);
+			name = events;
+			sourceTree = "<group>";
+		};
+		843209AE1FF4EF66003A0539 /* events */ = {
+			isa = PBXGroup;
+			children = (
+				843209AF1FF4EF76003A0539 /* ControllerEvent.cpp */,
+				843209B01FF4EF76003A0539 /* GenericEvent.cpp */,
+				843209B11FF4EF76003A0539 /* KeyEvent.cpp */,
+				843209B21FF4EF76003A0539 /* MotionEvent.cpp */,
+				843209B31FF4EF76003A0539 /* MouseEvent.cpp */,
+				843209B41FF4EF76003A0539 /* TouchEvent.cpp */,
+			);
+			name = events;
+			sourceTree = "<group>";
+		};
+		84320A2A1FF5248E003A0539 /* UWP */ = {
+			isa = PBXGroup;
+			children = (
+				84320A2B1FF524AE003A0539 /* WinUWP_main.cpp */,
+				84320A2C1FF524AE003A0539 /* WinUWP_Platform.cpp */,
+			);
+			name = UWP;
 			sourceTree = "<group>";
 		};
 		B4046B311ECDCA1800F85550 /* util */ = {
@@ -906,6 +1214,7 @@
 		C9E60986150518D500EB077F /* Platforms */ = {
 			isa = PBXGroup;
 			children = (
+				84320A2A1FF5248E003A0539 /* UWP */,
 				D10B73AE1982472E00A9352D /* Posix */,
 				D1BCC5851615A2BD0049CEA9 /* Android */,
 				C9E60988150518E200EB077F /* iOS */,
@@ -994,8 +1303,6 @@
 				D1B4869A19337389004674EB /* Mac_AppDelegate.mm */,
 				D1B4869B19337389004674EB /* Mac_CocoaWindow.h */,
 				D1B4869C19337389004674EB /* Mac_CocoaWindow.mm */,
-				D1E244781A3104C300586FAC /* Mac_QueuedEvents.h */,
-				D1E244791A3104C300586FAC /* Mac_QueuedEvents.mm */,
 				D1B4869D19337389004674EB /* Mac_Cursor.h */,
 				D1B4869E19337389004674EB /* Mac_Cursor.mm */,
 				D1B4869F19337389004674EB /* Mac_Keys.h */,
@@ -1078,10 +1385,10 @@
 		D1E7204116D37BF900B9C9AD /* delegates */ = {
 			isa = PBXGroup;
 			children = (
+				84320A011FF4F19F003A0539 /* KeyDelegate.cpp */,
 				D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */,
 				D1E7204416D37C2300B9C9AD /* EventDelegate.cpp */,
 				D1E7204516D37C2300B9C9AD /* InputDelegate.cpp */,
-				D1E7204616D37C2300B9C9AD /* KeyboardDelegate.cpp */,
 				8404CC151F951AB600272BF4 /* MotionDelegate.cpp */,
 				D1E7204716D37C2300B9C9AD /* MouseDelegate.cpp */,
 				D1E7204816D37C2300B9C9AD /* SystemDelegate.cpp */,
@@ -1198,52 +1505,82 @@
 			files = (
 				B455018B1BD7B6F200E75E43 /* OpenGLES_PixelShader.h in Headers */,
 				C9E6098F1505191800EB077F /* april.h in Headers */,
+				843209671FF4EEAB003A0539 /* VertexRenderCommand.h in Headers */,
 				C9E609901505191800EB077F /* Platform.h in Headers */,
 				B45501581BD7A80400E75E43 /* OpenGLES_RenderSystem.h in Headers */,
 				7F42F7A711EB178C00B1C1DF /* Keys.h in Headers */,
+				843209561FF4EEAB003A0539 /* AsyncCommand.h in Headers */,
+				843209A91FF4EF2C003A0539 /* MotionEvent.h in Headers */,
 				B45500F41BD7A7BA00E75E43 /* OpenGL1_RenderSystem.h in Headers */,
 				D11FB8FC1E6866DD001A7E9A /* InputMode.h in Headers */,
+				8432095C1FF4EEAB003A0539 /* CreateCommand.h in Headers */,
+				843209AA1FF4EF2C003A0539 /* MouseEvent.h in Headers */,
 				8404CC1C1F951B1400272BF4 /* MotionDelegate.h in Headers */,
 				7F42F7A811EB178C00B1C1DF /* RenderSystem.h in Headers */,
 				7FA3ED1811F9817A001D1DDD /* Window.h in Headers */,
+				843209621FF4EEAB003A0539 /* RenderCommand.h in Headers */,
+				843209641FF4EEAB003A0539 /* StateUpdateCommand.h in Headers */,
 				7F4D0FEA11FEE6C500F2F9F5 /* main.h in Headers */,
 				7FC8FA29122FA58F0092964C /* Timer.h in Headers */,
+				843209581FF4EEAB003A0539 /* AsyncCommands.h in Headers */,
 				B45501FD1BD7C84700E75E43 /* OpenGLES_defaultShaders.h in Headers */,
+				843209611FF4EEAB003A0539 /* PresentFrameCommand.h in Headers */,
 				C9C04F9014BB1091005BD333 /* PixelShader.h in Headers */,
 				D102CFFD19B7284500948584 /* TextureAsync.h in Headers */,
 				C9C04F9114BB1091005BD333 /* VertexShader.h in Headers */,
 				7F1B522A12E4710D00E958D8 /* aprilExport.h in Headers */,
 				D14BF820158737B300D31573 /* aprilUtil.h in Headers */,
+				843209591FF4EEAB003A0539 /* ClearColorCommand.h in Headers */,
 				B45501441BD7A7DE00E75E43 /* OpenGLES2_Texture.h in Headers */,
+				8432095A1FF4EEAB003A0539 /* ClearCommand.h in Headers */,
 				B45501931BD7B6F200E75E43 /* OpenGLES_VertexShader.h in Headers */,
+				843209601FF4EEAB003A0539 /* DestroyWindowCommand.h in Headers */,
+				843209A41FF4EF2C003A0539 /* ControllerEvent.h in Headers */,
 				D1E7203916D37B2700B9C9AD /* EventDelegate.h in Headers */,
 				D1E7203A16D37B2700B9C9AD /* Image.h in Headers */,
+				8432095E1FF4EEAB003A0539 /* DestroyCommand.h in Headers */,
 				B455016E1BD7A86200E75E43 /* OpenGL_RenderSystem.h in Headers */,
 				D1E7203B16D37B2700B9C9AD /* InputDelegate.h in Headers */,
+				8432095B1FF4EEAB003A0539 /* ClearDepthCommand.h in Headers */,
 				D1E7203C16D37B2700B9C9AD /* KeyboardDelegate.h in Headers */,
 				D1B486C819337393004674EB /* SDL_Cursor.h in Headers */,
 				D1B486CA19337393004674EB /* SDL_Window.h in Headers */,
 				B45500FC1BD7A7BA00E75E43 /* OpenGL1_Texture.h in Headers */,
 				B455017E1BD7A86200E75E43 /* OpenGL_Texture.h in Headers */,
+				843209AC1FF4EF2C003A0539 /* WinUWP_main.h in Headers */,
 				D1E7203D16D37B2700B9C9AD /* MouseDelegate.h in Headers */,
 				B45501241BD7A7D100E75E43 /* OpenGLC_Texture.h in Headers */,
+				843209651FF4EEAB003A0539 /* SuspendCommand.h in Headers */,
 				B455011C1BD7A7D100E75E43 /* OpenGLC_RenderSystem.h in Headers */,
 				D1E7203E16D37B2700B9C9AD /* SystemDelegate.h in Headers */,
 				D13681B0187BFB6600E66E32 /* Standard_main.h in Headers */,
+				84320A3C1FF66B79003A0539 /* UnloadTextureCommand.h in Headers */,
+				843209631FF4EEAB003A0539 /* ResetCommand.h in Headers */,
+				843209AB1FF4EF2C003A0539 /* TouchEvent.h in Headers */,
+				843209551FF4EEAB003A0539 /* AssignWindowCommand.h in Headers */,
+				843209A81FF4EF2C003A0539 /* KeyEvent.h in Headers */,
 				B455013C1BD7A7DE00E75E43 /* OpenGLES2_RenderSystem.h in Headers */,
+				843209571FF4EEAB003A0539 /* AsyncCommandQueue.h in Headers */,
 				D13681AA187BFB6600E66E32 /* main_base.h in Headers */,
 				B45501601BD7A80400E75E43 /* OpenGLES_Texture.h in Headers */,
 				D1FED160192A3B7B00BE6A6D /* Cursor.h in Headers */,
 				D13681A8187BFB6600E66E32 /* ControllerDelegate.h in Headers */,
 				D13681AE187BFB6600E66E32 /* RenderState.h in Headers */,
 				D1E7203F16D37B2700B9C9AD /* TouchDelegate.h in Headers */,
+				8432095F1FF4EEAB003A0539 /* DestroyTextureCommand.h in Headers */,
 				B45501101BD7A7C500E75E43 /* OpenGLES1_Texture.h in Headers */,
 				B45501081BD7A7C500E75E43 /* OpenGLES1_RenderSystem.h in Headers */,
+				843209A61FF4EF2C003A0539 /* GenericEvent.h in Headers */,
 				B455014C1BD7A7DE00E75E43 /* OpenGLES2_VertexShader.h in Headers */,
+				843209661FF4EEAB003A0539 /* UnassignWindowCommand.h in Headers */,
 				D1E7204016D37B2700B9C9AD /* UpdateDelegate.h in Headers */,
 				B45501341BD7A7DE00E75E43 /* OpenGLES2_PixelShader.h in Headers */,
 				7F1B522B12E4710D00E958D8 /* Color.h in Headers */,
+				8432095D1FF4EEAB003A0539 /* CreateWindowCommand.h in Headers */,
+				843209A51FF4EF2C003A0539 /* Events.h in Headers */,
 				7F1B522C12E4710D00E958D8 /* Texture.h in Headers */,
+				843209A31FF4EF2C003A0539 /* Application.h in Headers */,
+				843209A71FF4EF2C003A0539 /* KeyDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1253,36 +1590,54 @@
 			files = (
 				D1B486B319337389004674EB /* Mac_Keys.h in Headers */,
 				D1AF66BF170B1E5900A43743 /* april.h in Headers */,
+				8432091D1FF4EE5A003A0539 /* CreateCommand.h in Headers */,
 				B455017D1BD7A86200E75E43 /* OpenGL_Texture.h in Headers */,
 				D1B486AF19337389004674EB /* Mac_Cursor.h in Headers */,
+				8432099C1FF4EF27003A0539 /* GenericEvent.h in Headers */,
+				843209311FF4EE5A003A0539 /* UnassignWindowCommand.h in Headers */,
 				D1AF66C0170B1E5900A43743 /* Platform.h in Headers */,
+				843209271FF4EE5A003A0539 /* PresentFrameCommand.h in Headers */,
 				B455011B1BD7A7D100E75E43 /* OpenGLC_RenderSystem.h in Headers */,
 				B455018A1BD7B6F200E75E43 /* OpenGLES_PixelShader.h in Headers */,
+				843209141FF4EE5A003A0539 /* AsyncCommandQueue.h in Headers */,
 				D1B486BF19337389004674EB /* Mac_Window.h in Headers */,
+				8432092F1FF4EE5A003A0539 /* SuspendCommand.h in Headers */,
 				B455014B1BD7A7DE00E75E43 /* OpenGLES2_VertexShader.h in Headers */,
 				D1AF66C1170B1E5900A43743 /* Keys.h in Headers */,
 				D1AF66C2170B1E5900A43743 /* RenderSystem.h in Headers */,
 				D1AF66C3170B1E5900A43743 /* Window.h in Headers */,
 				D1AF66C4170B1E5900A43743 /* main.h in Headers */,
+				843209171FF4EE5A003A0539 /* ClearColorCommand.h in Headers */,
+				843209991FF4EF27003A0539 /* Application.h in Headers */,
 				D102CFFC19B7284500948584 /* TextureAsync.h in Headers */,
 				D17F3E961D79D5010045F39D /* VirtualKeyboard.h in Headers */,
 				D1AF66C5170B1E5900A43743 /* Timer.h in Headers */,
-				D1E2447A1A3104C300586FAC /* Mac_QueuedEvents.h in Headers */,
+				8432099B1FF4EF27003A0539 /* Events.h in Headers */,
 				D11FB8FB1E6866DD001A7E9A /* InputMode.h in Headers */,
+				843209A01FF4EF27003A0539 /* MouseEvent.h in Headers */,
 				D1AF66C7170B1E5900A43743 /* PixelShader.h in Headers */,
 				B45501071BD7A7C500E75E43 /* OpenGLES1_RenderSystem.h in Headers */,
 				D1AF66C8170B1E5900A43743 /* VertexShader.h in Headers */,
 				D1AF66CA170B1E5900A43743 /* aprilExport.h in Headers */,
 				D1AF66CB170B1E5900A43743 /* aprilUtil.h in Headers */,
+				843209A21FF4EF27003A0539 /* WinUWP_main.h in Headers */,
 				B45501571BD7A80400E75E43 /* OpenGLES_RenderSystem.h in Headers */,
 				D1AF66CD170B1E5900A43743 /* EventDelegate.h in Headers */,
 				D1AF66CE170B1E5900A43743 /* Image.h in Headers */,
+				8432091B1FF4EE5A003A0539 /* ClearDepthCommand.h in Headers */,
 				B45500F31BD7A7BA00E75E43 /* OpenGL1_RenderSystem.h in Headers */,
+				843209151FF4EE5A003A0539 /* AsyncCommands.h in Headers */,
 				8404CC1B1F951AEB00272BF4 /* MotionDelegate.h in Headers */,
 				D1B486B719337389004674EB /* Mac_LoadingOverlay.h in Headers */,
 				B436D2EF1D05AEB000DA2C15 /* RenderHelper.h in Headers */,
+				843209231FF4EE5A003A0539 /* DestroyTextureCommand.h in Headers */,
+				843209251FF4EE5A003A0539 /* DestroyWindowCommand.h in Headers */,
+				8432099D1FF4EF27003A0539 /* KeyDelegate.h in Headers */,
+				843209211FF4EE5A003A0539 /* DestroyCommand.h in Headers */,
 				D1AF66CF170B1E5900A43743 /* InputDelegate.h in Headers */,
 				B45501231BD7A7D100E75E43 /* OpenGLC_Texture.h in Headers */,
+				843209121FF4EE5A003A0539 /* AsyncCommand.h in Headers */,
+				8432099A1FF4EF27003A0539 /* ControllerEvent.h in Headers */,
 				D1FED15F192A3B7B00BE6A6D /* Cursor.h in Headers */,
 				B455010F1BD7A7C500E75E43 /* OpenGLES1_Texture.h in Headers */,
 				B4046B371ECDCA3C00F85550 /* egl.h in Headers */,
@@ -1293,23 +1648,34 @@
 				B45501FC1BD7C84700E75E43 /* OpenGLES_defaultShaders.h in Headers */,
 				D1AF66D1170B1E5900A43743 /* MouseDelegate.h in Headers */,
 				D1AF66D2170B1E5900A43743 /* SystemDelegate.h in Headers */,
+				8432099E1FF4EF27003A0539 /* KeyEvent.h in Headers */,
 				D1B486BB19337389004674EB /* Mac_OpenGLView.h in Headers */,
 				D1AF66D3170B1E5900A43743 /* TouchDelegate.h in Headers */,
+				843209321FF4EE5A003A0539 /* VertexRenderCommand.h in Headers */,
 				B455015F1BD7A80400E75E43 /* OpenGLES_Texture.h in Headers */,
 				B436D2F01D05AEB000DA2C15 /* RenderHelperLayered2D.h in Headers */,
+				843209291FF4EE5A003A0539 /* RenderCommand.h in Headers */,
 				B4046B391ECDCA3C00F85550 /* zlibUtil.h in Headers */,
+				8432092B1FF4EE5A003A0539 /* ResetCommand.h in Headers */,
 				D1B486A719337389004674EB /* Mac_AppDelegate.h in Headers */,
+				8432091F1FF4EE5A003A0539 /* CreateWindowCommand.h in Headers */,
 				B45501431BD7A7DE00E75E43 /* OpenGLES2_Texture.h in Headers */,
 				D13681AF187BFB6600E66E32 /* Standard_main.h in Headers */,
+				8432099F1FF4EF27003A0539 /* MotionEvent.h in Headers */,
 				D13681A7187BFB6600E66E32 /* ControllerDelegate.h in Headers */,
+				843209101FF4EE5A003A0539 /* AssignWindowCommand.h in Headers */,
 				D13681AD187BFB6600E66E32 /* RenderState.h in Headers */,
+				843209A11FF4EF27003A0539 /* TouchEvent.h in Headers */,
 				D13681A9187BFB6600E66E32 /* main_base.h in Headers */,
+				84320A381FF66B62003A0539 /* UnloadTextureCommand.h in Headers */,
+				843209191FF4EE5A003A0539 /* ClearCommand.h in Headers */,
 				B45501921BD7B6F200E75E43 /* OpenGLES_VertexShader.h in Headers */,
 				D1AF66D4170B1E5900A43743 /* UpdateDelegate.h in Headers */,
 				B45500FB1BD7A7BA00E75E43 /* OpenGL1_Texture.h in Headers */,
 				B455016D1BD7A86200E75E43 /* OpenGL_RenderSystem.h in Headers */,
 				D1AF66D5170B1E5900A43743 /* Color.h in Headers */,
 				D1AF66D6170B1E5900A43743 /* Texture.h in Headers */,
+				8432092D1FF4EE5A003A0539 /* StateUpdateCommand.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1421,48 +1787,75 @@
 				B45501851BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
 				7F42F7AC11EB179A00B1C1DF /* RenderSystem.cpp in Sources */,
 				B455012E1BD7A7DE00E75E43 /* OpenGLES2_PixelShader.cpp in Sources */,
+				8432097C1FF4EEC3003A0539 /* ClearCommand.cpp in Sources */,
+				843209C01FF4EF7A003A0539 /* TouchEvent.cpp in Sources */,
 				B455010A1BD7A7C500E75E43 /* OpenGLES1_Texture.cpp in Sources */,
 				7FA3ED2711F98BAE001D1DDD /* Window.cpp in Sources */,
+				843209861FF4EEC3003A0539 /* StateUpdateCommand.cpp in Sources */,
+				8432097D1FF4EEC3003A0539 /* ClearDepthCommand.cpp in Sources */,
 				B45500EE1BD7A7BA00E75E43 /* OpenGL1_RenderSystem.cpp in Sources */,
 				B436D2E21D05AE9100DA2C15 /* RenderHelperLayered2D.cpp in Sources */,
 				7F1B523012E4713600E958D8 /* Color.cpp in Sources */,
 				B45500F61BD7A7BA00E75E43 /* OpenGL1_Texture.cpp in Sources */,
+				84320A2F1FF524B2003A0539 /* WinUWP_main.cpp in Sources */,
 				7F1B523112E4713600E958D8 /* Texture.cpp in Sources */,
 				B45501521BD7A80400E75E43 /* OpenGLES_RenderSystem.cpp in Sources */,
 				C9C04F8B14BB106F005BD333 /* PixelShader.cpp in Sources */,
 				C9C04F9314BB109B005BD333 /* VertexShader.cpp in Sources */,
 				C9E6097D150518B400EB077F /* april.cpp in Sources */,
 				D1B486C719337393004674EB /* SDL_Cursor.cpp in Sources */,
+				843209841FF4EEC3003A0539 /* RenderCommand.cpp in Sources */,
+				843209BD1FF4EF7A003A0539 /* KeyEvent.cpp in Sources */,
 				B45501681BD7A86200E75E43 /* OpenGL_RenderSystem.cpp in Sources */,
 				D14BF81A158737A000D31573 /* Platform.cpp in Sources */,
 				B455013E1BD7A7DE00E75E43 /* OpenGLES2_Texture.cpp in Sources */,
 				B4046B421ECDCB8A00F85550 /* egl.cpp in Sources */,
+				843209BF1FF4EF7A003A0539 /* MouseEvent.cpp in Sources */,
 				B45501361BD7A7DE00E75E43 /* OpenGLES2_RenderSystem.cpp in Sources */,
+				8432097A1FF4EEC3003A0539 /* AsyncCommandQueue.cpp in Sources */,
 				8404CC171F951AC600272BF4 /* MotionDelegate.cpp in Sources */,
 				D1FED159192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
+				843209791FF4EEC3003A0539 /* AsyncCommand.cpp in Sources */,
 				D14BF96A15875F3300D31573 /* aprilUtil.cpp in Sources */,
 				D1E7204B16D37C2300B9C9AD /* EventDelegate.cpp in Sources */,
 				D1E7204E16D37C2300B9C9AD /* InputDelegate.cpp in Sources */,
 				D11FB8F41E6866D0001A7E9A /* InputMode.cpp in Sources */,
 				B455011E1BD7A7D100E75E43 /* OpenGLC_Texture.cpp in Sources */,
+				843209831FF4EEC3003A0539 /* PresentFrameCommand.cpp in Sources */,
 				B45501161BD7A7D100E75E43 /* OpenGLC_RenderSystem.cpp in Sources */,
-				D1E7205116D37C2300B9C9AD /* KeyboardDelegate.cpp in Sources */,
+				843209BC1FF4EF7A003A0539 /* GenericEvent.cpp in Sources */,
 				B4E4CE0A1E69A1D500DB4C31 /* Keys.cpp in Sources */,
 				D1E7205416D37C2300B9C9AD /* MouseDelegate.cpp in Sources */,
+				8432097E1FF4EEC3003A0539 /* CreateCommand.cpp in Sources */,
 				D1E7205716D37C2300B9C9AD /* SystemDelegate.cpp in Sources */,
 				D1E7205A16D37C2300B9C9AD /* TouchDelegate.cpp in Sources */,
+				843209881FF4EEC3003A0539 /* UnassignWindowCommand.cpp in Sources */,
+				843209811FF4EEC3003A0539 /* DestroyTextureCommand.cpp in Sources */,
 				D1B4873519337479004674EB /* Mac_main.mm in Sources */,
 				D17F3E971D79D5730045F39D /* VirtualKeyboard.cpp in Sources */,
 				D1E7205D16D37C2300B9C9AD /* UpdateDelegate.cpp in Sources */,
+				843209821FF4EEC3003A0539 /* DestroyWindowCommand.cpp in Sources */,
 				D1E7206416D37C5600B9C9AD /* Image.cpp in Sources */,
 				D1E7206716D37C5600B9C9AD /* ImageJpg.cpp in Sources */,
 				D1B4873919337479004674EB /* Mac_Platform.mm in Sources */,
+				84320A391FF66B74003A0539 /* UnloadTextureCommand.cpp in Sources */,
+				843209801FF4EEC3003A0539 /* DestroyCommand.cpp in Sources */,
+				843209851FF4EEC3003A0539 /* ResetCommand.cpp in Sources */,
+				8432097F1FF4EEC3003A0539 /* CreateWindowCommand.cpp in Sources */,
+				843209871FF4EEC3003A0539 /* SuspendCommand.cpp in Sources */,
 				D1E7206A16D37C5600B9C9AD /* ImageJpt.cpp in Sources */,
+				843209BB1FF4EF7A003A0539 /* ControllerEvent.cpp in Sources */,
+				84320A321FF524B6003A0539 /* WinUWP_Platform.cpp in Sources */,
+				8432097B1FF4EEC3003A0539 /* ClearColorCommand.cpp in Sources */,
+				843209891FF4EEC3003A0539 /* AssignWindowCommand.cpp in Sources */,
 				B436D2E11D05AE9100DA2C15 /* RenderHelper.cpp in Sources */,
+				8432098C1FF4EF04003A0539 /* Application.cpp in Sources */,
+				843209BE1FF4EF7A003A0539 /* MotionEvent.cpp in Sources */,
 				B45501461BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,
 				D1E7206D16D37C5600B9C9AD /* ImagePng.cpp in Sources */,
 				B4046B431ECDCB8A00F85550 /* zlibUtil.cpp in Sources */,
 				B455018D1BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */,
+				84320A031FF4F1A1003A0539 /* KeyDelegate.cpp in Sources */,
 				D102CFF719B7284500948584 /* TextureAsync.cpp in Sources */,
 				D1E7207216D37C6A00B9C9AD /* TimerSDL.cpp in Sources */,
 				D1B486C919337393004674EB /* SDL_Window.cpp in Sources */,
@@ -1482,15 +1875,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				B44FBD8D1BE0E44A00DD8995 /* RenderState.cpp in Sources */,
+				843209491FF4EE72003A0539 /* CreateCommand.cpp in Sources */,
 				D11FB8F81E6866D0001A7E9A /* InputMode.cpp in Sources */,
+				8432094E1FF4EE72003A0539 /* PresentFrameCommand.cpp in Sources */,
 				B4046B3C1ECDCB8900F85550 /* egl.cpp in Sources */,
 				B44FBD8E1BE0E44A00DD8995 /* iOS_main.mm in Sources */,
+				84320A341FF524B7003A0539 /* WinUWP_Platform.cpp in Sources */,
 				B4E4CE0E1E69A1D700DB4C31 /* Keys.cpp in Sources */,
 				B44FBD8F1BE0E44A00DD8995 /* Color.cpp in Sources */,
+				84320A311FF524B3003A0539 /* WinUWP_main.cpp in Sources */,
 				B44FBD901BE0E44A00DD8995 /* Texture.cpp in Sources */,
 				B44FBD911BE0E44A00DD8995 /* OpenGLES_PixelShader.cpp in Sources */,
+				843209C71FF4EF7B003A0539 /* ControllerEvent.cpp in Sources */,
+				843209471FF4EE72003A0539 /* ClearCommand.cpp in Sources */,
 				B44FBD921BE0E44A00DD8995 /* RenderSystem.cpp in Sources */,
 				B44FBD931BE0E44A00DD8995 /* Window.cpp in Sources */,
+				843209441FF4EE72003A0539 /* AsyncCommand.cpp in Sources */,
 				B44FBD941BE0E44A00DD8995 /* EAGLView.mm in Sources */,
 				B44FBD951BE0E44A00DD8995 /* OpenGL1_Texture.cpp in Sources */,
 				B44FBD961BE0E44A00DD8995 /* PixelShader.cpp in Sources */,
@@ -1498,6 +1898,7 @@
 				B44FBD981BE0E44A00DD8995 /* VertexShader.cpp in Sources */,
 				B44FBD991BE0E44A00DD8995 /* iOS_Platform.mm in Sources */,
 				B44FBD9A1BE0E44A00DD8995 /* OpenGL_RenderSystem.cpp in Sources */,
+				843209511FF4EE72003A0539 /* StateUpdateCommand.cpp in Sources */,
 				B44FBD9B1BE0E44A00DD8995 /* april.cpp in Sources */,
 				B44FBD9C1BE0E44A00DD8995 /* Platform.cpp in Sources */,
 				B44FBD9D1BE0E44A00DD8995 /* aprilUtil.cpp in Sources */,
@@ -1505,7 +1906,9 @@
 				B44FBD9F1BE0E44A00DD8995 /* WBImage.mm in Sources */,
 				B436D2EA1D05AE9300DA2C15 /* RenderHelperLayered2D.cpp in Sources */,
 				B44FBDA01BE0E44A00DD8995 /* OpenGL_Texture.cpp in Sources */,
+				8432094A1FF4EE72003A0539 /* CreateWindowCommand.cpp in Sources */,
 				B44FBDA11BE0E44A00DD8995 /* OpenGLES2_RenderSystem.cpp in Sources */,
+				8432094B1FF4EE72003A0539 /* DestroyCommand.cpp in Sources */,
 				B436D2E91D05AE9300DA2C15 /* RenderHelper.cpp in Sources */,
 				B4DF80851E375F0700307767 /* ImagePvrz.cpp in Sources */,
 				B44FBDA21BE0E44A00DD8995 /* InputDelegate.cpp in Sources */,
@@ -1513,18 +1916,32 @@
 				B44FBDA41BE0E44A00DD8995 /* OpenGLC_RenderSystem.cpp in Sources */,
 				B44FBDA51BE0E44A00DD8995 /* ImagePvr.mm in Sources */,
 				B44FBDA61BE0E44A00DD8995 /* AprilViewController.mm in Sources */,
+				843209C91FF4EF7B003A0539 /* KeyEvent.cpp in Sources */,
 				B4046B3D1ECDCB8900F85550 /* zlibUtil.cpp in Sources */,
+				84320A3B1FF66B75003A0539 /* UnloadTextureCommand.cpp in Sources */,
+				8432098E1FF4EF06003A0539 /* Application.cpp in Sources */,
+				843209531FF4EE72003A0539 /* UnassignWindowCommand.cpp in Sources */,
 				B44FBDA71BE0E44A00DD8995 /* Cursor.cpp in Sources */,
 				B4DF80841E375F0700307767 /* ImageEtcx.cpp in Sources */,
+				843209CB1FF4EF7B003A0539 /* MouseEvent.cpp in Sources */,
+				843209CA1FF4EF7B003A0539 /* MotionEvent.cpp in Sources */,
 				B44FBDA81BE0E44A00DD8995 /* OpenGLES_VertexShader.cpp in Sources */,
 				B44FBDA91BE0E44A00DD8995 /* OpenGLES1_RenderSystem.cpp in Sources */,
 				B44FBDAA1BE0E44A00DD8995 /* OpenGL1_RenderSystem.cpp in Sources */,
 				B44FBDAB1BE0E44A00DD8995 /* OpenGLES1_Texture.cpp in Sources */,
 				8404CC191F951AC800272BF4 /* MotionDelegate.cpp in Sources */,
-				B44FBDAC1BE0E44A00DD8995 /* KeyboardDelegate.cpp in Sources */,
 				B44FBDAD1BE0E44A00DD8995 /* MouseDelegate.cpp in Sources */,
+				843209461FF4EE72003A0539 /* ClearColorCommand.cpp in Sources */,
+				8432094C1FF4EE72003A0539 /* DestroyTextureCommand.cpp in Sources */,
+				843209541FF4EE72003A0539 /* AssignWindowCommand.cpp in Sources */,
 				B44FBDAE1BE0E44A00DD8995 /* SystemDelegate.cpp in Sources */,
+				843209C81FF4EF7B003A0539 /* GenericEvent.cpp in Sources */,
+				843209501FF4EE72003A0539 /* ResetCommand.cpp in Sources */,
+				8432094F1FF4EE72003A0539 /* RenderCommand.cpp in Sources */,
 				B44FBDAF1BE0E44A00DD8995 /* TouchDelegate.cpp in Sources */,
+				843209481FF4EE72003A0539 /* ClearDepthCommand.cpp in Sources */,
+				84320A051FF4F1A3003A0539 /* KeyDelegate.cpp in Sources */,
+				8432094D1FF4EE72003A0539 /* DestroyWindowCommand.cpp in Sources */,
 				B44FBDB11BE0E44A00DD8995 /* UpdateDelegate.cpp in Sources */,
 				B44FBDB21BE0E44A00DD8995 /* OpenGLES_RenderSystem.cpp in Sources */,
 				B44FBDB31BE0E44A00DD8995 /* OpenGLES2_PixelShader.cpp in Sources */,
@@ -1534,11 +1951,14 @@
 				B44FBDB71BE0E44A00DD8995 /* ApriliOSAppDelegate.mm in Sources */,
 				B44FBDB81BE0E44A00DD8995 /* ImagePng.cpp in Sources */,
 				B44FBDB91BE0E44A00DD8995 /* iOS_devices.mm in Sources */,
+				843209CC1FF4EF7B003A0539 /* TouchEvent.cpp in Sources */,
+				843209451FF4EE72003A0539 /* AsyncCommandQueue.cpp in Sources */,
 				B44FBDBA1BE0E44A00DD8995 /* TextureAsync.cpp in Sources */,
 				B44FBDBB1BE0E44A00DD8995 /* TimerPosix.cpp in Sources */,
 				D17F3E9B1D79D5750045F39D /* VirtualKeyboard.cpp in Sources */,
 				B44FBDBC1BE0E44A00DD8995 /* OpenGLES_Texture.cpp in Sources */,
 				B44FBDBD1BE0E44A00DD8995 /* iOS_Window.mm in Sources */,
+				843209521FF4EE72003A0539 /* SuspendCommand.cpp in Sources */,
 				B44FBDBE1BE0E44A00DD8995 /* main_base.cpp in Sources */,
 				B44FBDBF1BE0E44A00DD8995 /* OpenGLES2_VertexShader.cpp in Sources */,
 				B44FBDC01BE0E44A00DD8995 /* ControllerDelegate.cpp in Sources */,
@@ -1552,49 +1972,73 @@
 				D1B486B119337389004674EB /* Mac_Cursor.mm in Sources */,
 				B455013F1BD7A7DE00E75E43 /* OpenGLES2_Texture.cpp in Sources */,
 				B455012F1BD7A7DE00E75E43 /* OpenGLES2_PixelShader.cpp in Sources */,
+				843209361FF4EE71003A0539 /* ClearCommand.cpp in Sources */,
 				B45501031BD7A7C500E75E43 /* OpenGLES1_RenderSystem.cpp in Sources */,
+				8432093B1FF4EE71003A0539 /* DestroyTextureCommand.cpp in Sources */,
 				D1534751178AD62A00151D1A /* Color.cpp in Sources */,
+				843209371FF4EE71003A0539 /* ClearDepthCommand.cpp in Sources */,
 				D1B4873619337479004674EB /* Mac_main.mm in Sources */,
 				B455010B1BD7A7C500E75E43 /* OpenGLES1_Texture.cpp in Sources */,
+				843209381FF4EE71003A0539 /* CreateCommand.cpp in Sources */,
 				D1534752178AD62A00151D1A /* Texture.cpp in Sources */,
+				843209341FF4EE71003A0539 /* AsyncCommandQueue.cpp in Sources */,
 				D1534753178AD62A00151D1A /* RenderSystem.cpp in Sources */,
 				B4E4CE0B1E69A1D600DB4C31 /* Keys.cpp in Sources */,
+				8432093E1FF4EE71003A0539 /* RenderCommand.cpp in Sources */,
 				D1534754178AD62A00151D1A /* Window.cpp in Sources */,
 				D17F3E981D79D5740045F39D /* VirtualKeyboard.cpp in Sources */,
 				B4046B401ECDCB8A00F85550 /* egl.cpp in Sources */,
 				D1534755178AD62A00151D1A /* PixelShader.cpp in Sources */,
 				D1368196187BFB3E00E66E32 /* RenderState.cpp in Sources */,
+				8432093D1FF4EE71003A0539 /* PresentFrameCommand.cpp in Sources */,
 				D11FB8F51E6866D0001A7E9A /* InputMode.cpp in Sources */,
+				843209421FF4EE71003A0539 /* UnassignWindowCommand.cpp in Sources */,
+				8432093A1FF4EE71003A0539 /* DestroyCommand.cpp in Sources */,
 				D1534756178AD62A00151D1A /* VertexShader.cpp in Sources */,
 				B436D2E31D05AE9100DA2C15 /* RenderHelper.cpp in Sources */,
+				843209411FF4EE71003A0539 /* SuspendCommand.cpp in Sources */,
 				D1534757178AD62A00151D1A /* april.cpp in Sources */,
 				D1B486B519337389004674EB /* Mac_Keys.mm in Sources */,
+				843209C21FF4EF7A003A0539 /* GenericEvent.cpp in Sources */,
+				843209C31FF4EF7A003A0539 /* KeyEvent.cpp in Sources */,
+				843209C41FF4EF7A003A0539 /* MotionEvent.cpp in Sources */,
 				B4DF807F1E375F0600307767 /* ImagePvrz.cpp in Sources */,
 				D1534758178AD62A00151D1A /* Platform.cpp in Sources */,
+				843209331FF4EE71003A0539 /* AsyncCommand.cpp in Sources */,
 				D153475A178AD62A00151D1A /* aprilUtil.cpp in Sources */,
 				B455018E1BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */,
 				B4DF807E1E375F0600307767 /* ImageEtcx.cpp in Sources */,
 				D153475B178AD62A00151D1A /* EventDelegate.cpp in Sources */,
+				843209C11FF4EF7A003A0539 /* ControllerEvent.cpp in Sources */,
 				B45501861BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
 				D1B486B919337389004674EB /* Mac_LoadingOverlay.mm in Sources */,
 				D153475C178AD62A00151D1A /* InputDelegate.cpp in Sources */,
+				84320A3A1FF66B75003A0539 /* UnloadTextureCommand.cpp in Sources */,
 				D1B486C119337389004674EB /* Mac_Window.mm in Sources */,
+				843209391FF4EE71003A0539 /* CreateWindowCommand.cpp in Sources */,
 				B436D2E41D05AE9100DA2C15 /* RenderHelperLayered2D.cpp in Sources */,
-				D153475D178AD62A00151D1A /* KeyboardDelegate.cpp in Sources */,
+				843209351FF4EE71003A0539 /* ClearColorCommand.cpp in Sources */,
 				B455011F1BD7A7D100E75E43 /* OpenGLC_Texture.cpp in Sources */,
-				D1E2447C1A3104C300586FAC /* Mac_QueuedEvents.mm in Sources */,
+				84320A331FF524B6003A0539 /* WinUWP_Platform.cpp in Sources */,
+				84320A041FF4F1A2003A0539 /* KeyDelegate.cpp in Sources */,
+				843209431FF4EE71003A0539 /* AssignWindowCommand.cpp in Sources */,
+				843209C61FF4EF7A003A0539 /* TouchEvent.cpp in Sources */,
 				B45501371BD7A7DE00E75E43 /* OpenGLES2_RenderSystem.cpp in Sources */,
 				D153475E178AD62A00151D1A /* MouseDelegate.cpp in Sources */,
 				D153475F178AD62A00151D1A /* SystemDelegate.cpp in Sources */,
 				D1368190187BFB3E00E66E32 /* main_base.cpp in Sources */,
+				8432098D1FF4EF05003A0539 /* Application.cpp in Sources */,
+				8432093F1FF4EE71003A0539 /* ResetCommand.cpp in Sources */,
 				D1B486BD19337389004674EB /* Mac_OpenGLView.mm in Sources */,
 				B45501691BD7A86200E75E43 /* OpenGL_RenderSystem.cpp in Sources */,
+				843209C51FF4EF7A003A0539 /* MouseEvent.cpp in Sources */,
 				D1534760178AD62A00151D1A /* TouchDelegate.cpp in Sources */,
 				B45501791BD7A86200E75E43 /* OpenGL_Texture.cpp in Sources */,
 				B45501171BD7A7D100E75E43 /* OpenGLC_RenderSystem.cpp in Sources */,
 				D102CFF819B7284500948584 /* TextureAsync.cpp in Sources */,
 				B45500F71BD7A7BA00E75E43 /* OpenGL1_Texture.cpp in Sources */,
 				D1534761178AD62A00151D1A /* UpdateDelegate.cpp in Sources */,
+				843209401FF4EE71003A0539 /* StateUpdateCommand.cpp in Sources */,
 				D1534762178AD62A00151D1A /* Image.cpp in Sources */,
 				B4046B411ECDCB8A00F85550 /* zlibUtil.cpp in Sources */,
 				D1534763178AD62A00151D1A /* ImageJpg.cpp in Sources */,
@@ -1602,10 +2046,12 @@
 				D1534764178AD62A00151D1A /* ImageJpt.cpp in Sources */,
 				D1534765178AD62A00151D1A /* ImagePng.cpp in Sources */,
 				B45500EF1BD7A7BA00E75E43 /* OpenGL1_RenderSystem.cpp in Sources */,
+				84320A301FF524B3003A0539 /* WinUWP_main.cpp in Sources */,
 				D1534766178AD62A00151D1A /* TimerPosix.cpp in Sources */,
 				D1B486A919337389004674EB /* Mac_AppDelegate.mm in Sources */,
 				D153476A178AD62A00151D1A /* ControllerDelegate.cpp in Sources */,
 				8404CC181F951AC700272BF4 /* MotionDelegate.cpp in Sources */,
+				8432093C1FF4EE71003A0539 /* DestroyWindowCommand.cpp in Sources */,
 				D1B4873A19337479004674EB /* Mac_Platform.mm in Sources */,
 				D1FED15A192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
 				B45501471BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,
@@ -1621,49 +2067,73 @@
 				D1A6260F170B78FF009ABE7B /* TimerPosix.cpp in Sources */,
 				B455013D1BD7A7DE00E75E43 /* OpenGLES2_Texture.cpp in Sources */,
 				B455012D1BD7A7DE00E75E43 /* OpenGLES2_PixelShader.cpp in Sources */,
+				8432096B1FF4EEC2003A0539 /* ClearCommand.cpp in Sources */,
 				B45501011BD7A7C500E75E43 /* OpenGLES1_RenderSystem.cpp in Sources */,
+				843209701FF4EEC2003A0539 /* DestroyTextureCommand.cpp in Sources */,
 				D1B486B019337389004674EB /* Mac_Cursor.mm in Sources */,
+				8432096C1FF4EEC2003A0539 /* ClearDepthCommand.cpp in Sources */,
 				D1B4873419337479004674EB /* Mac_main.mm in Sources */,
 				B45501091BD7A7C500E75E43 /* OpenGLES1_Texture.cpp in Sources */,
+				8432096D1FF4EEC2003A0539 /* CreateCommand.cpp in Sources */,
 				D1AF669F170B1E5900A43743 /* RenderSystem.cpp in Sources */,
+				843209691FF4EEC2003A0539 /* AsyncCommandQueue.cpp in Sources */,
 				D1AF66A0170B1E5900A43743 /* Window.cpp in Sources */,
 				B4E4CE091E69A1CA00DB4C31 /* Keys.cpp in Sources */,
+				843209731FF4EEC2003A0539 /* RenderCommand.cpp in Sources */,
 				D1AF66A3170B1E5900A43743 /* Color.cpp in Sources */,
 				D17F3E941D79D4F60045F39D /* VirtualKeyboard.cpp in Sources */,
 				B4046B361ECDCA3C00F85550 /* egl.cpp in Sources */,
 				D1AF66A4170B1E5900A43743 /* Texture.cpp in Sources */,
 				D1368194187BFB3E00E66E32 /* RenderState.cpp in Sources */,
+				843209721FF4EEC2003A0539 /* PresentFrameCommand.cpp in Sources */,
 				D11FB8F31E6866D0001A7E9A /* InputMode.cpp in Sources */,
+				843209771FF4EEC2003A0539 /* UnassignWindowCommand.cpp in Sources */,
+				8432096F1FF4EEC2003A0539 /* DestroyCommand.cpp in Sources */,
 				D1AF66A5170B1E5900A43743 /* PixelShader.cpp in Sources */,
 				B436D2DF1D05AE8800DA2C15 /* RenderHelper.cpp in Sources */,
+				843209761FF4EEC2003A0539 /* SuspendCommand.cpp in Sources */,
 				D1AF66A6170B1E5900A43743 /* VertexShader.cpp in Sources */,
 				D1B486B419337389004674EB /* Mac_Keys.mm in Sources */,
+				843209B61FF4EF76003A0539 /* GenericEvent.cpp in Sources */,
+				843209B71FF4EF76003A0539 /* KeyEvent.cpp in Sources */,
+				843209B81FF4EF76003A0539 /* MotionEvent.cpp in Sources */,
 				B4DF807B1E375F0200307767 /* ImagePvrz.cpp in Sources */,
 				D1AF66A7170B1E5900A43743 /* april.cpp in Sources */,
+				843209681FF4EEC2003A0539 /* AsyncCommand.cpp in Sources */,
 				D1B486B819337389004674EB /* Mac_LoadingOverlay.mm in Sources */,
 				B455018C1BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp in Sources */,
 				B4DF807A1E375F0200307767 /* ImageEtcx.cpp in Sources */,
 				D1AF66AB170B1E5900A43743 /* Platform.cpp in Sources */,
+				843209B51FF4EF76003A0539 /* ControllerEvent.cpp in Sources */,
 				B45501841BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp in Sources */,
 				D1B486C019337389004674EB /* Mac_Window.mm in Sources */,
 				D1AF66AD170B1E5900A43743 /* aprilUtil.cpp in Sources */,
+				84320A371FF66B62003A0539 /* UnloadTextureCommand.cpp in Sources */,
 				D1AF66AE170B1E5900A43743 /* EventDelegate.cpp in Sources */,
+				8432096E1FF4EEC2003A0539 /* CreateWindowCommand.cpp in Sources */,
 				B436D2E01D05AE8800DA2C15 /* RenderHelperLayered2D.cpp in Sources */,
 				D136818E187BFB3E00E66E32 /* main_base.cpp in Sources */,
+				8432096A1FF4EEC2003A0539 /* ClearColorCommand.cpp in Sources */,
 				B455011D1BD7A7D100E75E43 /* OpenGLC_Texture.cpp in Sources */,
-				D1E2447B1A3104C300586FAC /* Mac_QueuedEvents.mm in Sources */,
+				84320A2E1FF524AE003A0539 /* WinUWP_Platform.cpp in Sources */,
+				84320A021FF4F19F003A0539 /* KeyDelegate.cpp in Sources */,
+				843209781FF4EEC2003A0539 /* AssignWindowCommand.cpp in Sources */,
+				843209BA1FF4EF76003A0539 /* TouchEvent.cpp in Sources */,
 				B45501351BD7A7DE00E75E43 /* OpenGLES2_RenderSystem.cpp in Sources */,
 				D1AF66AF170B1E5900A43743 /* InputDelegate.cpp in Sources */,
 				D1B486BC19337389004674EB /* Mac_OpenGLView.mm in Sources */,
-				D1AF66B0170B1E5900A43743 /* KeyboardDelegate.cpp in Sources */,
+				8432098B1FF4EEFF003A0539 /* Application.cpp in Sources */,
+				843209741FF4EEC2003A0539 /* ResetCommand.cpp in Sources */,
 				B45501671BD7A86200E75E43 /* OpenGL_RenderSystem.cpp in Sources */,
 				D1AF66B1170B1E5900A43743 /* MouseDelegate.cpp in Sources */,
+				843209B91FF4EF76003A0539 /* MouseEvent.cpp in Sources */,
 				B45501771BD7A86200E75E43 /* OpenGL_Texture.cpp in Sources */,
 				B45501151BD7A7D100E75E43 /* OpenGLC_RenderSystem.cpp in Sources */,
 				D102CFF619B7284500948584 /* TextureAsync.cpp in Sources */,
 				B45500F51BD7A7BA00E75E43 /* OpenGL1_Texture.cpp in Sources */,
 				D1AF66B2170B1E5900A43743 /* SystemDelegate.cpp in Sources */,
 				D1AF66B3170B1E5900A43743 /* TouchDelegate.cpp in Sources */,
+				843209751FF4EEC2003A0539 /* StateUpdateCommand.cpp in Sources */,
 				D1AF66B4170B1E5900A43743 /* UpdateDelegate.cpp in Sources */,
 				B4046B381ECDCA3C00F85550 /* zlibUtil.cpp in Sources */,
 				D1AF66B5170B1E5900A43743 /* Image.cpp in Sources */,
@@ -1671,10 +2141,12 @@
 				D1AF66B6170B1E5900A43743 /* ImageJpg.cpp in Sources */,
 				B45500ED1BD7A7BA00E75E43 /* OpenGL1_RenderSystem.cpp in Sources */,
 				D1B486A819337389004674EB /* Mac_AppDelegate.mm in Sources */,
+				84320A2D1FF524AE003A0539 /* WinUWP_main.cpp in Sources */,
 				D1AF66B7170B1E5900A43743 /* ImageJpt.cpp in Sources */,
 				D1AF66B8170B1E5900A43743 /* ImagePng.cpp in Sources */,
 				D1FED158192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
 				8404CC161F951AB600272BF4 /* MotionDelegate.cpp in Sources */,
+				843209711FF4EEC2003A0539 /* DestroyWindowCommand.cpp in Sources */,
 				D1B4873819337479004674EB /* Mac_Platform.mm in Sources */,
 				D1B486AC19337389004674EB /* Mac_CocoaWindow.mm in Sources */,
 				B45501451BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,

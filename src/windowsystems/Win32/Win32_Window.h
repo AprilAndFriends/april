@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -39,8 +39,6 @@ namespace april
 	public:
 		Win32_Window();
 		~Win32_Window();
-		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
-		bool destroy();
 
 		void setTitle(chstr title);
 		bool isCursorVisible() const;
@@ -50,11 +48,11 @@ namespace april
 		void setResolution(int w, int h, bool fullscreen);
 		HCURSOR getCursorHandle() const;
 
-		bool updateOneFrame();
-		void presentFrame();
+		bool update(float timeDelta);
 		void checkEvents();
 
-		void queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
+		void handleSizeChange(int width, int height, bool fullscreen);
+		void queueControllerInput(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue);
 
 		static LRESULT CALLBACK childProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 		
@@ -68,6 +66,9 @@ namespace april
 		bool connectedControllers[XUSER_MAX_COUNT];
 #endif
 
+		void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		void _systemDestroy();
+		
 		Cursor* _createCursor(bool fromResource);
 
 #ifdef _WIN32_XINPUT
@@ -77,12 +78,13 @@ namespace april
 		void _adjustWindowSizeForClient(int x, int y, int& w, int& h, DWORD style, DWORD exstyle);
 		void _refreshCursor();
 		void _updateCursorPosition();
+		
+		void _presentFrame(bool systemEnabled);
 
 		static LRESULT CALLBACK _mainProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	};
 
 }
-
 #endif
 #endif

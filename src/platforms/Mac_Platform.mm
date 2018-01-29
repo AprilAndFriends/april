@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -27,7 +27,10 @@
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
+#include "Mac_CocoaWindow.h"
 #include "Mac_Window.h"
+
+#define MAC_WINDOW ((april::Mac_Window*)april::window)
 
 namespace april
 {
@@ -38,15 +41,15 @@ namespace april
 #endif
 		hversion result;
 		SInt32 major, minor, bugfix;
-		if (Gestalt(gestaltSystemVersionMajor, &major)   == noErr &&
-			Gestalt(gestaltSystemVersionMinor, &minor)   == noErr &&
+		if (Gestalt(gestaltSystemVersionMajor, &major) == noErr &&
+			Gestalt(gestaltSystemVersionMinor, &minor) == noErr &&
 			Gestalt(gestaltSystemVersionBugFix, &bugfix) == noErr)
 		{
 			result.set(major, minor, bugfix);
 		}
 		else
 		{
-			result.set(10, 3); // just in case. < 10.4 is not supported.
+			result.set(10, 4); // just in case, < 10.4 is not supported.
 		}
 		return result;
 	}
@@ -64,17 +67,14 @@ namespace april
 			info.name = "mac";
 			info.deviceName = "unnamedMacDevice";
 			info.osVersion = _getMaxOsVersion();
-			
 			float scalingFactor = 1.0f;
 			if ([mainScreen respondsToSelector:@selector(backingScaleFactor)])
 			{
 				scalingFactor = [NSScreen mainScreen].backingScaleFactor;
 			}
-
 			int mib [] = { CTL_HW, HW_MEMSIZE };
 			int64_t value = 0;
 			size_t length = sizeof(value);
-
 			if (sysctl(mib, 2, &value, &length, NULL, 0) == -1)
 			{
 				info.ram = 2048;
@@ -83,14 +83,12 @@ namespace april
 			{
 				info.ram = (int)(value / (1024 * 1024));
 			}
-
 			// display resolution
 			NSRect rect = [mainScreen frame];
 			info.displayResolution.set((float)rect.size.width * scalingFactor, (float)rect.size.height * scalingFactor);
 			// display DPI
 			CGSize screenSize = CGDisplayScreenSize(CGMainDisplayID());
 			info.displayDpi = 25.4f * info.displayResolution.y / screenSize.height;
-
 			// locale
 			// This code gets the prefered locale based on user's list of prefered languages against the supported languages
 			// in the app bundle (the .lproj folders in the bundle)
@@ -125,7 +123,7 @@ namespace april
 		static hstr bundleID;
 		if (bundleID == "")
 		{
-			NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+			NSString* bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
 			bundleID = [bundleIdentifier UTF8String];
 		}
 		return bundleID;
@@ -150,7 +148,7 @@ namespace april
 		return true;
 	}
 	
-	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(const MessageBoxButton&), bool modal)
+	void _showMessageBox_platform(const MessageBoxData& data)
 	{
 		// fugly implementation of showing messagebox on mac os
 		// ideas:
@@ -158,74 +156,64 @@ namespace april
 		// * prioritize buttons and automatically assign slots
 		// * use constants for button captions
 		// * use an array with constants for button captions etc
-		
 		NSString *nsButtons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[3] = {MessageBoxButton::Ok, MessageBoxButton::Ok, MessageBoxButton::Ok};
-		
-		int i0 = 0, i1 = 1, i2 = 2;
-		//		if (NSFoundationVersionNumber >= NSFoundationVersionNumber_iOS_7_0)
-		//		{
-		//			i0 = 1, i1 = 0; // we want to bold the "OK" button, but in ios7 and up, the cancel button is bolded by default
-		//		}
-		
-		if (buttons == MessageBoxButton::OkCancel)
+		int i0 = 0;
+		int i1 = 1;
+		int i2 = 2;
+		if (data.buttons == MessageBoxButton::OkCancel)
 		{
-			nsButtons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
-			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
+			nsButtons[i1] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
 			buttonTypes[i1] = MessageBoxButton::Ok;
 			buttonTypes[i0] = MessageBoxButton::Cancel;
 		}
-		else if (buttons == MessageBoxButton::YesNoCancel)
+		else if (data.buttons == MessageBoxButton::YesNoCancel)
 		{
-			nsButtons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
-			nsButtons[i2] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
-			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
+			nsButtons[i1] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
+			nsButtons[i2] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
 			buttonTypes[i1] = MessageBoxButton::Yes;
 			buttonTypes[i2] = MessageBoxButton::No;
 			buttonTypes[i0] = MessageBoxButton::Cancel;
 		}
-		else if (buttons == MessageBoxButton::YesNo)
+		else if (data.buttons == MessageBoxButton::YesNo)
 		{
-			nsButtons[i1] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
-			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
+			nsButtons[i1] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
 			buttonTypes[i1] = MessageBoxButton::Yes;
 			buttonTypes[i0] = MessageBoxButton::No;
 		}
-		else if (buttons == MessageBoxButton::Cancel)
+		else if (data.buttons == MessageBoxButton::Cancel)
 		{
-			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
 			buttonTypes[i0] = MessageBoxButton::Cancel;
 		}
-		else if (buttons == MessageBoxButton::Ok)
+		else if (data.buttons == MessageBoxButton::Ok)
 		{
-			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Ok, "OK").cStr()];
 			buttonTypes[i0] = MessageBoxButton::Ok;
 		}
-		else if (buttons == MessageBoxButton::Yes)
+		else if (data.buttons == MessageBoxButton::Yes)
 		{
-			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
 			buttonTypes[i0] = MessageBoxButton::Yes;
 		}
-		else if (buttons == MessageBoxButton::No)
+		else if (data.buttons == MessageBoxButton::No)
 		{
-			nsButtons[i0] = [NSString stringWithUTF8String:customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
 			buttonTypes[i0] = MessageBoxButton::No;
 		}
-		
-        harray<hstr> argButtons;
-        harray<MessageBoxButton> argButtonTypes;
-        argButtons += [nsButtons[i0] UTF8String];
-        argButtons += nsButtons[i1] == 0 ? "" : [nsButtons[i1] UTF8String];
-        argButtons += nsButtons[i2] == 0 ? "" : [nsButtons[i2] UTF8String];
-        argButtonTypes += buttonTypes[i0];
-        argButtonTypes += buttonTypes[i1];
-        argButtonTypes += buttonTypes[i2];
-		if (aprilWindow == NULL)
-		{
-			printf("ERROR: %s\n", text.cStr());
-			exit(1);
-		}
-        aprilWindow->queueMessageBox(title, argButtons, argButtonTypes, text, callback);
+		harray<hstr> argButtons;
+		harray<MessageBoxButton> argButtonTypes;
+		argButtons += [nsButtons[i0] UTF8String];
+		argButtons += (nsButtons[i1] == 0 ? "" : [nsButtons[i1] UTF8String]);
+		argButtons += (nsButtons[i2] == 0 ? "" : [nsButtons[i2] UTF8String]);
+		argButtonTypes += buttonTypes[i0];
+		argButtonTypes += buttonTypes[i1];
+		argButtonTypes += buttonTypes[i2];
+#define ns(s) [NSString stringWithUTF8String:s.cStr()]
+		[AprilCocoaWindow showAlertView:ns(data.title) button1:ns(argButtons[0]) button2:ns(argButtons[1]) button3:ns(argButtons[2]) btn1_t:argButtonTypes[0] btn2_t:argButtonTypes[1] btn3_t:argButtonTypes[2] text:ns(data.text) callback:data.callback];
 	}
 	
 }

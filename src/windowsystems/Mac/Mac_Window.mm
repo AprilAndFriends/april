@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 ///
 /// @section LICENSE
 ///
@@ -9,20 +9,18 @@
 #import <Cocoa/Cocoa.h>
 
 #include <hltypes/hlog.h>
-#include "april.h"
-#include "Mac_Window.h"
-#include "Mac_Cursor.h"
+
 #import "Mac_OpenGLView.h"
 #import "Mac_CocoaWindow.h"
 #import "Mac_LoadingOverlay.h"
-#include "Mac_QueuedEvents.h"
+#include "Application.h"
+#include "april.h"
+#include "Mac_Window.h"
+#include "Mac_Cursor.h"
 #include "SystemDelegate.h"
 // declared here instead of as class properties because C++ doesn't play nicely with forward declared objc classes
 
-static AprilMacOpenGLView* mView = nil;
-AprilCocoaWindow* mWindow = nil;
 bool gReattachLoadingOverlay = false;
-april::Mac_Window* aprilWindow = NULL;
 
 extern bool g_WindowFocusedBeforeSleep;
 
@@ -36,26 +34,26 @@ bool isLionOrNewer()
 	static int result = -1;
 	if (result == -1)
 	{
-		hversion v = april::getSystemInfo().osVersion;
-		result = v.major >= 10 && v.minor >= 7 ? 1 : 0;
+		hversion version = april::getSystemInfo().osVersion;
+		result = (version.major >= 10 && version.minor >= 7 ? 1 : 0);
 	}
-	return result == 1;
+	return (result == 1);
 }
 
 namespace april
 {
 	bool usingCvDisplayLink = false; // purposely exposed like this so it can be overrided as extern in other porjects if needed. for now without an api.
 	
-    bool isUsingCVDisplayLink()
-    {
-        return usingCvDisplayLink;
-    }
-    
-    bool hasDisplayLinkThreadStarted()
-    {
-        return mView != NULL && mView->mDisplayLink != nil;
-    }
-
+	bool isUsingCVDisplayLink()
+	{
+		return usingCvDisplayLink;
+	}
+	
+	bool hasDisplayLinkThreadStarted()
+	{
+		return (april::macGlView != NULL && april::macGlView->mDisplayLink != nil);
+	}
+	
 	Mac_Window::Mac_Window() : Window()
 	{
 		this->ignoreUpdate = false;
@@ -67,45 +65,142 @@ namespace april
 		this->cursorExtensions += ".plist";
 		this->cursorExtensions += ".png";
 		this->scalingFactor = 1.0f;
+		this->width = 0;
+		this->height = 0;
 		if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
 		{
 			this->scalingFactor = [NSScreen mainScreen].backingScaleFactor;
 			hlog::writef(logTag, "Mac UI scaling factor: %.2f", this->scalingFactor);
 		}
-
-		aprilWindow = this;
 	}
 
 	Mac_Window::~Mac_Window()
 	{
-		if (mView)
+		if (april::macGlView != NULL)
 		{
-			[mView release];
-			mView = nil;
+			[april::macGlView destroy];
+			[april::macGlView release];
+			april::macGlView = nil;
 		}
-		if (mWindow)
+		if (april::macCocoaWindow != NULL)
 		{
-			[mWindow destroy];
-			[mWindow release];
-			mWindow = nil;
+			[april::macCocoaWindow destroy];
+			[april::macCocoaWindow release];
+			april::macCocoaWindow = nil;
 		}
 	}
 	
-	int Mac_Window::getWidth() const
+	void Mac_Window::_systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options)
 	{
-		NSRect bounds = [mWindow.contentView bounds];
-		return bounds.size.width * this->scalingFactor;
+		hstr windowTitle = title;
+		if (title == "")
+		{
+			NSString* nsTitle = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
+			if (nsTitle == nil)
+			{
+				windowTitle = "UNDEFINED TITLE";
+			}
+			else
+			{
+				windowTitle = [nsTitle UTF8String];
+			}
+		}
+		Window::_systemCreate(width, height, fullscreen, windowTitle, options);
+		NSRect frame;
+		NSRect defaultWndFrame;
+		NSUInteger styleMask;
+		bool lionFullscreen = isLionOrNewer();
+		this->fpsCounter = options.fpsCounter;
+		this->inputMode = InputMode::Mouse;
+		this->displayLinkIgnoreSystemRedraw = options.mac_displayLinkIgnoreSystemRedraw;
+		if (fullscreen)
+		{
+			frame = [[NSScreen mainScreen] frame];
+			styleMask = NSBorderlessWindowMask;
+			float factor = options.defaultWindowModeResolutionFactor;
+			float tw = frame.size.width * factor, th = frame.size.height * factor;
+			defaultWndFrame = NSMakeRect(frame.origin.x + (frame.size.width - tw) / 2.0f, frame.origin.y + (frame.size.height - th) / 2.0f, tw, th);
+		}
+		else
+		{
+			frame = NSMakeRect(0, 0, width / this->scalingFactor, height / this->scalingFactor);
+			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
+			if (options.resizable)
+			{
+				styleMask |= NSResizableWindowMask;
+			}
+		}
+		april::macCocoaWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
+		[april::macCocoaWindow configure];
+		this->setTitle(windowTitle);
+		createLoadingOverlay(april::macCocoaWindow);
+		if (fullscreen)
+		{
+			april::macCocoaWindow->mWindowedRect = defaultWndFrame;
+			april::macCocoaWindow->mCustomFullscreenExitAnimation = true;
+		}
+		else
+		{
+			[april::macCocoaWindow center];
+			april::macCocoaWindow->mWindowedRect = april::macCocoaWindow.frame;
+		}
+		if (lionFullscreen)
+		{
+			[april::macCocoaWindow setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
+		}
+		[april::macCocoaWindow makeKeyAndOrderFront:april::macCocoaWindow];
+		[april::macCocoaWindow setOpaque:YES];
+		[april::macCocoaWindow display];
+		NSRect bounds = [april::macCocoaWindow.contentView bounds];
+		this->width = bounds.size.width * this->scalingFactor;
+		this->height = bounds.size.height * this->scalingFactor;
+		// A trick to force the window to display as early as possible while we continue with initialization
+		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
+		if (fullscreen)
+		{
+			if (lionFullscreen)
+			{
+				[april::macCocoaWindow toggleFullScreen:nil];
+				[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
+			}
+			else
+			{
+				[april::macCocoaWindow enterFullScreen];
+			}
+		}
+		april::macGlView = [[AprilMacOpenGLView alloc] init];
+		[april::macGlView initApril];
+		if (NSAppKitVersionNumber >= NSAppKitVersionNumber10_7)
+		{
+			[april::macGlView setWantsBestResolutionOpenGLSurface:YES];
+		}
+		april::macGlView.frame = frame;
+		[april::macCocoaWindow setOpenGLView:april::macGlView];
+		if (!isUsingCVDisplayLink())
+		{
+			[april::macCocoaWindow startRenderLoop];
+		}
 	}
-
-	int Mac_Window::getHeight() const
+	
+	void Mac_Window::_systemDestroy()
 	{
-		NSRect bounds = [mWindow.contentView bounds];
-		return bounds.size.height * this->scalingFactor;
+		if (april::macGlView != NULL)
+		{
+			[april::macGlView destroy];
+			[april::macGlView release];
+			april::macGlView = nil;
+		}
+		if (april::macCocoaWindow  != NULL)
+		{
+			[april::macCocoaWindow  destroy];
+			[april::macCocoaWindow  release];
+			april::macCocoaWindow  = nil;
+		}
 	}
 	
 	void* Mac_Window::getBackendId() const
 	{
-		return (void*)mWindow;
+		return (void*)april::macCocoaWindow;
 	}
 
 	hstr Mac_Window::getParam(chstr param)
@@ -130,12 +225,11 @@ namespace april
 		{
 			return this->disableCursorCheck ? "1" : "0";
 		}
-
 		if (param == "displayLinkIgnoreSystemRedraw")
 		{
 			return this->displayLinkIgnoreSystemRedraw  ? "1" : "0";
 		}
-		return "";
+		return Window::getParam(param);
 	}
 	
 	void Mac_Window::setParam(chstr param, chstr value)
@@ -144,23 +238,23 @@ namespace april
 		{
 			this->retainLoadingOverlay = (value == "1");
 		}
-		if (param == "reattach_loading_overlay")
+		else if (param == "reattach_loading_overlay")
 		{
 			gReattachLoadingOverlay = true;
 		}
-		if (param == "fasthide_loading_overlay")
+		else if (param == "fasthide_loading_overlay")
 		{
 			this->fastHideLoadingOverlay = (value == "1");
 		}
-		if (param == "splashscreen_fadeout")
+		else if (param == "splashscreen_fadeout")
 		{
 			this->splashScreenFadeout = (value == "1");
 		}
-		if (param == "delay_splash")
+		else if (param == "delay_splash")
 		{
 			this->splashScreenDelay = value;
 		}
-		if (param == "disableCursorCheck")
+		else if (param == "disableCursorCheck")
 		{
 			this->disableCursorCheck = (value == "1");
 			if (this->disableCursorCheck)
@@ -172,146 +266,56 @@ namespace april
 				hlog::write(logTag, "Enabling Mac Cursor Check");
 			}
 		}
-		if (param == "displayLinkIgnoreSystemRedraw")
+		else if (param == "displayLinkIgnoreSystemRedraw")
 		{
 			this->displayLinkIgnoreSystemRedraw = (value == "1");
 		}
+		else
+		{
+			Window::setParam(param, value);
+		}
 	}
 	
-	void Mac_Window::updateCursorPosition(gvec2& pos)
-	{
-		this->cursorPosition = pos * this->scalingFactor;
-	}
-
 	bool Mac_Window::isCursorVisible() const
 	{
-		if (mView == NULL) return 1;
-		return !mView->mUseBlankCursor;
+		return (april::macGlView == NULL || !april::macGlView->mUseBlankCursor);
 	}
 	
 	void Mac_Window::setCursor(Cursor* value)
 	{
 		if (value != NULL)
 		{
-			Mac_Cursor* mc = (Mac_Cursor*) value;
-			[mView setCursor:mc->getNSCursor()];
+			Mac_Cursor* cursor = (Mac_Cursor*)value;
+			[april::macGlView setCursor:cursor->getNSCursor()];
 		}
 		else
 		{
-			[mView setCursor:NULL];
+			[april::macGlView setCursor:NULL];
 		}
-		[mWindow invalidateCursorRectsForView:mView];
+		[april::macCocoaWindow invalidateCursorRectsForView:april::macGlView];
 	}
 
-	void Mac_Window::setCursorVisible(bool visible)
+	void Mac_Window::setCursorVisible(bool value)
 	{
-		if (mView == NULL) return;
-		if (visible == isCursorVisible()) return;
-		[mView setUseBlankCursor:!visible];
-		[mWindow invalidateCursorRectsForView:mView];
-	}
-	
-	bool Mac_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
-	{
-		hstr windowTitle;
-		if (title == "")
+		if (april::macGlView != NULL && this->isCursorVisible() != value)
 		{
-			NSString* nsTitle = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
-			if (nsTitle == nil)
-			{
-				windowTitle = "UNDEFINED TITLE";
-			}
-			else
-			{
-				windowTitle = [nsTitle UTF8String];
-			}
+			[april::macGlView setUseBlankCursor:!value];
+			[april::macCocoaWindow invalidateCursorRectsForView:april::macGlView];
 		}
-		else
-		{
-			windowTitle = title;
-		}
-		if (!Window::create(w, h, fullscreen, windowTitle, options))
-		{
-			return false;
-		}
-
-		NSRect frame, defaultWndFrame;
-		NSUInteger styleMask;
-
-		bool lionFullscreen = isLionOrNewer();
-		this->fpsCounter = options.fpsCounter;
-		this->inputMode = InputMode::Mouse;
-		this->displayLinkIgnoreSystemRedraw = options.mac_displayLinkIgnoreSystemRedraw;
-
-		if (fullscreen)
-		{
-			frame = [[NSScreen mainScreen] frame];
-			styleMask = NSBorderlessWindowMask;
-			float factor = aprilWindow->getOptions().defaultWindowModeResolutionFactor;
-			float tw = frame.size.width * factor, th = frame.size.height * factor;
-			defaultWndFrame = NSMakeRect(frame.origin.x + (frame.size.width - tw) / 2.0f, frame.origin.y + (frame.size.height - th) / 2.0f, tw, th);
-		}
-		else
-		{
-			frame = NSMakeRect(0, 0, w / this->scalingFactor, h / this->scalingFactor);
-			styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask;
-			if (options.resizable) styleMask |= NSResizableWindowMask;
-		}
-		
-		mWindow = [[AprilCocoaWindow alloc] initWithContentRect:frame styleMask:styleMask backing: NSBackingStoreBuffered defer:false];
-		[mWindow configure];
-		setTitle(windowTitle);
-		createLoadingOverlay(mWindow);
-
-		if (fullscreen)
-		{
-			mWindow->mWindowedRect = defaultWndFrame;
-			mWindow->mCustomFullscreenExitAnimation = true;
-		}
-		else
-		{
-			[mWindow center];
-			mWindow->mWindowedRect = mWindow.frame;
-		}
-		if (lionFullscreen)
-			[mWindow setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
-
-		[mWindow makeKeyAndOrderFront:mWindow];
-		[mWindow setOpaque:YES];
-		[mWindow display];
-		// A trick to force the window to display as early as possible while we continue with initialization
-		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
-		if (fullscreen)
-		{
-			if (lionFullscreen)
-			{
-				[mWindow toggleFullScreen:nil];
-				[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
-			}
-			else
-			{
-				[mWindow enterFullScreen];
-			}
-		}
-		mView = [[AprilMacOpenGLView alloc] init];
-		[mView initOpenGL];
-		if (NSAppKitVersionNumber >= NSAppKitVersionNumber10_7)
-		{
-			[mView setWantsBestResolutionOpenGLSurface:YES];
-		}
- 		mView.frame = frame;
-		[mWindow setOpenGLView: mView];
-        if (!isUsingCVDisplayLink())
-        {
-            [mWindow startRenderLoop];
-        }
-		return 1;
 	}
 	
-	void Mac_Window::setResolution(int w, int h, bool fullscreen)
+	void Mac_Window::setResolution(int width, int height, bool fullscreen)
 	{
-		bool state = [mWindow isFullScreen];
-		if (fullscreen != state) [mWindow platformToggleFullScreen];
+		if (fullscreen != [april::macCocoaWindow isFullScreen])
+		{
+			[april::macCocoaWindow  platformToggleFullScreen];
+		}
+	}
+	
+	void Mac_Window::setSystemWindowSize(int width, int height)
+	{
+		this->width = width;
+		this->height = height;
 	}
 	
 	void Mac_Window::setFullscreenFlag(bool value)
@@ -321,91 +325,68 @@ namespace april
 	
 	void Mac_Window::onFocusChanged(bool value)
 	{
-		if (value == false && g_WindowFocusedBeforeSleep)
+		if (!value && g_WindowFocusedBeforeSleep)
 		{
 #ifdef _DEBUG
 			hlog::write(logTag, "Application lost focus while going to sleep, canceling focus on wake.");
 #endif
 			g_WindowFocusedBeforeSleep = false;
 		}
-		if (this->focused != value)
-		{
-            this->focused = value;
-            
-            if (isUsingCVDisplayLink())
-            {
-                queueFocusChanged(value);
-            }
-            else
-            {
-                handleFocusChangeEvent(value);
-            }
-		}
+		value ? april::application->resume() : april::application->suspend();
+		this->queueFocusChange(value);
 	}
 	
 	void Mac_Window::OnAppGainedFocus()
 	{
-		if (![mWindow isMiniaturized]) onFocusChanged(1);
+		if (![april::macCocoaWindow  isMiniaturized])
+		{
+			this->onFocusChanged(true);
+		}
 		// sometimes MacOS forgets about checking cursor rects, so let's remind it..
-		[mWindow invalidateCursorRectsForView:mView];
+		[april::macCocoaWindow invalidateCursorRectsForView:april::macGlView];
 	}
 
 	void Mac_Window::OnAppLostFocus()
 	{
-		onFocusChanged(0);
+		this->onFocusChanged(false);
 	}
 	
 	void Mac_Window::setTitle(chstr title)
-	{
-		if (this->fpsCounter)
-		{
-			hstr t = title + hsprintf(" [FPS: %d]", this->fps);
-			// optimization to prevent setting title every frame
-			if (t == this->fpsTitle) return;
-			this->fpsTitle = t;
-			[mWindow _setTitle:[NSString stringWithUTF8String:t.cStr()]];
-		}
-		else
-		{
-			[mWindow _setTitle:[NSString stringWithUTF8String:title.cStr()]];
-		}
+	{		
 		this->title = title;
 	}
 	
-	bool Mac_Window::updateOneFrame()
+	void Mac_Window::checkEvents()
 	{
-		if (this->shouldIgnoreUpdate())
-		{
-			return true;
-		}
 		if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
 		{
 			float scalingFactor = [NSScreen mainScreen].backingScaleFactor;
 			if (scalingFactor != this->scalingFactor)
 			{
 				this->scalingFactor = scalingFactor;
-				[mWindow onWindowSizeChange];
+				[april::macCocoaWindow  onWindowSizeChange];
 			}
 		}
-		bool result = Window::updateOneFrame();
-		if (result && mOverlayWindow != nil)
+		Window::checkEvents();
+	}
+	
+	bool Mac_Window::update(float timeDelta)
+	{
+		if (this->shouldIgnoreUpdate())
 		{
-			float timeDelta = this->timer.diff(false);
-			if (timeDelta > 0.5f) timeDelta = 0.5f;
+			return true;
+		}
+		bool result = Window::update(timeDelta);
+		if (result && gOverlayWindow != nil)
+		{
 			updateLoadingOverlay(timeDelta);
-		}
-
-		if (this->fpsCounter)
-		{
-			setTitle(this->title);
-		}
+		}		
 		return result;
 	}
 	
-	void Mac_Window::presentFrame()
+	void Mac_Window::_presentFrame(bool systemEnabled)
 	{
-		// presentFrame() calls are always manually called, so let's make sure
-		// Mac can update the view contents before we continue.
+		Window::_presentFrame(systemEnabled);
 		bool displayLink = isUsingCVDisplayLink();
 		if (displayLink)
 		{
@@ -415,60 +396,14 @@ namespace april
 			// possible.
 			this->setIgnoreUpdateFlag(true);
 		}
-		[mView presentFrame];
-		[mView setNeedsDisplay:YES];
-		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.01]];
+		[april::macGlView presentFrame];
+		//[april::macGlView setNeedsDisplay:YES];
 		if (displayLink)
 		{
 			this->setIgnoreUpdateFlag(false);
 		}
 	}
 	
-    void Mac_Window::dispatchQueuedEvents()
-    {
-        if (this->queuedEvents.size() > 0)
-        {
-            foreach (QueuedEvent*, it, this->queuedEvents)
-            {
-                (*it)->execute();
-                delete *it;
-            }
-            this->queuedEvents.clear();
-        }
-    }
-    
-    void Mac_Window::queueWindowSizeChanged(int w, int h, bool fullscreen)
-    {
-        hmutex::ScopeLock lock(&renderThreadSyncMutex);
-        this->queuedEvents += new WindowSizeChangedEvent(this, w, h, fullscreen);
-    }
-
-    void Mac_Window::queueFocusChanged(bool focused)
-    {
-        hmutex::ScopeLock lock(&renderThreadSyncMutex);
-        this->queuedEvents += new FocusChangedEvent(this, focused);
-    }
-
-    void Mac_Window::dispatchWindowSizeChanged(int w, int h, bool fullscreen)
-    {
-        april::SystemDelegate* delegate = aprilWindow->getSystemDelegate();
-        
-        if (delegate)
-        {
-            delegate->onWindowSizeChanged(w, h, fullscreen);
-        }
-        else
-        {
-            hlog::write(april::logTag, "Mac_CocoaWindow: Ignoring onWindowSizeChange, delegate not set.");
-        }
-    }
-
-    void Mac_Window::queueMessageBox(chstr title, harray<hstr> argButtons, harray<MessageBoxButton> argButtonTypes, chstr text, void (*callback)(MessageBoxButton))
-    {
-#define ns(s) [NSString stringWithUTF8String:s.cStr()]
-        [AprilCocoaWindow showAlertView:ns(title) button1:ns(argButtons[0]) button2:ns(argButtons[1]) button3:ns(argButtons[2]) btn1_t:argButtonTypes[0] btn2_t:argButtonTypes[1] btn3_t:argButtonTypes[2] text:ns(text) callback:callback];
-    }
-    
 	Cursor* Mac_Window::_createCursor(bool fromResource)
 	{
 		return new Mac_Cursor(fromResource);
@@ -477,42 +412,16 @@ namespace april
 	bool Mac_Window::shouldIgnoreUpdate()
 	{
 		return false;
-//		bool ret;
-//		hmutex::ScopeLock lock;
-//		lock.acquire(&this->ignoreUpdateMutex);
-//		ret = this->ignoreUpdate;
-//		lock.release();
-//		
-//		return ret;
+		/*
+		hmutex::ScopeLock lock(&this->ignoreUpdateMutex);
+		return this->ignoreUpdate;
+		*/
 	}
 	
 	void Mac_Window::setIgnoreUpdateFlag(bool value)
 	{
-		hmutex::ScopeLock lock;
-		lock.acquire(&this->ignoreUpdateMutex);
+		hmutex::ScopeLock lock(&this->ignoreUpdateMutex);
 		this->ignoreUpdate = value;
-		lock.release();
 	}
 	
-	void Mac_Window::terminateMainLoop()
-	{
-        [mWindow terminateMainLoop];
-	}
-
-	bool Mac_Window::destroy()
-	{
-		if (mView)
-		{
-            [mView destroy];
-			[mView release];
-			mView = nil;
-		}
-		if (mWindow)
-		{
-			[mWindow release];
-			mWindow = nil;
-		}
-		
-		return 1;
-	}
 }

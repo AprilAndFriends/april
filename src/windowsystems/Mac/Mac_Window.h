@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -27,27 +27,23 @@ namespace april
 		Mac_Window();
 		~Mac_Window();
 
-		int getWidth() const;
-		int getHeight() const;
+		HL_DEFINE_GET(int, width, Width);
+		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId() const;
-		
-		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
-		bool destroy();
 		
 		void setTitle(chstr title);
 		hstr getParam(chstr param);
 		void setParam(chstr param, chstr value);
 		
-		void updateCursorPosition(gvec2& pos);
 		bool isCursorVisible() const;
 		void setCursor(Cursor* value);
 		void setCursorVisible(bool visible);
 
-		void presentFrame();
-		bool updateOneFrame();
-		void terminateMainLoop();
+		void checkEvents();
+		bool update(float timeDelta);
 
-		void setResolution(int w, int h, bool fullscreen);
+		void setSystemWindowSize(int width, int height);
+		void setResolution(int width, int height, bool fullscreen);
 		void setFullscreenFlag(bool value);
 
 		void OnAppGainedFocus();
@@ -57,12 +53,6 @@ namespace april
 		
 		bool shouldIgnoreUpdate();
 		void setIgnoreUpdateFlag(bool value);
-		
-        void dispatchQueuedEvents();
-        void queueWindowSizeChanged(int w, int h, bool fullscreen);
-        void queueFocusChanged(bool focused);
-        void dispatchWindowSizeChanged(int w, int h, bool fullscreen);
-        void queueMessageBox(chstr title, harray<hstr> argButtons, harray<MessageBoxButton> argButtonTypes, chstr text, void (*callback)(MessageBoxButton));
         
 		bool displayLinkIgnoreSystemRedraw;
 		bool retainLoadingOverlay;
@@ -79,14 +69,19 @@ namespace april
         hmutex renderThreadSyncMutex;
 		
 	protected:
+		int width;
+		int height;
+		
 		Cursor* _createCursor(bool fromResource);
-        harray<QueuedEvent*> queuedEvents;
+		void _systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options);
+		void _systemDestroy();
+		
+		void _presentFrame(bool systemEnabled);
 		
 	};
 	
     bool isUsingCVDisplayLink();
 }
-extern april::Mac_Window* aprilWindow;
 
 bool isPreLion();
 bool isLionOrNewer();

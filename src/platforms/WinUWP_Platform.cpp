@@ -1,12 +1,12 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#if defined(_WINUWP) && !defined(_OPENKODE)
+#ifdef _WINUWP
 #define __HL_INCLUDE_PLATFORM_HEADERS
 #include <gtypes/Vector2.h>
 #include <hltypes/hdir.h>
@@ -17,6 +17,7 @@
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
+#include "Application.h"
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
@@ -38,7 +39,7 @@ namespace april
 		if (info.locale == "")
 		{
 			info.name = "winrt";
-			info.deviceName = "unnamedWinUWPDevice";
+			info.deviceName = "unnamedUWPDevice";
 #ifdef _ARM
 			info.architecture = "ARM";
 #else
@@ -50,7 +51,7 @@ namespace april
 			info.cpuCores = w32info.dwNumberOfProcessors;
 			// RAM size
 #ifndef _WINP8
-			// pure WinUWP can't retrieve this information so some arbitrary value is used
+			// pure UWP can't retrieve this information so some arbitrary value is used
 #ifndef _ARM
 			info.ram = 2048;
 #else
@@ -106,7 +107,7 @@ namespace april
 		}
 #ifdef _WINUWP_WINDOW
 		// display resolution
-		float dpiRatio = WinUWP::getDpiRatio();
+		float dpiRatio = UWP::getDpiRatio();
 		CoreWindow^ window = CoreWindow::GetForCurrentThread();
 		int width = hround(window->Bounds.Width * dpiRatio);
 		int height = hround(window->Bounds.Height * dpiRatio);
@@ -151,38 +152,26 @@ namespace april
 		return true;
 	}
 
-	static void(*currentCallback)(const MessageBoxButton&) = NULL;
+	static void(*_currentDialogCallback)(MessageBoxButton) = NULL;
 
-	void _showMessageBoxResult(int button)
+	static void _showMessageBoxResult(int button)
 	{
 		switch (button)
 		{
 		case IDOK:
-			if (currentCallback != NULL)
-			{
-				(*currentCallback)(MessageBoxButton::Ok);
-			}
+			Application::messageBoxCallback(MessageBoxButton::Ok);
 			break;
 		case IDYES:
-			if (currentCallback != NULL)
-			{
-				(*currentCallback)(MessageBoxButton::Yes);
-			}
+			Application::messageBoxCallback(MessageBoxButton::Yes);
 			break;
 		case IDNO:
-			if (currentCallback != NULL)
-			{
-				(*currentCallback)(MessageBoxButton::No);
-			}
+			Application::messageBoxCallback(MessageBoxButton::No);
 			break;
 		case IDCANCEL:
-			if (currentCallback != NULL)
-			{
-				(*currentCallback)(MessageBoxButton::Cancel);
-			}
+			Application::messageBoxCallback(MessageBoxButton::Cancel);
 			break;
 		default:
-			hlog::error(logTag, "Unknown message box callback: " + hstr(button));
+			Application::messageBoxCallback(MessageBoxButton::Ok);
 			break;
 		}
 	}
@@ -190,15 +179,13 @@ namespace april
 	static harray<DispatchedHandler^> messageBoxQueue;
 	static hmutex messageBoxQueueMutex;
 
-	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(const MessageBoxButton&), bool modal)
+	void _showMessageBox_platform(const MessageBoxData& data)
 	{
 		DispatchedHandler^ handler = ref new DispatchedHandler(
-			[title, text, buttons, style, customButtonTitles, callback]()
+			[data]()
 		{
-			currentCallback = callback;
-			_HL_HSTR_TO_PSTR_DEF(text);
-			_HL_HSTR_TO_PSTR_DEF(title);
+			Platform::String^ ptitle = _HL_HSTR_TO_PSTR(data.title);
+			Platform::String^ ptext = _HL_HSTR_TO_PSTR(data.text);
 			MessageDialog^ dialog = ref new MessageDialog(ptext, ptitle);
 			UICommandInvokedHandler^ commandHandler = ref new UICommandInvokedHandler(
 				[](IUICommand^ command)
@@ -220,20 +207,19 @@ namespace april
 			hstr yes;
 			hstr no;
 			hstr cancel;
-			_makeButtonLabels(&ok, &yes, &no, &cancel, buttons, customButtonTitles);
+			_makeButtonLabels(&ok, &yes, &no, &cancel, data.buttons, data.customButtonTitles);
 			_HL_HSTR_TO_PSTR_DEF(ok);
 			_HL_HSTR_TO_PSTR_DEF(yes);
 			_HL_HSTR_TO_PSTR_DEF(no);
 			_HL_HSTR_TO_PSTR_DEF(cancel);
-
-			if (buttons == MessageBoxButton::OkCancel)
+			if (data.buttons == MessageBoxButton::OkCancel)
 			{
 				dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 				dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDCANCEL));
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 1;
 			}
-			else if (buttons == MessageBoxButton::YesNoCancel)
+			else if (data.buttons == MessageBoxButton::YesNoCancel)
 			{
 				dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 				dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
@@ -241,13 +227,13 @@ namespace april
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 2;
 			}
-			else if (buttons == MessageBoxButton::Ok)
+			else if (data.buttons == MessageBoxButton::Ok)
 			{
 				dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 0;
 			}
-			else if (buttons == MessageBoxButton::YesNo)
+			else if (data.buttons == MessageBoxButton::YesNo)
 			{
 				dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 				dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
@@ -262,7 +248,7 @@ namespace april
 		}
 		catch (Platform::AccessDeniedException^ e)
 		{
-			hlog::warn(logTag, "messagebox() on WinUWP called \"recursively\"! Queueing to UI thread now...");
+			hlog::warn(logTag, "messagebox() on UWP called \"recursively\"! Queueing to UI thread now...");
 			messageBoxQueueMutex.lock();
 			messageBoxQueue += handler;
 			messageBoxQueueMutex.unlock();

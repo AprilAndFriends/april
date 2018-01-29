@@ -1,6 +1,6 @@
 package com.april;
 
-/// @version 4.5
+/// @version 5.0
 
 public interface Callback1<T, Arg0>
 {

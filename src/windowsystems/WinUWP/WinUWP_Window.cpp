@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -44,13 +44,13 @@ namespace april
 		this->destroy();
 	}
 
-	bool WinUWP_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	bool WinUWP_Window::_systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
 		Rect rect = CoreWindow::GetForCurrentThread()->Bounds;
 		w = (int)rect.Width;
 		h = (int)rect.Height;
 		fullscreen = ApplicationView::GetForCurrentView()->IsFullScreenMode; // WinUWP is always fullscreen
-		if (!Window::create(w, h, fullscreen, title, options))
+		if (!Window::_systemCreate(w, h, fullscreen, title, options))
 		{
 			return false;
 		}
@@ -136,15 +136,11 @@ namespace april
 		this->_setRenderSystemResolution(w, h, fullscreen);
 	}
 
-	void WinUWP_Window::presentFrame()
-	{
-	}
-
-	bool WinUWP_Window::updateOneFrame()
+	bool WinUWP_Window::update(float timeDelta)
 	{
 		ID3D12CommandQueue* commandQueue = DX12_RENDERSYS->getCommandQueue();
-		PIXBeginEvent(commandQueue, 0, L"updateOneFrame()");
-		bool result = Window::updateOneFrame();
+		PIXBeginEvent(commandQueue, 0, L"update()");
+		bool result = Window::update(timeDelta);
 		PIXEndEvent(commandQueue);
 		return result;
 	}

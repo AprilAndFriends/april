@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -161,13 +161,7 @@ namespace april
 		grect viewport(0.0f, 0.0f, (float)w, (float)h);
 		this->setViewport(viewport);
 		this->setOrthoProjection(viewport);
-		this->_updateDeviceState(true);
-		april::window->performUpdate(0.0f);
-		UpdateDelegate* updateDelegate = april::window->getUpdateDelegate();
-		if (updateDelegate != NULL)
-		{
-			updateDelegate->onPresentFrame();
-		}
+		this->_updateDeviceState(this->state, true);
 	}
 
 	void OpenGL_RenderSystem::_setDeviceViewport(cgrect rect)

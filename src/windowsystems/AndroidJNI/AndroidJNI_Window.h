@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -30,7 +30,6 @@ namespace april
 	public:
 		AndroidJNI_Window();
 		~AndroidJNI_Window();
-		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
 		
 		inline void setTitle(chstr title) { }
 		inline bool isCursorVisible() const { return false; }
@@ -39,17 +38,15 @@ namespace april
 		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId() const;
 		
-		void enterMainLoop();
-		void presentFrame();
-		bool updateOneFrame();
+		bool update(float timeDelta);
 		
-		void queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index);
-		void queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
+		void queueTouchInput(const MouseEvent::Type& type, cgvec2 position, int index);
+		void queueControllerInput(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue);
 
 		void showVirtualKeyboard();
 		void hideVirtualKeyboard();
 
-		void handleFocusChangeEvent(bool focused);
+		void handleFocusChange(bool focused);
 		void handleActivityChange(bool active);
 		
 	protected:
@@ -57,9 +54,13 @@ namespace april
 		int height;
 		bool forcedFocus;
 
+		void _systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options);
+		
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor() { }
 		
+		void _presentFrame(bool systemEnabled);
+
 	};
 
 }

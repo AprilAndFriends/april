@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -76,7 +76,6 @@ namespace april
 		Image::Format getNativeTextureFormat(Image::Format format) const;
 		unsigned int getNativeColorUInt(const april::Color& color) const;
 		Image* takeScreenshot(Image::Format format);
-		void presentFrame();
 
 		void updateOrientation();
 
@@ -176,7 +175,7 @@ namespace april
 		void _setDeviceBlendMode(const BlendMode& blendMode);
 		void _setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
 
-		void _updateDeviceState(bool forceUpdate);
+		void _updateDeviceState(RenderState* state, bool forceUpdate);
 		void _updateShader(bool forceUpdate);
 
 		void _deviceClear(bool depth);
@@ -186,6 +185,7 @@ namespace april
 		void _deviceRender(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count);
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
+		void _devicePresentFrame(bool systemEnabled);
 
 		void _setDX11VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize);
 

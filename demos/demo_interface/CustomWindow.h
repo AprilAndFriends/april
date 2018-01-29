@@ -18,15 +18,12 @@ class CustomWindow : public april::Window
 public:
 	CustomWindow();
 	~CustomWindow();
-	bool create(int w, int h, bool fullscreen, chstr title, april::Window::Options options);
-	bool destroy();
 
 	int getWidth() const;
 	int getHeight() const;
 	void* getBackendId() const;
 
-	bool updateOneFrame();
-	void presentFrame();
+	bool update(float timeDelta);
 	void checkEvents();
 
 	static LRESULT CALLBACK _processCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -34,6 +31,10 @@ public:
 protected:
 	HWND hWnd;
 
+	void _systemCreate(int w, int h, bool fullscreen, chstr title, april::Window::Options options);
+	void _systemDestroy();
+	
+	void _presentFrame();
+	
 };
-
 #endif

@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -56,7 +56,7 @@ int CALLBACK wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* wCm
 	}
 	LocalFree(wArgv);
 	// call the user specified main function
-	int result = __april_main(april_init, april_destroy, argc, argv);
+	int result = april::__mainStandard(&__aprilApplicationInit, &__aprilApplicationDestroy, argc, argv);
 	// free allocated memory for arguments
 	for_iter (i, 0, argc)
 	{

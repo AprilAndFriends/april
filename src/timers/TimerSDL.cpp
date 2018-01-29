@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -20,15 +20,15 @@ namespace april
 		this->td = 0;
 		this->frequency = 0;
 		this->performanceTimerStart = 0;
-		this->resolution = 0; // unused in SDL timer
+		this->resolution = 0.001;
 		this->mTimerStart = 0;
 		this->mTimerElapsed = 0;
 		performanceTimerElapsed = 0;
 		performanceTimer = 0;
-		
 		// for sdl:
 		performanceTimer = 0; // was: "false"
 		this->mTimerStart = SDL_GetTicks();
+		this->td1 = this->mTimerStart;
 		this->frequency	= 1000;
 		this->mTimerElapsed = this->mTimerStart;
 	}
@@ -37,12 +37,12 @@ namespace april
 	{
 	}
 	
-	float Timer::getTime()
+	double Timer::getTime()
 	{
-		return (float)(SDL_GetTicks() - this->mTimerStart);
+		return (double)(SDL_GetTicks() - this->mTimerStart);
 	}
 	
-	float Timer::diff(bool doUpdate)
+	double Timer::diff(bool doUpdate)
 	{
 		if (doUpdate)
 		{
@@ -53,13 +53,9 @@ namespace april
 	
 	void Timer::update()
 	{
-		this->td2 = getTime();
-		this->dt = (this->td2-this->td) * 0.1f;
-		if (this->dt < 0)
-		{
-			this->dt = 0; // in case user has moved the clock back, don't allow negative increments
-		}
-		this->td = this->td2;
+		this->td2 = this->getTime();
+		this->difference = hmax((this->td2 - this->td1) * this->resolution, 0.0); // limiting to 0 in case user has moved the clock back, don't allow negative increments
+		this->td1 = this->td2;
 	}
 	
 }

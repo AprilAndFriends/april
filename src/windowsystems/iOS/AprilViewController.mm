@@ -1,18 +1,21 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
+
+#import <QuartzCore/CALayer.h>
+
 #include <hltypes/hlog.h>
-#include "april.h"
+
 #import "AprilViewController.h"
 #import "EAGLView.h"
 #import "WBImage.h"
 #import "ApriliOSAppDelegate.h"
+#include "april.h"
 #include "iOS_Window.h"
-#import <QuartzCore/CALayer.h>
 
 extern EAGLView *glview;
 static UIImageView *mImageView;
@@ -24,11 +27,9 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 -(id)init
 {
 	self = [super init];
-	#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_7_0
-		self.wantsFullScreenLayout = YES;
-	#endif
 	return self;
 }
+
 // helper function that scans through all png files in the root of an .app folder
 // and tries to figure out which one is used as the launch image. The result is cached
 // in NSUserDefaults so the search only needs to be performed on the initial startup
@@ -41,7 +42,6 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
     // landscape and portait orientations will not experience correct behaviour.
     // In future, april-ios needs to see which orientation is currently active and
     // display that launch image as an overlay.
-
     NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
 //    bool landscape = UIInterfaceOrientationIsLandscape(interfaceOrientation);
     NSString* nsDefaultPngName = [userDefaults objectForKey:@"april_LaunchImage"];
@@ -78,8 +78,8 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
     {
 		hlog::write(april::logTag, "Cached Launch Image not found, detecting...");
     }
-
-    hstr defaultPngName, rotatedPngName;
+	hstr defaultPngName;
+	hstr rotatedPngName;
     hstr s;
     bool iPadImage;
     harray<hstr> pnglist, secondaryList;
@@ -88,7 +88,6 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 	CGSize originalScreenSize = screenSize;
     int screenHeight = screenSize.width > screenSize.height ? screenSize.width : screenSize.height;
     CGSize rotatedScreenSize = CGSizeMake(screenSize.height, screenSize.width);
-	
 	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone)
 	{
 		// prefer vertical images on the iphone
@@ -97,8 +96,6 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 		originalScreenSize = rotatedScreenSize;
 		rotatedScreenSize = temp;
 	}
-
-	
     for (NSString* imgName in allPngImageNames)
     {
         s = [imgName UTF8String];
@@ -139,22 +136,19 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
             }
         }
     }
-
     pnglist += secondaryList;
 	hmap<hstr, gvec2> imageProps;
-
-	for (int i = 0; i < 2; i++)
+	for_iter (i, 0, 2)
 	{
 		foreach (hstr, it, pnglist)
 		{
-			s = *it;
+			s = (*it);
 			UIImage *img = [UIImage imageWithContentsOfFile:[NSString stringWithUTF8String:s.cStr()]];
 			if (s.contains("/"))
 			{
 				s = s.rsplit("/", 1)[1].replaced(".png", "");
 			}
 			imageProps[s] = gvec2(img.size.width, img.size.height);
-			
 			// Has image same scale and dimensions as our current device's screen?
 			if (img.scale == screenScale && (CGSizeEqualToSize(img.size, screenSize)))
 			{
@@ -167,12 +161,8 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 		{
 			break;
 		}
-		else
-		{
-			screenSize = rotatedScreenSize; // just in case, do another pass
-		}
+		screenSize = rotatedScreenSize; // just in case, do another pass
 	}
-	
     if (defaultPngName == "")
     {
 		// assuming all the xcassets files are correct, this can happen on scaled screens on iphone6 and 6+
@@ -180,9 +170,11 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 		hlog::write(april::logTag, "Failed to find exact launch image for device, trying search by nearest aspect ratio");
 		screenSize = originalScreenSize;
 		gvec2 size;
-		float aspect, diff, bestFit, screenDiagonal;
-		
-		for (int i = 0; i < 2; i++)
+		float aspect = 0.0f;
+		float diff = 0.0f;
+		float bestFit = 0.0f;
+		float screenDiagonal = 0.0f;
+		for_iter (i, 0, 2)
 		{
 			bestFit = 10000.0f;
 			aspect = screenSize.width / screenSize.height;
@@ -191,7 +183,6 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 			{
 				s = it->first;
 				size = it->second;
-				
 				if (habs(size.x / size.y - aspect) < 0.001f)
 				{
 					diff = habs(screenDiagonal - size.squaredLength());
@@ -206,12 +197,8 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 			{
 				break;
 			}
-			else
-			{
-				screenSize = rotatedScreenSize; // just in case, do another pass
-			}
+			screenSize = rotatedScreenSize; // just in case, do another pass
 		}
-		
 		if (defaultPngName != "")
 		{
 			hlog::writef(april::logTag, "Found aproximate launch image: %s", defaultPngName.cStr());
@@ -222,28 +209,26 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 			return @"";
 		}
     }
-
 	nsDefaultPngName = [NSString stringWithUTF8String:defaultPngName.cStr()];
 	[userDefaults setObject:nsDefaultPngName forKey:@"april_LaunchImage"];
 	[userDefaults synchronize];
 	return nsDefaultPngName;
 }
-- (UIInterfaceOrientation)getDeviceOrientation
+
+-(UIInterfaceOrientation)getDeviceOrientation
 {
 	return [[UIApplication sharedApplication] statusBarOrientation];
 }
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
+-(void)loadView
 {
 	CGRect frame = getScreenBounds();
 	glview = [[[EAGLView alloc] initWithFrame:frame] autorelease];
 	self.view = glview;
-
 	UIUserInterfaceIdiom idiom = UIUserInterfaceIdiomPhone;
 	CGSize size = frame.size;
 	idiom = [UIDevice currentDevice].userInterfaceIdiom;
-	
 	// search for default launch image and make a view controller out of it to use while loading
     NSString* defaultPngName = [self getLaunchImageName:idiom interfaceOrientation:[self getDeviceOrientation] windowSize:size];
 	UIImage* image;
@@ -253,10 +238,8 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 		CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
 		UIGraphicsBeginImageContext(rect.size);
 		CGContextRef context = UIGraphicsGetCurrentContext();
-		
 		CGContextSetFillColorWithColor(context, [[UIColor blackColor] CGColor]);
 		CGContextFillRect(context, rect);
-		
 		image = UIGraphicsGetImageFromCurrentImageContext();
 		UIGraphicsEndImageContext();
 	}
@@ -268,26 +251,17 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 			image = [UIImage imageWithCGImage:image.CGImage scale:1 orientation:UIImageOrientationRight];
 		}
 	}
-	
 	mImageView = [[UIImageView alloc] initWithImage:image];
-	if (isiOS8OrNewer() || UIInterfaceOrientationIsPortrait([self getDeviceOrientation]))
-	{
-		mImageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-	}
-	else
-	{
-		mImageView.frame = CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width);
-	}
+	mImageView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
 	[self.view addSubview:mImageView];
 	mImageView.layer.zPosition = 1;
 }
 
-- (void)animationWillStart:(NSString*)animationID context:(void*)context
+-(void)animationWillStart:(NSString*)animationID context:(void*)context
 {
-	
 }
 
-- (void) animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
+-(void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
 {
 	if ([animationID isEqual: @"FadeOut"])
 	{
@@ -298,24 +272,22 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 	}
 }
 
-
-- (void)removeImageView:(bool)fast
+-(void)removeImageView:(bool)fast
 {
 	if (mImageView != nil)
 	{
 		hlog::write(april::logTag, "Performing fadeout of loading screen's UIImageView");
-
 		[UIView beginAnimations:@"FadeOut" context:nil];
 		[UIView setAnimationDuration:(fast ? 0.25f : 1)];
 		mImageView.alpha = 0;
-		[UIView  setAnimationDelegate:self];
+		[UIView setAnimationDelegate:self];
 		[UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
 		[UIView commitAnimations];
 	}
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad
+-(void)viewDidLoad
 {
 	[super viewDidLoad];
 }
@@ -338,20 +310,19 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
     return (gSupportedOrientations & (1 << interfaceOrientation)) != 0;
 }
 
--(NSUInteger) supportedInterfaceOrientations // used in iOS6+ only
+-(NSUInteger)supportedInterfaceOrientations // used in iOS6+ only
 {
     return gSupportedOrientations;
 }
 
-- (void)didReceiveMemoryWarning
+-(void)didReceiveMemoryWarning
 {
 	// Releases the view if it doesn't have a superview.
 	[super didReceiveMemoryWarning];
-	
 	// Release any cached data, images, etc that aren't in use.
 }
 
-- (void)dealloc
+-(void)dealloc
 {
 	[super dealloc];
 }

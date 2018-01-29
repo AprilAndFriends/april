@@ -90,7 +90,7 @@ class MouseDelegate : public april::MouseDelegate
 
 } mouseDelegate;
 
-void april_init(const harray<hstr>& args)
+void __aprilApplicationInit()
 {
 	srand((unsigned int)htime());
 	april::init(new CustomRenderSystem(), new CustomWindow());
@@ -105,7 +105,7 @@ void april_init(const harray<hstr>& args)
 	textureRect.y = -textureRect.h / 2;
 }
 
-void april_destroy()
+void __aprilApplicationDestroy()
 {
 	april::rendersys->destroyTexture(texture);
 	texture = NULL;

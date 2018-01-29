@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -81,9 +81,9 @@ namespace april
 		this->destroy();
 	}
 	
-	bool SDL_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	bool SDL_Window::_systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
-		if (!Window::create(w, h, fullscreen, title, options))
+		if (!Window::_systemCreate(w, h, fullscreen, title, options))
 		{
 			return false;
 		}
@@ -210,7 +210,7 @@ namespace april
 		SDL_SetWindowFullscreen(this->window, fullscreen ? 1 : 0);
 	}
 	
-	bool SDL_Window::updateOneFrame()
+	bool SDL_Window::update(timeDelta)
 	{
 		// check if we should quit...
 		if (gAprilShouldInvokeQuitCallback != 0)
@@ -221,10 +221,25 @@ namespace april
 			gAprilShouldInvokeQuitCallback = 0;
 		}
 		// first process sdl events
-		this->checkEvents();
-		return Window::updateOneFrame();
+		this->_processEvents();
+		return Window::update(timeDelta);
 	}
 
+	void SDL_Window::_presentFrame(bool systemEnabled)
+	{
+		Window::_presentFrame(systemEnabled);
+#if defined(_WIN32) && defined(_OPENGL)
+		harray<hstr> renderSystems;
+		renderSystems += april::RenderSystemType::OpenGL1.getName();
+		renderSystems += april::RenderSystemType::OpenGLES1.getName();
+		renderSystems += april::RenderSystemType::OpenGLES2.getName();
+		if (renderSystems.has(april::rendersys->getName()))
+		{
+			SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());
+		}
+#endif
+	}
+	
 	void SDL_Window::checkEvents()
 	{
 		SDL_Event sdlEvent;
@@ -241,10 +256,10 @@ namespace april
 					this->_setRenderSystemResolution(sdlEvent.window.data1, sdlEvent.window.data2, this->fullscreen);
 					break;
 				case SDL_WINDOWEVENT_FOCUS_GAINED:
-					this->handleFocusChangeEvent(true);
+					this->queueFocusChangeEvent(true);
 					break;
 				case SDL_WINDOWEVENT_FOCUS_LOST:
-					this->handleFocusChangeEvent(false);
+					this->queueFocusChangeEvent(false);
 					break;
 				case SDL_WINDOWEVENT_ENTER:
 					if (this->isCursorVisible() && !this->cursorVisible)
@@ -261,7 +276,7 @@ namespace april
 				}
 				break;
 			case SDL_QUIT:
-				if (this->handleQuitRequestEvent(true))
+				if (this->handleQuitRequest(true))
 				{
 					this->running = false;
 				}
@@ -273,7 +288,7 @@ namespace april
 				// on mac os, we need to handle command+q
 				if (SDL_GetModState() & KMOD_META && (tolower(sdlEvent.key.keysym.unicode) == 'q' || sdlEvent.key.keysym.sym == SDLK_q))
 				{
-					if (this->handleQuitRequestEvent(true))
+					if (this->handleQuitRequest(true))
 					{
 						this->running = false;
 					}
@@ -312,20 +327,6 @@ namespace april
 		// TODO - is this still needed in SDL 2?
 #if TARGET_OS_MAC && !TARGET_OS_IPHONE
 		platform_cursorVisibilityUpdate();
-#endif
-	}
-	
-	void SDL_Window::presentFrame()
-	{
-#if defined(_WIN32) && defined(_OPENGL)
-		harray<hstr> renderSystems;
-		renderSystems += april::RenderSystemType::OpenGL1.getName();
-		renderSystems += april::RenderSystemType::OpenGLES1.getName();
-		renderSystems += april::RenderSystemType::OpenGLES2.getName();
-		if (renderSystems.has(april::rendersys->getName()))
-		{
-			SwapBuffers(((OpenGL_RenderSystem*)april::rendersys)->getHDC());
-		}
 #endif
 	}
 	
@@ -508,22 +509,5 @@ namespace april
 		}
 	}
 	
-	float SDL_Window::_calcTimeSinceLastFrame()
-	{
-		static unsigned int x = SDL_GetTicks();
-		float timeDelta = (SDL_GetTicks() - x) * 0.001f;
-		x = SDL_GetTicks();
-		if (timeDelta > 0.5f)
-		{
-			timeDelta = 0.05f; // prevent jumps. from eg, waiting on device reset or super low framerate
-		}
-		if (!this->focused)
-		{
-			timeDelta = 0.0f;
-		}
-		return timeDelta;
-	}
-		
 }
-
 #endif

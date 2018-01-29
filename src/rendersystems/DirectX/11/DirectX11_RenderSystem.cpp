@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -748,9 +748,9 @@ namespace april
 		this->deviceState_constantBufferChanged = true;
 	}
 
-	void DirectX11_RenderSystem::_updateDeviceState(bool forceUpdate)
+	void DirectX11_RenderSystem::_updateDeviceState(RenderState* state, bool forceUpdate)
 	{
-		DirectX_RenderSystem::_updateDeviceState(forceUpdate);
+		DirectX_RenderSystem::_updateDeviceState(state, forceUpdate);
 		this->_updateShader(forceUpdate);
 	}
 
@@ -790,17 +790,20 @@ namespace april
 			}
 			this->deviceState_shader = shader;
 		}
-		if (inputLayoutChanged)
+		if (this->deviceState_shader != NULL)
 		{
-			this->d3dDeviceContext->IASetInputLayout(shader->inputLayout.Get());
-		}
-		if (vertexShaderChanged)
-		{
-			this->d3dDeviceContext->VSSetShader(shader->vertexShader->dx11Shader.Get(), NULL, 0);
-		}
-		if (pixelShaderChanged)
-		{
-			this->d3dDeviceContext->PSSetShader(shader->pixelShader->dx11Shader.Get(), NULL, 0);
+			if (inputLayoutChanged)
+			{
+				this->d3dDeviceContext->IASetInputLayout(this->deviceState_shader->inputLayout.Get());
+			}
+			if (vertexShaderChanged)
+			{
+				this->d3dDeviceContext->VSSetShader(this->deviceState_shader->vertexShader->dx11Shader.Get(), NULL, 0);
+			}
+			if (pixelShaderChanged)
+			{
+				this->d3dDeviceContext->PSSetShader(this->deviceState_shader->pixelShader->dx11Shader.Get(), NULL, 0);
+			}
 		}
 		// change other data
 		if (this->deviceState_constantBufferChanged)
@@ -922,11 +925,15 @@ namespace april
 		return NULL;
 	}
 	
-	void DirectX11_RenderSystem::presentFrame()
+	void DirectX11_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
-		this->swapChain->Present(1, 0);
-		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
-		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+		RenderSystem::_devicePresentFrame(systemEnabled);
+		if (systemEnabled)
+		{
+			this->swapChain->Present(1, 0);
+			// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
+			this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+		}
 	}
 
 	void DirectX11_RenderSystem::updateOrientation()

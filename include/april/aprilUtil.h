@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -21,6 +21,7 @@
 
 #include "aprilExport.h"
 
+/// @brief Used internally for vector/rect/etc string representations.
 #define APRIL_HSTR_SEPARATOR ','
 
 namespace april

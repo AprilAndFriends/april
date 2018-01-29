@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -31,7 +31,7 @@ namespace april
 	void OpenGLES1_RenderSystem::_deviceSuspend()
 	{
 		OpenGL_RenderSystem::_deviceSuspend();
-		this->unloadTextures();
+		this->_deviceUnloadTextures();
 	}
 
 	void OpenGLES1_RenderSystem::_deviceSetupCaps()

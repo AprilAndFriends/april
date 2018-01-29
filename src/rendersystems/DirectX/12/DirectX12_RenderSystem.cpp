@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -1062,35 +1062,39 @@ namespace april
 		return NULL;
 	}
 	
-	void DirectX12_RenderSystem::presentFrame()
+	void DirectX12_RenderSystem_devicePresentFrame(bool systemEnabled)
 	{
-		D3D12_RESOURCE_BARRIER presentResourceBarrier = {};
-		presentResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		presentResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		presentResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
-		presentResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		presentResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-		presentResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-		this->commandList->ResourceBarrier(1, &presentResourceBarrier);
-		this->executeCurrentCommands();
-		HRESULT hr = this->swapChain->Present(1, 0);
-		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
+		RenderSystem::_devicePresentFrame(systemEnabled);
+		if (systemEnabled)
 		{
-			//m_deviceRemoved = true;
-			return;
+			D3D12_RESOURCE_BARRIER presentResourceBarrier = {};
+			presentResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+			presentResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+			presentResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
+			presentResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+			presentResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+			presentResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+			this->commandList->ResourceBarrier(1, &presentResourceBarrier);
+			this->executeCurrentCommands();
+			HRESULT hr = this->swapChain->Present(1, 0);
+			if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
+			{
+				//m_deviceRemoved = true;
+				return;
+			}
+			_TRY_UNSAFE(hr, "Unable to present swap chain!");
+			this->deviceState_rootSignature = (!this->state->useTexture ? this->rootSignatures[0] : this->rootSignatures[1]);
+			this->waitForCommands();
+			this->prepareNewCommands();
+			D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
+			renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+			renderTargetResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+			renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
+			renderTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+			renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+			renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+			this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
 		}
-		_TRY_UNSAFE(hr, "Unable to present swap chain!");
-		this->deviceState_rootSignature = (!this->state->useTexture ? this->rootSignatures[0] : this->rootSignatures[1]);
-		this->waitForCommands();
-		this->prepareNewCommands();
-		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
-		renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		renderTargetResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
-		renderTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-		renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-		this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
 	}
 
 	void DirectX12_RenderSystem::updateDeviceReset()

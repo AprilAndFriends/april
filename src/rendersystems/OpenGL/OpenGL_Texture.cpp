@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -17,6 +17,7 @@
 #include "Image.h"
 #include "OpenGL_RenderSystem.h"
 #include "OpenGL_Texture.h"
+#include "RenderState.h"
 
 #define APRIL_OGL_RENDERSYS ((OpenGL_RenderSystem*)april::rendersys)
 

@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -21,6 +21,7 @@
 #include <hltypes/hstring.h>
 #include <hltypes/hversion.h>
 
+#include "Application.h"
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
@@ -175,7 +176,7 @@ namespace april
 {
 	hstr logTag = "april";
 
-	static hversion version(4, 5, 0);
+	static hversion version(5, 0, 0);
 
 	static harray<hstr> extensions;
 	static int maxAsyncTextureUploadsPerFrame = 0;
@@ -216,7 +217,6 @@ namespace april
 		hlog::writef(logTag, "Platform: %s %s, %d bit", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
 		// symbolic colors
 		resetSymbolicColors();
-        
 		// extensions
 		if (extensions.size() == 0)
 		{
@@ -246,6 +246,7 @@ namespace april
 		hstr renderSystemName = (april::rendersys != NULL ? april::rendersys->getName() : "NULL");
 		hstr windowName = (april::window != NULL ? april::window->getName() : "NULL");
 		hlog::writef(logTag, "Using: %s, %s", renderSystemName.cStr(), windowName.cStr());
+		april::rendersys->waitForAsyncCommands(true);
 	}
 
 	void _createRenderSystem(RenderSystemType renderSystemType)
@@ -422,6 +423,7 @@ namespace april
 	void createRenderSystem(RenderSystem::Options options)
 	{
 		april::rendersys->create(options);
+		april::rendersys->waitForAsyncCommands(true);
 	}
 	
 	void createWindow(int w, int h, bool fullscreen, chstr title, Window::Options options)
@@ -432,8 +434,9 @@ namespace april
 #ifdef _WINUWP
 		april::rendersys->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
 #endif
-		april::rendersys->getCaps(); // calling getCaps() is required here so it's initialized on certain platforms
-		april::rendersys->clear(); // initial clear backbuffer
+		april::rendersys->getCaps(); // calling getCaps() here is required here so it's initialized on certain platforms
+		april::rendersys->clear(); // make sure the backbuffer is clear after initialization
+		april::rendersys->waitForAsyncCommands(true);
 	}
 
 	void destroy()
@@ -441,6 +444,11 @@ namespace april
 		if (april::rendersys != NULL || april::window != NULL)
 		{
 			hlog::write(logTag, "Destroying APRIL.");
+		}
+		april::application->finish(); // make sure the application finishes up
+		if (april::rendersys != NULL)
+		{
+			april::rendersys->waitForAsyncCommands(true); // first make sure everything has been rendered
 		}
 		if (april::window != NULL)
 		{
@@ -451,6 +459,11 @@ namespace april
 			april::rendersys->destroy();
 			april::window->destroy();
 		}
+		if (april::rendersys != NULL)
+		{
+			april::rendersys->waitForAsyncCommands(true); // process the last remaining commands
+		}
+		april::application->finalize();
 		if (april::window != NULL)
 		{
 			delete april::window;

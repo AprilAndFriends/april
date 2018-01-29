@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -52,7 +52,7 @@ namespace april
 		return false;
 	}
 	
-	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(const MessageBoxButton&), bool modal)
+	void _showMessageBox_platform(const MessageBoxData& data)
 	{
 		hlog::warn(logTag, "Cannot use showMessageBox() on this platform.");
 	}

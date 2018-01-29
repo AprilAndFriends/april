@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -75,7 +75,7 @@ namespace april
 			if (!_preventRecursion)
 			{
 				_preventRecursion = true;
-				april::window->handleLowMemoryWarningEvent();
+				april::window->handleLowMemoryWarning();
 				_preventRecursion = false;
 				hr = D3D_DEVICE->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &textureDesc,
 					D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&this->d3dTexture));

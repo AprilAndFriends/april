@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -18,6 +18,6 @@ void createLoadingOverlay(NSWindow* parent);
 void updateLoadingOverlay(float timeDelta);
 void reattachLoadingOverlay();
 
-extern NSWindow* mOverlayWindow;
+extern NSWindow* gOverlayWindow;
 
 #endif

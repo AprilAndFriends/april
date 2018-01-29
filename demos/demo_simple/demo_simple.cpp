@@ -68,12 +68,11 @@ class UpdateDelegate : public april::UpdateDelegate
 {
 	bool onUpdate(float timeDelta)
 	{
-		harray<int> a;
-		a.randomize();
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(drawRect);
 		/// some general texture testing
 		april::rendersys->drawFilledRect(drawRect, april::Color(96, 96, 96));
+		// TODOx - re-enable and implement
 		manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
 		april::rendersys->setTexture(manualTexture);
 		april::rendersys->render(april::RenderOperation::TriangleStrip, dv, 4);
@@ -148,6 +147,7 @@ static UpdateDelegate* updateDelegate = NULL;
 static SystemDelegate* systemDelegate = NULL;
 static MouseDelegate* mouseDelegate = NULL;
 
+// TODOx - should be moved into april
 #ifdef __APPLE__
 void ObjCUtil_setCWD(const char* override_default_dir)
 {
@@ -170,7 +170,7 @@ void ObjCUtil_setCWD(const char* override_default_dir)
 }
 #endif
 
-void april_init(const harray<hstr>& args)
+void __aprilApplicationInit()
 {
 #ifdef __APPLE__
 	// On MacOSX, the current working directory is not set by
@@ -225,7 +225,7 @@ void april_init(const harray<hstr>& args)
 	textureRect.x = -textureRect.w * 0.5f;
 	textureRect.y = -textureRect.h * 0.5f;
 	// demonstrating some of the image manipulation methods
-	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::Format::RGBA, april::Texture::Type::Managed);
+	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::Format::RGBA);
 	manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 0, 0, texture);
 	manualTexture->invert(0, 0, 256, 128);
 	manualTexture->saturate(0, 128, 128, 128, 0.0f);
@@ -234,7 +234,7 @@ void april_init(const harray<hstr>& args)
 	manualTexture->blitStretch(texture->getWidth() / 2, 0, texture->getWidth() / 2, texture->getHeight(), 64, 128, 700, 200, texture, 208);
 }
 
-void april_destroy()
+void __aprilApplicationDestroy()
 {
 	april::window->setCursor(NULL);
 	april::window->destroyCursor(cursor);

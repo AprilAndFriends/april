@@ -1,14 +1,13 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#include <stdlib.h>
-
 #ifdef _ANDROIDJNI_WINDOW
+#include <stdlib.h>
 #include <jni.h>
 
 #include <gtypes/Vector2.h>
@@ -43,17 +42,13 @@ namespace april
 		this->destroy();
 	}
 
-	bool AndroidJNI_Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	void AndroidJNI_Window::_systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options)
 	{
-		if (!Window::create(w, h, true, title, options))
-		{
-			return false;
-		}
-		this->width = w;
-		this->height = h;
+		Window::_systemCreate(width, height, true, title, options);
+		this->width = width;
+		this->height = height;
 		this->inputMode = InputMode::Touch;
 		this->forcedFocus = false;
-		return true;
 	}
 	
 	void* AndroidJNI_Window::getBackendId() const
@@ -61,20 +56,7 @@ namespace april
 		return javaVM;
 	}
 
-	void AndroidJNI_Window::enterMainLoop()
-	{
-		hlog::error(logTag, "Using enterMainLoop() on Android JNI is not valid!");
-		exit(-1);
-	}
-	
-	void AndroidJNI_Window::presentFrame()
-	{
-		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodSwapBuffers, "swapBuffers", _JARGS(_JVOID, ));
-		env->CallStaticVoidMethod(classNativeInterface, methodSwapBuffers);
-		env->PopLocalFrame(NULL);
-	}
-
-	bool AndroidJNI_Window::updateOneFrame()
+	bool AndroidJNI_Window::update(float timeDelta)
 	{
 		APRIL_GET_NATIVE_INTERFACE_CLASS(classNativeInterface);
 		jmethodID methodSetSensorsEnabled = env->GetStaticMethodID(classNativeInterface, "setSensorsEnabled", _JARGS(_JVOID, _JBOOL _JBOOL _JBOOL _JBOOL _JBOOL));
@@ -96,22 +78,33 @@ namespace april
 			hlog::error(APRIL_JNI_LOG_TAG, "Could not find method, check definition: setSensorsEnabled");
 		}
 		env->PopLocalFrame(NULL);
-		return Window::updateOneFrame();
+		return Window::update(timeDelta);
 	}
 
-	void AndroidJNI_Window::queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index)
+	void AndroidJNI_Window::_presentFrame(bool systemEnabled)
 	{
-		if (type == MouseInputEvent::Type::Down || type == MouseInputEvent::Type::Up)
+		Window::_presentFrame(systemEnabled);
+		if (systemEnabled)
 		{
-			this->setInputMode(InputMode::Touch);
+			APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodSwapBuffers, "swapBuffers", _JARGS(_JVOID, ));
+			env->CallStaticVoidMethod(classNativeInterface, methodSwapBuffers);
+			env->PopLocalFrame(NULL);
 		}
-		Window::queueTouchEvent(type, position, index);
 	}
 
-	void AndroidJNI_Window::queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
+	void AndroidJNI_Window::queueTouchInput(const MouseEvent::Type& type, cgvec2 position, int index)
 	{
-		this->setInputMode(InputMode::Controller);
-		Window::queueControllerEvent(type, controllerIndex, buttonCode, axisValue);
+		if (type == MouseEvent::Type::Down || type == MouseEvent::Type::Up)
+		{
+			this->queueInputModeChange(InputMode::Touch);
+		}
+		Window::queueTouchInput(type, position, index);
+	}
+
+	void AndroidJNI_Window::queueControllerInput(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue)
+	{
+		this->queueInputModeChange(InputMode::Controller);
+		Window::queueControllerInput(type, controllerIndex, buttonCode, axisValue);
 	}
 
 	void AndroidJNI_Window::showVirtualKeyboard()
@@ -128,10 +121,10 @@ namespace april
 		env->PopLocalFrame(NULL);
 	}
 
-	void AndroidJNI_Window::handleFocusChangeEvent(bool focused)
+	void AndroidJNI_Window::handleFocusChange(bool focused)
 	{
 		this->forcedFocus = false;
-		Window::handleFocusChangeEvent(focused);
+		Window::handleFocusChange(focused);
 	}
 
 	void AndroidJNI_Window::handleActivityChange(bool active)
@@ -141,14 +134,14 @@ namespace april
 			if (this->focused)
 			{
 				this->forcedFocus = true;
-				Window::handleFocusChangeEvent(false);
+				Window::handleFocusChange(false);
 			}
 		}
 		else if (this->forcedFocus)
 		{
 			// only return focus if previously lost focus through acitvity state change
 			this->forcedFocus = false;
-			Window::handleFocusChangeEvent(true);
+			Window::handleFocusChange(true);
 		}
 	}
 

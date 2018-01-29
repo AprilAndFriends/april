@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+		package="com.april.demoHelloWorld"
+		android:versionCode="5000"
+		android:versionName="5.0.0">
+		
+	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="26"/>
+	<uses-feature android:glEsVersion="0x00020000"/>
+	<uses-feature android:name="android.hardware.screen.landscape"/>
+	
+	<application android:label="Demo Hello World"
+			android:icon="@drawable/icon"
+			android:theme="@style/AprilSplashScreen">
+		<activity android:name=".DemoHelloWorld"
+				android:label="Demo Hello World"
+				android:screenOrientation="sensorLandscape"
+				android:launchMode="singleTask">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
+	</application>
+	
+</manifest> 

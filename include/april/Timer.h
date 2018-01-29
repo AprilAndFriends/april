@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -38,13 +38,13 @@ namespace april
 		/// @brief Calculates the difference since the last measurement.
 		/// @param[in] update Whether to update the measurement before retrieving.
 		/// @return Time since the last measurement.
-		float diff(bool update = true);
+		double diff(bool update = true);
 		/// @brief Updates the timer manually.
 		void update();
 		
 	protected:
 		/// @brief Current difference.
-		float difference;
+		double difference;
 		/// @brief Previous time.
 		double td1;
 		/// @brief Current time.

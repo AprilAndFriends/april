@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -23,6 +23,7 @@
 #include <Psapi.h> // has to be here after hplatform.h that includes windows.h
 #pragma comment(lib, "psapi.lib")
 
+#include "Application.h"
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
@@ -134,86 +135,65 @@ namespace april
 		return true;
 	}
 
-	static void (*_currentMessageBoxCallback)(const MessageBoxButton&) = NULL;
-
-	void _showMessageBoxResult(int button)
+	void _showMessageBox_platform(const MessageBoxData& data)
 	{
-		switch (button)
-		{
-		case IDOK:
-			if (_currentMessageBoxCallback != NULL)
-			{
-				(*_currentMessageBoxCallback)(MessageBoxButton::Ok);
-			}
-			break;
-		case IDYES:
-			if (_currentMessageBoxCallback != NULL)
-			{
-				(*_currentMessageBoxCallback)(MessageBoxButton::Yes);
-			}
-			break;
-		case IDNO:
-			if (_currentMessageBoxCallback != NULL)
-			{
-				(*_currentMessageBoxCallback)(MessageBoxButton::No);
-			}
-			break;
-		case IDCANCEL:
-			if (_currentMessageBoxCallback != NULL)
-			{
-				(*_currentMessageBoxCallback)(MessageBoxButton::Cancel);
-			}
-			break;
-		default:
-			hlog::error(logTag, "Unknown message box callback: " + hstr(button));
-			break;
-		}
-	}
-
-	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(const MessageBoxButton&), bool modal)
-	{
-		_currentMessageBoxCallback = callback;
 		int type = 0;
-		if (buttons == MessageBoxButton::OkCancel)
+		if (data.buttons == MessageBoxButton::OkCancel)
 		{
 			type |= MB_OKCANCEL;
 		}
-		else if (buttons == MessageBoxButton::YesNoCancel)
+		else if (data.buttons == MessageBoxButton::YesNoCancel)
 		{
 			type |= MB_YESNOCANCEL;
 		}
-		else if (buttons == MessageBoxButton::Ok)
+		else if (data.buttons == MessageBoxButton::Ok)
 		{
 			type |= MB_OK;
 		}
-		else if (buttons == MessageBoxButton::YesNo)
+		else if (data.buttons == MessageBoxButton::YesNo)
 		{
 			type |= MB_YESNO;
 		}
-		if (style == MessageBoxStyle::Info)
+		if (data.style == MessageBoxStyle::Info)
 		{
 			type |= MB_ICONINFORMATION;
 		}
-		else if (style == MessageBoxStyle::Warning)
+		else if (data.style == MessageBoxStyle::Warning)
 		{
 			type |= MB_ICONWARNING;
 		}
-		else if (style == MessageBoxStyle::Critical)
+		else if (data.style == MessageBoxStyle::Critical)
 		{
 			type |= MB_ICONSTOP;
 		}
-		else if (style == MessageBoxStyle::Question)
+		else if (data.style == MessageBoxStyle::Question)
 		{
 			type |= MB_ICONQUESTION;
 		}
 		HWND hwnd = 0;
-		if (april::window != NULL && modal)
+		if (april::window != NULL && data.modal)
 		{
 			hwnd = (HWND)april::window->getBackendId();
 		}
-		int button = MessageBoxW(hwnd, text.wStr().c_str(), title.wStr().c_str(), type);
-		_showMessageBoxResult(button);
+		int button = MessageBoxW(hwnd, data.text.wStr().c_str(), data.title.wStr().c_str(), type);
+		switch (button)
+		{
+		case IDOK:
+			april::Application::messageBoxCallback(MessageBoxButton::Ok);
+			break;
+		case IDYES:
+			april::Application::messageBoxCallback(MessageBoxButton::Yes);
+			break;
+		case IDNO:
+			april::Application::messageBoxCallback(MessageBoxButton::No);
+			break;
+		case IDCANCEL:
+			april::Application::messageBoxCallback(MessageBoxButton::Cancel);
+			break;
+		default:
+			april::Application::messageBoxCallback(MessageBoxButton::Ok);
+			break;
+		}
 	}
 
 }

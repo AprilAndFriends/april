@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 		return 0;
 	}
 #endif
-	int result = __april_main(april_init, april_destroy, argc, argv);
+	int result = april::__mainStandard(&__aprilApplicationInit, &__aprilApplicationDestroy, argc, argv);
 #ifdef __SINGLE_INSTANCE
 	april::__unlockSingleInstanceMutex();
 #endif

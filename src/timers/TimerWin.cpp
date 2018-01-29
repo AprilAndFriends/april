@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -20,8 +20,7 @@ namespace april
 {
 	Timer::Timer()
 	{
-		this->difference = 0.0f;
-		this->td1 = 0.0;
+		this->difference = 0.0;
 		this->td2 = 0.0;
 		this->frequency = 0LL;
 		this->resolution = 0;
@@ -32,7 +31,7 @@ namespace april
 		if (!QueryPerformanceFrequency((LARGE_INTEGER*)&this->frequency))
 		{
 			hlog::warn(logTag, "Performance timer not available, multimedia timer will be used instead!");
-			this->start = (int64_t)htickCount();
+			this->start = htickCount();
 			this->resolution = 0.001;
 			this->frequency = 1000LL;
 		}
@@ -42,7 +41,9 @@ namespace april
 			this->performanceTimer = true;
 			this->resolution = 1.0 / this->frequency;
 			this->performanceTimerElapsed = this->performanceTimerStart;
+			this->start = this->performanceTimerStart;
 		}
+		this->td1 = (double)this->start;
 	}
 	
 	Timer::~Timer()
@@ -55,12 +56,12 @@ namespace april
 		{
 			int64_t time;
 			QueryPerformanceCounter((LARGE_INTEGER*)&time);
-			return ((double)(time - this->performanceTimerStart) * this->resolution * 1000.0);
+			return ((double)(time - this->performanceTimerStart));
 		}
-		return ((double)((int64_t)htickCount() - this->start) * this->resolution * 1000.0);
+		return ((double)(htickCount() - this->start));
 	}
 	
-	float Timer::diff(bool update)
+	double Timer::diff(bool update)
 	{
 		if (update)
 		{
@@ -72,11 +73,7 @@ namespace april
 	void Timer::update()
 	{
 		this->td2 = this->getTime();
-		this->difference = (float)((this->td2 - this->td1) * 0.001);
-		if (this->difference < 0)
-		{
-			this->difference = 0; // in case user has moved the clock back, don't allow negative increments
-		}
+		this->difference = hmax((this->td2 - this->td1) * this->resolution, 0.0); // limiting to 0 in case user has moved the clock back, don't allow negative increments
 		this->td1 = this->td2;
 	}
 

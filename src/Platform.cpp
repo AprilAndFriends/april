@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -13,6 +13,7 @@
 #include <hltypes/hmap.h>
 #include <hltypes/hstring.h>
 
+#include "Application.h"
 #include "april.h"
 #include "main_base.h"
 #include "Platform.h"
@@ -20,13 +21,6 @@
 
 namespace april
 {
-	// DEPRECATED
-	void messageBox(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(const MessageBoxButton&), bool modal, bool terminateOnDisplay)
-	{
-		showMessageBox(title, text, buttons, style, customButtonTitles, callback, modal, terminateOnDisplay);
-	}
-
 	HL_ENUM_CLASS_DEFINE(MessageBoxButton,
 	(
 		HL_ENUM_DEFINE(MessageBoxButton, Ok);
@@ -68,19 +62,32 @@ namespace april
 		HL_ENUM_DEFINE(MessageBoxStyle, Question);
 	));
 
+	MessageBoxData::MessageBoxData(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles,
+		void (*callback)(const MessageBoxButton&), bool modal, bool applicationFinishAfterDisplay)
+	{
+		this->title = title;
+		this->text = text;
+		this->buttons = buttons;
+		this->style = style;
+		this->customButtonTitles = customButtonTitles;
+		this->callback = callback;
+		this->modal = modal;
+		this->applicationFinishAfterDisplay = applicationFinishAfterDisplay;
+	}
+
 	extern void _setupSystemInfo_platform(SystemInfo& info);
 	extern hstr _getPackageName_platform();
 	extern hstr _getUserDataPath_platform();
 	extern int64_t _getRamConsumption_platform();
 	extern bool _openUrl_platform(chstr url);
-	extern void _showMessageBox_platform(chstr, chstr, MessageBoxButton, MessageBoxStyle, hmap<MessageBoxButton, hstr>, void(*)(const MessageBoxButton&), bool);
+	extern void _showMessageBox_platform(const MessageBoxData&);
 
 	void (*_setupSystemInfo)(SystemInfo& info) = &_setupSystemInfo_platform;
 	hstr (*_getPackageName)() = &_getPackageName_platform;
 	hstr (*_getUserDataPath)() = &_getUserDataPath_platform;
 	int64_t (*_getRamConsumption)() = &_getRamConsumption_platform;
 	bool (*_openUrl)(chstr) = &_openUrl_platform;
-	void (*_showMessageBox)(chstr, chstr, MessageBoxButton, MessageBoxStyle, hmap<MessageBoxButton, hstr>, void (*)(const MessageBoxButton&), bool) = &_showMessageBox_platform;
+	void (*_showMessageBox)(const MessageBoxData&) = &_showMessageBox_platform;
 
 	SystemInfo info;
 	harray<hstr> args;
@@ -178,35 +185,22 @@ namespace april
 		return result;
 	}
 
-	void showMessageBox(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(const MessageBoxButton&), bool modal, bool terminateOnDisplay)
+	void showMessageBox(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style, hmap<MessageBoxButton, hstr> customButtonTitles,
+		void (*callback)(const MessageBoxButton&), bool modal, bool applicationFinishAfterDisplay)
 	{
-		if (terminateOnDisplay)
-		{
-			if (window != NULL)
-			{
-#if !defined(_IOS) && !defined(_COCOA_WINDOW)
-				window->terminateMainLoop();
-				window->destroy();
-#endif
-#ifdef _COCOA_WINDOW
-				window->destroy();
-#endif
-			}
-			modal = true;
-		}
 		if (_showMessageBox != NULL)
 		{
-			(*_showMessageBox)(title, text, buttons, style, customButtonTitles, callback, modal);
+			april::application->queueMessageBox(MessageBoxData(title, text, buttons, style, customButtonTitles, callback, modal, applicationFinishAfterDisplay));
 		}
 		else
 		{
 			hlog::warn(logTag, "Cannot use showMessageBox() on this platform.");
 		}
-		if (terminateOnDisplay)
-		{
-			exit(0);
-		}
+	}
+
+	void _processMessageBox(const MessageBoxData& data)
+	{
+		(*_showMessageBox)(data);
 	}
 
 	void _makeButtonLabels(hstr* ok, hstr* yes, hstr* no, hstr* cancel, MessageBoxButton buttons, hmap<MessageBoxButton, hstr> customButtonTitles)

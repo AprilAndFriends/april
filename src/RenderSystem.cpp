@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -22,6 +22,7 @@
 
 #include "april.h"
 #include "aprilUtil.h"
+#include "AsyncCommands.h"
 #include "Image.h"
 #include "RenderHelperLayered2D.h"
 #include "RenderSystem.h"
@@ -126,6 +127,10 @@ namespace april
 		this->pixelOffset = 0.0f;
 		this->state = new RenderState();
 		this->deviceState = new RenderState();
+		this->lastAsyncCommandQueue = NULL;
+		this->processingAsync = false;
+		this->frameAdvanceUpdates = 0;
+		this->frameDuplicates = 0;
 		this->statCurrentFrameRenderCalls = 0;
 		this->statLastFrameRenderCalls = 0;
 		this->statCurrentFrameTextureSwitches = 0;
@@ -161,97 +166,121 @@ namespace april
 	{
 		if (!this->created)
 		{
-			hlog::writef(logTag, "Creating rendersystem: '%s' (options: %s)", this->name.cStr(), options.toString().cStr());
-			this->options = options;
-			this->state->reset();
-			this->deviceState->reset();
-			this->statCurrentFrameRenderCalls = 0;
-			this->statLastFrameRenderCalls = 0;
-			this->statCurrentFrameTextureSwitches = 0;
-			this->statLastFrameTextureSwitches = 0;
-			this->statCurrentFrameVertexCount = 0;
-			this->statLastFrameVertexCount = 0;
-			this->statCurrentFrameTriangleCount = 0;
-			this->statLastFrameTriangleCount = 0;
-			this->statCurrentFrameLineCount = 0;
-			this->statLastFrameLineCount = 0;
-			// create the actual device
-			this->_deviceInit();
-			this->created = this->_deviceCreate(options);
-			if (!this->created)
-			{
-				this->destroy();
-			}
+			this->created = true;
+			this->_addAsyncCommand(new CreateCommand(options));
 		}
 		return this->created;
+	}
+
+	void RenderSystem::_systemCreate(Options options)
+	{
+		hlog::writef(logTag, "Creating rendersystem: '%s' (options: %s)", this->name.cStr(), options.toString().cStr());
+		hmutex::ScopeLock lock(&this->asyncMutex);
+		this->options = options;
+		this->state->reset();
+		this->deviceState->reset();
+		this->lastAsyncCommandQueue = new AsyncCommandQueue();
+		this->statCurrentFrameRenderCalls = 0;
+		this->statLastFrameRenderCalls = 0;
+		this->statCurrentFrameTextureSwitches = 0;
+		this->statLastFrameTextureSwitches = 0;
+		this->statCurrentFrameVertexCount = 0;
+		this->statLastFrameVertexCount = 0;
+		this->statCurrentFrameTriangleCount = 0;
+		this->statLastFrameTriangleCount = 0;
+		this->statCurrentFrameLineCount = 0;
+		this->statLastFrameLineCount = 0;
+		// create the actual device
+		this->_deviceInit();
+		if (!this->_deviceCreate(options))
+		{
+			this->created = false;
+			this->_systemDestroy();
+		}
 	}
 
 	bool RenderSystem::destroy()
 	{
 		if (this->created)
 		{
-			hlog::writef(logTag, "Destroying rendersystem '%s'.", this->name.cStr());
 			this->created = false;
-			this->renderMode = RenderMode::Normal;
-			if (this->renderHelper != NULL)
-			{
-				delete this->renderHelper;
-				this->renderHelper = NULL;
-			}
-			// first wait for queud textures to cancel
-			harray<Texture*> textures = this->getTextures();
-			if (this->hasAsyncTexturesQueued())
-			{
-				foreach (Texture*, it, textures)
-				{
-					if ((*it)->isAsyncLoadQueued())
-					{
-						(*it)->unload(); // to cancel all async loads
-					}
-				}
-				this->waitForAsyncTextures();
-			}
-			// creating a copy (again), because deleting a texture modifies this->textures
-			textures = this->getTextures();
-			foreach (Texture*, it, textures)
-			{
-				delete (*it);
-			}
-			this->state->reset();
-			this->deviceState->reset();
-			this->statCurrentFrameRenderCalls = 0;
-			this->statLastFrameRenderCalls = 0;
-			this->statCurrentFrameTextureSwitches = 0;
-			this->statLastFrameTextureSwitches = 0;
-			this->statCurrentFrameVertexCount = 0;
-			this->statLastFrameVertexCount = 0;
-			this->statCurrentFrameTriangleCount = 0;
-			this->statLastFrameTriangleCount = 0;
-			this->statCurrentFrameLineCount = 0;
-			this->statLastFrameLineCount = 0;
-			if (!this->_deviceDestroy())
-			{
-				return false;
-			}
-			this->_deviceInit();
+			this->_addAsyncCommand(new DestroyCommand());
 			return true;
 		}
 		return false;
 	}
+
+	void RenderSystem::_systemDestroy()
+	{
+		hlog::writef(logTag, "Destroying rendersystem '%s'.", this->name.cStr());
+		hmutex::ScopeLock lock(&this->asyncMutex);
+		this->renderMode = RenderMode::Normal;
+		if (this->renderHelper != NULL)
+		{
+			delete this->renderHelper;
+			this->renderHelper = NULL;
+		}
+		// deleting all textures safely
+		hmutex::ScopeLock lockTextures(&this->texturesMutex);
+		harray<Texture*> textures = this->textures;
+		this->textures.clear();
+		lockTextures.release();
+		this->waitForAsyncTextures();
+		foreach (Texture*, it, textures)
+		{
+			(*it)->_deviceUnloadTexture();
+			(*it)->_ensureReadyForUpload();; // waiting for all async stuff to finish
+			delete (*it);
+		}
+		// misc
+		this->state->reset();
+		this->deviceState->reset();
+		delete this->lastAsyncCommandQueue;
+		this->lastAsyncCommandQueue = NULL;
+		foreach (AsyncCommandQueue*, it, this->asyncCommandQueues)
+		{
+			delete (*it);
+		}
+		this->asyncCommandQueues.clear();
+		this->statCurrentFrameRenderCalls = 0;
+		this->statLastFrameRenderCalls = 0;
+		this->statCurrentFrameTextureSwitches = 0;
+		this->statLastFrameTextureSwitches = 0;
+		this->statCurrentFrameVertexCount = 0;
+		this->statLastFrameVertexCount = 0;
+		this->statCurrentFrameTriangleCount = 0;
+		this->statLastFrameTriangleCount = 0;
+		this->statCurrentFrameLineCount = 0;
+		this->statLastFrameLineCount = 0;
+		this->_deviceDestroy();
+		this->_deviceInit();
+	}
 	
 	void RenderSystem::assignWindow(Window* window)
 	{
+		this->_addAsyncCommand(new AssignWindowCommand(window));
+	}
+
+	void RenderSystem::_systemAssignWindow(Window* window)
+	{
+		hmutex::ScopeLock lock(&this->asyncMutex);
 		this->_deviceAssignWindow(window);
 		this->_deviceSetupCaps();
 		this->_deviceSetup();
 		grect viewport(0.0f, 0.0f, april::window->getSize());
 		this->setViewport(viewport);
+		this->setIdentityTransform();
 		this->setOrthoProjection(viewport);
-		this->_updateDeviceState(true);
-		this->clear();
+		this->_updateDeviceState(this->state, true);
+		this->_deviceClear(true);
 	}
 
 	void RenderSystem::reset()
+	{
+		this->_addAsyncCommand(new ResetCommand(*this->state, april::window->getSize()));
+	}
+
+	void RenderSystem::_deviceReset()
 	{
 		hlog::write(logTag, "Resetting rendersystem.");
 		this->statCurrentFrameRenderCalls = 0;
@@ -264,28 +293,16 @@ namespace april
 		this->statLastFrameTriangleCount = 0;
 		this->statCurrentFrameLineCount = 0;
 		this->statLastFrameLineCount = 0;
-		this->_deviceReset();
-		this->_deviceSetup();
-		if (this->deviceState->texture != NULL)
-		{
-			this->deviceState->texture->load();
-		}
-		this->setViewport(grect(0.0f, 0.0f, april::window->getSize()));
-		this->_updateDeviceState(true);
-	}
-
-	void RenderSystem::_deviceReset()
-	{
 	}
 
 	void RenderSystem::suspend()
 	{
-		hlog::write(logTag, "Suspending rendersystem.");
-		this->_deviceSuspend();
+		this->_addAsyncCommand(new SuspendCommand());
 	}
 
 	void RenderSystem::_deviceSuspend()
 	{
+		hlog::write(logTag, "Suspending rendersystem.");
 	}
 
 	void RenderSystem::_deviceSetupDisplayModes()
@@ -311,6 +328,12 @@ namespace april
 				this->renderHelper->create();
 			}
 		}
+	}
+
+	int RenderSystem::getAsyncQueuesCount()
+	{
+		hmutex::ScopeLock lock(&this->asyncMutex);
+		return hmax(this->asyncCommandQueues.size() - 1, 0);
 	}
 
 	harray<Texture*> RenderSystem::getTextures()
@@ -366,6 +389,19 @@ namespace april
 		return TextureAsync::isRunning();
 	}
 
+	bool RenderSystem::hasTexturesReadyForUpload() const
+	{
+		harray<Texture*> textures = april::rendersys->getTextures();
+		foreach (Texture*, it, textures)
+		{
+			if ((*it)->getLoadMode() != Texture::LoadMode::AsyncDeferredUpload && (*it)->isReadyForUpload())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	grect RenderSystem::getViewport() const
 	{
 		return this->state->viewport;
@@ -399,6 +435,71 @@ namespace april
 		this->state->projectionMatrixChanged = true;
 	}
 	
+	bool RenderSystem::update(float timeDelta)
+	{
+		bool result = false;
+		hmutex::ScopeLock lock(&this->asyncMutex);
+		if (this->frameDuplicates > 0 && this->lastAsyncCommandQueue != NULL && this->lastAsyncCommandQueue->getRepeatCount() > 0)
+		{
+			this->processingAsync = true;
+			lock.release();
+			foreach (AsyncCommand*, it, this->lastAsyncCommandQueue->commands)
+			{
+				(*it)->execute();
+			}
+			if (this->lastAsyncCommandQueue->commands.size() > 0)
+			{
+				AsyncCommand* command = this->lastAsyncCommandQueue->commands.last();
+				if (command->isFinalizer() && !command->isSystemCommand())
+				{
+					result = true;
+				}
+			}
+			lock.acquire(&this->asyncMutex);
+			this->processingAsync = false;
+			lock.release();
+			if (this->lastAsyncCommandQueue->getRepeatCount() < this->frameDuplicates)
+			{
+				this->lastAsyncCommandQueue->setupNextRepeat();
+			}
+			else
+			{
+				this->lastAsyncCommandQueue->clearRepeat();
+			}
+		}
+		else if (this->asyncCommandQueues.size() >= 2)
+		{
+			AsyncCommandQueue* queue = this->asyncCommandQueues.removeFirst();
+			this->processingAsync = true;
+			lock.release();
+			foreach (AsyncCommand*, it, queue->commands)
+			{
+				(*it)->execute();
+			}
+			if (queue->commands.size() > 0)
+			{
+				AsyncCommand* command = queue->commands.last();
+				if (command->isFinalizer() && !command->isSystemCommand())
+				{
+					result = true;
+				}
+			}
+			lock.acquire(&this->asyncMutex);
+			this->processingAsync = false;
+			lock.release();
+			if (this->frameDuplicates > 0 && this->lastAsyncCommandQueue != NULL)
+			{
+				this->lastAsyncCommandQueue->applyRepeatQueue(queue);
+			}
+			foreach (UnloadTextureCommand*, it, queue->unloadTextureCommands)
+			{
+				(*it)->execute();
+			}
+			delete queue;
+		}
+		return result;
+	}
+
 	Texture* RenderSystem::createTextureFromResource(chstr filename, Texture::Type type, Texture::LoadMode loadMode)
 	{
 		return this->_createTextureFromSource(true, filename, type, loadMode);
@@ -435,11 +536,7 @@ namespace april
 		bool result = (format == Image::Format::Invalid ? texture->_create(name, type, loadMode) : texture->_create(name, format, type, loadMode));
 		if (result)
 		{
-			if (loadMode == Texture::LoadMode::Immediate)
-			{
-				result = texture->load();
-			}
-			else if (loadMode == Texture::LoadMode::Async || loadMode == Texture::LoadMode::AsyncDeferredUpload)
+			if (loadMode == Texture::LoadMode::Async || loadMode == Texture::LoadMode::AsyncDeferredUpload)
 			{
 				result = texture->loadAsync();
 			}
@@ -454,10 +551,25 @@ namespace april
 		return texture;
 	}
 
-	Texture* RenderSystem::createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type)
+	Texture* RenderSystem::createTexture(int width, int height, unsigned char* data, Image::Format format)
 	{
-		Texture* texture = this->_deviceCreateTexture(true);
-		if (!texture->_create(w, h, data, format, type))
+		if (format != Image::Format::Invalid && !this->getCaps().textureFormats.has(format))
+		{
+#ifdef _WIN32
+			hstr address = hsprintf("<0x%p>", data);
+#else
+			hstr address = hsprintf("<%p>", data); // on Unix %p adds the 0x
+#endif
+			hlog::errorf(logTag, "Cannot create texture with data %s, the texture format '%s' is not supported!", address.cStr(), format.getName().cStr());
+			return NULL;
+		}
+		Texture* texture = this->_deviceCreateTexture(false);
+		bool result = texture->_create(width, height, data, format);
+		if (result)
+		{
+			result = texture->loadAsync();
+		}
+		if (!result)
 		{
 			delete texture;
 			return NULL;
@@ -467,10 +579,20 @@ namespace april
 		return texture;
 	}
 
-	Texture* RenderSystem::createTexture(int w, int h, Color color, Image::Format format, Texture::Type type)
+	Texture* RenderSystem::createTexture(int width, int height, Color color, Image::Format format)
 	{
-		Texture* texture = this->_deviceCreateTexture(true);
-		if (!texture->_create(w, h, color, format, type))
+		if (format != Image::Format::Invalid && !this->getCaps().textureFormats.has(format))
+		{
+			hlog::errorf(logTag, "Cannot create texture with color '%s', the texture format '%s' is not supported!", color.hex().cStr(), format.getName().cStr());
+			return NULL;
+		}
+		Texture* texture = this->_deviceCreateTexture(false);
+		bool result = texture->_create(width, height, color, format);
+		if (result)
+		{
+			result = texture->loadAsync();
+		}
+		if (!result)
 		{
 			delete texture;
 			return NULL;
@@ -482,12 +604,14 @@ namespace april
 
 	void RenderSystem::destroyTexture(Texture* texture)
 	{
+		if (texture == NULL)
+		{
+			throw Exception("Cannot call destroyTexture(), texture is NULL!");
+		}
 		if (this->renderHelper != NULL)
 		{
 			this->renderHelper->flush();
 		}
-		texture->unload();
-		texture->waitForAsyncLoad(); // waiting for all async stuff to finish
 		hmutex::ScopeLock lock(&this->texturesMutex);
 		this->textures -= texture;
 		lock.release();
@@ -495,12 +619,7 @@ namespace april
 		{
 			this->state->texture = NULL;
 		}
-		if (this->deviceState->texture == texture)
-		{
-			this->deviceState->texture = NULL;
-			this->_setDeviceTexture(NULL);
-		}
-		delete texture;
+		this->_addUnloadTextureCommand(new DestroyTextureCommand(texture));
 	}
 
 	PixelShader* RenderSystem::createPixelShaderFromResource(chstr filename)
@@ -733,89 +852,148 @@ namespace april
 		this->state->projectionMatrixChanged = true;
 	}
 
-	void RenderSystem::_updateDeviceState(bool forceUpdate)
+	void RenderSystem::_updateDeviceState(RenderState* state, bool forceUpdate)
 	{
 		// viewport
-		if (forceUpdate || this->state->viewportChanged)
+		if (forceUpdate || (state->viewportChanged && this->deviceState->viewport != state->viewport))
 		{
-			if (forceUpdate || this->deviceState->viewport != this->state->viewport)
-			{
-				this->_setDeviceViewport(this->state->viewport);
-				this->deviceState->viewport = this->state->viewport;
-			}
-			this->state->viewportChanged = false;
+			this->_setDeviceViewport(state->viewport);
+			this->deviceState->viewport = state->viewport;
 		}
 		// modelview matrix
-		if (forceUpdate || this->state->modelviewMatrixChanged)
+		if (forceUpdate || (state->modelviewMatrixChanged && this->deviceState->modelviewMatrix != state->modelviewMatrix))
 		{
-			if (forceUpdate || this->deviceState->modelviewMatrix != this->state->modelviewMatrix)
-			{
-				this->_setDeviceModelviewMatrix(this->state->modelviewMatrix);
-				this->deviceState->modelviewMatrix = this->state->modelviewMatrix;
-			}
-			this->state->modelviewMatrixChanged = false;
+			this->_setDeviceModelviewMatrix(state->modelviewMatrix);
+			this->deviceState->modelviewMatrix = state->modelviewMatrix;
 		}
 		// projection matrix
-		if (forceUpdate || this->state->projectionMatrixChanged)
+		if (forceUpdate || (state->projectionMatrixChanged && this->deviceState->projectionMatrix != state->projectionMatrix))
 		{
-			if (forceUpdate || this->deviceState->projectionMatrix != this->state->projectionMatrix)
-			{
-				this->_setDeviceProjectionMatrix(this->state->projectionMatrix);
-				this->deviceState->projectionMatrix = this->state->projectionMatrix;
-			}
-			this->state->projectionMatrixChanged = false;
+			this->_setDeviceProjectionMatrix(state->projectionMatrix);
+			this->deviceState->projectionMatrix = state->projectionMatrix;
 		}
 		// depth buffer
-		if (forceUpdate || this->deviceState->depthBuffer != this->state->depthBuffer || this->deviceState->depthBufferWrite != this->state->depthBufferWrite)
+		if (forceUpdate || this->deviceState->depthBuffer != state->depthBuffer || this->deviceState->depthBufferWrite != state->depthBufferWrite)
 		{
-			this->_setDeviceDepthBuffer(this->state->depthBuffer, this->state->depthBufferWrite);
-			this->deviceState->depthBuffer = this->state->depthBuffer;
-			this->deviceState->depthBufferWrite = this->state->depthBufferWrite;
+			this->_setDeviceDepthBuffer(state->depthBuffer, state->depthBufferWrite);
+			this->deviceState->depthBuffer = state->depthBuffer;
+			this->deviceState->depthBufferWrite = state->depthBufferWrite;
 		}
 		// device render mode
-		if (forceUpdate || this->deviceState->useTexture != this->state->useTexture || this->deviceState->useColor != this->state->useColor)
+		if (forceUpdate || this->deviceState->useTexture != state->useTexture || this->deviceState->useColor != state->useColor)
 		{
-			this->_setDeviceRenderMode(this->state->useTexture, this->state->useColor);
+			this->_setDeviceRenderMode(state->useTexture, state->useColor);
 		}
 		// texture
-		if (forceUpdate || this->deviceState->texture != this->state->texture || this->deviceState->useTexture != this->state->useTexture)
+		if (forceUpdate || this->deviceState->texture != state->texture || this->deviceState->useTexture != state->useTexture)
 		{
-			// filtering and wrapping applied before loading texture data, some systems are optimized to work like this (e.g. iOS OpenGLES guidelines suggest it)
-			if (this->state->texture != NULL && this->state->useTexture)
+			if (state->texture != NULL && state->useTexture)
 			{
 				++this->statCurrentFrameTextureSwitches;
-				this->state->texture->load();
-				this->state->texture->unlock();
-				this->_setDeviceTexture(this->state->texture);
-				this->_setDeviceTextureFilter(this->state->texture->getFilter());
-				this->_setDeviceTextureAddressMode(this->state->texture->getAddressMode());
+				state->texture->_ensureReadyForUpload();
+				state->texture->_upload();
+				// filtering and address mode applied before loading texture data, some systems are optimized to work like this (e.g. iOS OpenGLES guidelines suggest it)
+				this->_setDeviceTextureFilter(state->texture->getFilter());
+				this->_setDeviceTextureAddressMode(state->texture->getAddressMode());
+				this->_setDeviceTexture(state->texture);
 			}
 			else
 			{
 				this->_setDeviceTexture(NULL);
 			}
-			this->deviceState->texture = this->state->texture;
+			this->deviceState->texture = state->texture;
 		}
 		// blend mode
-		if (forceUpdate || this->deviceState->blendMode != this->state->blendMode)
+		if (forceUpdate || this->deviceState->blendMode != state->blendMode)
 		{
-			this->_setDeviceBlendMode(this->state->blendMode);
-			this->deviceState->blendMode = this->state->blendMode;
+			this->_setDeviceBlendMode(state->blendMode);
+			this->deviceState->blendMode = state->blendMode;
 		}
 		// color mode
-		if (forceUpdate || this->deviceState->colorMode != this->state->colorMode || this->deviceState->colorModeFactor != this->state->colorModeFactor ||
-			this->deviceState->useTexture != this->state->useTexture || this->deviceState->useColor != this->state->useColor ||
-			this->deviceState->systemColor != this->state->systemColor)
+		if (forceUpdate || this->deviceState->colorMode != state->colorMode || this->deviceState->colorModeFactor != state->colorModeFactor ||
+			this->deviceState->useTexture != state->useTexture || this->deviceState->useColor != state->useColor ||
+			this->deviceState->systemColor != state->systemColor)
 		{
-			this->_setDeviceColorMode(this->state->colorMode, this->state->colorModeFactor, this->state->useTexture, this->state->useColor, this->state->systemColor);
-			this->deviceState->colorMode = this->state->colorMode;
-			this->deviceState->colorModeFactor = this->state->colorModeFactor;
-			this->deviceState->useColor = this->state->useColor;
-			this->deviceState->systemColor = this->state->systemColor;
+			this->_setDeviceColorMode(state->colorMode, state->colorModeFactor, state->useTexture, state->useColor, state->systemColor);
+			this->deviceState->colorMode = state->colorMode;
+			this->deviceState->colorModeFactor = state->colorModeFactor;
+			this->deviceState->useColor = state->useColor;
+			this->deviceState->systemColor = state->systemColor;
 		}
 		// shared variables
-		this->deviceState->useTexture = this->state->useTexture;
-		this->deviceState->useColor = this->state->useColor;
+		this->deviceState->useTexture = state->useTexture;
+		this->deviceState->useColor = state->useColor;
+	}
+
+	void RenderSystem::_addAsyncCommand(AsyncCommand* command)
+	{
+		if (command->isUseState())
+		{
+			this->state->viewportChanged = false;
+			this->state->modelviewMatrixChanged = false;
+			this->state->projectionMatrixChanged = false;
+		}
+		hmutex::ScopeLock lock(&this->asyncMutex);
+		if (this->asyncCommandQueues.size() == 0)
+		{
+			this->asyncCommandQueues += new AsyncCommandQueue();
+		}
+		this->asyncCommandQueues.last()->commands += command;
+		if (command->isFinalizer())
+		{
+			this->asyncCommandQueues += new AsyncCommandQueue();
+		}
+	}
+
+	void RenderSystem::_addUnloadTextureCommand(UnloadTextureCommand* command)
+	{
+		hmutex::ScopeLock lock(&this->asyncMutex);
+		if (this->asyncCommandQueues.size() == 0)
+		{
+			this->asyncCommandQueues += new AsyncCommandQueue();
+		}
+		this->asyncCommandQueues.last()->unloadTextureCommands += command;
+	}
+
+	void RenderSystem::_flushAsyncCommands()
+	{
+		hmutex::ScopeLock lock(&this->asyncMutex);
+		harray<AsyncCommandQueue*> queues = this->asyncCommandQueues;
+		this->asyncCommandQueues.clear();
+		lock.release();
+		foreach (AsyncCommandQueue*, it, queues)
+		{
+			foreach (AsyncCommand*, it2, (*it)->commands)
+			{
+				if ((*it2)->isSystemCommand())
+				{
+					(*it2)->execute();
+				}
+			}
+			foreach (UnloadTextureCommand*, it2, (*it)->unloadTextureCommands)
+			{
+				(*it2)->execute();
+			}
+			delete (*it);
+		}
+		TextureAsync::update();
+	}
+
+	void RenderSystem::waitForAsyncCommands(bool forced)
+	{
+		hmutex::ScopeLock lock(&this->asyncMutex);
+		if (forced && this->asyncCommandQueues.size() == 1 && this->asyncCommandQueues.first()->hasCommands() &&
+			this->frameDuplicates > 0 && this->lastAsyncCommandQueue != NULL && this->lastAsyncCommandQueue->getRepeatCount() <= 0)
+		{
+			this->asyncCommandQueues += new AsyncCommandQueue();
+		}
+		while (this->asyncCommandQueues.size() > 1 || this->processingAsync ||
+			(this->frameDuplicates > 0 && this->lastAsyncCommandQueue != NULL && this->lastAsyncCommandQueue->getRepeatCount() > 0))
+		{
+			lock.release();
+			hthread::sleep(0.001f);
+			lock.acquire(&this->asyncMutex);
+		}
 	}
 
 	void RenderSystem::clear(bool depth)
@@ -823,12 +1001,13 @@ namespace april
 		if (this->renderHelper != NULL)
 		{
 			this->renderHelper->clear();
+			return;
 		}
 		if (!this->options.depthBuffer)
 		{
 			depth = false;
 		}
-		this->_deviceClear(depth);
+		this->_addAsyncCommand(new ClearCommand(*this->state, depth));
 	}
 
 	void RenderSystem::clear(Color color, bool depth)
@@ -837,14 +1016,14 @@ namespace april
 		{
 			depth = false;
 		}
-		this->_deviceClear(color, depth);
+		this->_addAsyncCommand(new ClearColorCommand(*this->state, color, depth));
 	}
 
 	void RenderSystem::clearDepth()
 	{
 		if (this->options.depthBuffer)
 		{
-			this->_deviceClearDepth();
+			this->_addAsyncCommand(new ClearDepthCommand(*this->state));
 		}
 	}
 
@@ -954,8 +1133,7 @@ namespace april
 		this->state->useTexture = false;
 		this->state->useColor = false;
 		this->state->systemColor = Color::White;
-		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, vertices, count);
+		this->_addAsyncCommand(new VertexRenderCommand<PlainVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, const Color& color)
@@ -968,8 +1146,7 @@ namespace april
 		this->state->useTexture = false;
 		this->state->useColor = false;
 		this->state->systemColor = color;
-		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, vertices, count);
+		this->_addAsyncCommand(new VertexRenderCommand<PlainVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count)
@@ -978,8 +1155,7 @@ namespace april
 		this->state->useTexture = true;
 		this->state->useColor = false;
 		this->state->systemColor = Color::White;
-		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, vertices, count);
+		this->_addAsyncCommand(new VertexRenderCommand<TexturedVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, const Color& color)
@@ -992,8 +1168,7 @@ namespace april
 		this->state->useTexture = true;
 		this->state->useColor = false;
 		this->state->systemColor = color;
-		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, vertices, count);
+		this->_addAsyncCommand(new VertexRenderCommand<TexturedVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count)
@@ -1002,8 +1177,7 @@ namespace april
 		this->state->useTexture = false;
 		this->state->useColor = true;
 		this->state->systemColor = Color::White;
-		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, vertices, count);
+		this->_addAsyncCommand(new VertexRenderCommand<ColoredVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_renderInternal(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count)
@@ -1012,8 +1186,7 @@ namespace april
 		this->state->useTexture = true;
 		this->state->useColor = true;
 		this->state->systemColor = Color::White;
-		this->_updateDeviceState();
-		this->_deviceRender(renderOperation, vertices, count);
+		this->_addAsyncCommand(new VertexRenderCommand<ColoredTexturedVertex>(*this->state, renderOperation, vertices, count));
 	}
 
 	void RenderSystem::_drawRectInternal(cgrect rect, const Color& color)
@@ -1157,6 +1330,15 @@ namespace april
 		}
 	}
 
+	void RenderSystem::_deviceUnloadTextures()
+	{
+		harray<Texture*> textures = this->getTextures();
+		foreach (Texture*, it, textures)
+		{
+			(*it)->_deviceUnloadTexture();
+		}
+	}
+
 	void RenderSystem::waitForAsyncTextures(float timeout) const
 	{
 		float time = timeout;
@@ -1164,7 +1346,6 @@ namespace april
 		{
 			hthread::sleep(0.1f);
 			time -= 0.0001f;
-			TextureAsync::update();
 		}
 	}
 
@@ -1197,8 +1378,32 @@ namespace april
 
 	void RenderSystem::presentFrame()
 	{
+		this->_addAsyncCommand(new PresentFrameCommand(*this->state, april::window->isPresentFrameEnabled()));
+	}
+
+	void RenderSystem::_devicePresentFrame(bool systemEnabled)
+	{
 		this->flushFrame(true);
-		april::window->presentFrame();
+		april::window->_presentFrame(systemEnabled);
+	}
+
+	void RenderSystem::_repeatLastFrame()
+	{
+		// TODO - can this even work?
+		/*
+		if (this->lastAsyncCommandQueue != NULL)
+		{
+			hmutex::ScopeLock lock(&this->asyncMutex);
+			this->processingAsync = true;
+			lock.release();
+			foreach (AsyncCommand*, it, this->lastAsyncCommandQueue->commands)
+			{
+				(*it)->execute();
+			}
+			lock.acquire(&this->asyncMutex);
+			this->processingAsync = false;
+		}
+		*/
 	}
 
 	unsigned int RenderSystem::_numPrimitives(const RenderOperation& renderOperation, int count) const

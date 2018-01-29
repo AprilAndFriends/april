@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -24,7 +24,7 @@
 		{ \
 			OpenGL_Texture::_preventRecursion = true; \
 			hlog::warnf(logTag, "Not enough VRAM for %s! Calling low memory warning.", this->_getInternalName().cStr()); \
-			april::window->handleLowMemoryWarningEvent(); \
+			april::window->handleLowMemoryWarning(); \
 			OpenGL_Texture::_preventRecursion = false; \
 			this->_setCurrentTexture(); \
 			call; \

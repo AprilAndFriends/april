@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -38,8 +38,6 @@ namespace april
 		WinUWP_Window();
 		~WinUWP_Window();
 		
-		bool create(int w, int h, bool fullscreen, chstr title, Window::Options options);
-		
 		hstr getParam(chstr param);
 		void setParam(chstr param, chstr value);
 		
@@ -49,8 +47,7 @@ namespace april
 		void* getBackendId() const;
 
 		void setResolution(int w, int h, bool fullscreen);
-		void presentFrame();
-		bool updateOneFrame();
+		bool update(float timeDelta);
 		void checkEvents();
 		hstr findCursorFile(chstr filename) const;
 		
@@ -66,12 +63,13 @@ namespace april
 		bool backButtonSystemHandling;
 		hmap<hstr, int> cursorMappings;
 
+		void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor();
 
 	};
 	
 }
-
 #endif
 #endif

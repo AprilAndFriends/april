@@ -1,6 +1,6 @@
 package com.april;
 
-/// @version 4.5
+/// @version 5.0
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLContext;
@@ -18,7 +18,6 @@ public class Renderer implements android.opengl.GLSurfaceView.Renderer
 {
 	public void onSurfaceCreated(GL10 unused, EGLConfig config)
 	{
-		Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 		NativeInterface.onSurfaceCreated();
 		if (!NativeInterface.running)
 		{
@@ -36,7 +35,7 @@ public class Renderer implements android.opengl.GLSurfaceView.Renderer
 					Rect r = new Rect();
 					view.getWindowVisibleDisplayFrame(r);
 					float heightRatio = 1.0f - (float)(r.bottom - r.top) / view.getRootView().getHeight();
-					// on some devices heightRatio is werid and gives 0.0666667 or something like that
+					// on some devices heightRatio is weird and gives 0.0666667 or something like that
 					if (heightRatio < 0.1f)
 					{
 						heightRatio = 0.0f;
@@ -53,7 +52,7 @@ public class Renderer implements android.opengl.GLSurfaceView.Renderer
 	
 	public void onDrawFrame(GL10 unused)
 	{
-		if (!NativeInterface.render())
+		if (!NativeInterface.update())
 		{
 			NativeInterface.activity.finish();
 		}

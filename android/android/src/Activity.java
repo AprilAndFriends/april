@@ -1,6 +1,6 @@
 package com.april;
 
-/// @version 4.5
+/// @version 5.0
 
 import android.app.ActivityManager;
 import android.app.Dialog;
@@ -423,8 +423,8 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		{
 			this.callbacksOnDestroy.get(i).execute();
 		}
-		NativeInterface.activityOnDestroy();
 		NativeInterface.destroy();
+		NativeInterface.activityOnDestroy();
 		NativeInterface.reset();
 		super.onDestroy();
 		if (this.useHardExit)

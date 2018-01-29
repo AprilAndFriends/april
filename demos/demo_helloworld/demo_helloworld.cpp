@@ -22,7 +22,7 @@
 
 #include <april/april.h>
 #include <april/Cursor.h>
-#include <april/KeyboardDelegate.h>
+#include <april/KeyDelegate.h>
 #include <april/main.h>
 #include <april/MouseDelegate.h>
 #include <april/Platform.h>
@@ -133,7 +133,7 @@ public:
 static UpdateDelegate* updateDelegate = NULL;
 static SystemDelegate* systemDelegate = NULL;
 
-void april_init(const harray<hstr>& args)
+void __aprilApplicationInit()
 {
 #ifdef __APPLE__
 	// On MacOSX, the current working directory is not set by
@@ -200,13 +200,14 @@ void april_init(const harray<hstr>& args)
 	balls.add(Ball());
 }
 
-void april_destroy()
+void __aprilApplicationDestroy()
 {
 	april::window->setCursor(NULL);
 	april::window->destroyCursor(cursor);
 	cursor = NULL;
 	april::rendersys->destroyTexture(ball);
-	ball = NULL;	
+	ball = NULL;
+	april::destroy();
 	delete systemDelegate;
 	systemDelegate = NULL;
 	delete updateDelegate;

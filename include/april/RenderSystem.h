@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -26,15 +26,30 @@
 #include "aprilUtil.h"
 #include "Color.h"
 #include "Image.h"
-#include "RenderState.h"
 #include "Texture.h"
 
 namespace april
 {
+	class Application;
+	class AssignWindowCommand;
+	class AsyncCommand;
+	class AsyncCommandQueue;
+	class ClearCommand;
+	class ClearColorCommand;
+	class ClearDepthCommand;
+	class CreateCommand;
+	class DestroyCommand;
 	class Image;
 	class PixelShader;
+	class PresentFrameCommand;
+	class RenderCommand;
 	class RenderHelper;
+	class RenderState;
+	class ResetCommand;
+	class StateUpdateCommand;
+	class SuspendCommand;
 	class Texture;
+	template <typename T> class VertexRenderCommand;
 	class VertexShader;
 	class Window;
 
@@ -42,9 +57,22 @@ namespace april
 	class aprilExport RenderSystem
 	{
 	public:
+		friend class Application;
+		friend class AssignWindowCommand;
+		friend class ClearCommand;
+		friend class ClearColorCommand;
+		friend class ClearDepthCommand;
+		friend class CreateCommand;
+		friend class DestroyCommand;
+		friend class PresentFrameCommand;
+		friend class RenderCommand;
 		friend class RenderHelper;
 		friend class RenderHelperLayered2D;
+		friend class ResetCommand;
+		friend class StateUpdateCommand;
+		friend class SuspendCommand;
 		friend class Texture;
+		template <typename T> friend class VertexRenderCommand;
 		friend class Window;
 
 		/// @class RenderMode
@@ -172,6 +200,10 @@ namespace april
 		HL_DEFINE_GET(Caps, caps, Caps);
 		/// @brief Gets the current RenderMode.
 		HL_DEFINE_GET(RenderMode, renderMode, RenderMode);
+		/// @brief Gets how frames in advance can be updated.
+		HL_DEFINE_GET(int, frameAdvanceUpdates, FrameAdvanceUpdates);
+		/// @brief Gets/sets how many times a frame should be duplicated during rendering.
+		HL_DEFINE_GETSET(int, frameDuplicates, FrameDuplicates);
 		/// @brief Gets how many times a render call was called during this frame.
 		HL_DEFINE_GET(int, statCurrentFrameRenderCalls, StatCurrentFrameRenderCalls);
 		/// @brief Gets how many times a render call was called during the last frame.
@@ -192,6 +224,8 @@ namespace april
 		HL_DEFINE_GET(int, statCurrentFrameLineCount, StatCurrentFrameLineCount);
 		/// @brief Gets how many lines were rendered during the last frame.
 		HL_DEFINE_GET(int, statLastFrameLineCount, StatLastFrameLineCount);
+		/// @brief Gets how frames are queued for rendering.
+		int getAsyncQueuesCount();
 		/// @brief Gets all currently existing textures in the RenderSystem.
 		/// @return All currently existing textures in the RenderSystem.
 		harray<Texture*> getTextures();
@@ -211,6 +245,9 @@ namespace april
 		/// @brief Checks if there are any textures queued to be loaded asynchronously.
 		/// @return True if there are any textures queued to be loaded asynchronously.
 		bool hasAsyncTexturesQueued() const;
+		/// @brief Checks if there are any textures ready to be uploaded.
+		/// @return True if there are any textures ready to be uploaded.
+		bool hasTexturesReadyForUpload() const;
 		/// @brief Gets the render viewport.
 		/// @return The render viewport.
 		grect getViewport() const;
@@ -235,6 +272,15 @@ namespace april
 		/// @note This value is in MB (1 MB = 1024 kB, 1 kB = 1024 B).
 		virtual int getVRam() const = 0;
 
+		/// @brief Updates the RenderSystem.
+		/// @param[in] timeDelta Time since last frame.
+		/// @return Whether a frame has been rendered.
+		bool update(float timeDelta);
+		/// @brief Waits for the currently async commands to be executed.
+		/// @param[in] forced Whether to force executing all commands so far.
+		/// @note This is primarily used to help with synchronization. Future refactoring might introduce completely thread-safe access and render this functionality obsolete.
+		void waitForAsyncCommands(bool forced = false);
+
 		/// @brief Sets the current RenderMode.
 		void setRenderMode(RenderMode renderMode, const hmap<hstr, hstr>& options = hmap<hstr, hstr>());
 
@@ -243,7 +289,7 @@ namespace april
 		/// @param[in] type The Texture type that should be created.
 		/// @param[in] loadMode How and when the Texture should be loaded.
 		/// @return The created Texture object or NULL if failed.
-		Texture* createTextureFromResource(chstr filename, Texture::Type type = Texture::Type::Immutable, Texture::LoadMode loadMode = Texture::LoadMode::Immediate);
+		Texture* createTextureFromResource(chstr filename, Texture::Type type = Texture::Type::Immutable, Texture::LoadMode loadMode = Texture::LoadMode::Async);
 		/// @brief Creates a Texture object from a resource file.
 		/// @param[in] filename The filename of the resource.
 		/// @param[in] format To which pixel format the loaded data should be converted.
@@ -251,13 +297,13 @@ namespace april
 		/// @param[in] loadMode How and when the Texture should be loaded.
 		/// @return The created Texture object or NULL if failed.
 		/// @note When a format is forced, it's best to use managed (but not necessary).
-		Texture* createTextureFromResource(chstr filename, Image::Format format, Texture::Type type = Texture::Type::Managed, Texture::LoadMode loadMode = Texture::LoadMode::Immediate);
+		Texture* createTextureFromResource(chstr filename, Image::Format format, Texture::Type type = Texture::Type::Managed, Texture::LoadMode loadMode = Texture::LoadMode::Async);
 		/// @brief Creates a Texture object from a file.
 		/// @param[in] filename The filename of the file.
 		/// @param[in] type The Texture type that should be created.
 		/// @param[in] loadMode How and when the Texture should be loaded.
 		/// @return The created Texture object or NULL if failed.
-		Texture* createTextureFromFile(chstr filename, Texture::Type type = Texture::Type::Immutable, Texture::LoadMode loadMode = Texture::LoadMode::Immediate);
+		Texture* createTextureFromFile(chstr filename, Texture::Type type = Texture::Type::Immutable, Texture::LoadMode loadMode = Texture::LoadMode::Async);
 		/// @brief Creates a Texture object from a file.
 		/// @param[in] filename The filename of the file.
 		/// @param[in] format To which pixel format the loaded data should be converted.
@@ -265,7 +311,7 @@ namespace april
 		/// @param[in] loadMode How and when the Texture should be loaded.
 		/// @return The created Texture object or NULL if failed.
 		/// @note When a format is forced, it's best to use managed (but not necessary).
-		Texture* createTextureFromFile(chstr filename, Image::Format format, Texture::Type type = Texture::Type::Managed, Texture::LoadMode loadMode = Texture::LoadMode::Immediate);
+		Texture* createTextureFromFile(chstr filename, Image::Format format, Texture::Type type = Texture::Type::Managed, Texture::LoadMode loadMode = Texture::LoadMode::Async);
 		/// @brief Creates a Texture object from raw data.
 		/// @param[in] w Width of the image data.
 		/// @param[in] h Height of the image data.
@@ -273,7 +319,7 @@ namespace april
 		/// @param[in] format The format of the provided image data.
 		/// @param[in] type The Texture type that should be created.
 		/// @return The created Texture object or NULL if failed.
-		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type = Texture::Type::Managed);
+		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format);
 		/// @brief Creates a Texture object completely filled with a specific color.
 		/// @param[in] w Width of the image data.
 		/// @param[in] h Height of the image data.
@@ -281,7 +327,7 @@ namespace april
 		/// @param[in] format The format of the provided image data.
 		/// @param[in] type The Texture type that should be created.
 		/// @return The created Texture object or NULL if failed.
-		Texture* createTexture(int w, int h, Color color, Image::Format format, Texture::Type type = Texture::Type::Managed);
+		Texture* createTexture(int w, int h, Color color, Image::Format format);
 		/// @brief Destroys a Texture object.
 		/// @param[in] texture The Texture that should be destroyed.
 		/// @note After this call the Texture pointer becomes invalid.
@@ -530,7 +576,7 @@ namespace april
 		/// @brief Flushes the currently rendered data to the backbuffer for display.
 		/// @note Usually this doesn't need to be called manually. Calls flushFrame().
 		/// @see flushFrame
-		virtual void presentFrame();
+		void presentFrame();
 
 	protected:
 		/// @brief The RenderSystem's name.
@@ -556,8 +602,20 @@ namespace april
 		RenderState* deviceState;
 		/// @brief Mutex required for registering and unregistering of textures that allows for multi-threaded access.
 		hmutex texturesMutex;
+		/// @brief Mutex required for async update/rendering.
+		hmutex asyncMutex;
 		/// @brief Special helper object that can handle rendering in a different way.
 		RenderHelper* renderHelper;
+		/// @brief Async command queue.
+		harray<AsyncCommandQueue*> asyncCommandQueues;
+		/// @brief Last special async command queue.
+		AsyncCommandQueue* lastAsyncCommandQueue;
+		/// @brief Whether async commands are being processed right now.
+		bool processingAsync;
+		/// @brief How many times a render call was called during this frame.
+		int frameAdvanceUpdates;
+		/// @brief Gets how many times a frame should be duplicated during rendering.
+		int frameDuplicates;
 
 		/// @brief How many times a render call was called during this frame.
 		int statCurrentFrameRenderCalls;
@@ -609,11 +667,29 @@ namespace april
 		/// @brief Updates the device state based on the current render system state. This method only updates things tha have changed to improve performance.
 		/// @param[in] forceUpdate If true, will force an update of the entire device state, regardless of the current state.
 		/// @note The parameter forceUpdate is useful when the device is in an unknown or inconsistent state, but should be used with care as it invalidates all optimizations.
-		virtual void _updateDeviceState(bool forceUpdate = false);
+		virtual void _updateDeviceState(RenderState* state, bool forceUpdate = false);
+		/// @brief Adds a render command to the queue.
+		/// @param[in] command The command to add.
+		void _addAsyncCommand(AsyncCommand* command);
+		/// @brief Adds a special texture-unload command to the queue.
+		/// @param[in] command The command to add.
+		void _addUnloadTextureCommand(UnloadTextureCommand* command);
+		/// @brief Flushes all remaining async commands.
+		void _flushAsyncCommands();
+
+		/// @brief Routing method for async creation.
+		/// @param[in] options The options to use.
+		void _systemCreate(Options options);
+		/// @brief Routing method for async destruction.
+		void _systemDestroy();
+		/// @brief Routing method for async assignment of window.
+		/// @param[in] window The window instance.
+		void _systemAssignWindow(Window* window);
 
 		/// @brief Initializes everything internal for the RenderSystem
 		virtual void _deviceInit() = 0;
 		/// @brief Creates the internal device.
+		/// @param[in] options The options to use.
 		/// @return True if successful.
 		virtual bool _deviceCreate(Options options) = 0;
 		/// @brief Destroys the internal device.
@@ -790,6 +866,15 @@ namespace april
 		/// @param[in] vertices An array of vertices.
 		/// @param[in] count How many vertices from the array should be rendered.
 		virtual void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count) = 0;
+		/// @brief Flushes the currently rendered data to the backbuffer for display.
+		/// @param[in] systemEnabled Whether the system present is actually enabled.
+		virtual void _devicePresentFrame(bool systemEnabled);
+		/// @brief Renders previous frame again.
+		/// @see _devicePresentFrame
+		void _repeatLastFrame();
+		/// @brief Unloads all textures. Used internally only.
+		/// @note Useful for clearing all memory or if something invalidates textures and cannot guarantee that they are loaded anymore.
+		void _deviceUnloadTextures();
 
 		/// @brief Calculates the number of primitives based on the number of vertices.
 		/// @param[in] renderOperation The RenderOperation that is used for rendering

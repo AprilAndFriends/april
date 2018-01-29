@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -16,6 +16,7 @@
 #include <hltypes/hplatform.h>
 #include <hltypes/hthread.h>
 
+#include "Application.h"
 #include "april.h"
 #include "DirectX9_PixelShader.h"
 #include "DirectX9_RenderSystem.h"
@@ -24,6 +25,7 @@
 #include "Image.h"
 #include "Keys.h"
 #include "Platform.h"
+#include "RenderCommand.h"
 #include "RenderState.h"
 #include "Timer.h"
 #include "Win32_Window.h"
@@ -166,25 +168,23 @@ namespace april
 				surface->Release();
 			}
 		}
-		this->clear();
-		this->presentFrame();
 		// device config
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
+		this->_deviceClear(false);
 		this->d3dDevice->BeginScene();
 		this->renderTarget = NULL;
+		this->_devicePresentFrame(true);
 	}
 
 	void DirectX9_RenderSystem::_deviceReset()
 	{
+		RenderSystem::_deviceReset();
 		this->d3dDevice->EndScene();
-		foreach (Texture*, it, this->textures)
-		{
-			(*it)->unload();
-		}
+		this->_deviceUnloadTextures();
 		this->backBuffer->Release();
 		this->backBuffer = NULL;
 		HRESULT hr;
-		while (april::window->isRunning())
+		while (april::application->getState() == Application::State::Running)
 		{
 			hlog::write(logTag, "Resetting device...");
 			if (this->d3dpp->BackBufferWidth <= 0 || this->d3dpp->BackBufferHeight <= 0)
@@ -236,6 +236,11 @@ namespace april
 		bool nonPow2conditional = ((d3dCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) != 0);
 		this->caps.npotTextures = (!pow2 && !nonPow2conditional); // this is how the docs say it is defined
 		this->caps.npotTexturesLimited = (this->caps.npotTextures || pow2 && nonPow2conditional);
+		if (!this->_supportsA8Surface)
+		{
+			this->caps.textureFormats /= Image::Format::Alpha;
+			this->caps.textureFormats /= Image::Format::Greyscale;
+		}
 	}
 
 	void DirectX9_RenderSystem::_deviceSetup()
@@ -725,21 +730,18 @@ namespace april
 		return image;
 	}
 	
-	void DirectX9_RenderSystem::presentFrame()
+	void DirectX9_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
-		RenderSystem::presentFrame();
+		RenderSystem::_devicePresentFrame(systemEnabled);
 		this->d3dDevice->EndScene();
 		HRESULT hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
 		if (hr == D3DERR_DEVICELOST)
 		{
 			hlog::write(logTag, "Direct3D9 Device lost, attempting to restore...");
-			foreach (Texture*, it, this->textures)
-			{
-				(*it)->unload();
-			}
+			this->_deviceUnloadTextures();
 			this->backBuffer->Release();
 			this->backBuffer = NULL;
-			while (april::window->isRunning())
+			while (april::application->getState() == Application::State::Running)
 			{
 				hr = this->d3dDevice->TestCooperativeLevel();
 				if (!FAILED(hr))
@@ -772,7 +774,7 @@ namespace april
 					}
 					else
 					{
-						hlog::errorf(logTag, "Failed to reset device!, context: DirectX9_RenderSystem::presentFrame() hresult: %08X", hr);
+						hlog::errorf(logTag, "Failed to reset device!, context: DirectX9_RenderSystem::_devicePresentFrame() hresult: %08X", hr);
 					}
 				}
 				else if (hr == D3DERR_DRIVERINTERNALERROR)
@@ -788,7 +790,7 @@ namespace april
 			this->_deviceSetup();
 			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 			this->d3dDevice->BeginScene();
-			this->_updateDeviceState(true);
+			this->_updateDeviceState(this->state, true);
 			hlog::write(logTag, "Direct3D9 Device restored.");
 		}
 		else

@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -105,7 +105,7 @@ namespace april
 		void _createShaders();
 		void _destroyShaders();
 
-		void _updateDeviceState(bool forceUpdate = false);
+		void _updateDeviceState(RenderState* state, bool forceUpdate = false);
 
 		void _setDeviceModelviewMatrix(const gmat4& matrix);
 		void _setDeviceProjectionMatrix(const gmat4& matrix);

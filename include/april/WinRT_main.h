@@ -10,7 +10,7 @@
 /// 
 /// Defines main for WinRT.
 
-#if defined(_WIN32) && defined(_WINRT) && !defined(_OPENKODE)
+#if defined(_WIN32) && defined(_WINRT)
 #ifndef APRIL_WINRT_MAIN_H
 #define APRIL_WINRT_MAIN_H
 
@@ -56,7 +56,7 @@ int main(Platform::Array<Platform::String^>^ args)
 		memcpy(argv[i], arg.cStr(), sizeof(char) * (arg.size() + 1));
 	}
 	// call the user specified main function
-	int result = __april_main(april_init, april_destroy, argc, argv);
+	int result = april::__mainStandard(&__aprilApplicationInit, &__aprilApplicationDestroy, argc, argv);
 	// free allocated memory for arguments
 	for_iter (i, 0, argc)
 	{

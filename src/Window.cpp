@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -14,10 +14,12 @@
 #include <hltypes/hstring.h>
 #include <hltypes/hthread.h>
 
+#include "Application.h"
 #include "april.h"
+#include "AsyncCommands.h"
 #include "ControllerDelegate.h"
 #include "Cursor.h"
-#include "KeyboardDelegate.h"
+#include "KeyDelegate.h"
 #include "Keys.h"
 #include "MotionDelegate.h"
 #include "MouseDelegate.h"
@@ -42,101 +44,6 @@ namespace april
 		}
 	}
 	//////////////////
-
-	HL_ENUM_CLASS_DEFINE(Window::MouseInputEvent::Type,
-	(
-		HL_ENUM_DEFINE(Window::MouseInputEvent::Type, Down);
-		HL_ENUM_DEFINE(Window::MouseInputEvent::Type, Up);
-		HL_ENUM_DEFINE(Window::MouseInputEvent::Type, Cancel);
-		HL_ENUM_DEFINE(Window::MouseInputEvent::Type, Move);
-		HL_ENUM_DEFINE(Window::MouseInputEvent::Type, Scroll);
-	));
-
-	HL_ENUM_CLASS_DEFINE(Window::KeyInputEvent::Type,
-	(
-		HL_ENUM_DEFINE(Window::KeyInputEvent::Type, Down);
-		HL_ENUM_DEFINE(Window::KeyInputEvent::Type, Up);
-	));
-
-	HL_ENUM_CLASS_DEFINE(Window::ControllerInputEvent::Type,
-	(
-		HL_ENUM_DEFINE(Window::ControllerInputEvent::Type, Down);
-		HL_ENUM_DEFINE(Window::ControllerInputEvent::Type, Up);
-		HL_ENUM_DEFINE(Window::ControllerInputEvent::Type, Axis);
-		HL_ENUM_DEFINE(Window::ControllerInputEvent::Type, Connected);
-		HL_ENUM_DEFINE(Window::ControllerInputEvent::Type, Disconnected);
-	));
-
-	HL_ENUM_CLASS_DEFINE(Window::MotionInputEvent::Type,
-	(
-		HL_ENUM_DEFINE(Window::MotionInputEvent::Type, Accelerometer);
-		HL_ENUM_DEFINE(Window::MotionInputEvent::Type, LinearAccelerometer);
-		HL_ENUM_DEFINE(Window::MotionInputEvent::Type, Gravity);
-		HL_ENUM_DEFINE(Window::MotionInputEvent::Type, Rotation);
-		HL_ENUM_DEFINE(Window::MotionInputEvent::Type, Gyroscope);
-	));
-
-	Window::MouseInputEvent::MouseInputEvent()
-	{
-		this->type = Type::Move;
-		this->keyCode = Key::None;
-	}
-		
-	Window::MouseInputEvent::MouseInputEvent(Window::MouseInputEvent::Type type, cgvec2 position, Key keyCode)
-	{
-		this->type = type;
-		this->position = position;
-		this->keyCode = keyCode;
-	}
-		
-	Window::KeyInputEvent::KeyInputEvent()
-	{
-		this->type = Type::Up;
-		this->keyCode = Key::None;
-		this->charCode = 0;
-	}
-
-	Window::KeyInputEvent::KeyInputEvent(Window::KeyInputEvent::Type type, Key keyCode, unsigned int charCode)
-	{
-		this->type = type;
-		this->keyCode = keyCode;
-		this->charCode = charCode;
-	}
-
-	Window::TouchInputEvent::TouchInputEvent()
-	{
-	}
-	
-	Window::TouchInputEvent::TouchInputEvent(harray<gvec2>& touches)
-	{
-		this->touches = touches;
-	}
-		
-	Window::ControllerInputEvent::ControllerInputEvent()
-	{
-		this->type = Type::Up;
-		this->buttonCode = Button::None;
-	}
-
-	Window::ControllerInputEvent::ControllerInputEvent(Window::ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
-	{
-		this->type = type;
-		this->controllerIndex = controllerIndex;
-		this->buttonCode = buttonCode;
-		this->axisValue = axisValue;
-	}
-
-	Window::MotionInputEvent::MotionInputEvent()
-	{
-		this->type = Type::Gravity;
-		this->motionVector.set(0.0f, -9.81f, 0.0f);
-	}
-
-	Window::MotionInputEvent::MotionInputEvent(Window::MotionInputEvent::Type type, cgvec3 motionVector)
-	{
-		this->type = type;
-		this->motionVector = motionVector;
-	}
 
 	Window* window = NULL;
 	
@@ -174,15 +81,10 @@ namespace april
 		this->created = false;
 		this->fullscreen = true;
 		this->focused = true;
-		this->running = true;
+		this->presentFrameEnabled = true;
 		this->paused = false;
 		this->lastWidth = 0;
 		this->lastHeight = 0;
-		this->fps = 0;
-		this->fpsCount = 0;
-		this->fpsTimer = 0.0f;
-		this->fpsResolution = 0.5f;
-		this->timeDeltaMaxLimit = 0.1f;
 		this->cursor = NULL;
 		this->cursorVisible = false;
 		this->virtualKeyboardVisible = false;
@@ -192,7 +94,7 @@ namespace april
 		this->virtualKeyboard = NULL;
 		this->updateDelegate = NULL;
 		this->mouseDelegate = NULL;
-		this->keyboardDelegate = NULL;
+		this->keyDelegate = NULL;
 		this->touchDelegate = NULL;
 		this->controllerDelegate = NULL;
 		this->motionDelegate = NULL;
@@ -204,82 +106,89 @@ namespace april
 		this->destroy();
 	}
 
-	bool Window::create(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	bool Window::create(int width, int height, bool fullscreen, chstr title, Window::Options options)
 	{
 		if (!this->created)
 		{
-			hlog::writef(logTag, "Creating window: '%s' (%d, %d) %s, '%s', (options: %s)",
-				this->name.cStr(), w, h, fullscreen ? "fullscreen" : "windowed", title.cStr(), options.toString().cStr());
-			this->fullscreen = fullscreen;
-			this->title = title;
-			this->options = options;
 			this->created = true;
-			this->paused = false;
-			if (options.hotkeyFullscreen)
-			{
-				if (!fullscreen)
-				{
-					this->lastWidth = w;
-					this->lastHeight = h;
-				}
-				else
-				{
-					SystemInfo info = april::getSystemInfo();
-					this->lastWidth = hround(info.displayResolution.x * 0.6666667f);
-					this->lastHeight = hround(info.displayResolution.y * 0.6666667f);
-				}
-			}
-			this->fps = 0;
-			this->fpsCount = 0;
-			this->fpsTimer = 0.0f;
-			this->fpsResolution = 0.5f;
-			this->multiTouchActive = false;
-			this->cursor = NULL;
-			this->virtualKeyboardVisible = false;
-			this->virtualKeyboardHeightRatio = 0.0f;
-			this->inputMode = InputMode::Mouse;
+			april::rendersys->_addAsyncCommand(new CreateWindowCommand(width, height, fullscreen, title, options));
 			return true;
 		}
 		return false;
 	}
 	
+	void Window::_systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options)
+	{
+		hlog::writef(logTag, "Creating window: '%s' (%d, %d) %s, '%s', (options: %s)",
+			this->name.cStr(), width, height, fullscreen ? "fullscreen" : "windowed", title.cStr(), options.toString().cStr());
+		this->fullscreen = fullscreen;
+		this->title = title;
+		this->options = options;
+		this->paused = false;
+		if (options.hotkeyFullscreen)
+		{
+			if (!fullscreen)
+			{
+				this->lastWidth = width;
+				this->lastHeight = height;
+			}
+			else
+			{
+				SystemInfo info = april::getSystemInfo();
+				this->lastWidth = hround(info.displayResolution.x * 0.6666667f);
+				this->lastHeight = hround(info.displayResolution.y * 0.6666667f);
+			}
+		}
+		this->multiTouchActive = false;
+		this->cursor = NULL;
+		this->virtualKeyboardVisible = false;
+		this->virtualKeyboardHeightRatio = 0.0f;
+		this->inputMode = InputMode::Mouse;
+	}
+
 	bool Window::destroy()
 	{
 		if (this->created)
 		{
-			hlog::writef(logTag, "Destroying window '%s'.", this->name.cStr());
-			this->setVirtualKeyboard(NULL);
 			this->created = false;
-			this->paused = false;
-			this->fps = 0;
-			this->fpsCount = 0;
-			this->fpsTimer = 0.0f;
-			this->fpsResolution = 0.5f;
-			this->multiTouchActive = false;
-			this->cursor = NULL;
-			this->virtualKeyboardVisible = false;
-			this->virtualKeyboardHeightRatio = 0.0f;
-			this->inputMode = InputMode::Mouse;
-			this->virtualKeyboard = NULL;
-			this->updateDelegate = NULL;
-			this->mouseDelegate = NULL;
-			this->keyboardDelegate = NULL;
-			this->touchDelegate = NULL;
-			this->controllerDelegate = NULL;
-			this->motionDelegate = NULL;
-			this->systemDelegate = NULL;
-			this->mouseEvents.clear();
-			this->keyEvents.clear();
-			this->touchEvents.clear();
-			this->controllerEvents.clear();
-			this->touches.clear();
-			this->controllerEmulationKeys.clear();
+			april::rendersys->_addAsyncCommand(new DestroyWindowCommand());
 			return true;
 		}
 		return false;
 	}
 
+	void Window::_systemDestroy()
+	{
+		hlog::writef(logTag, "Destroying window '%s'.", this->name.cStr());
+		this->setVirtualKeyboard(NULL);
+		this->paused = false;
+		this->multiTouchActive = false;
+		this->cursor = NULL;
+		this->virtualKeyboardVisible = false;
+		this->virtualKeyboardHeightRatio = 0.0f;
+		this->inputMode = InputMode::Mouse;
+		this->virtualKeyboard = NULL;
+		this->updateDelegate = NULL;
+		this->mouseDelegate = NULL;
+		this->keyDelegate = NULL;
+		this->touchDelegate = NULL;
+		this->controllerDelegate = NULL;
+		this->motionDelegate = NULL;
+		this->systemDelegate = NULL;
+		this->mouseEvents.clear();
+		this->keyEvents.clear();
+		this->touchEvents.clear();
+		this->controllerEvents.clear();
+		this->touches.clear();
+		this->controllerEmulationKeys.clear();
+	}
+
 	void Window::unassign()
+	{
+		april::rendersys->_addAsyncCommand(new UnassignWindowCommand());
+	}
+
+	void Window::_systemUnassign()
 	{
 	}
 
@@ -297,10 +206,6 @@ namespace april
 			{
 				this->cursorPosition.set(-10000.0f, -10000.0f);
 			}
-			if (this->systemDelegate != NULL)
-			{
-				this->systemDelegate->onInputModeChanged(value);
-			}
 		}
 	}
 
@@ -314,10 +219,6 @@ namespace april
 			if (this->inputMode == InputMode::Controller)
 			{
 				this->cursorPosition.set(-10000.0f, -10000.0f);
-			}
-			if (this->systemDelegate != NULL)
-			{
-				this->systemDelegate->onInputModeChanged(this->inputMode);
 			}
 		}
 	}
@@ -340,7 +241,7 @@ namespace april
 			this->virtualKeyboard->hideKeyboard(true);
 			if (visible && !this->virtualKeyboard->isVisible())
 			{
-				this->handleVirtualKeyboardChangeEvent(false, 0.0f);
+				this->queueVirtualKeyboardChange(false, 0.0f);
 			}
 		}
 		this->virtualKeyboard = value;
@@ -378,12 +279,12 @@ namespace april
 		this->fullscreen = value;
 	}
 
-	void Window::setResolution(int w, int h)
+	void Window::setResolution(int width, int height)
 	{
-		this->setResolution(w, h, this->isFullscreen());
+		this->setResolution(width, height, this->isFullscreen());
 	}
 
-	void Window::setResolution(int w, int h, bool fullscreen)
+	void Window::setResolution(int width, int height, bool fullscreen)
 	{
 		hlog::warnf(logTag, "setResolution() is not available in '%s'.", this->name.cStr());
 	}
@@ -414,104 +315,126 @@ namespace april
 		this->_setRenderSystemResolution(this->getWidth(), this->getHeight(), this->fullscreen);
 	}
 	
-	void Window::_setRenderSystemResolution(int w, int h, bool fullscreen)
+	void Window::_setRenderSystemResolution(int width, int height, bool fullscreen)
 	{
-		hlog::writef(logTag, "Setting window resolution: (%d,%d); fullscreen: %s", w, h, fullscreen ? "yes" : "no");
-		april::rendersys->_deviceChangeResolution(w, h, fullscreen);
-		if (this->systemDelegate != NULL)
-		{
-			this->systemDelegate->onWindowSizeChanged(w, h, fullscreen);
-		}
+		april::rendersys->_deviceChangeResolution(width, height, fullscreen);
 	}
 	
-	void Window::enterMainLoop()
+	void Window::_presentFrame(bool systemEnabled)
 	{
-		this->fps = 0;
-		this->fpsCount = 0;
-		this->fpsTimer = 0.0f;
-		this->running = true;
-		while (this->running)
-		{
-			if (!this->updateOneFrame())
-			{
-				this->running = false;
-			}
-			if (this->updateDelegate != NULL)
-			{
-				this->updateDelegate->onPresentFrame();
-			}
-		}
+		april::application->_updateFps();
 	}
 
-	bool Window::updateOneFrame()
+	bool Window::update(float timeDelta)
 	{
-		TextureAsync::update();
-		float timeDelta = this->_calcTimeSinceLastFrame();
+		this->_processEvents();
 		if (!this->focused)
 		{
 			hthread::sleep(40.0f);
 		}
-		this->checkEvents();
-		return (this->performUpdate(timeDelta) && this->running);
+		return (this->performUpdate(timeDelta) && april::application->getState() == Application::State::Running);
 	}
-	
+
 	void Window::checkEvents()
 	{
-		// due to possible problems with multiple scroll events in one frame, consecutive scroll events are merged (and so are move events for convenience)
-		MouseInputEvent mouseEvent;
-		gvec2 cumulativeScroll;
-		while (this->mouseEvents.size() > 0) // required while instead of for, because this loop could modify this->mouseEvents when the event is propagated
+	}
+
+	void Window::_processEvents()
+	{
+		hmutex::ScopeLock lock(&this->eventMutex);
+		harray<GenericEvent> genericEvents = this->genericEvents;
+		harray<MouseEvent> mouseEvents = this->mouseEvents;
+		harray<KeyEvent> keyEvents = this->keyEvents;
+		harray<TouchEvent> touchEvents = this->touchEvents;
+		harray<ControllerEvent> controllerEvents = this->controllerEvents;
+		harray<MotionEvent> motionEvents = this->motionEvents;
+		this->genericEvents.clear();
+		this->mouseEvents.clear();
+		this->keyEvents.clear();
+		this->touchEvents.clear();
+		this->controllerEvents.clear();
+		this->motionEvents.clear();
+		lock.release();
+		for_iter(i, 0, genericEvents.size())
 		{
-			mouseEvent = this->mouseEvents.removeFirst();
-			if (mouseEvent.type != MouseInputEvent::Type::Cancel && mouseEvent.type != MouseInputEvent::Type::Scroll)
+			if (genericEvents[i].type == GenericEvent::Type::QuitRequest)
 			{
-				this->cursorPosition = mouseEvent.position;
-			}
-			if (mouseEvent.type == MouseInputEvent::Type::Scroll)
-			{
-				cumulativeScroll += mouseEvent.position;
-				if (this->mouseEvents.size() == 0 || this->mouseEvents.first().type != MouseInputEvent::Type::Scroll)
+				if (this->handleQuitRequest(genericEvents[i].boolValue))
 				{
-					this->handleMouseEvent(mouseEvent.type, cumulativeScroll, mouseEvent.keyCode);
+					april::application->finish();
+				}
+			}
+			else if (genericEvents[i].type == GenericEvent::Type::FocusChange)
+			{
+				this->handleFocusChange(genericEvents[i].boolValue);
+			}
+			else if (genericEvents[i].type == GenericEvent::Type::ActivityChange)
+			{
+				this->handleActivityChange(genericEvents[i].boolValue);
+			}
+			else if (genericEvents[i].type == GenericEvent::Type::SizeChange)
+			{
+				this->handleSizeChange(genericEvents[i].intValue, genericEvents[i].intValueOther, genericEvents[i].boolValue);
+			}
+			else if (genericEvents[i].type == GenericEvent::Type::InputModeChange)
+			{
+				this->handleInputModeChange(InputMode::fromInt(genericEvents[i].intValue));
+			}
+			else if (genericEvents[i].type == GenericEvent::Type::VirtualKeyboardChange)
+			{
+				this->handleVirtualKeyboardChange(genericEvents[i].boolValue, genericEvents[i].floatValue);
+			}
+			else if (genericEvents[i].type == GenericEvent::Type::LowMemoryWarning)
+			{
+				this->handleLowMemoryWarning();
+			}
+		}
+		// due to possible problems with multiple scroll events in one frame, consecutive scroll events are merged (and so are move events for convenience)
+		gvec2 cumulativeScroll;
+		for_iter (i, 0, mouseEvents.size())
+		{
+			if (mouseEvents[i].type != MouseEvent::Type::Cancel && mouseEvents[i].type != MouseEvent::Type::Scroll)
+			{
+				this->cursorPosition = mouseEvents[i].position;
+			}
+			if (mouseEvents[i].type == MouseEvent::Type::Scroll)
+			{
+				cumulativeScroll += mouseEvents[i].position;
+				// if final event or next event is not a scroll event (because of merging)
+				if (i == mouseEvents.size() - 1 || mouseEvents[i + 1].type != MouseEvent::Type::Scroll)
+				{
+					this->handleMouseInput(mouseEvents[i].type, cumulativeScroll, mouseEvents[i].keyCode);
 					cumulativeScroll.set(0.0f, 0.0f);
 				}
 			}
-			// if not a scroll event or final move event (because of merging)
-			else if (mouseEvent.type != MouseInputEvent::Type::Move || (mouseEvent.type == MouseInputEvent::Type::Move &&
-				(this->mouseEvents.size() == 0 || this->mouseEvents.first().type != MouseInputEvent::Type::Move)))
+			// if not a move event at all or final move event or next event is not a move event (because of merging)
+			else if (mouseEvents[i].type != MouseEvent::Type::Move || (mouseEvents[i].type == MouseEvent::Type::Move &&
+				(i == mouseEvents.size() - 1 || mouseEvents[i + 1].type != MouseEvent::Type::Move)))
 			{
-				this->handleMouseEvent(mouseEvent.type, mouseEvent.position, mouseEvent.keyCode);
+				this->handleMouseInput(mouseEvents[i].type, mouseEvents[i].position, mouseEvents[i].keyCode);
 			}
 		}
-		KeyInputEvent keyEvent;
-		while (this->keyEvents.size() > 0) // required while instead of for, because this loop could modify this->keyEvents when the event is propagated
+		for_iter (i, 0, keyEvents.size())
 		{
-			keyEvent = this->keyEvents.removeFirst();
-			this->handleKeyEvent(keyEvent.type, keyEvent.keyCode, keyEvent.charCode);
+			this->handleKeyInput(keyEvents[i].type, keyEvents[i].keyCode, keyEvents[i].charCode);
 		}
-		TouchInputEvent touchEvent;
-		while (this->touchEvents.size() > 0) // required while instead of for, because this loop could modify this->touchEvents when the event is propagated
+		for_iter (i, 0, touchEvents.size())
 		{
-			touchEvent = this->touchEvents.removeFirst();
-			this->handleTouchEvent(touchEvent.touches);
+			this->handleTouchInput(touchEvents[i].touches);
 		}
-		ControllerInputEvent controllerEvent;
-		while (this->controllerEvents.size() > 0) // required while instead of for, because this loop could modify this->controllerEvents when the event is propagated
+		for_iter (i, 0, controllerEvents.size())
 		{
-			controllerEvent = this->controllerEvents.removeFirst();
-			this->handleControllerEvent(controllerEvent.type, controllerEvent.controllerIndex, controllerEvent.buttonCode, controllerEvent.axisValue);
+			this->handleControllerInput(controllerEvents[i].type, controllerEvents[i].controllerIndex, controllerEvents[i].buttonCode, controllerEvents[i].axisValue);
 		}
-		MotionInputEvent motionEvent;
-		while (this->motionEvents.size() > 0) // required while instead of for, because this loop could modify this->motionEvent when the event is propagated
+		for_iter (i, 0, motionEvents.size())
 		{
-			motionEvent = this->motionEvents.removeFirst();
-			this->handleMotionEvent(motionEvent.type, motionEvent.motionVector);
+			this->handleMotionInput(motionEvents[i].type, motionEvents[i].motionVector);
 		}
 	}
 
 	void Window::terminateMainLoop()
 	{
-		this->running = false;
+		april::application->finish();
 	}
 
 	void Window::showVirtualKeyboard()
@@ -522,7 +445,7 @@ namespace april
 			this->virtualKeyboard->showKeyboard(false);
 			if (!visible && this->virtualKeyboard->isVisible())
 			{
-				this->handleVirtualKeyboardChangeEvent(true, this->virtualKeyboard->getHeightRatio());
+				this->queueVirtualKeyboardChange(true, this->virtualKeyboard->getHeightRatio());
 			}
 		}
 	}
@@ -535,7 +458,7 @@ namespace april
 			this->virtualKeyboard->hideKeyboard(false);
 			if (visible && !this->virtualKeyboard->isVisible())
 			{
-				this->handleVirtualKeyboardChangeEvent(false, 0.0f);
+				this->queueVirtualKeyboardChange(false, 0.0f);
 			}
 		}
 	}
@@ -545,26 +468,6 @@ namespace april
 		if (this->paused)
 		{
 			timeDelta = 0.0f;
-		}
-		this->fpsTimer += timeDelta;
-		if (this->timeDeltaMaxLimit > 0.0f)
-		{
-			timeDelta = hmin(timeDelta, this->timeDeltaMaxLimit);
-		}
-		if (this->fpsTimer > 0.0f)
-		{
-			++this->fpsCount;
-			if (this->fpsTimer >= this->fpsResolution)
-			{
-				this->fps = hceil(this->fpsCount / this->fpsTimer);
-				this->fpsCount = 0;
-				this->fpsTimer = 0.0f;
-			}
-		}
-		else
-		{
-			this->fps = 0;
-			this->fpsCount = 0;
 		}
 		// returning true: continue execution
 		// returning false: abort execution
@@ -584,185 +487,13 @@ namespace april
 		return true;
 	}
 	
-	void Window::handleMouseEvent(MouseInputEvent::Type type, cgvec2 position, Key keyCode)
-	{
-		if (this->mouseDelegate != NULL)
-		{
-			if (type == MouseInputEvent::Type::Down)
-			{
-				this->mouseDelegate->setCurrentCursorPosition(position);
-				this->mouseDelegate->onMouseDown(keyCode);
-			}
-			else if (type == MouseInputEvent::Type::Up)
-			{
-				this->mouseDelegate->setCurrentCursorPosition(position);
-				this->mouseDelegate->onMouseUp(keyCode);
-			}
-			else if (type == MouseInputEvent::Type::Cancel)
-			{
-				this->mouseDelegate->setCurrentCursorPosition(position);
-				this->mouseDelegate->onMouseCancel(keyCode);
-			}
-			else if (type == MouseInputEvent::Type::Move)
-			{
-				this->mouseDelegate->setCurrentCursorPosition(position);
-				this->mouseDelegate->onMouseMove();
-			}
-			else if (type == MouseInputEvent::Type::Scroll)
-			{
-				this->mouseDelegate->onMouseScroll(position.x, position.y);
-			}
-		}
-	}
-	
-	void Window::handleKeyEvent(KeyInputEvent::Type type, Key keyCode, unsigned int charCode)
-	{
-		this->handleKeyOnlyEvent(type, keyCode); // doesn't do anything if keyCode is Key::None
-		if (type == KeyInputEvent::Type::Down && charCode > 0) // ignores invalid chars
-		{
-			// according to the unicode standard, this range is undefined and reserved for system codes
-			// for example, Mac OSX maps keys up, down, left, right to this key, inducing wrong char calls to the app.
-			// source: http://en.wikibooks.org/wiki/Unicode/Character_reference/F000-FFFF
-			if (charCode < 0xE000 || charCode > 0xF8FF)
-			{
-				this->handleCharOnlyEvent(charCode);
-			}
-		}
-	}
-
-	void Window::handleKeyOnlyEvent(KeyInputEvent::Type type, Key keyCode)
-	{
-		if (this->keyboardDelegate != NULL && keyCode != Key::None)
-		{
-			if (type == KeyInputEvent::Type::Down)
-			{
-				if (this->options.keyPause == keyCode)
-				{
-					this->paused = !this->paused;
-				}
-				this->keyboardDelegate->onKeyDown(keyCode);
-			}
-			else if (type == KeyInputEvent::Type::Up)
-			{
-				this->keyboardDelegate->onKeyUp(keyCode);
-			}
-			bool processed = false;
-			// emulation of buttons using keyboard
-			if (this->controllerEmulationKeys.hasKey(keyCode))
-			{
-				Button button = this->controllerEmulationKeys[keyCode];
-				if (button != Button::AxisLX && button != Button::AxisLY && button != Button::AxisRX && button != Button::AxisRY && button != Button::TriggerL && button != Button::TriggerR)
-				{
-					this->handleControllerEvent((type == KeyInputEvent::Type::Down ? ControllerInputEvent::Type::Down : ControllerInputEvent::Type::Up), 0, button, 0.0f);
-					processed = true;
-				}
-			}
-			// emulation of positive axis values using keyboard
-			if (!processed && this->controllerEmulationAxisesPositive.hasKey(keyCode))
-			{
-				Button button = this->controllerEmulationAxisesPositive[keyCode];
-				if (button == Button::AxisLX || button == Button::AxisLY || button == Button::AxisRX || button == Button::AxisRY || button == Button::TriggerL || button == Button::TriggerR)
-				{
-					this->handleControllerEvent(ControllerInputEvent::Type::Axis, 0, button, (type == KeyInputEvent::Type::Down ? 1.0f : 0.0f));
-					processed = true;
-				}
-			}
-			// emulation of negative axis values using keyboard
-			if (!processed && this->controllerEmulationAxisesNegative.hasKey(keyCode))
-			{
-				Button button = this->controllerEmulationAxisesNegative[keyCode];
-				if (button == Button::AxisLX || button == Button::AxisLY || button == Button::AxisRX || button == Button::AxisRY)
-				{
-					this->handleControllerEvent(ControllerInputEvent::Type::Axis, 0, button, (type == KeyInputEvent::Type::Down ? -1.0f : 0.0f));
-					processed = true;
-				}
-			}
-		}
-	}
-
-	void Window::handleCharOnlyEvent(unsigned int charCode)
-	{
-		if (this->keyboardDelegate != NULL && charCode >= 32 && charCode != 127) // special hack, backspace induces a character in some implementations
-		{
-			this->keyboardDelegate->onChar(charCode);
-		}
-	}
-
-	void Window::handleTouchEvent(const harray<gvec2>& touches)
-	{
-		if (this->touchDelegate != NULL)
-		{
-			this->touchDelegate->onTouch(touches);
-		}
-	}
-
-	void Window::handleControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
-	{
-		if (this->controllerDelegate != NULL)
-		{
-			if (buttonCode != Button::None)
-			{
-				if (type == ControllerInputEvent::Type::Down)
-				{
-					this->controllerDelegate->onButtonDown(controllerIndex, buttonCode);
-				}
-				else if (type == ControllerInputEvent::Type::Up)
-				{
-					this->controllerDelegate->onButtonUp(controllerIndex, buttonCode);
-				}
-				else if (type == ControllerInputEvent::Type::Axis)
-				{
-					this->controllerDelegate->onControllerAxisChange(controllerIndex, buttonCode, axisValue);
-				}
-			}
-			else // connection change always uses Button::None
-			{
-				if (type == ControllerInputEvent::Type::Connected)
-				{
-					this->controllerDelegate->onControllerConnectionChanged(controllerIndex, true);
-				}
-				else if (type == ControllerInputEvent::Type::Disconnected)
-				{
-					this->controllerDelegate->onControllerConnectionChanged(controllerIndex, false);
-				}
-			}
-		}
-	}
-
-	void Window::handleMotionEvent(Window::MotionInputEvent::Type type, cgvec3 motionVector)
-	{
-		if (this->motionDelegate != NULL)
-		{
-			if (type == MotionInputEvent::Type::Accelerometer)
-			{
-				this->motionDelegate->onAccelerometer(motionVector);
-			}
-			else if (type == MotionInputEvent::Type::LinearAccelerometer)
-			{
-				this->motionDelegate->onLinearAccelerometer(motionVector);
-			}
-			else if (type == MotionInputEvent::Type::Gravity)
-			{
-				this->motionDelegate->onGravity(motionVector);
-			}
-			else if (type == MotionInputEvent::Type::Rotation)
-			{
-				this->motionDelegate->onRotation(motionVector);
-			}
-			else if (type == MotionInputEvent::Type::Gyroscope)
-			{
-				this->motionDelegate->onGyroscope(motionVector);
-			}
-		}
-	}
-
-	bool Window::handleQuitRequestEvent(bool canCancel)
+	bool Window::handleQuitRequest(bool canCancel)
 	{
 		// returns whether or not the windowing system is permitted to close the window
 		return (this->systemDelegate == NULL || this->systemDelegate->onQuit(canCancel));
 	}
-	
-	void Window::handleFocusChangeEvent(bool focused)
+
+	void Window::handleFocusChange(bool focused)
 	{
 		this->focused = focused;
 		hlog::write(logTag, "Window " + hstr(focused ? "gained focus." : "lost focus."));
@@ -776,8 +507,39 @@ namespace april
 	{
 		hlog::warn(logTag, this->name + " does not implement activity change events!");
 	}
-	
-	void Window::handleVirtualKeyboardChangeEvent(bool visible, float heightRatio)
+
+	void Window::handleSizeChange(int width, int height, bool fullscreen)
+	{
+		hlog::writef(logTag, "Setting window resolution: (%d,%d); fullscreen: %s", width, height, fullscreen ? "yes" : "no");
+		if (this->systemDelegate != NULL)
+		{
+			this->systemDelegate->onWindowSizeChanged(width, height, fullscreen);
+		}
+	}
+
+	void Window::handleInputModeChange(const InputMode& inputMode)
+	{
+		InputMode newInputMode = inputMode;
+		if (this->inputModeTranslations.hasKey(newInputMode))
+		{
+			newInputMode = this->inputModeTranslations[newInputMode];
+		}
+		if (this->inputMode != newInputMode)
+		{
+			this->inputMode = newInputMode;
+			hlog::write(logTag, "Changing Input Mode to: " + this->inputMode.getName());
+			if (this->inputMode == InputMode::Controller)
+			{
+				this->cursorPosition.set(-10000.0f, -10000.0f);
+			}
+			if (this->systemDelegate != NULL)
+			{
+				this->systemDelegate->onInputModeChanged(newInputMode);
+			}
+		}
+	}
+
+	void Window::handleVirtualKeyboardChange(bool visible, float heightRatio)
 	{
 		this->virtualKeyboardVisible = visible;
 		this->virtualKeyboardHeightRatio = heightRatio;
@@ -787,7 +549,7 @@ namespace april
 		}
 	}
 
-	void Window::handleLowMemoryWarningEvent()
+	void Window::handleLowMemoryWarning()
 	{
 		hlog::writef(logTag, "Processing low memory warning. Current RAM: %lld B; Current VRAM: %lld B", april::getRamConsumption(), april::rendersys->getVRamConsumption());
 		if (this->systemDelegate != NULL)
@@ -797,20 +559,238 @@ namespace april
 		}
 	}
 
-	void Window::queueMouseEvent(MouseInputEvent::Type type, cgvec2 position, Key keyCode)
+	void Window::handleMouseInput(MouseEvent::Type type, cgvec2 position, Key keyCode)
 	{
-		this->mouseEvents += MouseInputEvent(type, position, keyCode);
+		if (this->mouseDelegate != NULL)
+		{
+			if (type == MouseEvent::Type::Down)
+			{
+				this->mouseDelegate->setCurrentCursorPosition(position);
+				this->mouseDelegate->onMouseDown(keyCode);
+			}
+			else if (type == MouseEvent::Type::Up)
+			{
+				this->mouseDelegate->setCurrentCursorPosition(position);
+				this->mouseDelegate->onMouseUp(keyCode);
+			}
+			else if (type == MouseEvent::Type::Cancel)
+			{
+				this->mouseDelegate->setCurrentCursorPosition(position);
+				this->mouseDelegate->onMouseCancel(keyCode);
+			}
+			else if (type == MouseEvent::Type::Move)
+			{
+				this->mouseDelegate->setCurrentCursorPosition(position);
+				this->mouseDelegate->onMouseMove();
+			}
+			else if (type == MouseEvent::Type::Scroll)
+			{
+				this->mouseDelegate->onMouseScroll(position.x, position.y);
+			}
+		}
+	}
+	
+	void Window::handleKeyInput(KeyEvent::Type type, Key keyCode, unsigned int charCode)
+	{
+		this->handleKeyOnlyInput(type, keyCode); // doesn't do anything if keyCode is Key::None
+		if (type == KeyEvent::Type::Down && charCode > 0) // ignores invalid chars
+		{
+			// according to the unicode standard, this range is undefined and reserved for system codes
+			// for example, Mac OSX maps keys up, down, left, right to this key, inducing wrong char calls to the app.
+			// source: http://en.wikibooks.org/wiki/Unicode/Character_reference/F000-FFFF
+			if (charCode < 0xE000 || charCode > 0xF8FF)
+			{
+				this->handleCharOnlyInput(charCode);
+			}
+		}
 	}
 
-	void Window::queueKeyEvent(KeyInputEvent::Type type, Key keyCode, unsigned int charCode)
+	void Window::handleKeyOnlyInput(KeyEvent::Type type, Key keyCode)
 	{
-		this->keyEvents += KeyInputEvent(type, keyCode, charCode);
+		if (this->keyDelegate != NULL && keyCode != Key::None)
+		{
+			if (type == KeyEvent::Type::Down)
+			{
+				if (this->options.keyPause == keyCode)
+				{
+					this->paused = !this->paused;
+				}
+				this->keyDelegate->onKeyDown(keyCode);
+			}
+			else if (type == KeyEvent::Type::Up)
+			{
+				this->keyDelegate->onKeyUp(keyCode);
+			}
+			bool processed = false;
+			// emulation of buttons using keyboard
+			if (this->controllerEmulationKeys.hasKey(keyCode))
+			{
+				Button button = this->controllerEmulationKeys[keyCode];
+				if (button != Button::AxisLX && button != Button::AxisLY && button != Button::AxisRX && button != Button::AxisRY && button != Button::TriggerL && button != Button::TriggerR)
+				{
+					this->handleControllerInput((type == KeyEvent::Type::Down ? ControllerEvent::Type::Down : ControllerEvent::Type::Up), 0, button, 0.0f);
+					processed = true;
+				}
+			}
+			// emulation of positive axis values using keyboard
+			if (!processed && this->controllerEmulationAxisesPositive.hasKey(keyCode))
+			{
+				Button button = this->controllerEmulationAxisesPositive[keyCode];
+				if (button == Button::AxisLX || button == Button::AxisLY || button == Button::AxisRX || button == Button::AxisRY || button == Button::TriggerL || button == Button::TriggerR)
+				{
+					this->handleControllerInput(ControllerEvent::Type::Axis, 0, button, (type == KeyEvent::Type::Down ? 1.0f : 0.0f));
+					processed = true;
+				}
+			}
+			// emulation of negative axis values using keyboard
+			if (!processed && this->controllerEmulationAxisesNegative.hasKey(keyCode))
+			{
+				Button button = this->controllerEmulationAxisesNegative[keyCode];
+				if (button == Button::AxisLX || button == Button::AxisLY || button == Button::AxisRX || button == Button::AxisRY)
+				{
+					this->handleControllerInput(ControllerEvent::Type::Axis, 0, button, (type == KeyEvent::Type::Down ? -1.0f : 0.0f));
+					processed = true;
+				}
+			}
+		}
 	}
 
-	void Window::queueTouchEvent(MouseInputEvent::Type type, cgvec2 position, int index)
+	void Window::handleCharOnlyInput(unsigned int charCode)
 	{
+		if (this->keyDelegate != NULL && charCode >= 32 && charCode != 127) // special hack, backspace induces a character in some implementations
+		{
+			this->keyDelegate->onChar(charCode);
+		}
+	}
+
+	void Window::handleTouchInput(const harray<gvec2>& touches)
+	{
+		if (this->touchDelegate != NULL)
+		{
+			this->touchDelegate->onTouch(touches);
+		}
+	}
+
+	void Window::handleControllerInput(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
+	{
+		if (this->controllerDelegate != NULL)
+		{
+			if (buttonCode != Button::None)
+			{
+				if (type == ControllerEvent::Type::Down)
+				{
+					this->controllerDelegate->onButtonDown(controllerIndex, buttonCode);
+				}
+				else if (type == ControllerEvent::Type::Up)
+				{
+					this->controllerDelegate->onButtonUp(controllerIndex, buttonCode);
+				}
+				else if (type == ControllerEvent::Type::Axis)
+				{
+					this->controllerDelegate->onControllerAxisChange(controllerIndex, buttonCode, axisValue);
+				}
+			}
+			else // connection change always uses Button::None
+			{
+				if (type == ControllerEvent::Type::Connected)
+				{
+					this->controllerDelegate->onControllerConnectionChanged(controllerIndex, true);
+				}
+				else if (type == ControllerEvent::Type::Disconnected)
+				{
+					this->controllerDelegate->onControllerConnectionChanged(controllerIndex, false);
+				}
+			}
+		}
+	}
+
+	void Window::handleMotionInput(MotionEvent::Type type, cgvec3 motionVector)
+	{
+		if (this->motionDelegate != NULL)
+		{
+			if (type == MotionEvent::Type::Accelerometer)
+			{
+				this->motionDelegate->onAccelerometer(motionVector);
+			}
+			else if (type == MotionEvent::Type::LinearAccelerometer)
+			{
+				this->motionDelegate->onLinearAccelerometer(motionVector);
+			}
+			else if (type == MotionEvent::Type::Gravity)
+			{
+				this->motionDelegate->onGravity(motionVector);
+			}
+			else if (type == MotionEvent::Type::Rotation)
+			{
+				this->motionDelegate->onRotation(motionVector);
+			}
+			else if (type == MotionEvent::Type::Gyroscope)
+			{
+				this->motionDelegate->onGyroscope(motionVector);
+			}
+		}
+	}
+
+	bool Window::queueQuitRequest(bool canCancel)
+	{
+		hmutex::ScopeLock lock(&this->eventMutex);
+		this->genericEvents += GenericEvent(GenericEvent::Type::QuitRequest, canCancel);
+		return false; // always return false, the app needs to make a decision whether to terminate or not
+	}
+
+	void Window::queueFocusChange(bool focused)
+	{
+		hmutex::ScopeLock lock(&this->eventMutex);
+		this->genericEvents += GenericEvent(GenericEvent::Type::FocusChange, focused);
+	}
+
+	void Window::queueActivityChange(bool active)
+	{
+		hmutex::ScopeLock lock(&this->eventMutex);
+		this->genericEvents += GenericEvent(GenericEvent::Type::ActivityChange, active);
+	}
+
+	void Window::queueSizeChange(int width, int height, bool fullscreen)
+	{
+		hmutex::ScopeLock lock(&this->eventMutex);
+		this->genericEvents += GenericEvent(GenericEvent::Type::SizeChange, width, height, fullscreen);
+	}
+
+	void Window::queueInputModeChange(const InputMode& inputMode)
+	{
+		hmutex::ScopeLock lock(&this->eventMutex);
+		this->genericEvents += GenericEvent(GenericEvent::Type::InputModeChange, (int)inputMode.value);
+	}
+
+	void Window::queueVirtualKeyboardChange(bool visible, float heightRatio)
+	{
+		hmutex::ScopeLock lock(&this->eventMutex);
+		this->genericEvents += GenericEvent(GenericEvent::Type::VirtualKeyboardChange, visible, heightRatio);
+	}
+
+	void Window::queueLowMemoryWarning()
+	{
+		hmutex::ScopeLock lock(&this->eventMutex);
+		this->genericEvents += GenericEvent(GenericEvent::Type::LowMemoryWarning);
+	}
+
+	void Window::queueMouseInput(MouseEvent::Type type, cgvec2 position, Key keyCode)
+	{
+		hmutex::ScopeLock lock(&this->eventMutex);
+		this->mouseEvents += MouseEvent(type, position, keyCode);
+	}
+
+	void Window::queueKeyInput(KeyEvent::Type type, Key keyCode, unsigned int charCode)
+	{
+		hmutex::ScopeLock lock(&this->eventMutex);
+		this->keyEvents += KeyEvent(type, keyCode, charCode);
+	}
+
+	void Window::queueTouchInput(MouseEvent::Type type, cgvec2 position, int index)
+	{
+		hmutex::ScopeLock lock(&this->eventMutex);
 		harray<gvec2> previousTouches = this->touches;
-		if (type == MouseInputEvent::Type::Down)
+		if (type == MouseEvent::Type::Down)
 		{
 			if (index < this->touches.size()) // DOWN event of an already indexed touch, never happened so far
 			{
@@ -818,7 +798,7 @@ namespace april
 			}
 			this->touches += position;
 		}
-		else if (type == MouseInputEvent::Type::Up)
+		else if (type == MouseEvent::Type::Up)
 		{
 			if (index >= this->touches.size()) // redundant UP event, can happen
 			{
@@ -826,7 +806,7 @@ namespace april
 			}
 			this->touches.removeAt(index);
 		}
-		else if (type == MouseInputEvent::Type::Move)
+		else if (type == MouseEvent::Type::Move)
 		{
 			if (index >= this->touches.size()) // MOVE event of an unindexed touch, never happened so far
 			{
@@ -834,7 +814,7 @@ namespace april
 			}
 			this->touches[index] = position;
 		}
-		else if (type == MouseInputEvent::Type::Cancel) // canceling a particular pointer, required by specific systems (e.g. WinRT)
+		else if (type == MouseEvent::Type::Cancel) // canceling a particular pointer, required by specific systems (e.g. WinRT)
 		{
 			if (index < this->touches.size())
 			{
@@ -851,36 +831,28 @@ namespace april
 			if (!this->multiTouchActive && previousTouches.size() == 1)
 			{
 				// cancel (notify the app) that the previously called mouse-down event is canceled so multi-touch can be properly processed
-				this->queueMouseEvent(MouseInputEvent::Type::Cancel, previousTouches.first(), Key::MouseL);
+				this->mouseEvents += MouseEvent(MouseEvent::Type::Cancel, previousTouches.first(), Key::MouseL);
 			}
 			this->multiTouchActive = (this->touches.size() > 0);
 		}
 		else
 		{
-			this->queueMouseEvent(type, position, Key::MouseL);
+			this->mouseEvents += MouseEvent(type, position, Key::MouseL);
 		}
 		this->touchEvents.clear();
-		this->touchEvents += TouchInputEvent(this->touches);
+		this->touchEvents += TouchEvent(this->touches);
 	}
 
-	void Window::queueControllerEvent(ControllerInputEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
+	void Window::queueControllerInput(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
 	{
-		this->controllerEvents += ControllerInputEvent(type, controllerIndex, buttonCode, axisValue);
+		hmutex::ScopeLock lock(&this->eventMutex);
+		this->controllerEvents += ControllerEvent(type, controllerIndex, buttonCode, axisValue);
 	}
 
-	void Window::queueMotionEvent(Window::MotionInputEvent::Type type, cgvec3 motionVector)
+	void Window::queueMotionInput(MotionEvent::Type type, cgvec3 motionVector)
 	{
-		this->motionEvents += MotionInputEvent(type, motionVector);
-	}
-
-	float Window::_calcTimeSinceLastFrame()
-	{
-		float timeDelta = this->timer.diff(true);
-		if (!this->focused)
-		{
-			timeDelta = 0.0f;
-		}
-		return timeDelta;
+		hmutex::ScopeLock lock(&this->eventMutex);
+		this->motionEvents += MotionEvent(type, motionVector);
 	}
 
 	hstr Window::findCursorResource(chstr filename) const

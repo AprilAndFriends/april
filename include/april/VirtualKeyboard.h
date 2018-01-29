@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -44,12 +44,21 @@ namespace april
 		void drawKeyboard();
 
 	protected:
+		/// @brief Visibility flag.
 		bool visible;
+		/// @brief Height ratio of the screen.
 		float heightRatio;
 
+		/// @brief Shows the VirtualKeyboard.
+		/// @param[in] forced Whether to force display.
+		/// @return Height ratio of the screen.
 		virtual float _showKeyboard(bool forced) = 0;
+		/// @brief Shows the VirtualKeyboard.
+		/// @param[in] forced Whether to force display.
+		/// @return True if successful.
 		virtual bool _hideKeyboard(bool forced) = 0;
 
+		/// @brief Draws the VirtualKeyboard.
 		virtual void _drawKeyboard() = 0;
 
 	};

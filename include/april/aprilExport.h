@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -12,6 +12,9 @@
 
 #ifndef APRIL_EXPORT_H
 #define APRIL_EXPORT_H
+
+// TODOx - remove this once merged into trunk
+#define __APRIL_5_x_API
 
 	#ifdef _LIB
 		#define aprilExport

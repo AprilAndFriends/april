@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -24,6 +24,7 @@
 #include "OpenGLES_RenderSystem.h"
 #include "OpenGLES_Texture.h"
 #include "OpenGLES_VertexShader.h"
+#include "RenderState.h"
 #include "Window.h"
 
 #define VERTEX_ARRAY 0
@@ -117,8 +118,8 @@ namespace april
 		return true;
 	}
 
-	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(),
-		deviceState_matrixChanged(true), deviceState_systemColorChanged(true), deviceState_colorModeFactorChanged(true)
+	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(), deviceState_matrixChanged(true),
+		deviceState_systemColorChanged(true), deviceState_colorModeFactorChanged(true)
 	{
 #ifdef _ANDROID
 		this->etc1Supported = false;
@@ -200,7 +201,7 @@ namespace april
 	void OpenGLES_RenderSystem::_deviceSuspend()
 	{
 		OpenGL_RenderSystem::_deviceSuspend();
-		this->unloadTextures();
+		this->_deviceUnloadTextures();
 		this->_destroyShaders();
 	}
 
@@ -212,7 +213,12 @@ namespace april
 			return;
 		}
 #endif
-		hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
+		hstr extensions;
+		const GLubyte* extensionsString = glGetString(GL_EXTENSIONS);
+		if (extensionsString != NULL)
+		{
+			extensions = (const char*)extensionsString;
+		}
 		hlog::write(logTag, "Extensions supported: " + extensions);
 #if defined(_IOS) || defined(_WINRT) // iOS devices support limited NPOT textures as per device specification since iPhone 3G S
 		this->caps.npotTexturesLimited = true;
@@ -240,6 +246,7 @@ namespace april
 		glEnableVertexAttribArray(VERTEX_ARRAY);
 		OpenGL_RenderSystem::_deviceSetup();
 		this->_createShaders();
+		this->deviceState->texture = NULL;
 		this->deviceState_matrixChanged = true;
 		this->deviceState_systemColorChanged = true;
 		this->deviceState_colorModeFactorChanged = true;
@@ -335,9 +342,9 @@ namespace april
 #endif
 	}
 
-	void OpenGLES_RenderSystem::_updateDeviceState(bool forceUpdate)
+	void OpenGLES_RenderSystem::_updateDeviceState(RenderState* state, bool forceUpdate)
 	{
-		OpenGL_RenderSystem::_updateDeviceState(forceUpdate);
+		OpenGL_RenderSystem::_updateDeviceState(state, forceUpdate);
 		this->_updateShader(forceUpdate);
 	}
 
@@ -466,58 +473,67 @@ namespace april
 		}
 		if (forceUpdate)
 		{
-			glUseProgram(shader->glShaderProgram);
 			this->deviceState_shader = shader;
+			if (this->deviceState_shader != NULL)
+			{
+				glUseProgram(this->deviceState_shader->glShaderProgram);
+			}
 			if (this->deviceState->useTexture)
 			{
 				glActiveTexture(GL_TEXTURE0);
 			}
-			int samplerLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "sampler2d");
-			if (samplerLocation >= 0)
+			if (this->deviceState_shader != NULL)
 			{
-				glUniform1i(samplerLocation, 0);
-			}
-#ifdef _ANDROID
-			if (useAlphaHack) // will only be true if this->deviceState->useTexture is true
-			{
-				samplerLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "sampler2dAlpha");
+				int samplerLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "sampler2d");
 				if (samplerLocation >= 0)
 				{
-					glUniform1i(samplerLocation, 1);
+					glUniform1i(samplerLocation, 0);
 				}
-			}
+#ifdef _ANDROID
+				if (useAlphaHack) // will only be true if this->deviceState->useTexture is true
+				{
+					samplerLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "sampler2dAlpha");
+					if (samplerLocation >= 0)
+					{
+						glUniform1i(samplerLocation, 1);
+					}
+				}
 #endif
-		}
-		if (forceUpdate || this->deviceState_matrixChanged)
-		{
-			int matrixLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "transformationMatrix");
-			glUniformMatrix4fv(matrixLocation, 1, GL_FALSE, (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).data);
-			this->deviceState_matrixChanged = false;
-		}
-		if (forceUpdate || this->deviceState_systemColorChanged)
-		{
-			int systemColorLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "systemColor");
-			if (systemColorLocation >= 0)
-			{
-				static float shaderSystemColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-				shaderSystemColor[0] = this->deviceState->systemColor.r_f();
-				shaderSystemColor[1] = this->deviceState->systemColor.g_f();
-				shaderSystemColor[2] = this->deviceState->systemColor.b_f();
-				shaderSystemColor[3] = this->deviceState->systemColor.a_f();
-				glUniform4fv(systemColorLocation, 1, shaderSystemColor);
 			}
-			this->deviceState_systemColorChanged = false;
 		}
-		if (forceUpdate || this->deviceState_colorModeFactorChanged)
+		if (this->deviceState_shader != NULL)
 		{
-			int lerpLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "lerpAlpha");
-			if (lerpLocation >= 0)
+			if (forceUpdate || this->deviceState_matrixChanged)
 			{
-				static float shaderColorModeFactor = 1.0f;
-				shaderColorModeFactor = this->deviceState->colorModeFactor;
-				glUniform1fv(lerpLocation, 1, &shaderColorModeFactor);
+				int matrixLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "transformationMatrix");
+				glUniformMatrix4fv(matrixLocation, 1, GL_FALSE, (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).data);
+				this->deviceState_matrixChanged = false;
 			}
-			this->deviceState_colorModeFactorChanged = false;
+			if (forceUpdate || this->deviceState_systemColorChanged)
+			{
+				int systemColorLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "systemColor");
+				if (systemColorLocation >= 0)
+				{
+					static float shaderSystemColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+					shaderSystemColor[0] = this->deviceState->systemColor.r_f();
+					shaderSystemColor[1] = this->deviceState->systemColor.g_f();
+					shaderSystemColor[2] = this->deviceState->systemColor.b_f();
+					shaderSystemColor[3] = this->deviceState->systemColor.a_f();
+					glUniform4fv(systemColorLocation, 1, shaderSystemColor);
+				}
+				this->deviceState_systemColorChanged = false;
+			}
+			if (forceUpdate || this->deviceState_colorModeFactorChanged)
+			{
+				int lerpLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "lerpAlpha");
+				if (lerpLocation >= 0)
+				{
+					static float shaderColorModeFactor = 1.0f;
+					shaderColorModeFactor = this->deviceState->colorModeFactor;
+					glUniform1fv(lerpLocation, 1, &shaderColorModeFactor);
+				}
+				this->deviceState_colorModeFactorChanged = false;
+			}
 		}
 	}
 

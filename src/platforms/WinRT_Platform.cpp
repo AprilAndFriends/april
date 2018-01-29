@@ -1,12 +1,12 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#if defined(_WINRT) && !defined(_OPENKODE)
+#ifdef _WINRT
 #define __HL_INCLUDE_PLATFORM_HEADERS
 #include <gtypes/Vector2.h>
 #include <hltypes/hdir.h>
@@ -17,6 +17,7 @@
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
+#include "Application.h"
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
@@ -27,6 +28,7 @@
 using namespace Windows::Foundation::Collections;
 using namespace Windows::Graphics::Display;
 using namespace Windows::Storage;
+using namespace Windows::UI::Core;
 using namespace Windows::UI::Popups;
 using namespace Windows::UI::ViewManagement;
 
@@ -80,7 +82,7 @@ namespace april
 				info.locale = info.locale.lowered();
 				info.localeVariant = info.localeVariant.uppered();
 			}
-			info.osVersion.set(6, 3); // can't detect if Windows 10 maybe
+			info.osVersion.set(10, 0);
 		}
 		DisplayInformation^ displayInfo = DisplayInformation::GetForCurrentView();
 		// display DPI
@@ -103,7 +105,7 @@ namespace april
 			}
 			displayDpiLogged = true;
 		}
-#ifdef _WINRT_WINDOW
+#ifdef _WINUWP_WINDOW
 		// display resolution
 		float dpiRatio = WinRT::getDpiRatio();
 		CoreWindow^ window = CoreWindow::GetForCurrentThread();
@@ -115,7 +117,14 @@ namespace april
 		{
 			hswap(width, height);
 		}
-		info.displayResolution.set((float)width, (float)height);
+		if (info.displayResolution.y == 0.0f)
+		{
+			info.displayResolution.set((float)width, (float)height);
+		}
+		else
+		{
+			info.displayResolution.x = hmax((float)width, info.displayResolution.x);
+		}
 #endif
 	}
 
@@ -143,38 +152,26 @@ namespace april
 		return true;
 	}
 
-	static void(*currentCallback)(const MessageBoxButton&) = NULL;
+	static void(*_currentDialogCallback)(MessageBoxButton) = NULL;
 
-	void _showMessageBoxResult(int button)
+	static void _showMessageBoxResult(int button)
 	{
 		switch (button)
 		{
 		case IDOK:
-			if (currentCallback != NULL)
-			{
-				(*currentCallback)(MessageBoxButton::Ok);
-			}
+			Application::messageBoxCallback(MessageBoxButton::Ok);
 			break;
 		case IDYES:
-			if (currentCallback != NULL)
-			{
-				(*currentCallback)(MessageBoxButton::Yes);
-			}
+			Application::messageBoxCallback(MessageBoxButton::Yes);
 			break;
 		case IDNO:
-			if (currentCallback != NULL)
-			{
-				(*currentCallback)(MessageBoxButton::No);
-			}
+			Application::messageBoxCallback(MessageBoxButton::No);
 			break;
 		case IDCANCEL:
-			if (currentCallback != NULL)
-			{
-				(*currentCallback)(MessageBoxButton::Cancel);
-			}
+			Application::messageBoxCallback(MessageBoxButton::Cancel);
 			break;
 		default:
-			hlog::error(logTag, "Unknown message box callback: " + hstr(button));
+			Application::messageBoxCallback(MessageBoxButton::Ok);
 			break;
 		}
 	}
@@ -182,15 +179,13 @@ namespace april
 	static harray<DispatchedHandler^> messageBoxQueue;
 	static hmutex messageBoxQueueMutex;
 
-	void _showMessageBox_platform(chstr title, chstr text, MessageBoxButton buttons, MessageBoxStyle style,
-		hmap<MessageBoxButton, hstr> customButtonTitles, void (*callback)(const MessageBoxButton&), bool modal)
+	void _showMessageBox_platform(const MessageBoxData& data)
 	{
 		DispatchedHandler^ handler = ref new DispatchedHandler(
-			[title, text, buttons, style, customButtonTitles, callback]()
+			[data]()
 		{
-			currentCallback = callback;
-			_HL_HSTR_TO_PSTR_DEF(text);
-			_HL_HSTR_TO_PSTR_DEF(title);
+			Platform::String^ ptitle = _HL_HSTR_TO_PSTR(data.title);
+			Platform::String^ ptext = _HL_HSTR_TO_PSTR(data.text);
 			MessageDialog^ dialog = ref new MessageDialog(ptext, ptitle);
 			UICommandInvokedHandler^ commandHandler = ref new UICommandInvokedHandler(
 				[](IUICommand^ command)
@@ -212,20 +207,19 @@ namespace april
 			hstr yes;
 			hstr no;
 			hstr cancel;
-			_makeButtonLabels(&ok, &yes, &no, &cancel, buttons, customButtonTitles);
+			_makeButtonLabels(&ok, &yes, &no, &cancel, data.buttons, data.customButtonTitles);
 			_HL_HSTR_TO_PSTR_DEF(ok);
 			_HL_HSTR_TO_PSTR_DEF(yes);
 			_HL_HSTR_TO_PSTR_DEF(no);
 			_HL_HSTR_TO_PSTR_DEF(cancel);
-
-			if (buttons == MessageBoxButton::OkCancel)
+			if (data.buttons == MessageBoxButton::OkCancel)
 			{
 				dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 				dialog->Commands->Append(ref new UICommand(pcancel, commandHandler, IDCANCEL));
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 1;
 			}
-			else if (buttons == MessageBoxButton::YesNoCancel)
+			else if (data.buttons == MessageBoxButton::YesNoCancel)
 			{
 				dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 				dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));
@@ -233,13 +227,13 @@ namespace april
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 2;
 			}
-			else if (buttons == MessageBoxButton::Ok)
+			else if (data.buttons == MessageBoxButton::Ok)
 			{
 				dialog->Commands->Append(ref new UICommand(pok, commandHandler, IDOK));
 				dialog->DefaultCommandIndex = 0;
 				dialog->CancelCommandIndex = 0;
 			}
-			else if (buttons == MessageBoxButton::YesNo)
+			else if (data.buttons == MessageBoxButton::YesNo)
 			{
 				dialog->Commands->Append(ref new UICommand(pyes, commandHandler, IDYES));
 				dialog->Commands->Append(ref new UICommand(pno, commandHandler, IDNO));

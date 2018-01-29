@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -34,7 +34,7 @@ namespace april
 	{
 		this->d3dPool = D3DPOOL_DEFAULT;
 		this->d3dUsage = 0;
-		// some GPUs seem to have problems creating off-screen A8 surfaces when D3DPOOL_DEFAULT is used
+		// some GPUs seem to have problems creating off-screen A8 surfaces when D3DPOOL_DEFAULT is used so this special hack is used
 		if (!((DirectX9_RenderSystem*)april::rendersys)->_supportsA8Surface && this->d3dFormat == D3DFMT_A8)
 		{
 			this->d3dPool = D3DPOOL_MANAGED;
@@ -43,11 +43,6 @@ namespace april
 		{
 			this->d3dUsage = D3DUSAGE_DYNAMIC;
 		}
-		// TODOaa - change pool to save memory
-		if (type == Type::RenderTarget)
-		{
-			this->d3dUsage = D3DUSAGE_RENDERTARGET;
-		}
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, this->d3dUsage, this->d3dFormat, this->d3dPool, &this->d3dTexture, NULL);
 		if (hr == D3DERR_OUTOFVIDEOMEMORY)
 		{
@@ -55,7 +50,7 @@ namespace april
 			if (!_preventRecursion)
 			{
 				_preventRecursion = true;
-				april::window->handleLowMemoryWarningEvent();
+				april::window->handleLowMemoryWarning();
 				_preventRecursion = false;
 				hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, this->d3dUsage, this->d3dFormat, this->d3dPool, &this->d3dTexture, NULL);
 			}
@@ -78,9 +73,7 @@ namespace april
 				if (!FAILED(hr) && data != NULL)
 				{
 					unsigned char* newData = this->_createPotData(w, h, data);
-					this->type = Type::Volatile; // so the write() call right below goes through
-					this->write(0, 0, w, h, 0, 0, newData, w, h, this->format);
-					this->type = type;
+					this->_rawWrite(0, 0, w, h, 0, 0, newData, w, h, this->format);
 					delete[] newData;
 					this->firstUpload = false;
 				}
@@ -153,44 +146,19 @@ namespace april
 			return lock;
 		}
 		IDirect3DSurface9* surface = NULL;
-		if (this->type != Type::RenderTarget)
+		hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(w, h, this->d3dFormat, D3DPOOL_SYSTEMMEM, &surface, NULL);
+		if (FAILED(hr))
 		{
-			hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(w, h, this->d3dFormat, D3DPOOL_SYSTEMMEM, &surface, NULL);
-			if (FAILED(hr))
-			{
-				return lock;
-			}
-			hr = surface->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
-			if (FAILED(hr))
-			{
-				surface->Release();
-				return lock;
-			}
-			// a D3DLOCKED_RECT always has a "pitch" that is a multiple of 4
-			lock.activateLock(0, 0, w, h, x, y, (unsigned char*)lockRect.pBits, lockRect.Pitch / nativeBpp, h, nativeFormat);
+			return lock;
 		}
-		else
+		hr = surface->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
+		if (FAILED(hr))
 		{
-			hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(this->width, this->height, this->d3dFormat, D3DPOOL_SYSTEMMEM, &surface, NULL);
-			if (FAILED(hr))
-			{
-				return lock;
-			}
-			hr = APRIL_D3D_DEVICE->GetRenderTargetData(this->_getSurface(), surface);
-			if (FAILED(hr))
-			{
-				surface->Release();
-				return lock;
-			}
-			hr = surface->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
-			if (FAILED(hr))
-			{
-				surface->Release();
-				return lock;
-			}
-			// a D3DLOCKED_RECT always has a "pitch" that is a multiple of 4
-			lock.activateRenderTarget(x, y, w, h, 0, 0, (unsigned char*)lockRect.pBits, lockRect.Pitch / nativeBpp, this->height, nativeFormat);
+			surface->Release();
+			return lock;
 		}
+		// a D3DLOCKED_RECT always has a "pitch" that is a multiple of 4
+		lock.activateLock(0, 0, w, h, x, y, (unsigned char*)lockRect.pBits, lockRect.Pitch / nativeBpp, h, nativeFormat);
 		lock.systemBuffer = surface;
 		return lock;
 	}
@@ -209,30 +177,27 @@ namespace april
 				texture->UnlockRect(0);
 			}
 		}
-		else
+		else if (update)
 		{
 			IDirect3DSurface9* surface = (IDirect3DSurface9*)lock.systemBuffer;
 			if (lock.locked)
 			{
 				surface->UnlockRect();
-				if (update)
+				if (!lock.renderTarget)
 				{
-					if (!lock.renderTarget)
-					{
-						RECT rect;
-						rect.left = lock.x;
-						rect.top = lock.y;
-						rect.right = lock.x + lock.w;
-						rect.bottom = lock.y + lock.h;
-						POINT dest;
-						dest.x = lock.dx;
-						dest.y = lock.dy;
-						APRIL_D3D_DEVICE->UpdateSurface(surface, &rect, this->_getSurface(), &dest);
-					}
-					else
-					{
-						APRIL_D3D_DEVICE->UpdateSurface(surface, NULL, this->_getSurface(), NULL);
-					}
+					RECT rect;
+					rect.left = lock.x;
+					rect.top = lock.y;
+					rect.right = lock.x + lock.w;
+					rect.bottom = lock.y + lock.h;
+					POINT dest;
+					dest.x = lock.dx;
+					dest.y = lock.dy;
+					APRIL_D3D_DEVICE->UpdateSurface(surface, &rect, this->_getSurface(), &dest);
+				}
+				else
+				{
+					APRIL_D3D_DEVICE->UpdateSurface(surface, NULL, this->_getSurface(), NULL);
 				}
 			}
 			surface->Release();

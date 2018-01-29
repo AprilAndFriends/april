@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -9,34 +9,39 @@
 #import <UIKit/UIKit.h>
 #include "ApriliOSAppDelegate.h"
 
-#import "main_base.h"
+#include "Application.h"
+#include "main_base.h"
 
 namespace april
 {
-	extern harray<hstr> args;
-}
-
-int __april_main(void (*anAprilInit)(const harray<hstr>&), void (*anAprilDestroy)(), int argc, char** argv)
-{	
-	if (argv != NULL && argv[0] != NULL)
-	{
-		for_iter (i, 0, argc)
+	int __mainStandard(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)(), int argc, char** argv)
+	{	
+		harray<hstr> args;
+		if (argv != NULL && argv[0] != NULL)
 		{
-			april::args += argv[i];
+			for_iter (i, 0, argc)
+			{
+				args += argv[i];
+			}
 		}
+		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
+		april::application->setArgs(args);
+		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+		// limit GCD from spawning too much threads
+		[[NSOperationQueue mainQueue] setMaxConcurrentOperationCount:1];
+		[[NSOperationQueue currentQueue] setMaxConcurrentOperationCount:1];
+		NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
+		NSString* appDelegateClassName = [userDefaults objectForKey:@"appDelegateClassName"];
+		if (appDelegateClassName == nil)
+		{
+			appDelegateClassName = NSStringFromClass([ApriliOSAppDelegate class]);
+		}
+		int result = UIApplicationMain(argc, argv, nil, appDelegateClassName);
+		april::application->destroy();
+		delete april::application;
+		april::application = NULL;
+		[pool drain];
+		return result;
 	}
-	NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-	// limit GCD from spawning too much threads
-	[[NSOperationQueue mainQueue] setMaxConcurrentOperationCount:1];
-	[[NSOperationQueue currentQueue] setMaxConcurrentOperationCount:1];
 	
-	NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
-	NSString* appDelegateClassName = [userDefaults objectForKey:@"appDelegateClassName"];
-	if (appDelegateClassName == nil)
-	{
-		appDelegateClassName = NSStringFromClass([ApriliOSAppDelegate class]);
-	}
-	int result = UIApplicationMain(argc, argv, nil, appDelegateClassName);
-	[pool drain];
-	return result;
 }

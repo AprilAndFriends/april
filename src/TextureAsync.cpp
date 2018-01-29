@@ -1,5 +1,5 @@
 /// @file
-/// @version 4.5
+/// @version 5.0
 /// 
 /// @section LICENSE
 /// 
@@ -37,6 +37,10 @@ namespace april
 
 	void TextureAsync::update()
 	{
+		if (april::rendersys == NULL)
+		{
+			return;
+		}
 		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
 		if (TextureAsync::readerRunning && !TextureAsync::readerThread.isRunning())
 		{
@@ -56,9 +60,9 @@ namespace april
 		foreach (Texture*, it, textures)
 		{
 			// only async on-demand textures shouldn't be loaded
-			if ((*it)->getLoadMode() != Texture::LoadMode::AsyncDeferredUpload && (*it)->isLoadedAsync())
+			if ((*it)->getLoadMode() != Texture::LoadMode::AsyncDeferredUpload && (*it)->isReadyForUpload())
 			{
-				(*it)->load();
+				(*it)->_upload();
 				++count;
 				if (maxCount > 0 && count >= maxCount)
 				{
@@ -217,7 +221,10 @@ namespace april
 			{
 				foreach (hstream*, it, TextureAsync::streams)
 				{
-					delete (*it);
+					if ((*it) != NULL)
+					{
+						delete (*it);
+					}
 				}
 				TextureAsync::streams.clear();
 				break;
