@@ -27,8 +27,8 @@ namespace april
 		Mac_Window();
 		~Mac_Window();
 
-		int getWidth() const;
-		int getHeight() const;
+		HL_DEFINE_GET(int, width, Width);
+		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId() const;
 		
 		void setTitle(chstr title);
@@ -42,6 +42,7 @@ namespace april
 		void checkEvents();
 		bool update(float timeDelta);
 
+		void setSystemWindowSize(int width, int height);
 		void setResolution(int width, int height, bool fullscreen);
 		void setFullscreenFlag(bool value);
 
@@ -68,6 +69,9 @@ namespace april
         hmutex renderThreadSyncMutex;
 		
 	protected:
+		int width;
+		int height;
+		
 		Cursor* _createCursor(bool fromResource);
 		void _systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options);
 		void _systemDestroy();

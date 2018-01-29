@@ -110,9 +110,9 @@ namespace april
 - (void) onWindowSizeChange
 {
 	NSSize size = [mView bounds].size;
-	if (size.width == 0 || size.height == 0)
+	if (size.width <= 0 || size.height <= 0)
 	{
-		hlog::write(april::logTag, "onWindowSizeChange reported 0x0 size, ignoring");
+		hlog::write(april::logTag, "onWindowSizeChange reported invalid size, ignoring");
 		return;
 	}
 	if ([self inLiveResize])
@@ -122,6 +122,7 @@ namespace april
 	int width = size.width * MAC_WINDOW->scalingFactor;
 	int height = size.height * MAC_WINDOW->scalingFactor;
 	bool fullscreen = [self isFullScreen];
+	MAC_WINDOW->setSystemWindowSize(width, height);
 	april::window->queueSizeChange(width, height, fullscreen);
 }
 

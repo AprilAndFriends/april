@@ -65,6 +65,8 @@ namespace april
 		this->cursorExtensions += ".plist";
 		this->cursorExtensions += ".png";
 		this->scalingFactor = 1.0f;
+		this->width = 0;
+		this->height = 0;
 		if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
 		{
 			this->scalingFactor = [NSScreen mainScreen].backingScaleFactor;
@@ -149,6 +151,9 @@ namespace april
 		[april::macCocoaWindow makeKeyAndOrderFront:april::macCocoaWindow];
 		[april::macCocoaWindow setOpaque:YES];
 		[april::macCocoaWindow display];
+		NSRect bounds = [april::macCocoaWindow.contentView bounds];
+		this->width = bounds.size.width * this->scalingFactor;
+		this->height = bounds.size.height * this->scalingFactor;
 		// A trick to force the window to display as early as possible while we continue with initialization
 		[[NSRunLoop currentRunLoop] runUntilDate: [NSDate dateWithTimeIntervalSinceNow:0.1]];
 		if (fullscreen)
@@ -191,18 +196,6 @@ namespace april
 			[april::macCocoaWindow  release];
 			april::macCocoaWindow  = nil;
 		}
-	}
-	
-	int Mac_Window::getWidth() const
-	{
-		NSRect bounds = [april::macCocoaWindow .contentView bounds];
-		return bounds.size.width * this->scalingFactor;
-	}
-
-	int Mac_Window::getHeight() const
-	{
-		NSRect bounds = [april::macCocoaWindow .contentView bounds];
-		return bounds.size.height * this->scalingFactor;
 	}
 	
 	void* Mac_Window::getBackendId() const
@@ -317,6 +310,12 @@ namespace april
 		{
 			[april::macCocoaWindow  platformToggleFullScreen];
 		}
+	}
+	
+	void Mac_Window::setSystemWindowSize(int width, int height)
+	{
+		this->width = width;
+		this->height = height;
 	}
 	
 	void Mac_Window::setFullscreenFlag(bool value)
