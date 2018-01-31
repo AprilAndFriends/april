@@ -105,10 +105,12 @@ namespace april
 	{
 		april::application->updateFinishing();
 		april::application->destroy();
-		if (april::application != NULL)
+		delete april::application;
+		april::application = NULL;
+		if (april::classLoader != NULL)
 		{
-			delete april::application;
-			april::application = NULL;
+			env->DeleteGlobalRef(april::classLoader);
+			april::classLoader = NULL;
 		}
 		// nothing else may be called here, because this code is called from the Android UI thread
 	}
@@ -258,11 +260,6 @@ namespace april
 	void JNICALL _JNI_activityOnDestroy(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onDestroy()");
-		if (april::classLoader != NULL)
-		{
-			env->DeleteGlobalRef(april::classLoader);
-			april::classLoader = NULL;
-		}
 		// nothing else may be called here, because this code is called from the Android UI thread
 	}
 	

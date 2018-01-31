@@ -101,6 +101,7 @@ namespace april
 
 	void Application::updateFinishing()
 	{
+		this->resume(); // makes sure the update thread can resume
 		// processing remaining commands from other thread
 		while (this->getState() == State::Stopping)
 		{
@@ -149,10 +150,13 @@ namespace april
 	void Application::_updateSystem()
 	{
 		this->_updateMessageBoxQueue();
-		if (april::window != NULL && april::rendersys != NULL)
+		TextureAsync::update();
+		if (april::window != NULL)
 		{
-			TextureAsync::update();
 			april::window->checkEvents();
+		}
+		if (april::rendersys != NULL)
+		{
 			april::rendersys->update(0.0f); // might require some rendering
 		}
 	}
@@ -202,10 +206,15 @@ namespace april
 
 	void Application::_asyncUpdate(hthread* thread)
 	{
-		(*april::application->aprilApplicationInit)();
 #ifdef _ANDROID
-		getJNIEnv(); // attaches thread to Java VM
+		// attaching the Java thread is neccessary so C++-to-Java calls can be made
+		JNIEnv* env = NULL;
+		if (((JavaVM*)april::javaVM)->AttachCurrentThread(&env, NULL) != JNI_OK)
+		{
+			env = NULL;
+		}
 #endif
+		(*april::application->aprilApplicationInit)();
 		hmutex::ScopeLock lock(&april::application->stateMutex);
 		if (april::window != NULL && april::rendersys != NULL && april::application->state == State::Starting)
 		{
@@ -252,13 +261,16 @@ namespace april
 		}
 		(*april::application->aprilApplicationDestroy)();
 #ifdef _ANDROID
-		((JavaVM*)april::javaVM)->DetachCurrentThread();
+		if (env != NULL)
+		{
+			((JavaVM*)april::javaVM)->DetachCurrentThread();
+		}
 #endif
 	}
 
 	void Application::suspend()
 	{
-		if (!this->suspended)
+		if (!this->suspended && this->getState() == State::Running)
 		{
 			april::rendersys->_flushAsyncCommands(); // TODO - this is here for safe-guard and should be removed later
 			this->updateMutex.lock();
