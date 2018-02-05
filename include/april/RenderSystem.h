@@ -202,8 +202,12 @@ namespace april
 		HL_DEFINE_GET(RenderMode, renderMode, RenderMode);
 		/// @brief Gets how frames in advance can be updated.
 		HL_DEFINE_GET(int, frameAdvanceUpdates, FrameAdvanceUpdates);
-		/// @brief Gets/sets how many times a frame should be duplicated during rendering.
-		HL_DEFINE_GETSET(int, frameDuplicates, FrameDuplicates);
+		/// @brief Gets how many times a frame should be duplicated during rendering.
+		/// @return How many times a frame should be duplicated during rendering.
+		int getFrameDuplicates();
+		/// @brief Sets how many times a frame should be duplicated during rendering.
+		/// @parma[in] value The new value.
+		void setFrameDuplicates(int const& value);
 		/// @brief Gets how many times a render call was called during this frame.
 		HL_DEFINE_GET(int, statCurrentFrameRenderCalls, StatCurrentFrameRenderCalls);
 		/// @brief Gets how many times a render call was called during the last frame.
@@ -614,7 +618,7 @@ namespace april
 		bool processingAsync;
 		/// @brief How many times a render call was called during this frame.
 		int frameAdvanceUpdates;
-		/// @brief Gets how many times a frame should be duplicated during rendering.
+		/// @brief How many times a frame should be duplicated during rendering.
 		int frameDuplicates;
 
 		/// @brief How many times a render call was called during this frame.
@@ -886,6 +890,12 @@ namespace april
 		/// @param[in] count How many vertices are expected to be rendered.
 		/// @return How many vertices are allowed to be used in the given RenderOperation.
 		unsigned int _limitVertices(const RenderOperation& renderOperation, int count) const;
+
+	private:
+		/// @brief Queued value for frameDuplicates.
+		int _queuedFrameDuplicates;
+		/// @brief Mutex required for handling frameDuplicates change.
+		hmutex _frameDuplicatesMutex;
 
 	};
 

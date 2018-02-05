@@ -141,6 +141,7 @@ namespace april
 		this->statLastFrameTriangleCount = 0;
 		this->statCurrentFrameLineCount = 0;
 		this->statLastFrameLineCount = 0;
+		this->_queuedFrameDuplicates = -1;
 	}
 	
 	RenderSystem::~RenderSystem()
@@ -190,6 +191,7 @@ namespace april
 		this->statLastFrameTriangleCount = 0;
 		this->statCurrentFrameLineCount = 0;
 		this->statLastFrameLineCount = 0;
+		this->_queuedFrameDuplicates = -1;
 		// create the actual device
 		this->_deviceInit();
 		if (!this->_deviceCreate(options))
@@ -252,6 +254,7 @@ namespace april
 		this->statLastFrameTriangleCount = 0;
 		this->statCurrentFrameLineCount = 0;
 		this->statLastFrameLineCount = 0;
+		this->_queuedFrameDuplicates = -1;
 		this->_deviceDestroy();
 		this->_deviceInit();
 	}
@@ -309,6 +312,18 @@ namespace april
 	{
 		gvec2 resolution = april::getSystemInfo().displayResolution;
 		this->displayModes += RenderSystem::DisplayMode((int)resolution.x, (int)resolution.y, 60);
+	}
+
+	int RenderSystem::getFrameDuplicates()
+	{
+		hmutex::ScopeLock lock(&this->_frameDuplicatesMutex);
+		return (this->_queuedFrameDuplicates >= 0 ? this->_queuedFrameDuplicates : this->frameDuplicates);
+	}
+	
+	void RenderSystem::setFrameDuplicates(int const& value)
+	{
+		hmutex::ScopeLock lock(&this->_frameDuplicatesMutex);
+		this->_queuedFrameDuplicates = hmax(value, 0);
 	}
 
 	void RenderSystem::setRenderMode(RenderMode value, const hmap<hstr, hstr>& options)
@@ -438,8 +453,13 @@ namespace april
 	bool RenderSystem::update(float timeDelta)
 	{
 		bool result = false;
+		int previousRepeatCount = -1;
 		hmutex::ScopeLock lock(&this->asyncMutex);
-		if (this->frameDuplicates > 0 && this->lastAsyncCommandQueue != NULL && this->lastAsyncCommandQueue->getRepeatCount() > 0)
+		if (this->lastAsyncCommandQueue != NULL)
+		{
+			previousRepeatCount = this->lastAsyncCommandQueue->getRepeatCount();
+		}
+		if (this->frameDuplicates > 0 && this->lastAsyncCommandQueue != NULL && previousRepeatCount > 0)
 		{
 			this->processingAsync = true;
 			lock.release();
@@ -487,15 +507,39 @@ namespace april
 			lock.acquire(&this->asyncMutex);
 			this->processingAsync = false;
 			lock.release();
-			if (this->frameDuplicates > 0 && this->lastAsyncCommandQueue != NULL)
+			if (this->lastAsyncCommandQueue != NULL)
 			{
-				this->lastAsyncCommandQueue->applyRepeatQueue(queue);
+				if (this->frameDuplicates > 0)
+				{
+					this->lastAsyncCommandQueue->applyRepeatQueue(queue);
+				}
+				else
+				{
+					this->lastAsyncCommandQueue->clearRepeat();
+				}
 			}
 			foreach (UnloadTextureCommand*, it, queue->unloadTextureCommands)
 			{
 				(*it)->execute();
 			}
 			delete queue;
+		}
+		else
+		{
+			lock.release();
+		}
+		if (this->lastAsyncCommandQueue == NULL)
+		{
+			lock.acquire(&this->_frameDuplicatesMutex);
+			this->frameDuplicates = this->_queuedFrameDuplicates;
+			this->_queuedFrameDuplicates = -1;
+		}
+		else if (previousRepeatCount < this->lastAsyncCommandQueue->getRepeatCount())
+		{
+			this->lastAsyncCommandQueue->clearRepeat();
+			lock.acquire(&this->_frameDuplicatesMutex);
+			this->frameDuplicates = this->_queuedFrameDuplicates;
+			this->_queuedFrameDuplicates = -1;
 		}
 		return result;
 	}
