@@ -528,18 +528,21 @@ namespace april
 		{
 			lock.release();
 		}
-		if (this->lastAsyncCommandQueue == NULL)
+		if (this->_queuedFrameDuplicates >= 0)
 		{
-			lock.acquire(&this->_frameDuplicatesMutex);
-			this->frameDuplicates = this->_queuedFrameDuplicates;
-			this->_queuedFrameDuplicates = -1;
-		}
-		else if (previousRepeatCount < this->lastAsyncCommandQueue->getRepeatCount())
-		{
-			this->lastAsyncCommandQueue->clearRepeat();
-			lock.acquire(&this->_frameDuplicatesMutex);
-			this->frameDuplicates = this->_queuedFrameDuplicates;
-			this->_queuedFrameDuplicates = -1;
+			if (this->frameDuplicates == 0 || this->lastAsyncCommandQueue == NULL)
+			{
+				lock.acquire(&this->_frameDuplicatesMutex);
+				this->frameDuplicates = this->_queuedFrameDuplicates;
+				this->_queuedFrameDuplicates = -1;
+			}
+			else if (previousRepeatCount < this->lastAsyncCommandQueue->getRepeatCount())
+			{
+				this->lastAsyncCommandQueue->clearRepeat();
+				lock.acquire(&this->_frameDuplicatesMutex);
+				this->frameDuplicates = this->_queuedFrameDuplicates;
+				this->_queuedFrameDuplicates = -1;
+			}
 		}
 		return result;
 	}
