@@ -361,10 +361,10 @@ namespace april
 		}
 		else
 		{
-#ifdef _WIN32
-			result += hsprintf("<0x%p>", this);
+#if defined(_WIN32) && !defined(_WINRT)
+			result += hsprintf("<0x%p>", this); // only basic Win32 doesn't add 0x to %p
 #else
-			result += hsprintf("<%p>", this); // on Unix %p adds the 0x
+			result += hsprintf("<%p>", this);
 #endif
 		}
 		result += " (" + this->type.getName() + ")";

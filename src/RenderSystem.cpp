@@ -599,10 +599,10 @@ namespace april
 	{
 		if (format != Image::Format::Invalid && !this->getCaps().textureFormats.has(format))
 		{
-#ifdef _WIN32
-			hstr address = hsprintf("<0x%p>", data);
+#if defined(_WIN32) && !defined(_WINRT)
+			hstr address = hsprintf("<0x%p>", data); // only basic Win32 doesn't add 0x to %p
 #else
-			hstr address = hsprintf("<%p>", data); // on Unix %p adds the 0x
+			hstr address = hsprintf("<%p>", data);
 #endif
 			hlog::errorf(logTag, "Cannot create texture with data %s, the texture format '%s' is not supported!", address.cStr(), format.getName().cStr());
 			return NULL;
