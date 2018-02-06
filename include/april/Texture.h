@@ -609,14 +609,6 @@ namespace april
 		/// @note This is an expensive operation and should be used sparingly.
 		bool insertAlphaMap(Image* image, unsigned char median, int ambiguity); // TODOa - this functionality might be removed since shaders are much faster
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-		// TODOx - change this once merged into trunk, remove the condition
-#ifndef __APRIL_5_x_API
-		HL_DEPRECATED("Deprecated API. Use loadAsync() instead.")
-#endif
-		bool load() { return this->loadAsync(); }
-#endif
-
 	protected:
 		/// @brief Defines a texture read lock for reading and writing to improve performance.
 		struct Lock
