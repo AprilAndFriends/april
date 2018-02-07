@@ -1013,7 +1013,10 @@ namespace april
 		harray<AsyncCommandQueue*> queues = this->asyncCommandQueues;
 		this->asyncCommandQueues.clear();
 		lock.release();
-		this->lastAsyncCommandQueue->clearRepeat();
+		if (this->lastAsyncCommandQueue != NULL)
+		{
+			this->lastAsyncCommandQueue->clearRepeat();
+		}
 		foreach (AsyncCommandQueue*, it, queues)
 		{
 			foreach (AsyncCommand*, it2, (*it)->commands)
