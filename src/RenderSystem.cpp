@@ -323,7 +323,11 @@ namespace april
 	void RenderSystem::setFrameDuplicates(int const& value)
 	{
 		hmutex::ScopeLock lock(&this->_frameDuplicatesMutex);
-		this->_queuedFrameDuplicates = hmax(value, 0);
+		int newValue = hmax(value, 0);
+		if (this->frameDuplicates != newValue)
+		{
+			this->_queuedFrameDuplicates = newValue;
+		}
 	}
 
 	void RenderSystem::setRenderMode(RenderMode value, const hmap<hstr, hstr>& options)
@@ -1004,10 +1008,12 @@ namespace april
 
 	void RenderSystem::_flushAsyncCommands()
 	{
+		hlog::write(logTag, "Flushing all async queues.");
 		hmutex::ScopeLock lock(&this->asyncMutex);
 		harray<AsyncCommandQueue*> queues = this->asyncCommandQueues;
 		this->asyncCommandQueues.clear();
 		lock.release();
+		this->lastAsyncCommandQueue->clearRepeat();
 		foreach (AsyncCommandQueue*, it, queues)
 		{
 			foreach (AsyncCommand*, it2, (*it)->commands)
