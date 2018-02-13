@@ -10,17 +10,13 @@
 #include <hltypes/hplatform.h>
 
 #include <stdio.h>
+#include <jpeglib.h>
 
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hresource.h>
 #include <hltypes/hstream.h>
 #include <hltypes/hstring.h>
-
-extern "C"
-{
-#include <jpeglib.h> // has to be down here because of problems with header order
-}
 
 #include "april.h"
 #include "Image.h"
