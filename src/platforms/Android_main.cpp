@@ -122,6 +122,11 @@ namespace april
 			// using a try-catch block here just to make sure crashes are logged properly
 			try
 			{
+				if (april::application->getState() == april::Application::State::Starting)
+				{
+					april::application->updateInitializing(true);
+					return true;
+				}
 				april::application->update();
 			}
 			catch (hexception& e)
