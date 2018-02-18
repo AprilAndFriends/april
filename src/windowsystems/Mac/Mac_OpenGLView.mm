@@ -142,6 +142,11 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 
 -(void) draw
 {
+	if (april::application != NULL && april::application->getState() == april::Application::State::Starting)
+	{
+		april::application->updateInitializing(true);
+		return;
+	}
 	bool displayLink = april::isUsingCVDisplayLink();
 	if (displayLink)
 	{

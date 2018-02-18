@@ -88,6 +88,10 @@ namespace april
 		/// @brief Starts the main loop.
 		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.
 		void enterMainLoop();
+		/// @brief Performs the update when initializing.
+		/// @param[in] singleUpdateOnly Required for some platform due to how applications are handled internally.
+		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.
+		void updateInitializing(bool singleUpdateOnly = false);
 		/// @brief Performs the update of one frame.
 		/// @return True if a system command was executed.
 		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.

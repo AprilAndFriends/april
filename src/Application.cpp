@@ -71,12 +71,19 @@ namespace april
 	{
 		this->_setState(State::Starting);
 		this->updateThread.start();
+	}
+	
+	void Application::updateInitializing(bool singleUpdateOnly)
+	{
 		while (this->getState() == State::Starting)
 		{
 			this->_updateSystem();
+			if (singleUpdateOnly)
+			{
+				return;
+			}
 			hthread::sleep(0.001f);
 		}
-		this->timer.update();
 	}
 
 	void Application::destroy()
@@ -91,6 +98,7 @@ namespace april
 		this->fps = 0;
 		this->fpsCount = 0;
 		this->fpsTimer = 0.0f;
+		this->updateInitializing();
 		this->timer.update();
 		while (this->getState() == State::Running)
 		{

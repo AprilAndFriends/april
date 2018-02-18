@@ -209,6 +209,11 @@
 #endif
         return;
     }
+	if (april::application != NULL && april::application->getState() == april::Application::State::Starting)
+	{
+		april::application->updateInitializing(true);
+		return;
+	}
     [EAGLContext setCurrentContext:context];
 	if (april::application != NULL)
 	{
