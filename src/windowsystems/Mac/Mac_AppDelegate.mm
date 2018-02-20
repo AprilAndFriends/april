@@ -57,6 +57,7 @@ bool g_WindowFocusedBeforeSleep = false;
 	NSLog(@"april::applicationDidFinishLaunching");
 	mAppFocused = true;	// register for sleep/wake notifications, needed for proper handling of focus/unfocus events
 	april::application->init();
+	april::application->updateInitializing();
 	if (april::window == NULL)
 	{
 		[NSApp terminate:nil];

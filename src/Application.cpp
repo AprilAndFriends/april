@@ -117,7 +117,10 @@ namespace april
 		}
 		// finish everything up
 		this->_updateSystem();
-		april::rendersys->_flushAsyncCommands();
+		if (april::rendersys != NULL)
+		{
+			april::rendersys->_flushAsyncCommands();
+		}
 		// done
 		this->_setState(State::Idle);
 	}
