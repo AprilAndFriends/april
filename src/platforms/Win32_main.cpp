@@ -35,6 +35,7 @@ namespace april
 		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
 		april::application->setArgs(args);
 		april::application->init();
+		april::application->updateInitializing();
 		if (april::window != NULL && april::rendersys != NULL)
 		{
 			april::application->enterMainLoop();

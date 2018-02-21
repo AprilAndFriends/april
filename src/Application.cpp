@@ -98,7 +98,6 @@ namespace april
 		this->fps = 0;
 		this->fpsCount = 0;
 		this->fpsTimer = 0.0f;
-		this->updateInitializing();
 		this->timer.update();
 		while (this->getState() == State::Running)
 		{
