@@ -206,17 +206,21 @@ namespace april
 
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)
 	{
+#ifdef _ANDROID_JNI
 		bool focused = (jFocused != JNI_FALSE);
 		hlog::write(logTag, "onWindowFocusChanged(" + hstr(focused) + ")");
 		PROTECTED_WINDOW_CALL(queueFocusChange(focused));
+#endif
 	}
 	
 	void JNICALL _JNI_onVirtualKeyboardChanged(JNIEnv* env, jclass classe, jboolean jVisible, jfloat jHeightRatio)
 	{
+#ifdef _ANDROID_JNI
 		bool visible = (jVisible != JNI_FALSE);
 		float heightRatio = (float)jHeightRatio;
-		hlog::write(logTag, "onVirtualKeyboardChanged(" + hstr(visible) + "," + hstr(heightRatio) + ")");
+		hlog::write(logTag, "onVirtualKeyboardChanged(" + hstr(visible) + ", " + hstr(heightRatio) + ")");
 		PROTECTED_WINDOW_CALL(queueVirtualKeyboardChange(visible, heightRatio));
+#endif
 	}
 	
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)

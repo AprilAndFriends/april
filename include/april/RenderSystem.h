@@ -133,6 +133,8 @@ namespace april
 			bool vSync;
 			/// @brief Triple back buffer.
 			bool tripleBuffering;
+			/// @brief Whether to clear backbuffer on suspend.
+			bool clearOnSuspend;
 			/// @brief Special debug info.
 			bool debugInfo;
 

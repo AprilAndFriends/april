@@ -287,6 +287,11 @@ namespace april
 			hlog::write(logTag, "Application suspend.");
 			this->suspended = true;
 			april::rendersys->_flushAsyncCommands();
+			if (april::rendersys != NULL && april::rendersys->getOptions().clearOnSuspend)
+			{
+				april::rendersys->_deviceClear(true);
+				april::rendersys->_devicePresentFrame(true);
+			}
 		}
 	}
 

@@ -79,6 +79,7 @@ namespace april
 		this->depthBuffer = false;
 		this->vSync = true;
 		this->tripleBuffering = false;
+		this->clearOnSuspend = false;
 		this->debugInfo = false;
 	}
 
@@ -108,6 +109,10 @@ namespace april
 		if (this->vSync)
 		{
 			options += "V-Sync";
+		}
+		if (this->clearOnSuspend)
+		{
+			options += "Clear-On-Suspend";
 		}
 		if (this->debugInfo)
 		{
