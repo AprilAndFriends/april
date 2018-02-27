@@ -282,7 +282,7 @@ namespace april
 	{
 		if (!this->suspended && this->getState() == State::Running)
 		{
-			april::rendersys->_flushAsyncCommands(); // TODO - this is here for safe-guard and should be removed later
+			april::rendersys->_flushAsyncCommands(); // this is here for safe-guard
 			if (april::window->getOptions().suspendUpdateThread)
 			{
 				this->updateMutex.lock();

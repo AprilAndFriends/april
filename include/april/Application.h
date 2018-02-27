@@ -69,6 +69,8 @@ namespace april
 		HL_DEFINE_GETSET(harray<hstr>, args, Args);
 		/// @brief Get running flag.
 		State getState();
+		/// @brief Whether the application is suspended right now.
+		HL_DEFINE_IS(suspended, Suspended);
 		/// @brief The current FPS.
 		HL_DEFINE_GETSET(int, fps, Fps);
 		/// @brief The FPS resolution.
