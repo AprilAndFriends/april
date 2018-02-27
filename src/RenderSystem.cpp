@@ -120,7 +120,7 @@ namespace april
 		}
 		if (options.size() == 0)
 		{
-			options += "none";
+			options += "None";
 		}
 		return options.joined(',');
 	}

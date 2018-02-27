@@ -52,6 +52,7 @@ namespace april
 		this->resizable = false;
 		this->fpsCounter = false;
 		this->hotkeyFullscreen = false;
+		this->suspendUpdateThread = true;
 		this->keyPause = april::Key::None;
 		this->mac_displayLinkIgnoreSystemRedraw = false;
 		this->defaultWindowModeResolutionFactor = 0.8f;
@@ -66,11 +67,19 @@ namespace april
 		harray<hstr> options;
 		if (this->resizable)
 		{
-			options += "resizable";
+			options += "Resizable";
+		}
+		if (this->hotkeyFullscreen)
+		{
+			options += "Fullscreen Hotkey";
+		}
+		if (!this->suspendUpdateThread)
+		{
+			options += "No Update-Suspend";
 		}
 		if (options.size() == 0)
 		{
-			options += "none";
+			options += "None";
 		}
 		return options.joined(',');
 	}

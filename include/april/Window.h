@@ -64,6 +64,8 @@ namespace april
 			bool fpsCounter;
 			/// @brief Whether the fullscreen hotkey should be allowed.
 			bool hotkeyFullscreen;
+			/// @brief Whether the update thread should be suspended with a mutex lock.
+			bool suspendUpdateThread;
 			/// @brief Whether the fullscreen hotkey should be allowed.
 			april::Key keyPause;
 			/// @brief The factor used for downscaling a window size when not running in fullscreen.

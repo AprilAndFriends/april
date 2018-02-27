@@ -283,11 +283,14 @@ namespace april
 		if (!this->suspended && this->getState() == State::Running)
 		{
 			april::rendersys->_flushAsyncCommands(); // TODO - this is here for safe-guard and should be removed later
-			this->updateMutex.lock();
+			if (april::window->getOptions().suspendUpdateThread)
+			{
+				this->updateMutex.lock();
+			}
 			hlog::write(logTag, "Application suspend.");
 			this->suspended = true;
 			april::rendersys->_flushAsyncCommands();
-			if (april::rendersys != NULL && april::rendersys->getOptions().clearOnSuspend)
+			if (april::rendersys->getOptions().clearOnSuspend)
 			{
 				april::rendersys->_deviceClear(true);
 				april::rendersys->_devicePresentFrame(true);
@@ -301,7 +304,10 @@ namespace april
 		{
 			hlog::write(logTag, "Application resume.");
 			this->suspended = false;
-			this->updateMutex.unlock();
+			if (april::window->getOptions().suspendUpdateThread)
+			{
+				this->updateMutex.unlock();
+			}
 		}
 	}
 
