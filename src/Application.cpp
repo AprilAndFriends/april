@@ -267,7 +267,10 @@ namespace april
 		{
 			april::application->state = State::Stopping;
 			lock.release();
-			april::window->_processEvents();
+			if (april::window != NULL)
+			{
+				april::window->_processEvents();
+			}
 		}
 		(*april::application->aprilApplicationDestroy)();
 #ifdef _ANDROID
