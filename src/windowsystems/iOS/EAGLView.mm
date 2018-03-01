@@ -432,7 +432,7 @@
 	[textField endEditing:YES];
 }
 
-- (BOOL)textField:(UITextField *)_textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string   // return NO to not change text
+- (BOOL)textField:(UITextField *)_textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string // return NO to not change text
 {
 	if (april::window == NULL)
 	{

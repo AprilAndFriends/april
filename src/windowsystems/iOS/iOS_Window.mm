@@ -85,8 +85,8 @@ namespace april
 	{
 		this->destroy();
 	}
-		
-	bool iOS_Window::update(float timeDelta)
+	
+	void iOS_Window::checkEvents()
 	{
 		bool visible = this->isVirtualKeyboardVisible();
 		this->virtualKeyboardVisible = visible;
@@ -102,7 +102,7 @@ namespace april
 			}
 			this->keyboardRequest = 0;
 		}
-		return Window::update(timeDelta);
+		Window::checkEvents();
 	}
 
 	void iOS_Window::destroyWindow()

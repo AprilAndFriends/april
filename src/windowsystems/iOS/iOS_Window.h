@@ -26,9 +26,6 @@ namespace april
 		iOS_Window();
 		~iOS_Window();
 		
-		// implementations
-		bool update(float timeDelta);
-		void destroyWindow();
 		void setCursorVisible(bool value);
 		bool isCursorVisible() const;
 		int getWidth() const;
@@ -37,6 +34,10 @@ namespace april
 		gtypes::Vector2 getCursorPosition() const;
 		void* getBackendId() const;
 		bool isVirtualKeyboardVisible() const;
+		
+		void checkEvents();
+		
+		void destroyWindow();
 		
 		void showVirtualKeyboard();
 		void hideVirtualKeyboard();
