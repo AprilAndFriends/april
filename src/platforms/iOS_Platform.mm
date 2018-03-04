@@ -140,7 +140,7 @@ namespace april
 	
 	void _showMessageBox_platform(const MessageBoxData& data)
 	{
-		NSString *nsButtons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
+		NSString* nsButtons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
 		MessageBoxButton buttonTypes[3] = {MessageBoxButton::Ok, MessageBoxButton::Ok, MessageBoxButton::Ok};
 		int i0 = 0;
 		int i1 = 1;
@@ -154,12 +154,12 @@ namespace april
 		}
 		else if (data.buttons == MessageBoxButton::YesNoCancel)
 		{
-			nsButtons[i1] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
-			nsButtons[i2] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
-			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
-			buttonTypes[i1] = MessageBoxButton::Yes;
-			buttonTypes[i2] = MessageBoxButton::No;
-			buttonTypes[i0] = MessageBoxButton::Cancel;
+			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Yes, "Yes").cStr()];
+			nsButtons[i1] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
+			nsButtons[i2] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::Cancel, "Cancel").cStr()];
+			buttonTypes[i0] = MessageBoxButton::Yes;
+			buttonTypes[i1] = MessageBoxButton::No;
+			buttonTypes[i2] = MessageBoxButton::Cancel;
 		}
 		else if (data.buttons == MessageBoxButton::YesNo)
 		{
@@ -188,30 +188,28 @@ namespace april
 			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
 			buttonTypes[i0] = MessageBoxButton::No;
 		}
-		
-		NSString *titlens = [NSString stringWithUTF8String:data.title.cStr()];
-		NSString *textns = [NSString stringWithUTF8String:data.text.cStr()];
-
-		UIAlertController* alert = [UIAlertController alertControllerWithTitle:titlens message:textns preferredStyle:UIAlertControllerStyleAlert];
-
-		for (int i = 0; i < 3; i++)
+		NSString* nsTitle = [NSString stringWithUTF8String:data.title.cStr()];
+		NSString* nsText = [NSString stringWithUTF8String:data.text.cStr()];
+		UIAlertController* alert = [UIAlertController alertControllerWithTitle:nsTitle message:nsText preferredStyle:UIAlertControllerStyleAlert];
+		if (data.callback != NULL)
 		{
-			if (nsButtons[i] != nil)
+			void (*callback)(const MessageBoxButton&) = data.callback;
+			UIAlertAction* action = NULL;
+			for_iter (i, 0, 3)
 			{
-				MessageBoxButton buttonType = buttonTypes[i];
-				UIAlertAction* btn = [UIAlertAction actionWithTitle:nsButtons[i] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
+				if (nsButtons[i] != nil)
 				{
-					if (data.callback != NULL)
+					MessageBoxButton buttonType = buttonTypes[i];
+					action = [UIAlertAction actionWithTitle:nsButtons[i] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 					{
-						data.callback(buttonType);
-					}
-				}];
-				[alert addAction:btn];
+						callback(buttonType);
+					}];
+					[alert addAction:action];
+				}
 			}
 		}
-
-		UIViewController* vc = [[[UIApplication sharedApplication] delegate] window].rootViewController;
-		[vc presentViewController:alert animated:YES completion:nil];
+		UIViewController* viewController = [[[UIApplication sharedApplication] delegate] window].rootViewController;
+		[viewController presentViewController:alert animated:YES completion:nil];
 	}
 }
 #endif
