@@ -367,7 +367,10 @@ namespace april
 		{
 			file = [resources stringByAppendingPathComponent:[NSString stringWithUTF8String:filename.cStr()]];
 		}
-		NSURL * url = [NSURL URLWithString:[@"file://" stringByAppendingString:[file stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] ]];
+		NSCharacterSet* set = [NSCharacterSet URLHostAllowedCharacterSet];
+		NSString* result = [file stringByAddingPercentEncodingWithAllowedCharacters:set];
+
+		NSURL* url = [NSURL URLWithString:[@"file://" stringByAppendingString:result]];
 		return url;
 	}
 

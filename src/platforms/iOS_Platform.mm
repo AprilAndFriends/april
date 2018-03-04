@@ -29,97 +29,6 @@
 
 void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 
-@interface AprilMessageBoxDelegate : NSObject<UIAlertViewDelegate> {
-	void(*callback)(const april::MessageBoxButton&);
-	april::MessageBoxButton buttonTypes[3];
-	
-	CFRunLoopRef runLoop;
-	BOOL isModal;
-	april::MessageBoxButton selectedButton;
-}
-@property (nonatomic, assign) void(*callback)(const april::MessageBoxButton&);
-@property (nonatomic, assign) april::MessageBoxButton *buttonTypes;
-@property (nonatomic, readonly) april::MessageBoxButton selectedButton;
-@end
-
-@implementation AprilMessageBoxDelegate
-
-@synthesize callback;
-@synthesize selectedButton;
-@dynamic buttonTypes;
-
--(id)initWithModality:(BOOL)_isModal
-{
-	self = [super init];
-	if (self)
-	{
-		runLoop = CFRunLoopGetCurrent();
-		isModal = _isModal;
-	}
-	return self;
-}
-
--(april::MessageBoxButton*)buttonTypes
-{
-	return buttonTypes;
-}
-
--(void)setButtonTypes:(april::MessageBoxButton*)_buttonTypes
-{
-	buttonTypes[0] = _buttonTypes[0];
-	buttonTypes[1] = _buttonTypes[1];
-	buttonTypes[2] = _buttonTypes[2];
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	if (callback)
-	{
-		callback(buttonTypes[buttonIndex]);
-	}
-	if (isModal)
-	{
-		CFRunLoopStop(runLoop);
-	}
-	
-	selectedButton = buttonTypes[buttonIndex];
-	
-	[self release];
-}
-
-- (void)willPresentAlertView:(UIAlertView*)alertView
-{
-	NSString *reqSysVer = @"4.0";
-	NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
-	BOOL isFourOh = ([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending);
-	
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && buttonTypes[2].value != 0 && isFourOh)
-	{
-		// landscape sucks on 4.0+ phones when we have three buttons.
-		// it doesnt show hint message.
-		// unless we hack.
-		
-		float w = alertView.bounds.size.width;
-		if (w < 5.0f)
-		{
-			hlog::write(april::logTag, "In messageBox()'s label hack, width override took place");
-			w = 400.0f; // hardcoded width! seems to work ok
-		}
-		
-		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 30.0f, alertView.bounds.size.width, 40.0f)]; 
-		label.backgroundColor = [UIColor clearColor]; 
-		label.textColor = [UIColor whiteColor]; 
-		label.font = [UIFont systemFontOfSize:14.0f]; 
-		label.textAlignment = NSTextAlignmentCenter;
-		label.text = alertView.message; 
-		[alertView addSubview:label]; 
-		[label release];
-	}
-	
-}
-
-@end
-
 namespace april
 {
 	void _setupSystemInfo_platform(SystemInfo& info)
@@ -279,27 +188,30 @@ namespace april
 			nsButtons[i0] = [NSString stringWithUTF8String:data.customButtonTitles.tryGet(MessageBoxButton::No, "No").cStr()];
 			buttonTypes[i0] = MessageBoxButton::No;
 		}
+		
 		NSString *titlens = [NSString stringWithUTF8String:data.title.cStr()];
 		NSString *textns = [NSString stringWithUTF8String:data.text.cStr()];
-		AprilMessageBoxDelegate *mbd = [[[AprilMessageBoxDelegate alloc] initWithModality:data.modal] autorelease];
-		mbd.callback = april::Application::messageBoxCallback;
-		[mbd setButtonTypes:buttonTypes];
-		[mbd retain];
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:titlens message:textns delegate:mbd cancelButtonTitle:nsButtons[i0] otherButtonTitles:nsButtons[i1], nsButtons[i2], nil];
-		if (alert != nil) // just in case, hapens in some very weird situations..
+
+		UIAlertController* alert = [UIAlertController alertControllerWithTitle:titlens message:textns preferredStyle:UIAlertControllerStyleAlert];
+
+		for (int i = 0; i < 3; i++)
 		{
-			[alert show];
-			if (data.modal)
+			if (nsButtons[i] != nil)
 			{
-				CFRunLoopRun();
+				MessageBoxButton buttonType = buttonTypes[i];
+				UIAlertAction* btn = [UIAlertAction actionWithTitle:nsButtons[i] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
+				{
+					if (data.callback != NULL)
+					{
+						data.callback(buttonType);
+					}
+				}];
+				[alert addAction:btn];
 			}
-			[alert release];
 		}
-		else
-		{
-			hlog::error(logTag, "Failed to display AlertView!");
-		}
+
+		UIViewController* vc = [[[UIApplication sharedApplication] delegate] window].rootViewController;
+		[vc presentViewController:alert animated:YES completion:nil];
 	}
-	
 }
 #endif

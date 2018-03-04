@@ -36,6 +36,7 @@ namespace april
 		{
 			appDelegateClassName = NSStringFromClass([ApriliOSAppDelegate class]);
 		}
+		april::showMessageBox("KOK", "ODAK");
 		int result = UIApplicationMain(argc, argv, nil, appDelegateClassName);
 		april::application->destroy();
 		delete april::application;
