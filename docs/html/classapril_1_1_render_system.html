@@ -123,10 +123,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a1169c7f27b07a0a8308b41fdc6d86a62">HL_DEFINE_GET</a> (int, <a class="el" href="classapril_1_1_render_system.html#aaf232af7dec2cc4c8a05d8ff2389580c">frameAdvanceUpdates</a>, FrameAdvanceUpdates)</td></tr>
 <tr class="memdesc:a1169c7f27b07a0a8308b41fdc6d86a62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets how frames in advance can be updated. <br /></td></tr>
 <tr class="separator:a1169c7f27b07a0a8308b41fdc6d86a62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af247b80ba8a681bd6e2ebb2dd0887762"><td class="memItemLeft" align="right" valign="top"><a id="af247b80ba8a681bd6e2ebb2dd0887762"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#af247b80ba8a681bd6e2ebb2dd0887762">HL_DEFINE_GETSET</a> (int, <a class="el" href="classapril_1_1_render_system.html#a59c010b62544287c643bca643b8f4042">frameDuplicates</a>, FrameDuplicates)</td></tr>
-<tr class="memdesc:af247b80ba8a681bd6e2ebb2dd0887762"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets/sets how many times a frame should be duplicated during rendering. <br /></td></tr>
-<tr class="separator:af247b80ba8a681bd6e2ebb2dd0887762"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0837e017e1672a57ae32c64a3b4f1d1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#af0837e017e1672a57ae32c64a3b4f1d1">getFrameDuplicates</a> ()</td></tr>
+<tr class="memdesc:af0837e017e1672a57ae32c64a3b4f1d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets how many times a frame should be duplicated during rendering.  <a href="#af0837e017e1672a57ae32c64a3b4f1d1">More...</a><br /></td></tr>
+<tr class="separator:af0837e017e1672a57ae32c64a3b4f1d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a052170a9cabe1ec7e33792cf9c8de696"><td class="memItemLeft" align="right" valign="top"><a id="a052170a9cabe1ec7e33792cf9c8de696"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a052170a9cabe1ec7e33792cf9c8de696">setFrameDuplicates</a> (int const &amp;value)</td></tr>
+<tr class="memdesc:a052170a9cabe1ec7e33792cf9c8de696"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets how many times a frame should be duplicated during rendering. [in] value The new value. <br /></td></tr>
+<tr class="separator:a052170a9cabe1ec7e33792cf9c8de696"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fc02a266fd27b3411c6ad6813392cab"><td class="memItemLeft" align="right" valign="top"><a id="a4fc02a266fd27b3411c6ad6813392cab"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a4fc02a266fd27b3411c6ad6813392cab">HL_DEFINE_GET</a> (int, <a class="el" href="classapril_1_1_render_system.html#ab1eec2d11c5ba510f4fdee87fff8bca6">statCurrentFrameRenderCalls</a>, StatCurrentFrameRenderCalls)</td></tr>
 <tr class="memdesc:a4fc02a266fd27b3411c6ad6813392cab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets how many times a render call was called during this frame. <br /></td></tr>
@@ -671,7 +674,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 <tr class="separator:aaf232af7dec2cc4c8a05d8ff2389580c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59c010b62544287c643bca643b8f4042"><td class="memItemLeft" align="right" valign="top"><a id="a59c010b62544287c643bca643b8f4042"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a59c010b62544287c643bca643b8f4042">frameDuplicates</a></td></tr>
-<tr class="memdesc:a59c010b62544287c643bca643b8f4042"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets how many times a frame should be duplicated during rendering. <br /></td></tr>
+<tr class="memdesc:a59c010b62544287c643bca643b8f4042"><td class="mdescLeft">&#160;</td><td class="mdescRight">How many times a frame should be duplicated during rendering. <br /></td></tr>
 <tr class="separator:a59c010b62544287c643bca643b8f4042"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1eec2d11c5ba510f4fdee87fff8bca6"><td class="memItemLeft" align="right" valign="top"><a id="ab1eec2d11c5ba510f4fdee87fff8bca6"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ab1eec2d11c5ba510f4fdee87fff8bca6">statCurrentFrameRenderCalls</a></td></tr>
@@ -3779,6 +3782,26 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 
 <p>Gets a list of all supported display modes. </p>
 <dl class="section return"><dt>Returns</dt><dd>A list of all supported display modes. </dd></dl>
+
+</div>
+</div>
+<a id="af0837e017e1672a57ae32c64a3b4f1d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0837e017e1672a57ae32c64a3b4f1d1">&#9670;&nbsp;</a></span>getFrameDuplicates()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int april::RenderSystem::getFrameDuplicates </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets how many times a frame should be duplicated during rendering. </p>
+<dl class="section return"><dt>Returns</dt><dd>How many times a frame should be duplicated during rendering. </dd></dl>
 
 </div>
 </div>

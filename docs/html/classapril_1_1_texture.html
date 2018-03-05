@@ -357,6 +357,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a89ac861fedfde6912ac6f061685f9741"><td class="memItemLeft" align="right" valign="top">hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a89ac861fedfde6912ac6f061685f9741">_getInternalName</a> () const</td></tr>
 <tr class="memdesc:a89ac861fedfde6912ac6f061685f9741"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the internal texture name.  <a href="#a89ac861fedfde6912ac6f061685f9741">More...</a><br /></td></tr>
 <tr class="separator:a89ac861fedfde6912ac6f061685f9741"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f905e7d5f01343c1803f0f9a1375680"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a8f905e7d5f01343c1803f0f9a1375680">_isAsyncUploadQueued</a> ()</td></tr>
+<tr class="memdesc:a8f905e7d5f01343c1803f0f9a1375680"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether TextureAsync needs to upload this texture to the GPU.  <a href="#a8f905e7d5f01343c1803f0f9a1375680">More...</a><br /></td></tr>
+<tr class="separator:a8f905e7d5f01343c1803f0f9a1375680"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f118c6af81026a82b506bded649ad08"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a7f118c6af81026a82b506bded649ad08">_loadAsync</a> ()</td></tr>
 <tr class="memdesc:a7f118c6af81026a82b506bded649ad08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads the texture asynchronously. Used internally only.  <a href="#a7f118c6af81026a82b506bded649ad08">More...</a><br /></td></tr>
 <tr class="separator:a7f118c6af81026a82b506bded649ad08"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1113,6 +1116,34 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>UnloadTextureCommand
 
 <p>Gets the alterable flag. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if the image data from the texture can be both read and written. </dd></dl>
+
+</div>
+</div>
+<a id="a8f905e7d5f01343c1803f0f9a1375680"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f905e7d5f01343c1803f0f9a1375680">&#9670;&nbsp;</a></span>_isAsyncUploadQueued()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool april::Texture::_isAsyncUploadQueued </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks whether TextureAsync needs to upload this texture to the GPU. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if TextureAsync needs to upload this texture to the GPU. </dd></dl>
 
 </div>
 </div>
