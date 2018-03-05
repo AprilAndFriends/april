@@ -191,21 +191,21 @@ namespace april
 		NSString* nsTitle = [NSString stringWithUTF8String:data.title.cStr()];
 		NSString* nsText = [NSString stringWithUTF8String:data.text.cStr()];
 		UIAlertController* alert = [UIAlertController alertControllerWithTitle:nsTitle message:nsText preferredStyle:UIAlertControllerStyleAlert];
-		if (data.callback != NULL)
+		void (*callback)(const MessageBoxButton&) = data.callback;
+		UIAlertAction* action = NULL;
+		for_iter (i, 0, 3)
 		{
-			void (*callback)(const MessageBoxButton&) = data.callback;
-			UIAlertAction* action = NULL;
-			for_iter (i, 0, 3)
+			if (nsButtons[i] != nil)
 			{
-				if (nsButtons[i] != nil)
+				MessageBoxButton buttonType = buttonTypes[i];
+				action = [UIAlertAction actionWithTitle:nsButtons[i] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 				{
-					MessageBoxButton buttonType = buttonTypes[i];
-					action = [UIAlertAction actionWithTitle:nsButtons[i] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
+					if (callback != NULL)
 					{
 						callback(buttonType);
-					}];
-					[alert addAction:action];
-				}
+					}
+				}];
+				[alert addAction:action];
 			}
 		}
 		UIViewController* viewController = [[[UIApplication sharedApplication] delegate] window].rootViewController;
