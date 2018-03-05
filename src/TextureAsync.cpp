@@ -59,8 +59,8 @@ namespace april
 		harray<Texture*> textures = april::rendersys->getTextures();
 		foreach (Texture*, it, textures)
 		{
-			// only async on-demand textures shouldn't be loaded
-			if ((*it)->getLoadMode() != Texture::LoadMode::AsyncDeferredUpload && (*it)->isReadyForUpload())
+			// only async on-demand textures shouldn't be loaded, this is checked in _isAsyncUploadQueued()
+			if ((*it)->_isAsyncUploadQueued())
 			{
 				(*it)->_upload();
 				++count;

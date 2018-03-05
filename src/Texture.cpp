@@ -370,6 +370,16 @@ namespace april
 		result += " (" + this->type.getName() + ")";
 		return result;
 	}
+	
+	bool Texture::_isAsyncUploadQueued()
+	{
+		if (this->loadMode == Texture::LoadMode::AsyncDeferredUpload)
+		{
+			return false;
+		}
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		return (!this->asyncLoadQueued && (this->filename == "" || this->dataAsync != NULL) && !this->uploaded);
+	}
 
 	bool Texture::loadAsync()
 	{
