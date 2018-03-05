@@ -134,10 +134,12 @@ namespace april
 		State state;
 		/// @brief Whether the application has been suspended. Required by some OSes.
 		bool suspended;
-		/// @brief The Timer object used for timing purposes.
+		/// @brief The Timer object used for general timing purposes.
 		Timer timer;
 		/// @brief The current time since the last frame.
 		float timeDelta;
+		/// @brief The Timer object used for timing frame rendering to adjust the update thread sleep time.
+		Timer frameTimer;
 		/// @brief FPS of the last mesaure.
 		int fps;
 		/// @brief Current counter for FPS calculation.
@@ -161,6 +163,8 @@ namespace april
 		hmutex stateMutex;
 		/// @brief The time-delta mutex.
 		hmutex timeDeltaMutex;
+		/// @brief The frame timer mutex.
+		hmutex frameTimerMutex;
 		/// @brief The message-box queue mutex.
 		hmutex messageBoxMutex;
 

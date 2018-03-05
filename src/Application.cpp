@@ -142,7 +142,13 @@ namespace april
 		hmutex::ScopeLock lock(&this->timeDeltaMutex);
 		this->timeDelta += timeDelta;
 		lock.release();
-		return april::rendersys->update(timeDelta);
+		lock.acquire(&this->frameTimerMutex);
+		this->frameTimer.update();
+		lock.release();
+		bool result = april::rendersys->update(timeDelta);
+		lock.acquire(&this->frameTimerMutex);
+		this->frameTimer.update();
+		return result;
 	}
 
 	void Application::_updateMessageBoxQueue()
@@ -233,6 +239,11 @@ namespace april
 			float timeDelta = 0.0f;
 			UpdateDelegate* updateDelegate = NULL;
 			hmutex::ScopeLock lockTimeDelta;
+			float sleepTime = 0.0f;
+			// if this option can be changed in the future, this code needs to be adjusted for this
+			bool vSync = april::rendersys->getOptions().vSync;
+			// this might be changed in the future (assuming at least one display mode is available, this might not be safe)
+			float frameTime = 1000.0f / april::rendersys->getDisplayModes().first().refreshRate;
 			while (april::application->getState() == State::Running)
 			{
 				lock.acquire(&april::application->updateMutex);
@@ -258,7 +269,17 @@ namespace april
 				lock.release();
 				while (april::application->getState() == State::Running && april::rendersys->getAsyncQueuesCount() > april::rendersys->getFrameAdvanceUpdates())
 				{
-					hthread::sleep(0.001f);
+					if (vSync)
+					{
+						lock.acquire(&april::application->frameTimerMutex);
+						sleepTime = frameTime - (float)april::application->frameTimer.diff(false) * 1000.0f;
+						lock.release();
+						hthread::sleep(hmax(sleepTime - 1.0f, 0.001f)); // using safe zone of 1ms
+					}
+					else
+					{
+						hthread::sleep(0.001f);
+					}
 					april::window->_processEvents();
 				}
 			}
