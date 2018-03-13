@@ -40,11 +40,28 @@ namespace april
 
 - (void) timerEvent:(NSTimer*) t
 {
+	static int runningState = 0;
+	if (april::application != NULL)
+	{
+		april::Application::State state = april::application->getState();
+		if (state == april::Application::State::Running && runningState == 0)
+		{
+			runningState = 1;
+		}
+		else if (state != april::Application::State::Running && runningState == 1)
+		{
+			runningState = 2;
+		}
+	}
 	// Avoid CPU overload while the app is waiting for screen to refresh
-	if (mView->mStartedDrawing || (april::rendersys->getAsyncQueuesCount() <= 0 && !april::rendersys->hasTexturesReadyForUpload() && !april::application->isAnyMessageBoxQueued()))
+	if (mView->mStartedDrawing || (april::rendersys->getAsyncQueuesCount() <= 0 && !april::rendersys->hasTexturesReadyForUpload() && !april::application->isAnyMessageBoxQueued() && runningState != 2))
 	{
 		hthread::sleep(1);
 		return;
+	}
+	if (runningState == 2)
+	{
+		runningState = 3;
 	}
 	mView->mStartedDrawing = true;
 	[mView setNeedsDisplay:YES];
