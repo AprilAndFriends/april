@@ -191,7 +191,6 @@ namespace april
 		NSString* nsTitle = [NSString stringWithUTF8String:data.title.cStr()];
 		NSString* nsText = [NSString stringWithUTF8String:data.text.cStr()];
 		UIAlertController* alert = [UIAlertController alertControllerWithTitle:nsTitle message:nsText preferredStyle:UIAlertControllerStyleAlert];
-		void (*callback)(const MessageBoxButton&) = data.callback;
 		UIAlertAction* action = NULL;
 		for_iter (i, 0, 3)
 		{
@@ -200,10 +199,7 @@ namespace april
 				MessageBoxButton buttonType = buttonTypes[i];
 				action = [UIAlertAction actionWithTitle:nsButtons[i] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 				{
-					if (callback != NULL)
-					{
-						callback(buttonType);
-					}
+					april::Application::messageBoxCallback(buttonType);
 				}];
 				[alert addAction:action];
 			}

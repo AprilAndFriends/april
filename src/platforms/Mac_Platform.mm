@@ -213,7 +213,7 @@ namespace april
 		argButtonTypes += buttonTypes[i1];
 		argButtonTypes += buttonTypes[i2];
 #define ns(s) [NSString stringWithUTF8String:s.cStr()]
-		[AprilCocoaWindow showAlertView:ns(data.title) button1:ns(argButtons[0]) button2:ns(argButtons[1]) button3:ns(argButtons[2]) btn1_t:argButtonTypes[0] btn2_t:argButtonTypes[1] btn3_t:argButtonTypes[2] text:ns(data.text) callback:data.callback];
+		[AprilCocoaWindow showAlertView:ns(data.title) button1:ns(argButtons[0]) button2:ns(argButtons[1]) button3:ns(argButtons[2]) btn1_t:argButtonTypes[0] btn2_t:argButtonTypes[1] btn3_t:argButtonTypes[2] text:ns(data.text) callback:april::Application::messageBoxCallback];
 	}
 	
 }
