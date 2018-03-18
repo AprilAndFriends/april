@@ -145,10 +145,7 @@ namespace april
 		lock.acquire(&this->frameTimerMutex);
 		this->frameTimer.update();
 		lock.release();
-		bool result = april::rendersys->update(timeDelta);
-		lock.acquire(&this->frameTimerMutex);
-		this->frameTimer.update();
-		return result;
+		return april::rendersys->update(timeDelta);
 	}
 
 	void Application::_updateMessageBoxQueue()
