@@ -135,7 +135,7 @@ namespace april
 			}
 		}
 		static hmap<hstr, int> counters;
-		int count = counters[prefix] + 1;
+		int count = counters[prefix] + 1; // must assign to temp variable first, because counters[prefix] is not executed in a deterministic way
 		counters[prefix] = count;
 		return prefix.replaced(".", "_") + hstr(count);
 	}
