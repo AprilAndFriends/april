@@ -25,6 +25,7 @@
 #include <hltypes/hstring.h>
 
 #include "april.h"
+#include "Application.h"
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "Mac_CocoaWindow.h"
