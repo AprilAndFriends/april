@@ -25,7 +25,7 @@ namespace april
 		if (!this->executed)
 		{
 			UnloadTextureCommand::execute();
-			this->texture->_ensureReadyForUpload(); // waiting for all async stuff to finish
+			this->texture->_ensureAsyncCompleted(); // waiting for all async stuff to finish
 			delete this->texture;
 			// don't set texture to NULL, because it can accessed outside and the memory location is important
 		}

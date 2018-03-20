@@ -60,9 +60,8 @@ namespace april
 		foreach (Texture*, it, textures)
 		{
 			// only async on-demand textures shouldn't be loaded, this is checked in _isAsyncUploadQueued()
-			if ((*it)->_isAsyncUploadQueued())
+			if ((*it)->_tryAsyncFinalUpload())
 			{
-				(*it)->_upload();
 				++count;
 				if (maxCount > 0 && count >= maxCount)
 				{

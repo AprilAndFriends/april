@@ -151,6 +151,9 @@ namespace april
 		/// @brief Checks whether the texture is waiting to be loaded asynchronously.
 		/// @return True if the texture is waiting to be loaded asynchronously.
 		bool isAsyncLoadQueued();
+		/// @brief Checks whether TextureAsync needs to upload this texture to the GPU.
+		/// @return True if TextureAsync needs to upload this texture to the GPU.
+		bool isAsyncUploadQueued();
 		/// @brief Checks whether the texture is completely unloaded.
 		/// @return True if the texture is completely unloaded.
 		/// @see isUploaded()
@@ -801,12 +804,18 @@ namespace april
 		/// @return True if successful or already loaded.
 		bool _loadMetaData();
 		/// @brief Uploads the texture data to the GPU. Used internally only.
+		/// @return True if can be uploaded and successful.
+		bool _tryAsyncFinalUpload();
+		/// @brief Makes sure that the texture has been uploaded to the GPU. Used internally only.
 		/// @return True if successful or already loaded.
-		bool _upload();
+		bool _upload(hmutex::ScopeLock& lock);
 		/// @brief Waits for the texture to be ready for upload. Used internally only.
 		/// @see loadAsync
 		/// @see _upload
-		void _ensureReadyForUpload();
+		void _ensureAsyncCompleted();
+		/// @brief Uploads the texture data to the GPU. Used internally only.
+		/// @return True if successful or already loaded.
+		bool _ensureUploaded();
 
 		/// @brief Clears the entire image and sets all image data to zeroes without safety checks. Used internally only.
 		/// @return True if successful.

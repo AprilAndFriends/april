@@ -371,13 +371,22 @@ namespace april
 		return result;
 	}
 	
-	bool Texture::_isAsyncUploadQueued()
+	bool Texture::isAsyncUploadQueued()
 	{
 		if (this->loadMode == Texture::LoadMode::AsyncDeferredUpload)
 		{
 			return false;
 		}
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		return (!this->asyncLoadQueued && (this->filename == "" || this->dataAsync != NULL) && !this->uploaded);
+	}
+
+	bool Texture::_isAsyncUploadQueued()
+	{
+		if (this->loadMode == Texture::LoadMode::AsyncDeferredUpload)
+		{
+			return false;
+		}
 		return (!this->asyncLoadQueued && (this->filename == "" || this->dataAsync != NULL) && !this->uploaded);
 	}
 
@@ -454,21 +463,20 @@ namespace april
 		return true;
 	}
 
-	bool Texture::_upload()
+	bool Texture::_tryAsyncFinalUpload()
 	{
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
-		if (this->uploaded)
+		if (!this->_isAsyncUploadQueued())
 		{
-			this->_tryUploadDataToGpu(); // upload any additional changes
-			return true;
+			return false;
 		}
+		this->_upload(lock);
+		return true;
+	}
+
+	bool Texture::_upload(hmutex::ScopeLock& lock)
+	{
 		this->asyncLoadDiscarded = false; // a possible previous unload call must be canceled
-		if (this->asyncLoadQueued)
-		{
-			lock.release();
-			this->_ensureReadyForUpload();
-			return true; // will already call this method again through TextureAsync::update() so it does not need to continue
-		}
 		int size = 0;
 		unsigned char* currentData = NULL;
 		// no lock required since it only checks for existence, not for manipulation of data
@@ -620,7 +628,7 @@ namespace april
 		}
 	}
 
-	void Texture::_ensureReadyForUpload()
+	void Texture::_ensureAsyncCompleted()
 	{
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (!this->asyncLoadQueued || this->asyncLoadDiscarded || this->filename == "" || this->uploaded)
@@ -640,6 +648,17 @@ namespace april
 			lock.release();
 			hthread::sleep(0.001f);
 		}
+	}
+
+	bool Texture::_ensureUploaded()
+	{
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		if (this->uploaded)
+		{
+			this->_tryUploadDataToGpu(); // upload any additional changes
+			return true;
+		}
+		return this->_upload(lock);
 	}
 
 	hstream* Texture::_prepareAsyncStream()
