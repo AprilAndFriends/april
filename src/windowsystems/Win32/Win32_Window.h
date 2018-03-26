@@ -42,10 +42,10 @@ namespace april
 
 		void setTitle(chstr title);
 		bool isCursorVisible() const;
-		int getWidth() const;
-		int getHeight() const;
+		HL_DEFINE_GET(int, width, Width);
+		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId() const;
-		void setResolution(int w, int h, bool fullscreen);
+		void setResolution(int width, int height, bool fullscreen);
 		HCURSOR getCursorHandle() const;
 
 		bool update(float timeDelta);
@@ -59,6 +59,8 @@ namespace april
 	protected:
 		HWND hWnd;
 		HCURSOR defaultCursor;
+		int width;
+		int height;
 		hstr fpsTitle;
 		bool fpsCounter;
 #ifdef _WIN32_XINPUT
@@ -66,7 +68,7 @@ namespace april
 		bool connectedControllers[XUSER_MAX_COUNT];
 #endif
 
-		void _systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options);
+		void _systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options);
 		void _systemDestroy();
 		
 		Cursor* _createCursor(bool fromResource);
@@ -75,13 +77,16 @@ namespace april
 		void _checkXInputControllerStates();
 #endif
 		void _setupStyles(DWORD& style, DWORD& exstyle, bool fullscreen);
-		void _adjustWindowSizeForClient(int x, int y, int& w, int& h, DWORD style, DWORD exstyle);
+		void _adjustWindowSizeForClient(int x, int y, int& width, int& height, DWORD style, DWORD exstyle);
 		void _refreshCursor();
 		void _updateCursorPosition();
 		
 		void _presentFrame(bool systemEnabled);
 
 		static LRESULT CALLBACK _mainProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+	private:
+		int _mouseMessages;
 
 	};
 
