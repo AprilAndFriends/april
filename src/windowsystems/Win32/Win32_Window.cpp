@@ -274,16 +274,12 @@ namespace april
 		{
 			this->_adjustWindowSizeForClient(x, y, width, height, style, exstyle);
 		}
-		// needs to be set here already, because some calls below already call system event callbacks
-		this->fullscreen = fullscreen;
+		this->fullscreen = fullscreen; // needs to be set here already, because some calls below already call system event callbacks
+		this->width = width;
+		this->height = height;
 		SetWindowPos(this->hWnd, (fullscreen ? HWND_TOPMOST : HWND_NOTOPMOST), x, y, width, height, 0);
 		ShowWindow(this->hWnd, SW_SHOW);
 		UpdateWindow(this->hWnd);
-		RECT clientRect;
-		GetClientRect(this->hWnd, &clientRect);
-		this->width = clientRect.right - clientRect.left;
-		this->height = clientRect.bottom - clientRect.top;
-		//hlog::warnf("OK", "set resolution: %d,%d,%d", this->width, this->height, this->fullscreen);
 		this->handleSizeChange(this->width, this->height, this->fullscreen);
 	}
 	
@@ -586,15 +582,9 @@ namespace april
 	{
 		RECT clientRect;
 		GetClientRect(this->hWnd, &clientRect);
-		int width2 = clientRect.right - clientRect.left;
-		int height2 = clientRect.bottom - clientRect.top;
-		//hlog::warnf("OK", "handle size change: %d,%d - %d,%d,%d", width2, height2, width, height, (int)fullscreen);
-		//Window::handleSizeChange(this->width, this->height, fullscreen);
-		this->width = width;
-		this->height = height;
-		Window::handleSizeChange(width, height, fullscreen);
-		//this->performUpdate(0.0f);
-		//april::rendersys->presentFrame();
+		this->width = clientRect.right - clientRect.left;
+		this->height = clientRect.bottom - clientRect.top;
+		Window::handleSizeChange(this->width, this->height, this->fullscreen);
 	}
 
 	void Win32_Window::queueControllerInput(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue)
@@ -624,18 +614,17 @@ namespace april
 			_sizeChanging = false;
 			break;
 		case WM_SIZE:
-			if (!april::window->isFullscreen() &&
-				(_sizeChanging || wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED && !_initialSize))
+			if (!april::window->isFullscreen() && (_sizeChanging || wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED && !_initialSize))
 			{
 				RECT clientRect;
 				GetClientRect(WIN32_WINDOW->hWnd, &clientRect);
 				WIN32_WINDOW->width = clientRect.right - clientRect.left;
 				WIN32_WINDOW->height = clientRect.bottom - clientRect.top;
-				//hlog::warnf("OK", "size event: %d,%d,%d", WIN32_WINDOW->width, WIN32_WINDOW->height, april::window->isFullscreen());
 				WIN32_WINDOW->_setRenderSystemResolution(april::window->getWidth(), april::window->getHeight(), april::window->isFullscreen());
+				ShowWindow(WIN32_WINDOW->hWnd, SW_SHOW);
 				UpdateWindow(WIN32_WINDOW->hWnd);
 				april::window->queueSizeChange(april::window->getWidth(), april::window->getHeight(), april::window->isFullscreen());
-				april::application->renderFrameSync();
+				april::application->renderFrameSync(); // TODO - implement this properly once render-to-texture frame duplication is implemented
 			}
 			_initialSize = false;
 			break;

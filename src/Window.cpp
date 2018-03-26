@@ -276,15 +276,15 @@ namespace april
 	void Window::setFullscreen(bool value)
 	{
 		SystemInfo info = april::getSystemInfo();
-		int w = hround(info.displayResolution.x);
-		int h = hround(info.displayResolution.y);
+		int width = hround(info.displayResolution.x);
+		int height = hround(info.displayResolution.y);
 		if (!value)
 		{
 			float factor = this->getOptions().defaultWindowModeResolutionFactor;
-			w = (int)(w * factor);
-			h = (int)(h * factor);
+			width = (int)(width * factor);
+			height = (int)(height * factor);
 		}
-		this->setResolution(w, h, value);
+		this->setResolution(width, height, value);
 		this->fullscreen = value;
 	}
 
@@ -364,7 +364,8 @@ namespace april
 		this->controllerEvents.clear();
 		this->motionEvents.clear();
 		lock.release();
-		for_iter(i, 0, genericEvents.size())
+		GenericEvent sizeEvent(GenericEvent::Type::SizeChange);
+		for_iter (i, 0, genericEvents.size())
 		{
 			if (genericEvents[i].type == GenericEvent::Type::QuitRequest)
 			{
@@ -383,7 +384,7 @@ namespace april
 			}
 			else if (genericEvents[i].type == GenericEvent::Type::SizeChange)
 			{
-				this->handleSizeChange(genericEvents[i].intValue, genericEvents[i].intValueOther, genericEvents[i].boolValue);
+				sizeEvent = genericEvents[i]; // merging size events
 			}
 			else if (genericEvents[i].type == GenericEvent::Type::InputModeChange)
 			{
@@ -397,6 +398,10 @@ namespace april
 			{
 				this->handleLowMemoryWarning();
 			}
+		}
+		if (sizeEvent.intValue > 0 && sizeEvent.intValueOther > 0)
+		{
+			this->handleSizeChange(sizeEvent.intValue, sizeEvent.intValueOther, sizeEvent.boolValue);
 		}
 		// due to possible problems with multiple scroll events in one frame, consecutive scroll events are merged (and so are move events for convenience)
 		gvec2 cumulativeScroll;
