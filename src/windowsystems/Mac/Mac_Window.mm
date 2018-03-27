@@ -236,27 +236,32 @@ namespace april
 	{
 		if (param == "retain_loading_overlay")
 		{
-			this->retainLoadingOverlay = (value == "1");
+			this->retainLoadingOverlay = (value == "1"); // TODO - should use true/false
+			return;
 		}
-		else if (param == "reattach_loading_overlay")
+		if (param == "reattach_loading_overlay")
 		{
 			gReattachLoadingOverlay = true;
+			return;
 		}
-		else if (param == "fasthide_loading_overlay")
+		if (param == "fasthide_loading_overlay")
 		{
-			this->fastHideLoadingOverlay = (value == "1");
+			this->fastHideLoadingOverlay = (value == "1"); // TODO - should use true/false
+			return;
 		}
-		else if (param == "splashscreen_fadeout")
+		if (param == "splashscreen_fadeout")
 		{
-			this->splashScreenFadeout = (value == "1");
+			this->splashScreenFadeout = (value == "1"); // TODO - should use true/false
+			return;
 		}
-		else if (param == "delay_splash")
+		if (param == "delay_splash")
 		{
-			this->splashScreenDelay = value;
+			this->splashScreenDelay = (float)value;
+			return;
 		}
-		else if (param == "disableCursorCheck")
+		if (param == "disableCursorCheck")
 		{
-			this->disableCursorCheck = (value == "1");
+			this->disableCursorCheck = (value == "1"); // TODO - should use true/false
 			if (this->disableCursorCheck)
 			{
 				hlog::write(logTag, "Disabling Mac Cursor Check");
@@ -265,15 +270,14 @@ namespace april
 			{
 				hlog::write(logTag, "Enabling Mac Cursor Check");
 			}
+			return;
 		}
-		else if (param == "displayLinkIgnoreSystemRedraw")
+		if (param == "displayLinkIgnoreSystemRedraw")
 		{
-			this->displayLinkIgnoreSystemRedraw = (value == "1");
+			this->displayLinkIgnoreSystemRedraw = (value == "1"); // TODO - should use true/false
+			return;
 		}
-		else
-		{
-			Window::setParam(param, value);
-		}
+		Window::setParam(param, value);
 	}
 	
 	bool Mac_Window::isCursorVisible() const

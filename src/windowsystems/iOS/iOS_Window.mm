@@ -213,26 +213,26 @@ namespace april
 		if (param == "retain_loading_overlay")
 		{
 			bool prev = this->retainLoadingOverlay;
-			this->retainLoadingOverlay = (value == "1");
+			this->retainLoadingOverlay = (value == "1"); // TODO - should use true/false
 			if (!this->retainLoadingOverlay && prev)// && this->firstFrameDrawn)
 			{
 				[viewcontroller removeImageView:(value == "0" ? false : true)];
 			}
+			return;
 		}
-		else if (param == "exit_function")
+		if (param == "exit_function")
 		{
-			unsigned long ptr;
+			unsigned long ptr = 0;
 			sscanf(value.cStr(), "%lu", &ptr);
 			this->exitFunction = (void (*)(int)) ptr;
+			return;
 		}
-		else if (param == "CADisplayLink::updateInterval" && glview != nil)
+		if (param == "CADisplayLink::updateInterval" && glview != nil)
 		{
 			[glview setUpdateInterval:(int)value];
+			return;
 		}
-		else
-		{
-			Window::setParam(param, value);
-		}
+		Window::setParam(param, value);
 	}
 
 	float iOS_Window::_getTouchScale() const

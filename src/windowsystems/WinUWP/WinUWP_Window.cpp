@@ -105,17 +105,21 @@ namespace april
 					this->cursorMappings[data[1]] = (int)data[0];
 				}
 			}
+			return;
 		}
 #else
 		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
 		{
 			this->backButtonSystemHandling = (value != "0");
+			return;
 		}
 #endif
 		if (param == WINUWP_DELAY_SPLASH)
 		{
 			this->delaySplash = (float)value;
+			return;
 		}
+		Window::setParam(param, value);
 	}
 
 	void WinUWP_Window::setTitle(chstr title)

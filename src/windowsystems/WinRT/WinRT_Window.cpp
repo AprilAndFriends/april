@@ -99,21 +99,21 @@ namespace april
 					this->cursorMappings[data[1]] = (unsigned int)data[0];
 				}
 			}
+			return;
 		}
 #else
-		else if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
+		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
 		{
 			this->backButtonSystemHandling = (value != "0");
+			return;
 		}
 #endif
-		else if (param == WINRT_DELAY_SPLASH)
+		if (param == WINRT_DELAY_SPLASH)
 		{
 			this->delaySplash = (float)value;
+			return;
 		}
-		else
-		{
-			Window::setParam(param, value);
-		}
+		Window::setParam(param, value);
 	}
 
 	void WinRT_Window::setTitle(chstr title)
