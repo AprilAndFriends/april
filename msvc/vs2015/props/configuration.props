@@ -14,7 +14,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">
     <Link>
-      <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-ljpeg;-lzlib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-lbinjpeg;-lzlib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9|Win32' or
