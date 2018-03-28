@@ -103,6 +103,10 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <Import Project="..\..\..\..\..\hltypes\msvc\vs2015\props-generic\build-defaults.props" />
   <Import Project="props\configuration.props" />
+  <!-- on some machines there is a bizarre linker error where the linker won't properly link libjpeg.a or similar variants-->
+  <PropertyGroup Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">
+    <TargetName>libbinjpeg</TargetName>
+  </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="..\..\jconfig.h" />
     <ClInclude Include="..\..\jdct.h" />
