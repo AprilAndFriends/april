@@ -365,6 +365,7 @@ namespace april
 		this->motionEvents.clear();
 		lock.release();
 		GenericEvent sizeEvent(GenericEvent::Type::SizeChange);
+		bool receivedMemoryWarning = false;
 		for_iter (i, 0, genericEvents.size())
 		{
 			if (genericEvents[i].type == GenericEvent::Type::QuitRequest)
@@ -396,12 +397,16 @@ namespace april
 			}
 			else if (genericEvents[i].type == GenericEvent::Type::LowMemoryWarning)
 			{
-				this->handleLowMemoryWarning();
+				receivedMemoryWarning = true; // merging low memory warning events
 			}
 		}
 		if (sizeEvent.intValue > 0 && sizeEvent.intValueOther > 0)
 		{
 			this->handleSizeChange(sizeEvent.intValue, sizeEvent.intValueOther, sizeEvent.boolValue);
+		}
+		if (receivedMemoryWarning)
+		{
+			this->handleLowMemoryWarning();
 		}
 		// due to possible problems with multiple scroll events in one frame, consecutive scroll events are merged (and so are move events for convenience)
 		gvec2 cumulativeScroll;
