@@ -8,7 +8,9 @@ cmake_minimum_required(VERSION 3.4.1)
 # Locate all source files
 
 file (GLOB_RECURSE CppSrc
-    "../../../demos/demo_simple/*.cpp"
+    "../../include/*.h"
+    "../../src/*.h"
+    "../../src/*.cpp"
 )
 
 # Creates and names a library, sets it as either STATIC
@@ -18,9 +20,9 @@ file (GLOB_RECURSE CppSrc
 
 add_library(
 	# Sets the name of the library.
-	demo_simple
+	april
 	# Sets the library as a shared library.
-	SHARED
+	STATIC
 	# Provides a relative path to your source file(s).
 	${CppSrc}
 )
@@ -39,14 +41,12 @@ find_library(
 	log
 )
 
-
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
 target_link_libraries(
 	# Specifies the target library.
-	demo_simple
 	april
 	# Links the target library to the log library
 	# included in the NDK.

@@ -1,1 +1,4 @@
-include ':app', ':april'
+include ':app'
+include ':april'
+
+project(':april').projectDir = new File('../lib')

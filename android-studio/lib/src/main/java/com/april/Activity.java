@@ -6,8 +6,6 @@ import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
@@ -19,9 +17,7 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import com.april.DialogFactory;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -59,17 +55,17 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	
 	public GLSurfaceView glView = null;
 	public ArrayList ignoredKeys = null;
-	public List<Callback1<Void, Bundle>> callbacksOnCreate = null;
-	public List<Callback<Void>> callbacksOnStart = null;
-	public List<Callback<Void>> callbacksOnResume = null;
-	public List<Callback<Void>> callbacksOnPause = null;
-	public List<Callback<Void>> callbacksOnStop = null;
-	public List<Callback<Void>> callbacksOnDestroy = null;
-	public List<Callback<Void>> callbacksOnRestart = null;
-	public List<Callback3<Boolean, Integer, Integer, Intent>> callbacksOnActivityResult = null;
-	public List<Callback1<Void, Intent>> callbacksOnNewIntent = null;
-	public List<Callback<Boolean>> callbacksOnBackPressed = null;
-	public List<Callback1<Void, Configuration>> callbacksOnConfigurationChanged = null;
+	public List<ICallback1<Void, Bundle>> callbacksOnCreate = null;
+	public List<ICallback<Void>> callbacksOnStart = null;
+	public List<ICallback<Void>> callbacksOnResume = null;
+	public List<ICallback<Void>> callbacksOnPause = null;
+	public List<ICallback<Void>> callbacksOnStop = null;
+	public List<ICallback<Void>> callbacksOnDestroy = null;
+	public List<ICallback<Void>> callbacksOnRestart = null;
+	public List<ICallback3<Boolean, Integer, Integer, Intent>> callbacksOnActivityResult = null;
+	public List<ICallback1<Void, Intent>> callbacksOnNewIntent = null;
+	public List<ICallback<Boolean>> callbacksOnBackPressed = null;
+	public List<ICallback1<Void, Configuration>> callbacksOnConfigurationChanged = null;
 	
 	public Activity()
 	{
@@ -82,70 +78,70 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_UP);
 		this.ignoredKeys.add(KeyEvent.KEYCODE_VOLUME_MUTE);
 		this.systemSettingsObserver = new SystemSettingsObserver();
-		this.callbacksOnCreate = new ArrayList<Callback1<Void, Bundle>>();
-		this.callbacksOnStart = new ArrayList<Callback<Void>>();
-		this.callbacksOnResume = new ArrayList<Callback<Void>>();
-		this.callbacksOnPause = new ArrayList<Callback<Void>>();
-		this.callbacksOnStop = new ArrayList<Callback<Void>>();
-		this.callbacksOnDestroy = new ArrayList<Callback<Void>>();
-		this.callbacksOnRestart = new ArrayList<Callback<Void>>();
-		this.callbacksOnActivityResult = new ArrayList<Callback3<Boolean, Integer, Integer, Intent>>();
-		this.callbacksOnNewIntent = new ArrayList<Callback1<Void, Intent>>();
-		this.callbacksOnBackPressed = new ArrayList<Callback<Boolean>>();
-		this.callbacksOnConfigurationChanged = new ArrayList<Callback1<Void, Configuration>>();
+		this.callbacksOnCreate = new ArrayList<ICallback1<Void, Bundle>>();
+		this.callbacksOnStart = new ArrayList<ICallback<Void>>();
+		this.callbacksOnResume = new ArrayList<ICallback<Void>>();
+		this.callbacksOnPause = new ArrayList<ICallback<Void>>();
+		this.callbacksOnStop = new ArrayList<ICallback<Void>>();
+		this.callbacksOnDestroy = new ArrayList<ICallback<Void>>();
+		this.callbacksOnRestart = new ArrayList<ICallback<Void>>();
+		this.callbacksOnActivityResult = new ArrayList<ICallback3<Boolean, Integer, Integer, Intent>>();
+		this.callbacksOnNewIntent = new ArrayList<ICallback1<Void, Intent>>();
+		this.callbacksOnBackPressed = new ArrayList<ICallback<Boolean>>();
+		this.callbacksOnConfigurationChanged = new ArrayList<ICallback1<Void, Configuration>>();
 	}
 	
-	public void registerOnCreate(Callback1<Void, Bundle> callback)
+	public void registerOnCreate(ICallback1<Void, Bundle> callback)
 	{
 		this.callbacksOnCreate.add(callback);
 	}
 	
-	public void registerOnStart(Callback<Void> callback)
+	public void registerOnStart(ICallback<Void> ICallback)
 	{
-		this.callbacksOnStart.add(callback);
+		this.callbacksOnStart.add(ICallback);
 	}
 	
-	public void registerOnResume(Callback<Void> callback)
+	public void registerOnResume(ICallback<Void> ICallback)
 	{
-		this.callbacksOnResume.add(callback);
+		this.callbacksOnResume.add(ICallback);
 	}
 	
-	public void registerOnPause(Callback<Void> callback)
+	public void registerOnPause(ICallback<Void> ICallback)
 	{
-		this.callbacksOnPause.add(callback);
+		this.callbacksOnPause.add(ICallback);
 	}
 	
-	public void registerOnStop(Callback<Void> callback)
+	public void registerOnStop(ICallback<Void> ICallback)
 	{
-		this.callbacksOnStop.add(callback);
+		this.callbacksOnStop.add(ICallback);
 	}
 	
-	public void registerOnDestroy(Callback<Void> callback)
+	public void registerOnDestroy(ICallback<Void> ICallback)
 	{
-		this.callbacksOnDestroy.add(callback);
+		this.callbacksOnDestroy.add(ICallback);
 	}
 	
-	public void registerOnRestart(Callback<Void> callback)
+	public void registerOnRestart(ICallback<Void> ICallback)
 	{
-		this.callbacksOnRestart.add(callback);
+		this.callbacksOnRestart.add(ICallback);
 	}
 	
-	public void registerOnActivityResult(Callback3<Boolean, Integer, Integer, Intent> callback)
+	public void registerOnActivityResult(ICallback3<Boolean, Integer, Integer, Intent> callback)
 	{
 		this.callbacksOnActivityResult.add(callback);
 	}
 	
-	public void registerOnNewIntent(Callback1<Void, Intent> callback)
+	public void registerOnNewIntent(ICallback1<Void, Intent> callback)
 	{
 		this.callbacksOnNewIntent.add(callback);
 	}
 	
-	public void registerOnBackPressed(Callback<Boolean> callback)
+	public void registerOnBackPressed(ICallback<Boolean> ICallback)
 	{
-		this.callbacksOnBackPressed.add(callback);
+		this.callbacksOnBackPressed.add(ICallback);
 	}
 	
-	public void registerOnConfigurationChanged(Callback1<Void, Configuration> callback)
+	public void registerOnConfigurationChanged(ICallback1<Void, Configuration> callback)
 	{
 		this.callbacksOnConfigurationChanged.add(callback);
 	}
