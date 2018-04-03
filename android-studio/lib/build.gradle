@@ -1,0 +1,24 @@
+android {
+	compileSdkVersion 26
+
+	defaultConfig {
+		minSdkVersion 15
+		targetSdkVersion 26
+		versionCode 5000
+		versionName "5.0.0"
+
+	}
+
+	buildTypes {
+		release {
+			minifyEnabled false
+		}
+	}
+
+}
+
+dependencies {
+	implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+	implementation 'com.android.support:appcompat-v7:26.1.0'
+}
