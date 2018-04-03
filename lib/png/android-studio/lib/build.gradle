@@ -1,0 +1,7 @@
+apply plugin: 'com.android.library'
+apply from: '../../../../../hltypes/android-studio/default/build.gradle'
+
+android
+{
+}
+

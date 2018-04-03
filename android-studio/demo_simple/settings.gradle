@@ -1,4 +1,0 @@
-include ':april'
-include ':app'
-
-project(':april').projectDir = new File('../lib')

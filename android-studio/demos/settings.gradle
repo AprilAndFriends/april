@@ -1,0 +1,12 @@
+include ':demo_simple'
+
+include ':hltypes'
+project(':hltypes').projectDir = new File('../../../hltypes/android-studio/lib')
+include ':gtypes'
+project(':gtypes').projectDir = new File('../../../gtypes/android-studio/lib')
+include ':jpeg'
+project(':jpeg').projectDir = new File('../../lib/jpeg/android-studio/lib')
+include ':png'
+project(':png').projectDir = new File('../../lib/png/android-studio/lib')
+include ':april'
+project(':april').projectDir = new File('../lib')
