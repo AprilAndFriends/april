@@ -1,7 +1,20 @@
 apply plugin: 'com.android.library'
-apply from: '../../../../../hltypes/android-studio/default/build.gradle'
+apply from: '../../../../../hltypes/android-studio/generic/default.gradle'
 
 android
 {
+	defaultConfig
+	{
+		/*
+		externalNativeBuild
+		{
+			cmake
+			{
+				cFlags "-funswitch-loops -mfpu=vfpv3-d16 -fpic -fstack-protector -Wall -Wno-parentheses -Wno-overloaded-virtual -Wstrict-overflow=0 -fstrict-aliasing -ffunction-sections -fomit-frame-pointer -finline-limit=300"
+				cppFlags "-funswitch-loops -mfpu=vfpv3-d16 -fpic -fstack-protector -Wall -Wno-parentheses -Wno-overloaded-virtual -Wstrict-overflow=0 -fstrict-aliasing -ffunction-sections -fomit-frame-pointer -finline-limit=300"
+			}
+		}
+		*/
+	}
 }
 

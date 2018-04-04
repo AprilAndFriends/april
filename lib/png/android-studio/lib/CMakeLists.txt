@@ -3,34 +3,24 @@
 
 # Sets the minimum version of CMake required to build the native library.
 
-cmake_minimum_required(VERSION 3.4.1)
-
-# Locate all source files
-
-file (GLOB_RECURSE CppSrc
-    "../../*.h"
+file(GLOB CppSrc
+    "../../*.c"
     "../../*.cpp"
 )
 
-# Creates and names a library, sets it as either STATIC
-# or SHARED, and provides the relative paths to its source code.
-# You can define multiple libraries, and CMake builds them for you.
-# Gradle automatically packages shared libraries with your APK.
+#set(CMAKE_CXX_STANDARD 11)  # enable C++11 standard
+#SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
+#add_definition(-D__ANDROIDX__)
+#set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y -Wall")
+
+include_directories(AFTER ../..)
+#include_directories( ${MY_SOURCE_DIR}/src )
 
 add_library(
-	# Sets the name of the library.
 	png
-	# Sets the library as a shared library.
 	STATIC
-	# Provides a relative path to your source file(s).
 	${CppSrc}
 )
-
-# Searches for a specified prebuilt library and stores the path as a
-# variable. Because CMake includes system libraries in the search path by
-# default, you only need to specify the name of the public NDK library
-# you want to add. CMake verifies that the library exists before
-# completing its build.
 
 find_library(
 	# Sets the name of the path variable.

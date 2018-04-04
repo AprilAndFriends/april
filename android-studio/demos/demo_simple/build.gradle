@@ -1,38 +1,13 @@
 apply plugin: 'com.android.application'
+apply from: '../../../../hltypes/android-studio/generic/default.gradle'
 
 android
 {
-	compileSdkVersion 26
 	defaultConfig
 	{
 		applicationId "com.april.demoSimple"
-		minSdkVersion 15
-		targetSdkVersion 26
-		versionCode 1
-		versionName "1.0"
-		externalNativeBuild
-		{
-			cmake
-			{
-				cppFlags "-std=c++11 -frtti -fexceptions"
-			}
-		}
-	}
-	
-	buildTypes
-	{
-		release
-		{
-			minifyEnabled false
-		}
-	}
-	
-	externalNativeBuild
-	{
-		cmake
-		{
-			path "CMakeLists.txt"
-		}
+		versionCode 5000
+		versionName "5.0.0"
 	}
 }
 
