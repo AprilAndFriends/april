@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 apply from: '../../../hltypes/android-studio/generic/default.gradle'
+apply from: '../../../hltypes/android-studio/generic/native.gradle'
+apply from: '../../../hltypes/android-studio/generic/cpp.gradle'
 
 android
 {
@@ -8,4 +10,13 @@ android
 		versionCode 5000
 		versionName "5.0.0"
 	}
+}
+
+dependencies
+{
+	implementation project(":hltypes")
+	implementation project(":gtypes")
+	implementation project(":png")
+	implementation project(":jpeg")
+	implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
