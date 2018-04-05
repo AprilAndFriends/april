@@ -5,16 +5,11 @@ project(jpeg)
 
 file(
 	GLOB_RECURSE CppSrc
-    "../../*.h"
-    "../../*.c"
-    "../../*.cpp"
+	"../../j*.c"
+	"../../j*.cpp"
 )
 
-add_library(
-	jpeg
-	STATIC
-	${CppSrc}
-)
+add_library(jpeg STATIC ${CppSrc})
 
 include_directories(AFTER "../..")
 

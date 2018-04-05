@@ -12,6 +12,7 @@
  * is shoved onto the user.
  */
 
+#ifndef _ANDROID
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
@@ -274,3 +275,4 @@ jpeg_mem_term (j_common_ptr cinfo)
 {
   /* no work */
 }
+#endif

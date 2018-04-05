@@ -11,8 +11,7 @@ android
 		{
 			cmake
 			{
-				//cFlags "-I../../include/gtypes"
-				//cppFlags "-I../../include/gtypes"
+				targets "jpeg"
 			}
 		}
 	}

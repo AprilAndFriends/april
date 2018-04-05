@@ -1,12 +1,20 @@
-include ':demo_simple'
+include(":demo_simple")
+include(":hltypes")
+include(":gtypes")
+include(":jpeg")
+include(":png")
+include(":april")
 
-include ':hltypes'
-project(':hltypes').projectDir = new File('../../../hltypes/android-studio/lib')
-include ':gtypes'
-project(':gtypes').projectDir = new File('../../../gtypes/android-studio/lib')
-include ':jpeg'
-project(':jpeg').projectDir = new File('../../lib/jpeg/android-studio/lib')
-include ':png'
-project(':png').projectDir = new File('../../lib/png/android-studio/lib')
-include ':april'
-project(':april').projectDir = new File('../lib')
+project(":hltypes").projectDir = file("../../../hltypes/android-studio/lib")
+project(":gtypes").projectDir = file("../../../gtypes/android-studio/lib")
+project(":jpeg").projectDir = file("../../lib/jpeg/android-studio/lib")
+project(":png").projectDir = file("../../lib/png/android-studio/lib")
+project(":april").projectDir = file("../lib")
+
+/*
+project(":hltypes").buildDir = "build/hltypes"
+project(":gtypes").buildDir = "build/gtypes"
+project(":jpeg").buildDir = "build/jpeg"
+project(":png").buildDir = "build/png"
+project(":april").buildDir = "build/april"
+*/

@@ -3,18 +3,27 @@ set(CMAKE_VERBOSE_MAKEFILE on)
 
 project(png)
 
+# defining manually so source files don't need to be changed
 file(
-	GLOB_RECURSE CppSrc
-    "../../*.h"
-    "../../*.c"
-    "../../*.cpp"
+	GLOB CppSrc
+	"../../png.c"
+	"../../pngerror.c"
+	"../../pngget.c"
+	"../../pngpmem.c"
+	"../../pngpread.c"
+	"../../pngread.c"
+	"../../pngrio.c"
+	"../../pngrtran.c"
+	"../../pngrutil.c"
+	"../../pngset.c"
+	"../../pngtrans.c"
+	"../../pngwio.c"
+	"../../pngwrite.c"
+	"../../pngwtran.c"
+	"../../pngwutil.c"
 )
 
-add_library(
-	png
-	STATIC
-	${CppSrc}
-)
+add_library(png STATIC ${CppSrc})
 
 include_directories(AFTER "../..")
 

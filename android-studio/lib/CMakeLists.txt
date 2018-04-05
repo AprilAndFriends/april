@@ -5,16 +5,11 @@ project(april)
 
 file(
 	GLOB_RECURSE CppSrc
-    "../../include/*.h"
-    "../../src/*.h"
-    "../../src/*.cpp"
+	"../../src/*.c"
+	"../../src/*.cpp"
 )
 
-add_library(
-	april
-	STATIC
-	${CppSrc}
-)
+add_library(april STATIC ${CppSrc})
 
 include_directories(AFTER "../../include/april")
 include_directories(AFTER "../../src/util")
