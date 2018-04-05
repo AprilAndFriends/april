@@ -9,7 +9,7 @@ file(
 	"../../png.c"
 	"../../pngerror.c"
 	"../../pngget.c"
-	"../../pngpmem.c"
+	"../../pngmem.c"
 	"../../pngpread.c"
 	"../../pngread.c"
 	"../../pngrio.c"
@@ -26,6 +26,7 @@ file(
 add_library(png STATIC ${CppSrc})
 
 include_directories(AFTER "../..")
+include_directories(AFTER "../../../hltypes/lib/zlib")
 
 target_link_libraries(
 	png

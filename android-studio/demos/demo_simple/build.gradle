@@ -22,10 +22,10 @@ android
 
 dependencies
 {
-	implementation project(":hltypes")
-	implementation project(":gtypes")
-	implementation project(":png")
-	implementation project(":jpeg")
-	implementation project(":april")
-	implementation fileTree(dir: 'libs', include: ['*.jar'])
+	implementation project(':hltypes')
+	implementation project(':gtypes')
+	implementation project(':png')
+	implementation project(':jpeg')
+	implementation project(':april')
+	implementation fileTree(include: ['*.jar'], dir: 'libs')
 }

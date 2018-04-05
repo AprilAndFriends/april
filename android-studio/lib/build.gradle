@@ -1,4 +1,4 @@
-apply plugin: 'com.android.library'
+apply plugin: "com.android.library"
 apply from: '../../../hltypes/android-studio/generic/default.gradle'
 apply from: '../../../hltypes/android-studio/generic/native.gradle'
 apply from: '../../../hltypes/android-studio/generic/cpp.gradle'
@@ -21,9 +21,9 @@ android
 
 dependencies
 {
-	implementation project(":hltypes")
-	implementation project(":gtypes")
-	implementation project(":png")
-	implementation project(":jpeg")
-	implementation fileTree(dir: 'libs', include: ['*.jar'])
+	implementation project(':hltypes')
+	implementation project(':gtypes')
+	implementation project(':png')
+	implementation project(':jpeg')
+	implementation fileTree(include: ['*.jar'], dir: 'libs')
 }
