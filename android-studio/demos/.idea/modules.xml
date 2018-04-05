@@ -5,10 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/../lib/april.iml" filepath="$PROJECT_DIR$/../lib/april.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo_simple/demo_simple.iml" filepath="$PROJECT_DIR$/demo_simple/demo_simple.iml" />
       <module fileurl="file://$PROJECT_DIR$/demos.iml" filepath="$PROJECT_DIR$/demos.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../../gtypes/android-studio/lib/gtypes.iml" filepath="$PROJECT_DIR$/../../../gtypes/android-studio/lib/gtypes.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../../hltypes/android-studio/lib/hltypes.iml" filepath="$PROJECT_DIR$/../../../hltypes/android-studio/lib/hltypes.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../lib/jpeg/android-studio/lib/jpeg.iml" filepath="$PROJECT_DIR$/../../lib/jpeg/android-studio/lib/jpeg.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../lib/png/android-studio/lib/png.iml" filepath="$PROJECT_DIR$/../../lib/png/android-studio/lib/png.iml" />
     </modules>
   </component>
 </project>

@@ -10,10 +10,6 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/demo_simple" />
             <option value="$PROJECT_DIR$/../lib" />
-            <option value="$PROJECT_DIR$/../../lib/jpeg/android-studio/lib" />
-            <option value="$PROJECT_DIR$/../../lib/png/android-studio/lib" />
-            <option value="$PROJECT_DIR$/../../../gtypes/android-studio/lib" />
-            <option value="$PROJECT_DIR$/../../../hltypes/android-studio/lib" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

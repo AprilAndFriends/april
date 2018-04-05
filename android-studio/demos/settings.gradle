@@ -1,14 +1,18 @@
+/*
 include(":hltypes")
 include(":gtypes")
 include(":jpeg")
 include(":png")
+*/
 include(":april")
 include(":demo_simple")
 
+/*
 project(":hltypes").projectDir = file("../../../hltypes/android-studio/lib")
 project(":gtypes").projectDir = file("../../../gtypes/android-studio/lib")
 project(":jpeg").projectDir = file("../../lib/jpeg/android-studio/lib")
 project(":png").projectDir = file("../../lib/png/android-studio/lib")
+*/
 project(":april").projectDir = file("../lib")
 
 /*
