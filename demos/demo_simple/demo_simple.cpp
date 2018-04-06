@@ -73,7 +73,7 @@ class UpdateDelegate : public april::UpdateDelegate
 		/// some general texture testing
 		april::rendersys->drawFilledRect(drawRect, april::Color(96, 96, 96));
 		// TODOx - re-enable and implement
-		//manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
+		manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
 		april::rendersys->setTexture(manualTexture);
 		april::rendersys->render(april::RenderOperation::TriangleStrip, dv, 4);
 		april::rendersys->setTexture(texture);
@@ -226,14 +226,12 @@ void __aprilApplicationInit()
 	textureRect.y = -textureRect.h * 0.5f;
 	// demonstrating some of the image manipulation methods
 	manualTexture = april::rendersys->createTexture((int)drawRect.w, (int)drawRect.h, april::Color::Clear, april::Image::Format::RGBA);
-	/*
 	manualTexture->write(0, 0, texture->getWidth(), texture->getHeight(), 0, 0, texture);
-	manualTexture->invert(0, 0, 256, 128);
-	manualTexture->saturate(0, 128, 128, 128, 0.0f);
-	manualTexture->rotateHue(128, 0, 128, 128, 180.0f);
-	manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 128, 128, texture, 96);
-	manualTexture->blitStretch(texture->getWidth() / 2, 0, texture->getWidth() / 2, texture->getHeight(), 64, 128, 700, 200, texture, 208);
-	 */
+	manualTexture->invert(0, 0, 512, 128);
+	manualTexture->saturate(0, 128, 256, 128, 0.0f);
+	manualTexture->rotateHue(256, 0, 256, 256, 180.0f);
+	manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 256, 128, texture, 96);
+	manualTexture->blitStretch(texture->getWidth() / 2, 0, texture->getWidth() / 2, texture->getHeight(), 128, 256, 700, 200, texture, 208);
 }
 
 void __aprilApplicationDestroy()

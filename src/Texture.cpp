@@ -641,7 +641,7 @@ namespace april
 		{
 			TextureAsync::update();
 			lock.acquire(&this->asyncLoadMutex);
-			if (!this->asyncLoadQueued)
+			if (!this->asyncLoadQueued && this->uploaded)
 			{
 				break;
 			}
@@ -805,6 +805,7 @@ namespace april
 
 	bool Texture::_rawClear()
 	{
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		memset(this->data, 0, this->getByteSize());
 		this->dirty = true;
@@ -819,6 +820,7 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + this->_getInternalName());
 			return color;
 		}
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		if (this->data != NULL)
 		{
@@ -839,6 +841,7 @@ namespace april
 
 	bool Texture::_rawSetPixel(int x, int y, const Color& color)
 	{
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::setPixel(x, y, color, this->data, this->width, this->height, this->format);
 		this->dirty |= result;
@@ -853,6 +856,7 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + this->_getInternalName());
 			return color;
 		}
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		if (this->data != NULL)
 		{
@@ -877,6 +881,7 @@ namespace april
 		{
 			return this->_rawSetPixel(x, y, color);
 		}
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::fillRect(x, y, w, h, color, this->data, this->width, this->height, this->format);
 		this->dirty |= result;
@@ -890,6 +895,7 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + this->_getInternalName());
 			return false;
 		}
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		return Image::convertToFormat(this->width, this->height, this->data, this->format, output, format, false);
 	}
@@ -901,6 +907,7 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + this->_getInternalName());
 			return NULL;
 		}
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		unsigned char* data = NULL;
 		Image* image = NULL;
@@ -924,6 +931,7 @@ namespace april
 
 	bool Texture::_rawWrite(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::write(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format);
 		this->dirty |= result;
@@ -947,6 +955,7 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + texture->_getInternalName());
 			return false;
 		}
+		texture->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&texture->asyncDataMutex);
 		return this->write(sx, sy, sw, sh, dx, dy, texture->data, texture->width, texture->height, texture->format);
 	}
@@ -958,6 +967,7 @@ namespace april
 			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format);
 		this->dirty |= result;
@@ -981,6 +991,7 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + texture->_getInternalName());
 			return false;
 		}
+		texture->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&texture->asyncDataMutex);
 		return this->writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, texture->data, texture->width, texture->height, texture->format);
 	}
@@ -992,6 +1003,7 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format);
 		this->dirty |= result;
@@ -1015,6 +1027,7 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + texture->_getInternalName());
 			return false;
 		}
+		texture->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&texture->asyncDataMutex);
 		return this->blit(sx, sy, sw, sh, dx, dy, texture->data, texture->width, texture->height, texture->format);
 	}
@@ -1026,6 +1039,7 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format);
 		this->dirty |= result;
@@ -1049,6 +1063,7 @@ namespace april
 			hlog::warn(logTag, "Cannot read texture: " + texture->_getInternalName());
 			return false;
 		}
+		texture->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&texture->asyncDataMutex);
 		return this->blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, texture->data, texture->width, texture->height, texture->format);
 	}
@@ -1060,6 +1075,7 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::rotateHue(x, y, w, h, degrees, this->data, this->width, this->height, this->format);
 		this->dirty |= result;
@@ -1073,6 +1089,7 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::saturate(x, y, w, h, factor, this->data, this->width, this->height, this->format);
 		this->dirty |= result;
@@ -1086,6 +1103,7 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::invert(x, y, w, h, this->data, this->width, this->height, this->format);
 		this->dirty |= result;
@@ -1099,6 +1117,7 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
+		this->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::insertAlphaMap(this->width, this->height, srcData, srcFormat, this->data, this->format, median, ambiguity);
 		this->dirty |= result;
@@ -1128,6 +1147,7 @@ namespace april
 				this->_getInternalName().cStr(), this->width, this->height, texture->_getInternalName().cStr(), texture->width, texture->height);
 			return false;
 		}
+		texture->_ensureAsyncCompleted();
 		hmutex::ScopeLock lock(&texture->asyncDataMutex);
 		return this->insertAlphaMap(texture->data, texture->format, median, ambiguity);
 	}
