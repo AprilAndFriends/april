@@ -9,6 +9,16 @@ android {
 		versionCode 5000
 		versionName "5.0.0"
 	}
+	externalNativeBuild {
+		cmake {
+			path "CMakeLists.txt"
+		}
+	}
+	sourceSets {
+		main {
+			assets.srcDirs = ["../../../demos/media"]
+		}
+	}
 }
 
 dependencies {

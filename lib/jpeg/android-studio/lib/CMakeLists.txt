@@ -3,6 +3,8 @@ set(CMAKE_VERBOSE_MAKEFILE on)
 
 project(jpeg)
 
+include("../../../../../hltypes/android-studio/generic/cmake-preprocessors.txt")
+
 file(
 	GLOB_RECURSE CppSrc
 	"../../j*.c"

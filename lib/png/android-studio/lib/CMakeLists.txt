@@ -3,6 +3,8 @@ set(CMAKE_VERBOSE_MAKEFILE on)
 
 project(png)
 
+include("../../../../../hltypes/android-studio/generic/cmake-preprocessors.txt")
+
 # defining manually so source files don't need to be changed
 file(
 	GLOB CppSrc
