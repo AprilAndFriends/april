@@ -809,11 +809,11 @@ namespace april
 		/// @brief Makes sure that the texture has been uploaded to the GPU. Used internally only.
 		/// @return True if successful or already loaded.
 		bool _upload(hmutex::ScopeLock& lock);
-		/// @brief Waits for the texture to be ready for upload. Used internally only.
+		/// @brief Waits for the texture to be ready for upload. Used internally only. Called from main thread only.
 		/// @see loadAsync
 		/// @see _upload
 		void _ensureAsyncCompleted();
-		/// @brief Uploads the texture data to the GPU. Used internally only.
+		/// @brief Uploads the texture data to the GPU. Used internally only. Called from main thread only.
 		/// @return True if successful or already loaded.
 		bool _ensureUploaded();
 
