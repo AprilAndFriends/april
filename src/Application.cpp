@@ -303,7 +303,12 @@ namespace april
 	{
 		if (!this->suspended && this->getState() == State::Running)
 		{
-			april::rendersys->_flushAsyncCommands(); // this is here for safe-guard
+			// TODO - is this still needed?
+			/*
+#ifndef _ANDROID
+			april::rendersys->_flushAsyncCommands(); // this is here for safe-guard on non-Android platforms
+#endif
+			*/
 			if (april::window->getOptions().suspendUpdateThread)
 			{
 				this->updateMutex.lock();

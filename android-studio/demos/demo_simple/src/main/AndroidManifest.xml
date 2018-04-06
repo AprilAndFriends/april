@@ -2,9 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 		package="com.april.demoSimple">
 		
-	<uses-feature android:glEsVersion="0x00020000"/>
-	<uses-feature android:name="android.hardware.screen.landscape"/>
-	
 	<application android:label="Demo Simple"
 			android:icon="@drawable/icon"
 			android:theme="@style/AprilSplashScreen">

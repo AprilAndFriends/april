@@ -133,7 +133,7 @@ namespace april
 				while (!april::application->update())
 				{
 					// // special hack required for being able to stop rendering when onPause() happens
-					if (_activityPaused)
+					if (_activityPaused || april::application->getState() != april::Application::State::Running)
 					{
 						april::rendersys->clear();
 						break;
