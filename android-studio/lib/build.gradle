@@ -1,5 +1,7 @@
 apply plugin: "com.android.library"
-apply from: '../../../hltypes/android-studio/generic/default.gradle'
+apply from: "../../../hltypes/android-studio/generic/default.gradle"
+apply from: "../../../hltypes/android-studio/generic/native.gradle"
+apply from: "../../../hltypes/android-studio/generic/cpp.gradle"
 
 android
 {
@@ -12,5 +14,5 @@ android
 
 dependencies
 {
-	implementation fileTree(include: ['*.jar'], dir: 'libs')
+	implementation fileTree(include: ["*.jar"], dir: "libs")
 }

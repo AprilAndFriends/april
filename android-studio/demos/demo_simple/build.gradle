@@ -1,7 +1,7 @@
-apply plugin: 'com.android.application'
-apply from: '../../../../hltypes/android-studio/generic/default.gradle'
-apply from: '../../../../hltypes/android-studio/generic/native.gradle'
-apply from: '../../../../hltypes/android-studio/generic/cpp.gradle'
+apply plugin: "com.android.application"
+apply from: "../../../../hltypes/android-studio/generic/default.gradle"
+apply from: "../../../../hltypes/android-studio/generic/native.gradle"
+apply from: "../../../../hltypes/android-studio/generic/cpp.gradle"
 
 android
 {
@@ -22,6 +22,6 @@ android
 
 dependencies
 {
-	implementation project(':april')
-	implementation fileTree(include: ['*.jar'], dir: 'libs')
+	implementation project(":april")
+	implementation fileTree(include: ["*.jar"], dir: "libs")
 }

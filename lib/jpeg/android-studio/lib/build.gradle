@@ -1,2 +1,2 @@
 apply plugin: "com.android.library"
-apply from: '../../../../../hltypes/android-studio/generic/default.gradle'
+apply from: "../../../../../hltypes/android-studio/generic/default.gradle"
