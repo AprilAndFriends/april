@@ -15,7 +15,8 @@ add_library(aprilpix STATIC ${CppSrc})
 
 include_directories(AFTER "../../../../hltypes/include")
 include_directories(AFTER "../../../../gtypes/include")
-include_directories(AFTER "../../../include")
+include_directories(AFTER "../../../include/april")
+include_directories(AFTER "../../../lib/webp/src")
 include_directories(AFTER "../../include")
 include_directories(AFTER "../../src")
 

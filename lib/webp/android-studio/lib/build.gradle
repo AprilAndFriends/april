@@ -2,3 +2,18 @@ apply plugin: "com.android.library"
 apply from: "../../../../../hltypes/android-studio/generic/default.gradle"
 apply from: "../../../../../hltypes/android-studio/generic/native.gradle"
 apply from: "../../../../../hltypes/android-studio/generic/c.gradle"
+
+android {
+	defaultConfig {
+		externalNativeBuild {
+			cmake {
+				arguments "-DANDROID_ARM_NEON=TRUE"
+			}
+		}
+	}
+	externalNativeBuild {
+		cmake {
+			path "CMakeLists.txt"
+		}
+	}
+}

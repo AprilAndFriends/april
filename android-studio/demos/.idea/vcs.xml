@@ -3,14 +3,19 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
     <mapping directory="$PROJECT_DIR$/../lib" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../aprilpix/android-studio/lib" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../aprilpix/src" vcs="svn" />
     <mapping directory="$PROJECT_DIR$/../../demos/demo_3d" vcs="svn" />
     <mapping directory="$PROJECT_DIR$/../../demos/demo_advanced" vcs="svn" />
     <mapping directory="$PROJECT_DIR$/../../demos/demo_helloworld" vcs="svn" />
     <mapping directory="$PROJECT_DIR$/../../demos/demo_motion" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../demos/demo_pix" vcs="svn" />
     <mapping directory="$PROJECT_DIR$/../../demos/demo_tictactoe" vcs="svn" />
     <mapping directory="$PROJECT_DIR$/../../demos/media" vcs="svn" />
     <mapping directory="$PROJECT_DIR$/../../lib/jpeg/android-studio/lib" vcs="svn" />
     <mapping directory="$PROJECT_DIR$/../../lib/png/android-studio/lib" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/webp/android-studio/lib" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/../../lib/webp/src" vcs="svn" />
     <mapping directory="$PROJECT_DIR$/../../../gtypes/android-studio/lib" vcs="svn" />
     <mapping directory="$PROJECT_DIR$/../../../hltypes/android-studio/lib" vcs="svn" />
   </component>
