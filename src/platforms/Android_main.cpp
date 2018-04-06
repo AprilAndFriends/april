@@ -51,6 +51,8 @@ namespace april
 	extern void* javaVM;
 	extern void (*dialogCallback)(MessageBoxButton);
 	extern jobject classLoader;
+
+	static bool _activityPaused = false; // special hack required for being able to stop rendering when onPause() happens
 	
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jstring jDataPath, jstring jForcedArchivePath)
 	{
@@ -130,8 +132,8 @@ namespace april
 				// on Android this must not continue until something has been renderered due to swapBuffer() being called externally
 				while (!april::application->update())
 				{
-					// safeguard so an infinite loop is prevented
-					if (april::application->getState() != april::Application::State::Running)
+					// // special hack required for being able to stop rendering when onPause() happens
+					if (_activityPaused)
 					{
 						april::rendersys->clear();
 						break;
@@ -216,7 +218,7 @@ namespace april
 
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)
 	{
-#ifdef _ANDROID_JNI
+#ifdef _ANDROIDJNI_WINDOW
 		bool focused = (jFocused != JNI_FALSE);
 		hlog::write(logTag, "onWindowFocusChanged(" + hstr(focused) + ")");
 		PROTECTED_WINDOW_CALL(queueFocusChange(focused));
@@ -225,7 +227,7 @@ namespace april
 	
 	void JNICALL _JNI_onVirtualKeyboardChanged(JNIEnv* env, jclass classe, jboolean jVisible, jfloat jHeightRatio)
 	{
-#ifdef _ANDROID_JNI
+#ifdef _ANDROIDJNI_WINDOW
 		bool visible = (jVisible != JNI_FALSE);
 		float heightRatio = (float)jHeightRatio;
 		hlog::write(logTag, "onVirtualKeyboardChanged(" + hstr(visible) + ", " + hstr(heightRatio) + ")");
@@ -261,7 +263,12 @@ namespace april
 		PROTECTED_APPLICATION_CALL(resume());
 		PROTECTED_WINDOW_CALL(queueActivityChange(true));
 	}
-	
+
+	void JNICALL _JNI_activityOnResumeNotify(JNIEnv* env, jclass classe)
+	{
+		_activityPaused = false;
+	}
+
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onPause()");
@@ -270,6 +277,11 @@ namespace april
 		PROTECTED_APPLICATION_CALL(suspend());
 	}
 	
+	void JNICALL _JNI_activityOnPauseNotify(JNIEnv* env, jclass classe)
+	{
+		_activityPaused = true;
+	}
+
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onStop()");
@@ -307,7 +319,7 @@ namespace april
 		april::Application::messageBoxCallback(MessageBoxButton::Cancel);
 	}
 	
-#define METHOD_COUNT 32 // make sure this fits
+#define METHOD_COUNT 34 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
 		{"setVariables",						_JARGS(_JVOID, _JSTR _JSTR),					(void*)&april::_JNI_setVariables				},
@@ -334,7 +346,9 @@ namespace april
 		{"activityOnCreate",					_JARGS(_JVOID, ),								(void*)&april::_JNI_activityOnCreate			},
 		{"activityOnStart",						_JARGS(_JVOID, ),								(void*)&april::_JNI_activityOnStart				},
 		{"activityOnResume",					_JARGS(_JVOID, ),								(void*)&april::_JNI_activityOnResume			},
+		{"activityOnResumeNotify",				_JARGS(_JVOID, ),								(void*)&april::_JNI_activityOnResumeNotify		},
 		{"activityOnPause",						_JARGS(_JVOID, ),								(void*)&april::_JNI_activityOnPause				},
+		{"activityOnPauseNotify",				_JARGS(_JVOID, ),								(void*)&april::_JNI_activityOnPauseNotify		},
 		{"activityOnStop",						_JARGS(_JVOID, ),								(void*)&april::_JNI_activityOnStop				},
 		{"activityOnDestroy",					_JARGS(_JVOID, ),								(void*)&april::_JNI_activityOnDestroy			},
 		{"activityOnRestart",					_JARGS(_JVOID, ),								(void*)&april::_JNI_activityOnRestart			},

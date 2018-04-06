@@ -90,7 +90,9 @@ public class NativeInterface
 	public static native void activityOnCreate();
 	public static native void activityOnStart();
 	public static native void activityOnResume();
+	public static native void activityOnResumeNotify();
 	public static native void activityOnPause();
+	public static native void activityOnPauseNotify();
 	public static native void activityOnStop();
 	public static native void activityOnDestroy();
 	public static native void activityOnRestart();
