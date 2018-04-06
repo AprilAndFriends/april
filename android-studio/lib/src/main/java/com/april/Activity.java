@@ -350,6 +350,7 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	@Override
 	protected void onResume()
 	{
+		NativeInterface.activityOnResumeNotify();
 		super.onResume();
 		this.glView.onResume();
 		for (int i = 0; i < this.callbacksOnResume.size(); ++i)
@@ -374,6 +375,7 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	@Override
 	protected void onPause()
 	{
+		NativeInterface.activityOnPauseNotify();
 		if (this.sensorManager != null)
 		{
 			this.sensorManager.unregisterListener(this.sensorEventListener);
