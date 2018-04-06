@@ -8,7 +8,12 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/demo_3d" />
+            <option value="$PROJECT_DIR$/demo_advanced" />
+            <option value="$PROJECT_DIR$/demo_helloworld" />
+            <option value="$PROJECT_DIR$/demo_motion" />
             <option value="$PROJECT_DIR$/demo_simple" />
+            <option value="$PROJECT_DIR$/demo_tictactoe" />
             <option value="$PROJECT_DIR$/../lib" />
             <option value="$PROJECT_DIR$/../../lib/jpeg/android-studio/lib" />
             <option value="$PROJECT_DIR$/../../lib/png/android-studio/lib" />
