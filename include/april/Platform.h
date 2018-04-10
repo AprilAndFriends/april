@@ -46,6 +46,8 @@ namespace april
 		gvec2 displayResolution;
 		/// @brief Current screen DPI.
 		float displayDpi;
+		/// @brief scaling factor for retina displays. eg retina macs have 2, iPhone8+ has 3, most have 1
+		float displayScaleFactor;
 		/// @brief Locale code as per ISO 639
 		hstr locale;
 		/// @brief Locale script and region codes as per ISO 15924 (for scripts) and ISO 3166 (for regions).
