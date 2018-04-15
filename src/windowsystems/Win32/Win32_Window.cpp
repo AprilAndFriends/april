@@ -119,8 +119,7 @@ namespace april
 		}
 		// create window
 		this->hWnd = CreateWindowExW(exstyle, APRIL_WIN32_WINDOW_CLASS, this->title.wStr().c_str(), style, x, y, width, height, NULL, NULL, hinst, NULL);
-		//this
-		// this workaround is required to properly support WinXP
+		// this workaround is required to properly support everything before Win7
 		if (_getTouchInputInfo == NULL && _closeTouchInputHandle == NULL && _registerTouchWindow == NULL)
 		{
 			HMODULE user32Dll = LoadLibraryW(L"user32.dll");
