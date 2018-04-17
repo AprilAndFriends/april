@@ -89,7 +89,7 @@ namespace april
 			info.displayResolution.set((float)GetSystemMetrics(SM_CXSCREEN), (float)GetSystemMetrics(SM_CYSCREEN));
 			// display DPI
 			info.displayDpi = 96.0f;
-			if (info.displayResolution.y > 1200)
+			if (info.displayResolution.y >= 1536)
 			{
 				// crude but works for now...
 				info.displayScaleFactor = 2;
