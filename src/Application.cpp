@@ -340,8 +340,8 @@ namespace april
 	void Application::renderFrameSync()
 	{
 		// TODO - can this even work?
-		//hmutex::ScopeLock lock(&this->updateMutex);
-		//april::rendersys->_repeatLastFrame();
+		hmutex::ScopeLock lock(&this->updateMutex);
+		april::rendersys->_repeatLastFrame();
 	}
 
 	void Application::queueMessageBox(const MessageBoxData& data)

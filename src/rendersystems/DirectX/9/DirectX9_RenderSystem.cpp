@@ -169,7 +169,9 @@ namespace april
 			}
 		}
 		// device config
+		this->_updateIntermediateRenderTexture();
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
+		this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_intermediateRenderTexture)->_getSurface());
 		this->_deviceClear(false);
 		this->d3dDevice->BeginScene();
 		this->renderTarget = NULL;
@@ -733,6 +735,11 @@ namespace april
 	void DirectX9_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
 		RenderSystem::_devicePresentFrame(systemEnabled);
+		//this->d3dDevice->EndScene();
+		//this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_intermediateRenderTexture)->_getSurface());
+		this->d3dDevice->SetRenderTarget(0, this->backBuffer);
+		//this->d3dDevice->BeginScene();
+		this->_presentIntermediateRenderTexture();
 		this->d3dDevice->EndScene();
 		HRESULT hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
 		if (hr == D3DERR_DEVICELOST)
@@ -789,6 +796,7 @@ namespace april
 			}
 			this->_deviceSetup();
 			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
+			this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_intermediateRenderTexture)->_getSurface());
 			this->d3dDevice->BeginScene();
 			this->_updateDeviceState(this->state, true);
 			hlog::write(logTag, "Direct3D9 Device restored.");
@@ -807,6 +815,7 @@ namespace april
 					hthread::sleep(1.0f);
 				}
 			}
+			this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_intermediateRenderTexture)->_getSurface());
 			this->d3dDevice->BeginScene();
 		}
 	}
@@ -825,7 +834,7 @@ namespace april
 		DirectX9_Texture* texture = (DirectX9_Texture*)source;
 		if (texture == NULL)
 		{
-			this->d3dDevice->SetRenderTarget(0, this->backBuffer);
+			this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_intermediateRenderTexture)->_getSurface());
 		}
 		else
 		{
