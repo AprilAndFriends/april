@@ -1097,6 +1097,16 @@ namespace april
 		}
 	}
 
+	void DirectX12_RenderSystem::_deviceRepeatLastFrame()
+	{
+		//DirectX_RenderSystem::_deviceRepeatLastFrame();
+	}
+
+	void DirectX12_RenderSystem::_deviceCopyRenderTargetData(Texture* source, Texture* destination)
+	{
+
+	}
+
 	void DirectX12_RenderSystem::updateDeviceReset()
 	{
 		// TODOuwp
