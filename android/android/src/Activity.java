@@ -389,21 +389,16 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		{
 			this.callbacksOnPause.get(i).execute();
 		}
-		this.waiting = true;
+		this.glView.onPause();
+		super.onPause();
 		// native call is queued into render thread
 		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
 			{
 				NativeInterface.activityOnPause();
-				waiting = false;
 			}
 		});
-		while (this.waiting)
-		{
-		}
-		this.glView.onPause();
-		super.onPause();
 	}
 	
 	@Override

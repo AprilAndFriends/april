@@ -82,7 +82,7 @@ namespace april
 			hlog::write(logTag, "Using obb for resources: " + dataPath);
 		}
 	}
-	
+
 	void JNICALL _JNI_init(JNIEnv* env, jclass classe, jobjectArray jArgs)
 	{
 		int length = env->GetArrayLength(jArgs);
@@ -102,7 +102,7 @@ namespace april
 		april::application->setArgs(args);
 		april::application->init();
 	}
-	
+
 	void JNICALL _JNI_destroy(JNIEnv* env, jclass classe)
 	{
 		delete april::application;
@@ -114,7 +114,7 @@ namespace april
 		}
 		// nothing else may be called here, because this code is called from the Android UI thread
 	}
-	
+
 	bool JNICALL _JNI_update(JNIEnv* env, jclass classe)
 	{
 		if (april::application != NULL)
@@ -147,17 +147,17 @@ namespace april
 		}
 		return false;
 	}
-	
+
 	void JNICALL _JNI_onKeyDown(JNIEnv* env, jclass classe, jint keyCode, jint charCode)
 	{
 		PROTECTED_WINDOW_CALL(queueKeyInput(KeyEvent::Type::Down, android2april((int)keyCode), (unsigned int)charCode));
 	}
-	
+
 	void JNICALL _JNI_onKeyUp(JNIEnv* env, jclass classe, jint keyCode)
 	{
 		PROTECTED_WINDOW_CALL(queueKeyInput(KeyEvent::Type::Up, android2april((int)keyCode), 0));
 	}
-	
+
 	void JNICALL _JNI_onChar(JNIEnv* env, jclass classe, jint charCode)
 	{
 		PROTECTED_WINDOW_CALL(queueKeyInput(KeyEvent::Type::Down, april::Key::None, (unsigned int)charCode));
@@ -167,7 +167,7 @@ namespace april
 	{
 		PROTECTED_WINDOW_CALL(queueTouchInput(MouseEvent::Type::fromInt((int)type), gvec2((float)x, (float)y), (int)index));
 	}
-	
+
 	void JNICALL _JNI_onScroll(JNIEnv* env, jclass classe, jfloat x, jfloat y)
 	{
 		PROTECTED_WINDOW_CALL(queueMouseInput(MouseEvent::Type::Scroll, gvec2((float)x, (float)y), april::Key::None));
@@ -177,12 +177,12 @@ namespace april
 	{
 		PROTECTED_WINDOW_CALL(queueControllerInput(ControllerEvent::Type::Down, (int)controllerIndex, Button::fromInt((int)buttonCode), 0.0f));
 	}
-	
+
 	void JNICALL _JNI_onButtonUp(JNIEnv* env, jclass classe, jint controllerIndex, jint buttonCode)
 	{
 		PROTECTED_WINDOW_CALL(queueControllerInput(ControllerEvent::Type::Up, (int)controllerIndex, Button::fromInt((int)buttonCode), 0.0f));
 	}
-	
+
 	void JNICALL _JNI_onControllerAxisChange(JNIEnv* env, jclass classe, jint controllerIndex, jint buttonCode, jfloat axisValue)
 	{
 		PROTECTED_WINDOW_CALL(queueControllerInput(ControllerEvent::Type::Axis, (int)controllerIndex, Button::fromInt((int)buttonCode), axisValue));
@@ -221,7 +221,7 @@ namespace april
 		PROTECTED_WINDOW_CALL(queueFocusChange(focused));
 #endif
 	}
-	
+
 	void JNICALL _JNI_onVirtualKeyboardChanged(JNIEnv* env, jclass classe, jboolean jVisible, jfloat jHeightRatio)
 	{
 #ifdef _ANDROIDJNI_WINDOW
@@ -231,13 +231,13 @@ namespace april
 		PROTECTED_WINDOW_CALL(queueVirtualKeyboardChange(visible, heightRatio));
 #endif
 	}
-	
+
 	void JNICALL _JNI_onLowMemory(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "onLowMemoryWarning()");
 		PROTECTED_WINDOW_CALL(queueLowMemoryWarning());
 	}
-	
+
 	void JNICALL _JNI_onSurfaceCreated(JNIEnv* env, jclass classe)
 	{
 		if (april::rendersys != NULL)
@@ -246,12 +246,12 @@ namespace april
 			april::rendersys->reset();
 		}
 	}
-	
+
 	void JNICALL _JNI_activityOnCreate(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onCreate()");
 	}
-	
+
 	void JNICALL _JNI_activityOnStart(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onStart()");
@@ -260,13 +260,13 @@ namespace april
 	void JNICALL _JNI_activityOnResume(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onResume()");
-		PROTECTED_APPLICATION_CALL(resume());
 		PROTECTED_WINDOW_CALL(queueActivityChange(true));
 	}
 
 	void JNICALL _JNI_activityOnResumeNotify(JNIEnv* env, jclass classe)
 	{
 		_activityPaused = false;
+		PROTECTED_APPLICATION_CALL(resume());
 	}
 
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
@@ -274,19 +274,19 @@ namespace april
 		hlog::write(logTag, "Android Activity::onPause()");
 		PROTECTED_WINDOW_CALL(queueActivityChange(false));
 		PROTECTED_RENDERSYS_CALL(suspend());
-		PROTECTED_APPLICATION_CALL(suspend());
 	}
 	
 	void JNICALL _JNI_activityOnPauseNotify(JNIEnv* env, jclass classe)
 	{
 		_activityPaused = true;
+		PROTECTED_APPLICATION_CALL(suspend());
 	}
 
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onStop()");
 	}
-	
+
 	void JNICALL _JNI_activityOnDestroy(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onDestroy()");
@@ -295,32 +295,32 @@ namespace april
 		april::application->updateFinishing();
 		april::application->destroy();
 	}
-	
+
 	void JNICALL _JNI_activityOnRestart(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onRestart()");
 	}
-	
+
 	void JNICALL _JNI_onDialogOk(JNIEnv* env, jclass classe)
 	{
 		april::Application::messageBoxCallback(MessageBoxButton::Ok);
 	}
-	
+
 	void JNICALL _JNI_onDialogYes(JNIEnv* env, jclass classe)
 	{
 		april::Application::messageBoxCallback(MessageBoxButton::Yes);
 	}
-	
+
 	void JNICALL _JNI_onDialogNo(JNIEnv* env, jclass classe)
 	{
 		april::Application::messageBoxCallback(MessageBoxButton::No);
 	}
-	
+
 	void JNICALL _JNI_onDialogCancel(JNIEnv* env, jclass classe)
 	{
 		april::Application::messageBoxCallback(MessageBoxButton::Cancel);
 	}
-	
+
 #define METHOD_COUNT 34 // make sure this fits
 	static JNINativeMethod methods[METHOD_COUNT] =
 	{
@@ -359,7 +359,7 @@ namespace april
 		{"onDialogNo",							_JARGS(_JVOID, ),								(void*)&april::_JNI_onDialogNo					},
 		{"onDialogCancel",						_JARGS(_JVOID, ),								(void*)&april::_JNI_onDialogCancel				}
 	};
-	
+
 	jint __JNI_OnLoad(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)(), JavaVM* vm, void* reserved)
 	{
 		hlog::write(logTag, "Loading binary.");
