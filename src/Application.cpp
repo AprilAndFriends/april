@@ -89,7 +89,6 @@ namespace april
 	void Application::destroy()
 	{
 		this->_setState(State::Idle);
-		this->resume(); // makes sure the update thread can resume
 		this->updateThread.join();
 	}
 
@@ -108,7 +107,6 @@ namespace april
 
 	void Application::updateFinishing()
 	{
-		this->resume(); // makes sure the update thread can resume
 		// processing remaining commands from other thread
 		while (this->getState() == State::Stopping)
 		{
@@ -241,9 +239,9 @@ namespace april
 			bool vSync = april::rendersys->getOptions().vSync;
 			// this might be changed in the future (assuming at least one display mode is available, this might not be safe)
 			float frameTime = 1000.0f / april::rendersys->getDisplayModes().first().refreshRate;
+			lock.acquire(&april::application->updateMutex);
 			while (april::application->getState() == State::Running)
 			{
-				lock.acquire(&april::application->updateMutex);
 				lockTimeDelta.acquire(&april::application->timeDeltaMutex);
 				timeDelta = april::application->timeDelta;
 				april::application->timeDelta = 0.0f;
@@ -279,6 +277,7 @@ namespace april
 					}
 					april::window->_processEvents();
 				}
+				lock.acquire(&april::application->updateMutex);
 			}
 		}
 		else

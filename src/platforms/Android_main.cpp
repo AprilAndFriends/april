@@ -52,7 +52,7 @@ namespace april
 	extern void (*dialogCallback)(MessageBoxButton);
 	extern jobject classLoader;
 
-	static bool _activityPaused = false; // special hack required for being able to stop rendering when onPause() happens
+	static bool _activityPaused = true; // special hack required for being able to stop rendering when onPause() happens
 	
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jstring jDataPath, jstring jForcedArchivePath)
 	{
@@ -105,8 +105,6 @@ namespace april
 	
 	void JNICALL _JNI_destroy(JNIEnv* env, jclass classe)
 	{
-		april::application->updateFinishing();
-		april::application->destroy();
 		delete april::application;
 		april::application = NULL;
 		if (april::classLoader != NULL)
@@ -135,7 +133,6 @@ namespace april
 					// // special hack required for being able to stop rendering when onPause() happens
 					if (_activityPaused || april::application->getState() != april::Application::State::Running)
 					{
-						april::rendersys->clear();
 						break;
 					}
 					hthread::sleep(0.001f);
@@ -285,13 +282,15 @@ namespace april
 	void JNICALL _JNI_activityOnStop(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onStop()");
-		// nothing else may be called here, because this code is called from the Android UI thread
 	}
 	
 	void JNICALL _JNI_activityOnDestroy(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onDestroy()");
-		// nothing else may be called here, because this code is called from the Android UI thread
+		april::application->resume(); // first unlock the update thread so it can finish
+		april::application->finish();
+		april::application->updateFinishing();
+		april::application->destroy();
 	}
 	
 	void JNICALL _JNI_activityOnRestart(JNIEnv* env, jclass classe)
@@ -360,6 +359,7 @@ namespace april
 	
 	jint __JNI_OnLoad(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)(), JavaVM* vm, void* reserved)
 	{
+		hlog::write(logTag, "Loading binary.");
 		april::javaVM = (void*)vm;
 		JNIEnv* env = NULL;
 		if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK)
@@ -371,11 +371,11 @@ namespace april
 		{
 			return -1;
 		}
-		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
 		jclass classClass = env->FindClass("java/lang/Class");
 		jmethodID methodGetClassLoader = env->GetMethodID(classClass, "getClassLoader", _JARGS(_JCLASS("java/lang/ClassLoader"), ));
 		jobject classLoader = env->CallObjectMethod(classNativeInterface, methodGetClassLoader);
 		april::classLoader = env->NewGlobalRef(classLoader);
+		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
 		return JNI_VERSION_1_6;
 	}
 

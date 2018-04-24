@@ -219,7 +219,7 @@ namespace april
 		{
 			extensions = (const char*)extensionsString;
 		}
-		hlog::write(logTag, "Extensions supported: " + extensions);
+		hlog::write(logTag, "Extensions supported:\n" + extensions.replaced(' ', '\n'));
 #if defined(_IOS) || defined(_WINRT) // iOS devices support limited NPOT textures as per device specification since iPhone 3G S
 		this->caps.npotTexturesLimited = true;
 #else
