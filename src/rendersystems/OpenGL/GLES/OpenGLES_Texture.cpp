@@ -30,9 +30,9 @@ namespace april
 	{
 	}
 
-	bool OpenGLES_Texture::_deviceCreateTexture(unsigned char* data, int size, Type type)
+	bool OpenGLES_Texture::_deviceCreateTexture(unsigned char* data, int size)
 	{
-		if (!OpenGL_Texture::_deviceCreateTexture(data, size, type))
+		if (!OpenGL_Texture::_deviceCreateTexture(data, size))
 		{
 			return false;
 		}

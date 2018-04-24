@@ -622,6 +622,12 @@ namespace april
 		int frameAdvanceUpdates;
 		/// @brief How many times a frame should be duplicated during rendering.
 		int frameDuplicates;
+		/// @brief Special texture used as utility for rendering.
+		Texture* _intermediateRenderTexture;
+		/// @brief Fixed RenderState for rendering the intermediate render texture.
+		RenderState* _intermediateState;
+		/// @brief Fixed vertices for rendering the intermediate render texture.
+		april::TexturedVertex _intermediateRenderVertices[6];
 
 		/// @brief How many times a render call was called during this frame.
 		int statCurrentFrameRenderCalls;
@@ -877,7 +883,19 @@ namespace april
 		virtual void _devicePresentFrame(bool systemEnabled);
 		/// @brief Renders previous frame again.
 		/// @see _devicePresentFrame
-		void _repeatLastFrame();
+		virtual void _deviceRepeatLastFrame();
+		/// @brief Copies RenderTarget data from one texture to another.
+		/// @note Both textures must be render targets.
+		virtual void _deviceCopyRenderTargetData(Texture* source, Texture* destination) = 0;
+		/// @brief Updates the intermediate render texture.
+		void _updateIntermediateRenderTexture();
+		/// @brief Creates the intermediate render texture.
+		/// @param[in] width The texture width.
+		/// @param[in] height The texture height.
+		/// @return True if successful.
+		bool _tryCreateIntermediateRenderTexture(int width, int height);
+		/// @brief Renders the actual intermediate render texture.
+		void _presentIntermediateRenderTexture();
 		/// @brief Unloads all textures. Used internally only.
 		/// @note Useful for clearing all memory or if something invalidates textures and cannot guarantee that they are loaded anymore.
 		void _deviceUnloadTextures();

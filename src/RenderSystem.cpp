@@ -147,6 +147,8 @@ namespace april
 		this->statCurrentFrameLineCount = 0;
 		this->statLastFrameLineCount = 0;
 		this->_queuedFrameDuplicates = -1;
+		this->_intermediateRenderTexture = NULL;
+		this->_intermediateState = new RenderState();
 	}
 	
 	RenderSystem::~RenderSystem()
@@ -157,6 +159,7 @@ namespace april
 		}
 		delete this->state;
 		delete this->deviceState;
+		delete this->_intermediateState;
 		if (this->renderHelper != NULL)
 		{
 			delete this->renderHelper;
@@ -231,6 +234,11 @@ namespace april
 		hmutex::ScopeLock lockTextures(&this->texturesMutex);
 		harray<Texture*> textures = this->textures;
 		this->textures.clear();
+		if (this->_intermediateRenderTexture != NULL)
+		{
+			textures += this->_intermediateRenderTexture;
+			this->_intermediateRenderTexture = NULL;
+		}
 		lockTextures.release();
 		this->waitForAsyncTextures();
 		foreach (Texture*, it, textures)
@@ -348,8 +356,11 @@ namespace april
 			}
 			if (this->renderMode == RenderMode::Layered2D)
 			{
+				throw Exception("Currently " + RenderMode::Layered2D.getName() + " is not supported!");
+				/*
 				this->renderHelper = new RenderHelperLayered2D(options);
 				this->renderHelper->create();
+				*/
 			}
 		}
 	}
@@ -461,6 +472,7 @@ namespace april
 	
 	bool RenderSystem::update(float timeDelta)
 	{
+		this->_updateIntermediateRenderTexture();
 		bool result = false;
 		int previousRepeatCount = -1;
 		hmutex::ScopeLock lock(&this->asyncMutex);
@@ -1444,27 +1456,106 @@ namespace april
 
 	void RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
-		this->flushFrame(true);
+		// TODO - remove this entirely with Layered2D
+		//this->flushFrame(true);
 		april::window->_presentFrame(systemEnabled);
 	}
 
-	void RenderSystem::_repeatLastFrame()
+	void RenderSystem::_deviceRepeatLastFrame()
 	{
-		// TODO - can this even work?
-		/*
-		if (this->lastAsyncCommandQueue != NULL)
+		// TODOtx - enable this once it's ready
+		//this->_presentIntermediateRenderTexture();
+		//this->_devicePresentFrame(true);
+	}
+
+	void RenderSystem::_updateIntermediateRenderTexture()
+	{
+		// texture update
+		if (april::window != NULL)
 		{
-			hmutex::ScopeLock lock(&this->asyncMutex);
-			this->processingAsync = true;
-			lock.release();
-			foreach (AsyncCommand*, it, this->lastAsyncCommandQueue->commands)
+			int width = april::window->getWidth();
+			int height = april::window->getHeight();
+			if (width > 0 && height > 0)
 			{
-				(*it)->execute();
+				// creating the texture the first time
+				if (this->_intermediateRenderTexture == NULL)
+				{
+					if (!this->_tryCreateIntermediateRenderTexture(width, height))
+					{
+						throw Exception("Couldn't create intermediate render texture!");
+					}
+					// setting up the RenderState
+					this->_intermediateState->useTexture = true;
+					// setting up vertices
+					april::TexturedVertex* v = this->_intermediateRenderVertices;
+					v[0].x = -1.0f;	v[0].y = -1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;
+					v[1].x = 1.0f;	v[1].y = -1.0f;	v[1].z = 0.0f;	v[1].u = 1.0f;	v[1].v = 0.0f;
+					v[2].x = -1.0f;	v[2].y = 1.0f;	v[2].z = 0.0f;	v[2].u = 0.0f;	v[2].v = 1.0f;
+					v[3] = v[1];
+					v[4] = v[2];
+					v[5].x = 1.0f;	v[5].y = 1.0f;	v[5].z = 0.0f;	v[5].u = 1.0f;	v[5].v = 1.0f;
+				}
+				else
+				{
+					// updating the texture size when necessary
+					int oldWidth = this->_intermediateRenderTexture->getWidth();
+					int oldHeight = this->_intermediateRenderTexture->getHeight();
+					if (width != oldWidth || height != oldHeight)
+					{
+						april::Texture* oldTexture = this->_intermediateRenderTexture;
+						if (this->_tryCreateIntermediateRenderTexture(width, height))
+						{
+							this->_deviceCopyRenderTargetData(oldTexture, this->_intermediateRenderTexture);
+							if (this->state->texture == oldTexture)
+							{
+								this->state->texture = NULL;
+							}
+							oldTexture->_deviceUnloadTexture();
+							delete oldTexture;
+						}
+						else
+						{
+							hlog::error(logTag, "Couldn't create new intermediate render texture!");
+							this->_intermediateRenderTexture = oldTexture;
+						}
+					}
+				}
 			}
-			lock.acquire(&this->asyncMutex);
-			this->processingAsync = false;
 		}
-		*/
+	}
+
+	bool RenderSystem::_tryCreateIntermediateRenderTexture(int width, int height)
+	{
+		this->_intermediateRenderTexture = this->_deviceCreateTexture(false);
+		bool result = this->_intermediateRenderTexture->_createRenderTarget(width, height, april::Image::Format::RGBX);
+		if (result)
+		{
+			this->_intermediateRenderTexture->_loadAsync();
+			hmutex::ScopeLock lock;
+			result = this->_intermediateRenderTexture->_upload(lock);
+		}
+		if (!result)
+		{
+			this->_intermediateRenderTexture->_deviceUnloadTexture();
+			delete this->_intermediateRenderTexture;
+			this->_intermediateRenderTexture = NULL;
+		}
+		return result;
+	}
+
+	void RenderSystem::_presentIntermediateRenderTexture()
+	{
+		int width = this->_intermediateRenderTexture->getWidth();
+		int height = this->_intermediateRenderTexture->getHeight();
+		this->_intermediateState->viewport.setSize((float)width, (float)height);
+		this->_intermediateState->projectionMatrix.setOrthoProjection(grect(1.0f - 2.0f * this->pixelOffset / width, 1.0f - 2.0f * this->pixelOffset / height, 2.0f, 2.0f));
+		this->_intermediateState->texture = this->_intermediateRenderTexture;
+		this->_updateDeviceState(this->_intermediateState, true);
+		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
+		this->state->viewportChanged = true;
+		this->state->modelviewMatrixChanged = true;
+		this->state->projectionMatrixChanged = true;
+		this->_updateDeviceState(this->state);
 	}
 
 	unsigned int RenderSystem::_numPrimitives(const RenderOperation& renderOperation, int count) const

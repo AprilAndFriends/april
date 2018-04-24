@@ -28,7 +28,7 @@ protected:
 
 	void _setCurrentTexture();
 
-	bool _deviceCreateTexture(unsigned char* data, int size, april::Texture::Type type);
+	bool _deviceCreateTexture(unsigned char* data, int size);
 	bool _deviceDestroyTexture();
 	void _assignFormat();
 

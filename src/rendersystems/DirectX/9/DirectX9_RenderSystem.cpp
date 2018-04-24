@@ -161,7 +161,7 @@ namespace april
 		if (!this->_supportsA8Surface)
 		{
 			IDirect3DSurface9* surface = NULL;
-			HRESULT hr = this->d3dDevice->CreateOffscreenPlainSurface(16, 16, D3DFMT_A8, D3DPOOL_SYSTEMMEM, &surface, NULL);
+			hr = this->d3dDevice->CreateOffscreenPlainSurface(16, 16, D3DFMT_A8, D3DPOOL_SYSTEMMEM, &surface, NULL);
 			if (!FAILED(hr))
 			{
 				this->_supportsA8Surface = true;
@@ -169,11 +169,15 @@ namespace april
 			}
 		}
 		// device config
+		this->renderTarget = NULL;
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
 		this->_deviceClear(false);
 		this->d3dDevice->BeginScene();
-		this->renderTarget = NULL;
-		this->_devicePresentFrame(true);
+		this->d3dDevice->Present(NULL, NULL, NULL, NULL);
+		this->d3dDevice->EndScene();
+		this->_updateIntermediateRenderTexture();
+		this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_intermediateRenderTexture)->_getSurface());
+		this->d3dDevice->BeginScene();
 	}
 
 	void DirectX9_RenderSystem::_deviceReset()
@@ -181,6 +185,11 @@ namespace april
 		RenderSystem::_deviceReset();
 		this->d3dDevice->EndScene();
 		this->_deviceUnloadTextures();
+		DirectX9_Texture* intermediateRenderTexture = ((DirectX9_Texture*)this->_intermediateRenderTexture);
+		if (intermediateRenderTexture != NULL)
+		{
+			intermediateRenderTexture->_deviceUnloadTexture();
+		}
 		this->backBuffer->Release();
 		this->backBuffer = NULL;
 		HRESULT hr;
@@ -214,10 +223,13 @@ namespace april
 			}
 			else
 			{
-				hlog::errorf(logTag, "Failed to reset device!, context: DirectX9_RenderSystem::reset() hresult: %u", hr);
+				hlog::errorf(logTag, "Failed to reset device! DirectX9_RenderSystem::reset() hresult: %u", hr);
 			}
 		}
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
+		intermediateRenderTexture->_loadAsync();
+		intermediateRenderTexture->_ensureUploaded();
+		this->d3dDevice->SetRenderTarget(0, intermediateRenderTexture->_getSurface());
 		this->d3dDevice->BeginScene();
 		hlog::write(logTag, "Direct3D9 Device restored.");
 	}
@@ -368,6 +380,7 @@ namespace april
 				this->_tryAssignChildWindow();
 			}
 			this->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
+			this->_updateIntermediateRenderTexture();
 		}
 	}
 
@@ -732,13 +745,22 @@ namespace april
 	
 	void DirectX9_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
+		this->d3dDevice->EndScene();
+		this->d3dDevice->SetRenderTarget(0, this->backBuffer);
+		this->d3dDevice->BeginScene();
+		this->_presentIntermediateRenderTexture();
 		RenderSystem::_devicePresentFrame(systemEnabled);
 		this->d3dDevice->EndScene();
 		HRESULT hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
+		DirectX9_Texture* intermediateRenderTexture = ((DirectX9_Texture*)this->_intermediateRenderTexture);
 		if (hr == D3DERR_DEVICELOST)
 		{
 			hlog::write(logTag, "Direct3D9 Device lost, attempting to restore...");
 			this->_deviceUnloadTextures();
+			if (intermediateRenderTexture != NULL)
+			{
+				intermediateRenderTexture->_deviceUnloadTexture();
+			}
 			this->backBuffer->Release();
 			this->backBuffer = NULL;
 			while (april::application->getState() == Application::State::Running)
@@ -789,6 +811,7 @@ namespace april
 			}
 			this->_deviceSetup();
 			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
+			this->d3dDevice->SetRenderTarget(0, intermediateRenderTexture->_getSurface());
 			this->d3dDevice->BeginScene();
 			this->_updateDeviceState(this->state, true);
 			hlog::write(logTag, "Direct3D9 Device restored.");
@@ -807,8 +830,44 @@ namespace april
 					hthread::sleep(1.0f);
 				}
 			}
+			this->d3dDevice->SetRenderTarget(0, intermediateRenderTexture->_getSurface());
 			this->d3dDevice->BeginScene();
 		}
+	}
+
+	void DirectX9_RenderSystem::_deviceRepeatLastFrame()
+	{
+		this->_updateIntermediateRenderTexture();
+		this->_devicePresentFrame(true);
+	}
+
+	void DirectX9_RenderSystem::_deviceCopyRenderTargetData(Texture* source, Texture* destination)
+	{
+		if (source->getType() != Texture::Type::RenderTarget)
+		{
+			hlog::error(logTag, "Cannot copy render target data, source texture is not a render target!");
+			return;
+		}
+		if (destination->getType() != Texture::Type::RenderTarget)
+		{
+			hlog::error(logTag, "Cannot copy render target data, destination texture is not a render target!");
+			return;
+		}
+		IDirect3DSurface9* previousRenderTarget = NULL;
+		this->d3dDevice->GetRenderTarget(0, &previousRenderTarget);
+		this->d3dDevice->EndScene();
+		this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)destination)->_getSurface());
+		this->d3dDevice->BeginScene();
+		this->_intermediateState->viewport.setSize((float)source->getWidth(), (float)source->getHeight());
+		this->_intermediateState->projectionMatrix.setOrthoProjection(
+			grect(1.0f - 2.0f * this->pixelOffset / source->getWidth(), 1.0f - 2.0f * this->pixelOffset / source->getHeight(), 2.0f, 2.0f));
+		this->_intermediateState->texture = source;
+		this->_updateDeviceState(this->_intermediateState, true);
+		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
+		this->d3dDevice->EndScene();
+		this->d3dDevice->SetRenderTarget(0, previousRenderTarget);
+		this->d3dDevice->BeginScene();
+		this->_updateDeviceState(this->state, true);
 	}
 
 	Texture* DirectX9_RenderSystem::getRenderTarget()
@@ -825,7 +884,7 @@ namespace april
 		DirectX9_Texture* texture = (DirectX9_Texture*)source;
 		if (texture == NULL)
 		{
-			this->d3dDevice->SetRenderTarget(0, this->backBuffer);
+			this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_intermediateRenderTexture)->_getSurface());
 		}
 		else
 		{

@@ -55,6 +55,9 @@ namespace april
 			/// @var static const Type Type::Managed
 			/// @brief Resides in RAM and on GPU, can be modified. Best used for manually created textures or loaded from files which will be modified.
 			HL_ENUM_DECLARE(Type, Managed);
+			/// @var static const Type Type::RenderTarget
+			/// @brief Used as render target.
+			HL_ENUM_DECLARE(Type, RenderTarget);
 		));
 
 		/// @class Filter
@@ -741,7 +744,6 @@ namespace april
 		/// @param[in] data The raw image data.
 		/// @param[in] format The pixel format of the raw image data.
 		/// @return True if successful.
-		/// @note The the type is automatically Texture::Type::Managed.
 		virtual bool _create(int width, int height, unsigned char* data, Image::Format format);
 		/// @brief Creates and sets up all of the texture's internal data and fills it with the given Color.
 		/// @param[in] width Width of the raw image data.
@@ -749,15 +751,20 @@ namespace april
 		/// @param[in] color The color to be filled.
 		/// @param[in] format The pixel format of the raw image data.
 		/// @return True if successful.
-		/// @note The the type is automatically Texture::Type::Managed.
 		virtual bool _create(int width, int height, const Color& color, Image::Format format);
+		/// @brief Creates and sets up all of the texture's internal data for render target usage.
+		/// @param[in] width Width of the raw image data.
+		/// @param[in] height Height of the raw image data.
+		/// @param[in] format The pixel format of the raw image data.
+		/// @return True if successful.
+		/// @note The format parameter will automatically be converted into the native format of the system backend.
+		virtual bool _createRenderTarget(int width, int height, Image::Format format);
 
 		/// @brief Creates the device texture.
 		/// @param[in] data The raw image data.
 		/// @param[in] size The raw image data size in bytes.
-		/// @param[in] type The texture type.
 		/// @return True if successful.
-		virtual bool _deviceCreateTexture(unsigned char* data, int size, Type type) = 0;
+		virtual bool _deviceCreateTexture(unsigned char* data, int size) = 0;
 		/// @brief Unloads the device texture.
 		void _deviceUnloadTexture();
 		/// @brief Destroy the device texture.
@@ -899,6 +906,10 @@ namespace april
 		/// @param[in] srcFormat The pixel format of source raw image data.
 		/// @return True if successful.
 		virtual bool _uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat) = 0;
+
+	private:
+		/// @brief Checks max texture size from the system backend.
+		void _checkMaxTextureSize();
 
 	};
 	
