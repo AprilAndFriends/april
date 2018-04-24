@@ -240,8 +240,11 @@ namespace april
 	
 	void JNICALL _JNI_onSurfaceCreated(JNIEnv* env, jclass classe)
 	{
-		hlog::write(logTag, "Android View::onSurfaceCreated()");
-		PROTECTED_RENDERSYS_CALL(reset());
+		if (april::rendersys != NULL)
+		{
+			hlog::write(logTag, "Android View::onSurfaceCreated()");
+			april::rendersys->reset();
+		}
 	}
 	
 	void JNICALL _JNI_activityOnCreate(JNIEnv* env, jclass classe)
