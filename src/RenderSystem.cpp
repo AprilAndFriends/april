@@ -1461,7 +1461,7 @@ namespace april
 		april::window->_presentFrame(systemEnabled);
 	}
 
-	void RenderSystem::_repeatLastFrame()
+	void RenderSystem::_deviceRepeatLastFrame()
 	{
 		// TODOtx - enable this once it's ready
 		//this->_presentIntermediateRenderTexture();
@@ -1480,45 +1480,33 @@ namespace april
 				// creating the texture the first time
 				if (this->_intermediateRenderTexture == NULL)
 				{
-					this->_intermediateRenderTexture = this->_deviceCreateTexture(false);
-					bool result = this->_intermediateRenderTexture->_createRenderTarget(width, height, april::Image::Format::RGBX);
-					if (result)
+					if (!this->_tryCreateIntermediateRenderTexture(width, height))
 					{
-						result = this->_intermediateRenderTexture->_loadAsync();
-					}
-					if (result)
-					{
-						hmutex::ScopeLock lock;
-						result = this->_intermediateRenderTexture->_upload(lock);
-					}
-					if (!result)
-					{
-						this->_intermediateRenderTexture->_deviceUnloadTexture();
-						delete this->_intermediateRenderTexture;
-						this->_intermediateRenderTexture = NULL;
 						throw Exception("Couldn't create intermediate render texture!");
 					}
-					//this->_intermediateRenderTexture->fillRect(0, 0, 200, 200, april::Color::Neon);
 					// setting up RenderState
+					/*
 					this->_intermediateState->viewport.setPosition(0.0f, 0.0f);
 					this->_intermediateState->modelviewMatrix.setIdentity();
 					this->_intermediateState->depthBuffer = false;
 					this->_intermediateState->depthBufferWrite = false;
+					*/
 					this->_intermediateState->useTexture = true;
 					this->_intermediateState->useColor = false;
-					this->_intermediateState->texture = this->_intermediateRenderTexture;
+					/*
 					this->_intermediateState->blendMode = BlendMode::Alpha;
 					this->_intermediateState->colorMode = ColorMode::Multiply;
 					this->_intermediateState->colorModeFactor = 1.0f;
 					this->_intermediateState->systemColor = april::Color::White;
+					*/
 					// setting up vertices
 					april::TexturedVertex* v = this->_intermediateRenderVertices;
-					v[0].x = 0.0f;	v[0].y = 1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;
-					v[1].x = 1.0f;	v[1].y = 1.0f;	v[1].z = 0.0f;	v[1].u = 1.0f;	v[1].v = 0.0f;
-					v[2].x = -1.0f;	v[2].y = -1.0f;	v[2].z = 0.0f;	v[2].u = 0.0f;	v[2].v = 1.0f;
+					v[0].x = -1.0f;	v[0].y = -1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;
+					v[1].x = 1.0f;	v[1].y = -1.0f;	v[1].z = 0.0f;	v[1].u = 1.0f;	v[1].v = 0.0f;
+					v[2].x = -1.0f;	v[2].y = 1.0f;	v[2].z = 0.0f;	v[2].u = 0.0f;	v[2].v = 1.0f;
 					v[3] = v[1];
 					v[4] = v[2];
-					v[5].x = 1.0f;	v[5].y = -1.0f;	v[5].z = 0.0f;	v[5].u = 1.0f;	v[5].v = 1.0f;
+					v[5].x = 1.0f;	v[5].y = 1.0f;	v[5].z = 0.0f;	v[5].u = 1.0f;	v[5].v = 1.0f;
 				}
 				else
 				{
@@ -1528,32 +1516,20 @@ namespace april
 					if (width != oldWidth || height != oldHeight)
 					{
 						april::Texture* oldTexture = this->_intermediateRenderTexture;
-						this->_intermediateRenderTexture = this->_deviceCreateTexture(false);
-						bool result = this->_intermediateRenderTexture->_create(width, height, april::Color::Clear, this->getNativeTextureFormat(april::Image::Format::RGBA));
-						if (result)
+						if (this->_tryCreateIntermediateRenderTexture(width, height))
 						{
-							result = this->_intermediateRenderTexture->_loadAsync();
-						}
-						if (result)
-						{
-							this->_intermediateRenderTexture->_ensureAsyncCompleted();
-							result = this->_intermediateRenderTexture->_ensureUploaded();
-						}
-						if (result)
-						{
-							// TODOtx - find a way to get the texture data
-							//this->_intermediateRenderTexture->write(0, 0, hmin(width, oldWidth), hmin(height, oldHeight), 0, 0, oldTexture);
+							this->_deviceCopyRenderTargetData(oldTexture, this->_intermediateRenderTexture);
+							if (this->state->texture == oldTexture)
+							{
+								this->state->texture = NULL;
+							}
 							oldTexture->_deviceUnloadTexture();
-							oldTexture->_ensureAsyncCompleted(); // waiting for all async stuff to finish
 							delete oldTexture;
 						}
 						else
 						{
-							this->_intermediateRenderTexture->_deviceUnloadTexture();
-							this->_intermediateRenderTexture->_ensureAsyncCompleted(); // waiting for all async stuff to finish
-							delete this->_intermediateRenderTexture;
-							this->_intermediateRenderTexture = oldTexture;
 							hlog::error(logTag, "Couldn't create new intermediate render texture!");
+							this->_intermediateRenderTexture = oldTexture;
 						}
 					}
 				}
@@ -1561,54 +1537,38 @@ namespace april
 		}
 	}
 
+	bool RenderSystem::_tryCreateIntermediateRenderTexture(int width, int height)
+	{
+		this->_intermediateRenderTexture = this->_deviceCreateTexture(false);
+		bool result = this->_intermediateRenderTexture->_createRenderTarget(width, height, april::Image::Format::RGBX);
+		if (result)
+		{
+			this->_intermediateRenderTexture->_loadAsync();
+			hmutex::ScopeLock lock;
+			result = this->_intermediateRenderTexture->_upload(lock);
+		}
+		if (!result)
+		{
+			this->_intermediateRenderTexture->_deviceUnloadTexture();
+			delete this->_intermediateRenderTexture;
+			this->_intermediateRenderTexture = NULL;
+		}
+		return result;
+	}
+
 	void RenderSystem::_presentIntermediateRenderTexture()
 	{
-		/*
-		grect viewport;
-		bool viewportChanged;
-		gmat4 modelviewMatrix;
-		bool modelviewMatrixChanged;
-		gmat4 projectionMatrix;
-		bool projectionMatrixChanged;
-		bool depthBuffer;
-		bool depthBufferWrite;
-		bool useTexture;
-		bool useColor;
-		Texture* texture;
-		BlendMode blendMode;
-		ColorMode colorMode;
-		float colorModeFactor;
-		Color systemColor;
-		*/
-		//*
-		this->_intermediateState->viewport.setSize((float)this->_intermediateRenderTexture->getWidth(), (float)this->_intermediateRenderTexture->getHeight());
-		//this->_intermediateState->projectionMatrix.setOrthoProjection(this->_intermediateState->viewport);
-		this->_intermediateState->viewportChanged = true;
-		//this->_intermediateState->modelviewMatrix = this->state->modelviewMatrix;
-		this->_intermediateState->modelviewMatrixChanged = true;
-		this->_intermediateState->projectionMatrixChanged = true;
-		this->_intermediateState->useTexture = true;
-		this->_intermediateState->useColor = false;
+		int width = this->_intermediateRenderTexture->getWidth();
+		int height = this->_intermediateRenderTexture->getHeight();
+		this->_intermediateState->viewport.setSize((float)width, (float)height);
+		this->_intermediateState->projectionMatrix.setOrthoProjection(grect(1.0f - 2.0f * this->pixelOffset / width, 1.0f - 2.0f * this->pixelOffset / height, 2.0f, 2.0f));
 		this->_intermediateState->texture = this->_intermediateRenderTexture;
 		this->_updateDeviceState(this->_intermediateState, true);
 		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
-		//*/
-
-		//*
-		april::ColoredVertex v[3];
-		v[0].x = -1.0f;	v[0].y = -1.0f;	v[0].z = 0.0f;	v[0].color = this->getNativeColorUInt(april::Color::White);
-		v[1].x = 1.0f;	v[1].y = -1.0f;	v[1].z = 0.0f;	v[1].color = this->getNativeColorUInt(april::Color::White);
-		v[2].x = -1.0f;	v[2].y = -0.6f;	v[2].z = 0.0f;	v[2].color = this->getNativeColorUInt(april::Color::White);
-
-		this->_intermediateState->viewport.setSize(april::window->getSize());
-		//this->_intermediateState->projectionMatrix.setOrthoProjection(this->_intermediateState->viewport);
-		//this->_intermediateState->modelviewMatrix = this->state->modelviewMatrix;
-		this->_intermediateState->useTexture = false;
-		this->_intermediateState->useColor = true;
-		this->_updateDeviceState(this->_intermediateState, true);
-		this->_deviceRender(RenderOperation::TriangleList, v, 3);
-		//*/
-		this->_updateDeviceState(this->state, true);
+		this->state->viewportChanged = true;
+		this->state->modelviewMatrixChanged = true;
+		this->state->projectionMatrixChanged = true;
+		this->_updateDeviceState(this->state);
 	}
 
 	unsigned int RenderSystem::_numPrimitives(const RenderOperation& renderOperation, int count) const

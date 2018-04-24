@@ -341,7 +341,7 @@ namespace april
 	{
 		// TODO - can this even work?
 		hmutex::ScopeLock lock(&this->updateMutex);
-		april::rendersys->_repeatLastFrame();
+		april::rendersys->_deviceRepeatLastFrame();
 	}
 
 	void Application::queueMessageBox(const MessageBoxData& data)

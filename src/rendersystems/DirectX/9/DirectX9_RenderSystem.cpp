@@ -161,7 +161,7 @@ namespace april
 		if (!this->_supportsA8Surface)
 		{
 			IDirect3DSurface9* surface = NULL;
-			HRESULT hr = this->d3dDevice->CreateOffscreenPlainSurface(16, 16, D3DFMT_A8, D3DPOOL_SYSTEMMEM, &surface, NULL);
+			hr = this->d3dDevice->CreateOffscreenPlainSurface(16, 16, D3DFMT_A8, D3DPOOL_SYSTEMMEM, &surface, NULL);
 			if (!FAILED(hr))
 			{
 				this->_supportsA8Surface = true;
@@ -177,9 +177,7 @@ namespace april
 		this->d3dDevice->EndScene();
 		this->_updateIntermediateRenderTexture();
 		this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_intermediateRenderTexture)->_getSurface());
-		this->_deviceClear(false);
 		this->d3dDevice->BeginScene();
-		//this->_devicePresentFrame(true);
 	}
 
 	void DirectX9_RenderSystem::_deviceReset()
@@ -382,6 +380,7 @@ namespace april
 				this->_tryAssignChildWindow();
 			}
 			this->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
+			this->_updateIntermediateRenderTexture();
 		}
 	}
 
@@ -751,9 +750,6 @@ namespace april
 		this->d3dDevice->BeginScene();
 		this->_presentIntermediateRenderTexture();
 		RenderSystem::_devicePresentFrame(systemEnabled);
-		//this->d3dDevice->EndScene();
-		//this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_intermediateRenderTexture)->_getSurface());
-		//this->d3dDevice->BeginScene();
 		this->d3dDevice->EndScene();
 		HRESULT hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
 		DirectX9_Texture* intermediateRenderTexture = ((DirectX9_Texture*)this->_intermediateRenderTexture);
@@ -837,6 +833,44 @@ namespace april
 			this->d3dDevice->SetRenderTarget(0, intermediateRenderTexture->_getSurface());
 			this->d3dDevice->BeginScene();
 		}
+	}
+
+	void DirectX9_RenderSystem::_deviceRepeatLastFrame()
+	{
+		this->_updateIntermediateRenderTexture();
+		this->_devicePresentFrame(true);
+	}
+
+	void DirectX9_RenderSystem::_deviceCopyRenderTargetData(Texture* source, Texture* destination)
+	{
+		if (source->getType() != Texture::Type::RenderTarget)
+		{
+			hlog::error(logTag, "Cannot copy render target data, source texture is not a render target!");
+			return;
+		}
+		if (destination->getType() != Texture::Type::RenderTarget)
+		{
+			hlog::error(logTag, "Cannot copy render target data, source texture is not a render target!");
+			return;
+		}
+		IDirect3DSurface9* previousRenderTarget = NULL;
+		this->d3dDevice->GetRenderTarget(0, &previousRenderTarget);
+		this->d3dDevice->EndScene();
+		this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)destination)->_getSurface());
+		this->d3dDevice->BeginScene();
+		this->_intermediateState->viewport.setSize((float)source->getWidth(), (float)source->getHeight());
+		this->_intermediateState->projectionMatrix.setOrthoProjection(
+			grect(1.0f - 2.0f * this->pixelOffset / source->getWidth(), 1.0f - 2.0f * this->pixelOffset / source->getHeight(), 2.0f, 2.0f));
+		this->_intermediateState->texture = source;
+		this->_updateDeviceState(this->_intermediateState, true);
+		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
+		this->d3dDevice->EndScene();
+		this->d3dDevice->SetRenderTarget(0, previousRenderTarget);
+		this->d3dDevice->BeginScene();
+		this->state->viewportChanged = true;
+		this->state->modelviewMatrixChanged = true;
+		this->state->projectionMatrixChanged = true;
+		this->_updateDeviceState(this->state);
 	}
 
 	Texture* DirectX9_RenderSystem::getRenderTarget()

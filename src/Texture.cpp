@@ -428,7 +428,10 @@ namespace april
 			{
 				this->_assignFormat();
 			}
-			this->asyncLoadQueued = TextureAsync::queueLoad(this);
+			if (this->type != Type::RenderTarget)
+			{
+				this->asyncLoadQueued = TextureAsync::queueLoad(this);
+			}
 		}
 		return this->asyncLoadQueued;
 	}
