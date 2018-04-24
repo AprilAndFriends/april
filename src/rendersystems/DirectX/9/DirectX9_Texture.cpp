@@ -30,7 +30,7 @@ namespace april
 	{
 	}
 
-	bool DirectX9_Texture::_deviceCreateTexture(unsigned char* data, int size, Type type)
+	bool DirectX9_Texture::_deviceCreateTexture(unsigned char* data, int size)
 	{
 		this->d3dPool = D3DPOOL_DEFAULT;
 		this->d3dUsage = 0;
@@ -39,9 +39,16 @@ namespace april
 		{
 			this->d3dPool = D3DPOOL_MANAGED;
 		}
-		else if (this->type != Type::Immutable)
+		else
 		{
-			this->d3dUsage = D3DUSAGE_DYNAMIC;
+			if (this->type == Type::RenderTarget)
+			{
+				this->d3dUsage = D3DUSAGE_RENDERTARGET;
+			}
+			else if (this->type != Type::Immutable)
+			{
+				this->d3dUsage = D3DUSAGE_DYNAMIC;
+			}
 		}
 		HRESULT hr = APRIL_D3D_DEVICE->CreateTexture(this->width, this->height, 1, this->d3dUsage, this->d3dFormat, this->d3dPool, &this->d3dTexture, NULL);
 		if (hr == D3DERR_OUTOFVIDEOMEMORY)
@@ -146,19 +153,45 @@ namespace april
 			return lock;
 		}
 		IDirect3DSurface9* surface = NULL;
-		hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(w, h, this->d3dFormat, D3DPOOL_SYSTEMMEM, &surface, NULL);
-		if (FAILED(hr))
+		if (this->type != Type::RenderTarget)
 		{
-			return lock;
+			hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(w, h, this->d3dFormat, D3DPOOL_SYSTEMMEM, &surface, NULL);
+			if (FAILED(hr))
+			{
+				return lock;
+			}
+			hr = surface->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
+			if (FAILED(hr))
+			{
+				surface->Release();
+				return lock;
+			}
+			// a D3DLOCKED_RECT always has a "pitch" that is a multiple of 4
+			lock.activateLock(0, 0, w, h, x, y, (unsigned char*)lockRect.pBits, lockRect.Pitch / nativeBpp, h, nativeFormat);
 		}
-		hr = surface->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
-		if (FAILED(hr))
+		else
 		{
-			surface->Release();
-			return lock;
+			hr = APRIL_D3D_DEVICE->CreateOffscreenPlainSurface(this->width, this->height, this->d3dFormat, D3DPOOL_SYSTEMMEM, &surface, NULL);
+			if (FAILED(hr))
+			{
+				return lock;
+			}
+			hr = APRIL_D3D_DEVICE->GetRenderTargetData(this->_getSurface(), surface);
+			if (FAILED(hr))
+			{
+				surface->Release();
+				return lock;
+			}
+			hr = surface->LockRect(&lockRect, NULL, D3DLOCK_DISCARD);
+			if (FAILED(hr))
+			{
+				surface->Release();
+				return lock;
+			}
+			// a D3DLOCKED_RECT always has a "pitch" that is a multiple of 4
+			lock.activateLock(x, y, w, h, 0, 0, (unsigned char*)lockRect.pBits, lockRect.Pitch / nativeBpp, this->height, nativeFormat);
+			lock.renderTarget = true;
 		}
-		// a D3DLOCKED_RECT always has a "pitch" that is a multiple of 4
-		lock.activateLock(0, 0, w, h, x, y, (unsigned char*)lockRect.pBits, lockRect.Pitch / nativeBpp, h, nativeFormat);
 		lock.systemBuffer = surface;
 		return lock;
 	}

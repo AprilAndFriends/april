@@ -30,6 +30,7 @@ namespace april
 	(
 		HL_ENUM_DEFINE(Texture::Type, Immutable);
 		HL_ENUM_DEFINE(Texture::Type, Managed);
+		HL_ENUM_DEFINE(Texture::Type, RenderTarget);
 	));
 
 	HL_ENUM_CLASS_DEFINE(Texture::Filter,
@@ -126,7 +127,6 @@ namespace april
 	{
 		this->filename = filename;
 		this->type = type;
-		this->type = type;
 		this->loadMode = loadMode;
 		hlog::write(logTag, "Registering texture: " + this->_getInternalName());
 		return true;
@@ -155,13 +155,9 @@ namespace april
 		this->type = Type::Managed;
 		this->format = format;
 		this->data = new unsigned char[this->getByteSize()];
-		hlog::write(logTag, "Registering manual texture: " + this->_getInternalName());
+		hlog::write(logTag, "Registering manual texture: " + this->_getInternalName()); // print here because type and format need to be assigned first
 		Image::write(0, 0, this->width, this->height, 0, 0, data, this->width, this->height, format, this->data, this->width, this->height, this->format);
-		int maxTextureSize = april::rendersys->getCaps().maxTextureSize;
-		if (maxTextureSize > 0 && (this->width > maxTextureSize || this->height > maxTextureSize))
-		{
-			hlog::warnf(logTag, "Texture size for '%s' is %d,%d while the reported system max texture size is %d!", this->_getInternalName().cStr(), this->width, this->height, maxTextureSize);
-		}
+		this->_checkMaxTextureSize();
 		this->_assignFormat();
 		return true;
 	}
@@ -178,15 +174,37 @@ namespace april
 		this->type = Type::Managed;
 		this->format = format;
 		this->data = new unsigned char[this->getByteSize()];
-		hlog::write(logTag, "Registering manual texture: " + this->_getInternalName());
+		hlog::write(logTag, "Registering manual texture: " + this->_getInternalName()); // print here because type and format need to be assigned first
 		Image::fillRect(0, 0, this->width, this->height, color, this->data, this->width, this->height, this->format);
+		this->_checkMaxTextureSize();
+		this->_assignFormat();
+		return true;
+	}
+
+	bool Texture::_createRenderTarget(int width, int height, Image::Format format)
+	{
+		if (width <= 0 || height <= 0)
+		{
+			hlog::errorf(logTag, "Cannot create texture with dimensions %d,%d!", width, height);
+			return false;
+		}
+		this->width = width;
+		this->height = height;
+		this->type = Type::RenderTarget;
+		this->format = april::rendersys->getNativeTextureFormat(format);
+		hlog::write(logTag, "Registering manual texture: " + this->_getInternalName()); // print here because type and format need to be assigned first
+		this->_checkMaxTextureSize();
+		this->_assignFormat();
+		return true;
+	}
+
+	void Texture::_checkMaxTextureSize()
+	{
 		int maxTextureSize = april::rendersys->getCaps().maxTextureSize;
 		if (maxTextureSize > 0 && (this->width > maxTextureSize || this->height > maxTextureSize))
 		{
 			hlog::warnf(logTag, "Texture size for '%s' is %d,%d while the reported system max texture size is %d!", this->_getInternalName().cStr(), this->width, this->height, maxTextureSize);
 		}
-		this->_assignFormat();
-		return true;
 	}
 
 	Texture::~Texture()
@@ -279,7 +297,7 @@ namespace april
 
 	int Texture::getCurrentRamSize()
 	{
-		if (this->type == Type::Immutable)
+		if (this->type == Type::Immutable || this->type == Type::RenderTarget)
 		{
 			return 0;
 		}
@@ -340,7 +358,7 @@ namespace april
 
 	bool Texture::_isWritable() const
 	{
-		return (this->type != Type::Immutable);
+		return (this->type != Type::Immutable && this->type != Type::RenderTarget);
 	}
 
 	bool Texture::_isAlterable() const
@@ -498,7 +516,7 @@ namespace april
 		}
 		lock.release();
 		// if no cached data was previously loaded
-		if (currentData == NULL)
+		if (currentData == NULL && this->type != Type::RenderTarget)
 		{
 			if (this->filename == "")
 			{
@@ -545,7 +563,7 @@ namespace april
 			delete image;
 		}
 		this->_assignFormat();
-		bool result = this->_deviceCreateTexture(currentData, size, this->type);
+		bool result = this->_deviceCreateTexture(currentData, size);
 		if (!result)
 		{
 			// no lock required since it only checks for existence, not for manipulation of data
@@ -558,7 +576,7 @@ namespace april
 			this->uploaded = result;
 			return false;
 		}
-		if (currentData != NULL)
+		if (currentData != NULL && this->type != Type::RenderTarget)
 		{
 			lock.acquire(&this->asyncDataMutex);
 			this->dirty = false;

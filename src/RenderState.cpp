@@ -40,7 +40,7 @@ namespace april
 		this->blendMode = BlendMode::Alpha;
 		this->colorMode = ColorMode::Multiply;
 		this->colorModeFactor = 1.0f;
-		this->systemColor = Color::Black;
+		this->systemColor = Color::White;
 	}
 
 }

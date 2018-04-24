@@ -33,7 +33,7 @@ namespace april
 	{
 	}
 
-	bool OpenGL_Texture::_deviceCreateTexture(unsigned char* data, int size, Type type)
+	bool OpenGL_Texture::_deviceCreateTexture(unsigned char* data, int size)
 	{
 		glGenTextures(1, &this->textureId);
 		if (this->textureId == 0)

@@ -38,7 +38,7 @@ namespace april
 		D3DPOOL d3dPool;
 		DWORD d3dUsage;
 
-		bool _deviceCreateTexture(unsigned char* data, int size, Type type);
+		bool _deviceCreateTexture(unsigned char* data, int size);
 		bool _deviceDestroyTexture();
 		void _assignFormat();
 

@@ -30,7 +30,7 @@ CustomTexture::~CustomTexture()
 {
 }
 
-bool CustomTexture::_deviceCreateTexture(unsigned char* data, int size, april::Texture::Type type)
+bool CustomTexture::_deviceCreateTexture(unsigned char* data, int size)
 {
 	glGenTextures(1, &this->textureId);
 	if (this->textureId == 0)
