@@ -1484,21 +1484,8 @@ namespace april
 					{
 						throw Exception("Couldn't create intermediate render texture!");
 					}
-					// setting up RenderState
-					/*
-					this->_intermediateState->viewport.setPosition(0.0f, 0.0f);
-					this->_intermediateState->modelviewMatrix.setIdentity();
-					this->_intermediateState->depthBuffer = false;
-					this->_intermediateState->depthBufferWrite = false;
-					*/
+					// setting up the RenderState
 					this->_intermediateState->useTexture = true;
-					this->_intermediateState->useColor = false;
-					/*
-					this->_intermediateState->blendMode = BlendMode::Alpha;
-					this->_intermediateState->colorMode = ColorMode::Multiply;
-					this->_intermediateState->colorModeFactor = 1.0f;
-					this->_intermediateState->systemColor = april::Color::White;
-					*/
 					// setting up vertices
 					april::TexturedVertex* v = this->_intermediateRenderVertices;
 					v[0].x = -1.0f;	v[0].y = -1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;

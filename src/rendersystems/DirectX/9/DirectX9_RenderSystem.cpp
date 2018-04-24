@@ -850,7 +850,7 @@ namespace april
 		}
 		if (destination->getType() != Texture::Type::RenderTarget)
 		{
-			hlog::error(logTag, "Cannot copy render target data, source texture is not a render target!");
+			hlog::error(logTag, "Cannot copy render target data, destination texture is not a render target!");
 			return;
 		}
 		IDirect3DSurface9* previousRenderTarget = NULL;
@@ -867,10 +867,7 @@ namespace april
 		this->d3dDevice->EndScene();
 		this->d3dDevice->SetRenderTarget(0, previousRenderTarget);
 		this->d3dDevice->BeginScene();
-		this->state->viewportChanged = true;
-		this->state->modelviewMatrixChanged = true;
-		this->state->projectionMatrixChanged = true;
-		this->_updateDeviceState(this->state);
+		this->_updateDeviceState(this->state, true);
 	}
 
 	Texture* DirectX9_RenderSystem::getRenderTarget()

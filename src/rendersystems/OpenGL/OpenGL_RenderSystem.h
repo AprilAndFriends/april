@@ -121,6 +121,9 @@ namespace april
 		void _deviceRender(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count);
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
+		void _devicePresentFrame(bool systemEnabled);
+		void _deviceRepeatLastFrame();
+		void _deviceCopyRenderTargetData(Texture* source, Texture* destination);
 
 		void _setDeviceVertexPointer(int stride, const void* pointer, bool forceUpdate = false);
 		void _setDeviceTexturePointer(int stride, const void* pointer, bool forceUpdate = false);

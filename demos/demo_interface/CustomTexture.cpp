@@ -107,8 +107,7 @@ april::Texture::Lock CustomTexture::_tryLockSystem(int x, int y, int w, int h)
 {
 	april::Texture::Lock lock;
 	april::Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
-	int gpuBpp = april::Image::getFormatBpp(nativeFormat);
-	lock.activateLock(0, 0, w, h, x, y, new unsigned char[w * h * gpuBpp], w, h, nativeFormat);
+	lock.activateLock(0, 0, w, h, x, y, new unsigned char[w * h * nativeFormat.getBpp()], w, h, nativeFormat);
 	lock.systemBuffer = lock.data;
 	return lock;
 }
@@ -121,7 +120,7 @@ bool CustomTexture::_unlockSystem(Lock& lock, bool update)
 	}
 	if (update)
 	{
-		if (this->format != april::Image::FORMAT_COMPRESSED && this->format != april::Image::FORMAT_PALETTE)
+		if (this->format != april::Image::Format::Compressed && this->format != april::Image::Format::Palette)
 		{
 			this->_setCurrentTexture();
 			if (this->width == lock.w && this->height == lock.h)
@@ -149,7 +148,6 @@ bool CustomTexture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy,
 	{
 		return false;
 	}
-	this->load();
 	this->_setCurrentTexture();
 	if (sx == 0 && dx == 0 && sy == 0 && dy == 0 && sw == this->width && srcWidth == this->width && sh == this->height && srcHeight == this->height)
 	{

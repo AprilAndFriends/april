@@ -365,6 +365,21 @@ namespace april
 #endif
 	}
 
+	void OpenGL_RenderSystem::_devicePresentFrame(bool systemEnabled)
+	{
+		RenderSystem::_devicePresentFrame(systemEnabled);
+	}
+
+	void OpenGL_RenderSystem::_deviceRepeatLastFrame()
+	{
+		//RenderSystem::_deviceRepeatLastFrame();
+	}
+
+	void OpenGL_RenderSystem::_deviceCopyRenderTargetData(Texture* source, Texture* destination)
+	{
+		
+	}
+
 	void OpenGL_RenderSystem::_setDeviceVertexPointer(int stride, const void* pointer, bool forceUpdate)
 	{
 		if (forceUpdate || this->deviceState_vertexStride != stride || this->deviceState_vertexPointer != pointer)
