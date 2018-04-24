@@ -326,9 +326,12 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:a89b2fd78df5c53635c8f8d571dcbbea6"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a89b2fd78df5c53635c8f8d571dcbbea6">_create</a> (int <a class="el" href="classapril_1_1_texture.html#aae6f21b8854a6950b6b327bae93c04d9">width</a>, int <a class="el" href="classapril_1_1_texture.html#ac61335fcac4806368fb1da65b852cd8d">height</a>, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> <a class="el" href="classapril_1_1_texture.html#ac54ea5d8c9c8227f6c1769e2d29c6ad9">format</a>)</td></tr>
 <tr class="memdesc:a89b2fd78df5c53635c8f8d571dcbbea6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates and sets up all of the texture's internal data and fills it with the given <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a>.  <a href="#a89b2fd78df5c53635c8f8d571dcbbea6">More...</a><br /></td></tr>
 <tr class="separator:a89b2fd78df5c53635c8f8d571dcbbea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fd0136f94f98c62eb35b015bbfd9c88"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a0fd0136f94f98c62eb35b015bbfd9c88">_deviceCreateTexture</a> (unsigned char *<a class="el" href="classapril_1_1_texture.html#a85936cdc9fd821bb9b225a7cca32c1cf">data</a>, int size, <a class="el" href="classapril_1_1_texture_1_1_type.html">Type</a> <a class="el" href="classapril_1_1_texture.html#a1e03a6060369015ccc2db32979b4773c">type</a>)=0</td></tr>
-<tr class="memdesc:a0fd0136f94f98c62eb35b015bbfd9c88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the device texture.  <a href="#a0fd0136f94f98c62eb35b015bbfd9c88">More...</a><br /></td></tr>
-<tr class="separator:a0fd0136f94f98c62eb35b015bbfd9c88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeda0cd3a36c83d33ce08eea5932af3c8"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aeda0cd3a36c83d33ce08eea5932af3c8">_createRenderTarget</a> (int <a class="el" href="classapril_1_1_texture.html#aae6f21b8854a6950b6b327bae93c04d9">width</a>, int <a class="el" href="classapril_1_1_texture.html#ac61335fcac4806368fb1da65b852cd8d">height</a>, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> <a class="el" href="classapril_1_1_texture.html#ac54ea5d8c9c8227f6c1769e2d29c6ad9">format</a>)</td></tr>
+<tr class="memdesc:aeda0cd3a36c83d33ce08eea5932af3c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates and sets up all of the texture's internal data for render target usage.  <a href="#aeda0cd3a36c83d33ce08eea5932af3c8">More...</a><br /></td></tr>
+<tr class="separator:aeda0cd3a36c83d33ce08eea5932af3c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52c36ebfe12a8171c0284fae438a83ec"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a52c36ebfe12a8171c0284fae438a83ec">_deviceCreateTexture</a> (unsigned char *<a class="el" href="classapril_1_1_texture.html#a85936cdc9fd821bb9b225a7cca32c1cf">data</a>, int size)=0</td></tr>
+<tr class="memdesc:a52c36ebfe12a8171c0284fae438a83ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the device texture.  <a href="#a52c36ebfe12a8171c0284fae438a83ec">More...</a><br /></td></tr>
+<tr class="separator:a52c36ebfe12a8171c0284fae438a83ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d3101334b0cce9661b905ac206664d5"><td class="memItemLeft" align="right" valign="top"><a id="a0d3101334b0cce9661b905ac206664d5"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a0d3101334b0cce9661b905ac206664d5">_deviceUnloadTexture</a> ()</td></tr>
 <tr class="memdesc:a0d3101334b0cce9661b905ac206664d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unloads the device texture. <br /></td></tr>
@@ -764,7 +767,6 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>UnloadTextureCommand
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if successful. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The the type is automatically <a class="el" href="classapril_1_1_texture_1_1_type.html#aae10f154aa1d310185bf13f54886256f" title="Resides in RAM and on GPU, can be modified. Best used for manually created textures or loaded from fi...">Texture::Type::Managed</a>. </dd></dl>
 
 </div>
 </div>
@@ -825,7 +827,6 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>UnloadTextureCommand
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if successful. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The the type is automatically <a class="el" href="classapril_1_1_texture_1_1_type.html#aae10f154aa1d310185bf13f54886256f" title="Resides in RAM and on GPU, can be modified. Best used for manually created textures or loaded from fi...">Texture::Type::Managed</a>. </dd></dl>
 
 </div>
 </div>
@@ -926,6 +927,60 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>UnloadTextureCommand
 
 </div>
 </div>
+<a id="aeda0cd3a36c83d33ce08eea5932af3c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeda0cd3a36c83d33ce08eea5932af3c8">&#9670;&nbsp;</a></span>_createRenderTarget()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool april::Texture::_createRenderTarget </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>height</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a>&#160;</td>
+          <td class="paramname"><em>format</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates and sets up all of the texture's internal data for render target usage. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">width</td><td>Width of the raw image data. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">height</td><td>Height of the raw image data. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">format</td><td>The pixel format of the raw image data. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if successful. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The format parameter will automatically be converted into the native format of the system backend. </dd></dl>
+
+</div>
+</div>
 <a id="aa59e2e8cd88eabb6993affd8ccae6468"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa59e2e8cd88eabb6993affd8ccae6468">&#9670;&nbsp;</a></span>_decodeFromAsyncStream()</h2>
 
@@ -960,8 +1015,8 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>UnloadTextureCommand
 
 </div>
 </div>
-<a id="a0fd0136f94f98c62eb35b015bbfd9c88"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0fd0136f94f98c62eb35b015bbfd9c88">&#9670;&nbsp;</a></span>_deviceCreateTexture()</h2>
+<a id="a52c36ebfe12a8171c0284fae438a83ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a52c36ebfe12a8171c0284fae438a83ec">&#9670;&nbsp;</a></span>_deviceCreateTexture()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -979,13 +1034,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>UnloadTextureCommand
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>size</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_texture_1_1_type.html">Type</a>&#160;</td>
-          <td class="paramname"><em>type</em>&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1005,7 +1054,6 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>UnloadTextureCommand
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>The raw image data. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">size</td><td>The raw image data size in bytes. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>The texture type. </td></tr>
   </table>
   </dd>
 </dl>

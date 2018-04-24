@@ -590,9 +590,23 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a9e57967205e0d7fd7f6e8c386732ab81"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a9e57967205e0d7fd7f6e8c386732ab81">_devicePresentFrame</a> (bool systemEnabled)</td></tr>
 <tr class="memdesc:a9e57967205e0d7fd7f6e8c386732ab81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes the currently rendered data to the backbuffer for display.  <a href="#a9e57967205e0d7fd7f6e8c386732ab81">More...</a><br /></td></tr>
 <tr class="separator:a9e57967205e0d7fd7f6e8c386732ab81"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ce732980a0cf64f1bf71e2723b994cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a5ce732980a0cf64f1bf71e2723b994cc">_repeatLastFrame</a> ()</td></tr>
-<tr class="memdesc:a5ce732980a0cf64f1bf71e2723b994cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders previous frame again.  <a href="#a5ce732980a0cf64f1bf71e2723b994cc">More...</a><br /></td></tr>
-<tr class="separator:a5ce732980a0cf64f1bf71e2723b994cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a045dcb18e7dc39375da4a9dd7b909bf2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a045dcb18e7dc39375da4a9dd7b909bf2">_deviceRepeatLastFrame</a> ()</td></tr>
+<tr class="memdesc:a045dcb18e7dc39375da4a9dd7b909bf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders previous frame again.  <a href="#a045dcb18e7dc39375da4a9dd7b909bf2">More...</a><br /></td></tr>
+<tr class="separator:a045dcb18e7dc39375da4a9dd7b909bf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b574c4e9f18f8af31054dfbd4332aa1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a2b574c4e9f18f8af31054dfbd4332aa1">_deviceCopyRenderTargetData</a> (<a class="el" href="classapril_1_1_texture.html">Texture</a> *source, <a class="el" href="classapril_1_1_texture.html">Texture</a> *destination)=0</td></tr>
+<tr class="memdesc:a2b574c4e9f18f8af31054dfbd4332aa1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies RenderTarget data from one texture to another.  <a href="#a2b574c4e9f18f8af31054dfbd4332aa1">More...</a><br /></td></tr>
+<tr class="separator:a2b574c4e9f18f8af31054dfbd4332aa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dbcbab571e1a8b3f690e8dd493e79aa"><td class="memItemLeft" align="right" valign="top"><a id="a1dbcbab571e1a8b3f690e8dd493e79aa"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a1dbcbab571e1a8b3f690e8dd493e79aa">_updateIntermediateRenderTexture</a> ()</td></tr>
+<tr class="memdesc:a1dbcbab571e1a8b3f690e8dd493e79aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the intermediate render texture. <br /></td></tr>
+<tr class="separator:a1dbcbab571e1a8b3f690e8dd493e79aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33bb778367695dffe7ff610d72dee467"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a33bb778367695dffe7ff610d72dee467">_tryCreateIntermediateRenderTexture</a> (int width, int height)</td></tr>
+<tr class="memdesc:a33bb778367695dffe7ff610d72dee467"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the intermediate render texture.  <a href="#a33bb778367695dffe7ff610d72dee467">More...</a><br /></td></tr>
+<tr class="separator:a33bb778367695dffe7ff610d72dee467"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaaa2d91efe3faf8908eb4dd868c0d151"><td class="memItemLeft" align="right" valign="top"><a id="aaaa2d91efe3faf8908eb4dd868c0d151"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#aaaa2d91efe3faf8908eb4dd868c0d151">_presentIntermediateRenderTexture</a> ()</td></tr>
+<tr class="memdesc:aaaa2d91efe3faf8908eb4dd868c0d151"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders the actual intermediate render texture. <br /></td></tr>
+<tr class="separator:aaaa2d91efe3faf8908eb4dd868c0d151"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a27639f378164ecdfec6d3789a16bde64"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a27639f378164ecdfec6d3789a16bde64">_deviceUnloadTextures</a> ()</td></tr>
 <tr class="memdesc:a27639f378164ecdfec6d3789a16bde64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unloads all textures. Used internally only.  <a href="#a27639f378164ecdfec6d3789a16bde64">More...</a><br /></td></tr>
 <tr class="separator:a27639f378164ecdfec6d3789a16bde64"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -676,6 +690,18 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a59c010b62544287c643bca643b8f4042">frameDuplicates</a></td></tr>
 <tr class="memdesc:a59c010b62544287c643bca643b8f4042"><td class="mdescLeft">&#160;</td><td class="mdescRight">How many times a frame should be duplicated during rendering. <br /></td></tr>
 <tr class="separator:a59c010b62544287c643bca643b8f4042"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6224aa3ea0b62f8549c16e5c145a127f"><td class="memItemLeft" align="right" valign="top"><a id="a6224aa3ea0b62f8549c16e5c145a127f"></a>
+<a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a6224aa3ea0b62f8549c16e5c145a127f">_intermediateRenderTexture</a></td></tr>
+<tr class="memdesc:a6224aa3ea0b62f8549c16e5c145a127f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Special texture used as utility for rendering. <br /></td></tr>
+<tr class="separator:a6224aa3ea0b62f8549c16e5c145a127f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43e5a562c528f0b864e22b7d78091e33"><td class="memItemLeft" align="right" valign="top"><a id="a43e5a562c528f0b864e22b7d78091e33"></a>
+<a class="el" href="classapril_1_1_render_state.html">RenderState</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a43e5a562c528f0b864e22b7d78091e33">_intermediateState</a></td></tr>
+<tr class="memdesc:a43e5a562c528f0b864e22b7d78091e33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fixed <a class="el" href="classapril_1_1_render_state.html" title="Defines a rendersystem state. ">RenderState</a> for rendering the intermediate render texture. <br /></td></tr>
+<tr class="separator:a43e5a562c528f0b864e22b7d78091e33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6f1d5d72f8b573e38741cb92943d39b"><td class="memItemLeft" align="right" valign="top"><a id="ac6f1d5d72f8b573e38741cb92943d39b"></a>
+<a class="el" href="classapril_1_1_textured_vertex.html">april::TexturedVertex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ac6f1d5d72f8b573e38741cb92943d39b">_intermediateRenderVertices</a> [6]</td></tr>
+<tr class="memdesc:ac6f1d5d72f8b573e38741cb92943d39b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fixed vertices for rendering the intermediate render texture. <br /></td></tr>
+<tr class="separator:ac6f1d5d72f8b573e38741cb92943d39b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1eec2d11c5ba510f4fdee87fff8bca6"><td class="memItemLeft" align="right" valign="top"><a id="ab1eec2d11c5ba510f4fdee87fff8bca6"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ab1eec2d11c5ba510f4fdee87fff8bca6">statCurrentFrameRenderCalls</a></td></tr>
 <tr class="memdesc:ab1eec2d11c5ba510f4fdee87fff8bca6"><td class="mdescLeft">&#160;</td><td class="mdescRight">How many times a render call was called during this frame. <br /></td></tr>
@@ -1134,6 +1160,45 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 
 </div>
 </div>
+<a id="a2b574c4e9f18f8af31054dfbd4332aa1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b574c4e9f18f8af31054dfbd4332aa1">&#9670;&nbsp;</a></span>_deviceCopyRenderTargetData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void april::RenderSystem::_deviceCopyRenderTargetData </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td>
+          <td class="paramname"><em>source</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td>
+          <td class="paramname"><em>destination</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copies RenderTarget data from one texture to another. </p>
+<dl class="section note"><dt>Note</dt><dd>Both textures must be render targets. </dd></dl>
+
+</div>
+</div>
 <a id="a515d0b1af0c6e107cc53f9fe1905230e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a515d0b1af0c6e107cc53f9fe1905230e">&#9670;&nbsp;</a></span>_deviceCreate()</h2>
 
@@ -1527,6 +1592,34 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a045dcb18e7dc39375da4a9dd7b909bf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a045dcb18e7dc39375da4a9dd7b909bf2">&#9670;&nbsp;</a></span>_deviceRepeatLastFrame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void april::RenderSystem::_deviceRepeatLastFrame </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Renders previous frame again. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classapril_1_1_render_system.html#a9e57967205e0d7fd7f6e8c386732ab81" title="Flushes the currently rendered data to the backbuffer for display. ">_devicePresentFrame</a> </dd></dl>
 
 </div>
 </div>
@@ -2264,34 +2357,6 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 
 </div>
 </div>
-<a id="a5ce732980a0cf64f1bf71e2723b994cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ce732980a0cf64f1bf71e2723b994cc">&#9670;&nbsp;</a></span>_repeatLastFrame()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void april::RenderSystem::_repeatLastFrame </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Renders previous frame again. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classapril_1_1_render_system.html#a9e57967205e0d7fd7f6e8c386732ab81" title="Flushes the currently rendered data to the backbuffer for display. ">_devicePresentFrame</a> </dd></dl>
-
-</div>
-</div>
 <a id="a1e5e7645d0c9b0d2d4c9aceddbe21919"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1e5e7645d0c9b0d2d4c9aceddbe21919">&#9670;&nbsp;</a></span>_setDeviceBlendMode()</h2>
 
@@ -2751,6 +2816,52 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a33bb778367695dffe7ff610d72dee467"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33bb778367695dffe7ff610d72dee467">&#9670;&nbsp;</a></span>_tryCreateIntermediateRenderTexture()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool april::RenderSystem::_tryCreateIntermediateRenderTexture </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>height</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates the intermediate render texture. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">width</td><td>The texture width. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">height</td><td>The texture height. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if successful. </dd></dl>
 
 </div>
 </div>
