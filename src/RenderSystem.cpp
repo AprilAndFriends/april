@@ -1471,7 +1471,7 @@ namespace april
 	void RenderSystem::_updateIntermediateRenderTexture()
 	{
 		// texture update
-		if (april::window != NULL)
+		if (this->created && april::window != NULL)
 		{
 			int width = april::window->getWidth();
 			int height = april::window->getHeight();
