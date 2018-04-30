@@ -273,11 +273,41 @@ namespace april
 		{
 			hlog::warnf(logTag, "Texture '%s' has byteSize = 0 (possibly not loaded yet?)", this->filename.cStr());
 		}
+		return this->_getByteSize();
+	}
+
+	int Texture::_getByteSize() const
+	{
 		if (this->compressedSize > 0)
 		{
 			return this->compressedSize;
 		}
 		return (this->width * this->height * this->format.getBpp());
+	}
+
+	int Texture::getCurrentAllRamSize()
+	{
+		int byteSize = this->_getByteSize();
+		int result = 0;
+		hmutex::ScopeLock lock(&this->asyncLoadMutex);
+		// VRAM
+		if (this->width > 0 && this->height > 0 && this->format != Image::Format::Invalid && this->uploaded)
+		{
+			result += byteSize;
+		}
+		// async RAM
+		bool asyncRamUsed = (!this->asyncLoadQueued && this->dataAsync != NULL && !this->uploaded);
+		lock.release();
+		if (asyncRamUsed && this->width > 0 && this->height > 0 && this->format != Image::Format::Invalid)
+		{
+			result += byteSize;
+		}
+		// RAM
+		if (this->type != Type::Immutable && this->type != Type::RenderTarget)
+		{
+			result += byteSize;
+		}
+		return result;
 	}
 
 	int Texture::getCurrentVRamSize()

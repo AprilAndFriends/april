@@ -130,6 +130,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a07ee676daca24631d9930368aec63452"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a07ee676daca24631d9930368aec63452">getByteSize</a> () const</td></tr>
 <tr class="memdesc:a07ee676daca24631d9930368aec63452"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the size of the image data in bytes.  <a href="#a07ee676daca24631d9930368aec63452">More...</a><br /></td></tr>
 <tr class="separator:a07ee676daca24631d9930368aec63452"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0ce88bf78ca4a99551d8ebe592addf9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ab0ce88bf78ca4a99551d8ebe592addf9">getCurrentAllRamSize</a> ()</td></tr>
+<tr class="memdesc:ab0ce88bf78ca4a99551d8ebe592addf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current VRAM consumption, RAM consumption and RAM consumption of the asynchronously loaded data.  <a href="#ab0ce88bf78ca4a99551d8ebe592addf9">More...</a><br /></td></tr>
+<tr class="separator:ab0ce88bf78ca4a99551d8ebe592addf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab13fe79bb23d1051f1bc56a2509fa794"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ab13fe79bb23d1051f1bc56a2509fa794">getCurrentVRamSize</a> ()</td></tr>
 <tr class="memdesc:ab13fe79bb23d1051f1bc56a2509fa794"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current VRAM consumption.  <a href="#ab13fe79bb23d1051f1bc56a2509fa794">More...</a><br /></td></tr>
 <tr class="separator:ab13fe79bb23d1051f1bc56a2509fa794"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -351,6 +354,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a379a7029460c5136510485e70ea44100"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_image.html">Image</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a379a7029460c5136510485e70ea44100">_processImageFormatSupport</a> (<a class="el" href="classapril_1_1_image.html">Image</a> *image)</td></tr>
 <tr class="memdesc:a379a7029460c5136510485e70ea44100"><td class="mdescLeft">&#160;</td><td class="mdescRight">If necessary, converts to image the a format supported by the <a class="el" href="classapril_1_1_render_system.html" title="Defines a generic render system. ">RenderSystem</a>.  <a href="#a379a7029460c5136510485e70ea44100">More...</a><br /></td></tr>
 <tr class="separator:a379a7029460c5136510485e70ea44100"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac03ed71b6a1c8168f1e4a3e0ada135a8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ac03ed71b6a1c8168f1e4a3e0ada135a8">_getByteSize</a> () const</td></tr>
+<tr class="memdesc:ac03ed71b6a1c8168f1e4a3e0ada135a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the size of the image data in bytes.  <a href="#ac03ed71b6a1c8168f1e4a3e0ada135a8">More...</a><br /></td></tr>
+<tr class="separator:ac03ed71b6a1c8168f1e4a3e0ada135a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb2237ec7a6779b326110e1ff576a9dd"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aeb2237ec7a6779b326110e1ff576a9dd">_isReadable</a> () const</td></tr>
 <tr class="memdesc:aeb2237ec7a6779b326110e1ff576a9dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the readable flag.  <a href="#aeb2237ec7a6779b326110e1ff576a9dd">More...</a><br /></td></tr>
 <tr class="separator:aeb2237ec7a6779b326110e1ff576a9dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1144,6 +1150,37 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>UnloadTextureCommand
 
 <p>Uploads the texture data to the GPU. Used internally only. Called from main thread only. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if successful or already loaded. </dd></dl>
+
+</div>
+</div>
+<a id="ac03ed71b6a1c8168f1e4a3e0ada135a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac03ed71b6a1c8168f1e4a3e0ada135a8">&#9670;&nbsp;</a></span>_getByteSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int april::Texture::_getByteSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the size of the image data in bytes. </p>
+<dl class="section return"><dt>Returns</dt><dd>Size of the image data in bytes. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The calculation is basically "width * height * bpp". </dd>
+<dd>
+This is called internally. </dd></dl>
 
 </div>
 </div>
@@ -3296,6 +3333,27 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
 <p>Gets the size of the image data in bytes. </p>
 <dl class="section return"><dt>Returns</dt><dd>Size of the image data in bytes. </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The calculation is basically "width * height * bpp". </dd></dl>
+
+</div>
+</div>
+<a id="ab0ce88bf78ca4a99551d8ebe592addf9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0ce88bf78ca4a99551d8ebe592addf9">&#9670;&nbsp;</a></span>getCurrentAllRamSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int april::Texture::getCurrentAllRamSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the current VRAM consumption, RAM consumption and RAM consumption of the asynchronously loaded data. </p>
+<dl class="section return"><dt>Returns</dt><dd>The current VRAM consumption, RAM consumption and RAM consumption of the asynchronously loaded data. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This code is useful to check the full RAM consumption without requiring multiple mutex locks. </dd></dl>
 
 </div>
 </div>

@@ -136,6 +136,10 @@ namespace april
 		/// @return Size of the image data in bytes.
 		/// @note The calculation is basically "width * height * bpp".
 		int getByteSize() const;
+		/// @brief Gets the current VRAM consumption, RAM consumption and RAM consumption of the asynchronously loaded data.
+		/// @return The current VRAM consumption, RAM consumption and RAM consumption of the asynchronously loaded data.
+		/// @note This code is useful to check the full RAM consumption without requiring multiple mutex locks.
+		int getCurrentAllRamSize();
 		/// @brief Gets the current VRAM consumption.
 		/// @return The current VRAM consumption.
 		int getCurrentVRamSize();
@@ -786,6 +790,11 @@ namespace april
 		/// @note The parameter image may be invalidated and shouldn't be used anymore. Instead, use the returned Image.
 		Image* _processImageFormatSupport(Image* image);
 
+		/// @brief Gets the size of the image data in bytes.
+		/// @return Size of the image data in bytes.
+		/// @note The calculation is basically "width * height * bpp".
+		/// @note This is called internally.
+		int _getByteSize() const;
 		/// @brief Gets the readable flag.
 		/// @return True if the image data from the texture can be read.
 		virtual bool _isReadable() const;

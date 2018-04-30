@@ -72,6 +72,7 @@
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a0b74a8987e037663b998fb2507491868"><param name="Name" value="_ensureAsyncCompleted"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a5029ee799cd15f5b7d22b88802e69844"><param name="Name" value="_ensureUploaded"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_render_system.html#a49ee82604acbaa55982a7a50bc785a71"><param name="Name" value="_flushAsyncCommands"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#ac03ed71b6a1c8168f1e4a3e0ada135a8"><param name="Name" value="_getByteSize"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#a99efbd1db01d91cdda534754f66e3c9d"><param name="Name" value="_getInstances"></OBJECT>
   <UL>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_application_1_1_state.html#a99efbd1db01d91cdda534754f66e3c9d"><param name="Name" value="april::Application::State"></OBJECT>
@@ -1709,6 +1710,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a0d3101334b0cce9661b905ac206664d5"><param name="Name" value="_deviceUnloadTexture"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a0b74a8987e037663b998fb2507491868"><param name="Name" value="_ensureAsyncCompleted"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a5029ee799cd15f5b7d22b88802e69844"><param name="Name" value="_ensureUploaded"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#ac03ed71b6a1c8168f1e4a3e0ada135a8"><param name="Name" value="_getByteSize"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a89ac861fedfde6912ac6f061685f9741"><param name="Name" value="_getInternalName"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#ae7d8e82cd3d1db4c51e3c75013af99ff"><param name="Name" value="_isAlterable"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a8f905e7d5f01343c1803f0f9a1375680"><param name="Name" value="_isAsyncUploadQueued"></OBJECT>
@@ -1756,6 +1758,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a367dc9d9332912dae4bc73093ec69a16"><param name="Name" value="fromResource"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a0a020316b333f58c13ef2ce8cb0968be"><param name="Name" value="getBpp"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a07ee676daca24631d9930368aec63452"><param name="Name" value="getByteSize"></OBJECT>
+    <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#ab0ce88bf78ca4a99551d8ebe592addf9"><param name="Name" value="getCurrentAllRamSize"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a8ac60dc6f51e89634f0964393bed3d8e"><param name="Name" value="getCurrentAsyncRamSize"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a6c3ab491ccf94fa77ef55b6adc6ad77a"><param name="Name" value="getCurrentRamSize"></OBJECT>
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#ab13fe79bb23d1051f1bc56a2509fa794"><param name="Name" value="getCurrentVRamSize"></OBJECT>
@@ -2541,6 +2544,7 @@
     <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a07ee676daca24631d9930368aec63452"><param name="Name" value="april::Texture"></OBJECT>
   </UL>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_image_1_1_format.html#ae272fbe7686f51023c6d33ed1902d9dc"><param name="Name" value="getChannelIndices"></OBJECT>
+  <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#ab0ce88bf78ca4a99551d8ebe592addf9"><param name="Name" value="getCurrentAllRamSize"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a8ac60dc6f51e89634f0964393bed3d8e"><param name="Name" value="getCurrentAsyncRamSize"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#a6c3ab491ccf94fa77ef55b6adc6ad77a"><param name="Name" value="getCurrentRamSize"></OBJECT>
   <LI><OBJECT type="text/sitemap"><param name="Local" value="classapril_1_1_texture.html#ab13fe79bb23d1051f1bc56a2509fa794"><param name="Name" value="getCurrentVRamSize"></OBJECT>
