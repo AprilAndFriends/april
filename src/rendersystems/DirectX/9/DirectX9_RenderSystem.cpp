@@ -752,7 +752,7 @@ namespace april
 		RenderSystem::_devicePresentFrame(systemEnabled);
 		this->d3dDevice->EndScene();
 		HRESULT hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
-		DirectX9_Texture* intermediateRenderTexture = ((DirectX9_Texture*)this->_intermediateRenderTexture);
+		DirectX9_Texture* intermediateRenderTexture = (DirectX9_Texture*)this->_intermediateRenderTexture;
 		if (hr == D3DERR_DEVICELOST)
 		{
 			hlog::write(logTag, "Direct3D9 Device lost, attempting to restore...");
@@ -811,6 +811,8 @@ namespace april
 			}
 			this->_deviceSetup();
 			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
+			this->_tryCreateIntermediateRenderTexture(april::window->getWidth(), april::window->getHeight());
+			intermediateRenderTexture = (DirectX9_Texture*)this->_intermediateRenderTexture; // it changed
 			this->d3dDevice->SetRenderTarget(0, intermediateRenderTexture->_getSurface());
 			this->d3dDevice->BeginScene();
 			this->_updateDeviceState(this->state, true);
@@ -830,6 +832,7 @@ namespace april
 					hthread::sleep(1.0f);
 				}
 			}
+			intermediateRenderTexture = (DirectX9_Texture*)this->_intermediateRenderTexture; // it changed
 			this->d3dDevice->SetRenderTarget(0, intermediateRenderTexture->_getSurface());
 			this->d3dDevice->BeginScene();
 		}
