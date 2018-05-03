@@ -199,7 +199,6 @@ namespace april
 		this->statLastFrameTriangleCount = 0;
 		this->statCurrentFrameLineCount = 0;
 		this->statLastFrameLineCount = 0;
-		this->_queuedFrameDuplicates = -1;
 		// create the actual device
 		this->_deviceInit();
 		if (!this->_deviceCreate(options))
@@ -267,7 +266,6 @@ namespace april
 		this->statLastFrameTriangleCount = 0;
 		this->statCurrentFrameLineCount = 0;
 		this->statLastFrameLineCount = 0;
-		this->_queuedFrameDuplicates = -1;
 		this->_deviceDestroy();
 		this->_deviceInit();
 	}
