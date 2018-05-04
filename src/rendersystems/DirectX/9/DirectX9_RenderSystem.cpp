@@ -185,17 +185,19 @@ namespace april
 		RenderSystem::_deviceReset();
 		this->d3dDevice->EndScene();
 		this->_deviceUnloadTextures();
-		DirectX9_Texture* intermediateRenderTexture = ((DirectX9_Texture*)this->_intermediateRenderTexture);
+		DirectX9_Texture* intermediateRenderTexture = (DirectX9_Texture*)this->_intermediateRenderTexture;
 		if (intermediateRenderTexture != NULL)
 		{
 			intermediateRenderTexture->_deviceUnloadTexture();
+			delete intermediateRenderTexture;
+			this->_intermediateRenderTexture = NULL;
 		}
 		this->backBuffer->Release();
 		this->backBuffer = NULL;
 		HRESULT hr;
 		while (april::application->getState() == Application::State::Running)
 		{
-			hlog::write(logTag, "Resetting device...");
+			hlog::write(logTag, "Resetting Direct3D9 Device...");
 			if (this->d3dpp->BackBufferWidth <= 0 || this->d3dpp->BackBufferHeight <= 0)
 			{
 				throw Exception(hsprintf("Backbuffer size is invalid: %d x %d", this->d3dpp->BackBufferWidth, this->d3dpp->BackBufferHeight));
@@ -223,14 +225,16 @@ namespace april
 			}
 			else
 			{
-				hlog::errorf(logTag, "Failed to reset device! DirectX9_RenderSystem::reset() hresult: %u", hr);
+				hlog::errorf(logTag, "Failed to reset device! DirectX9_RenderSystem::reset() hresult: 0x%08X", hr);
 			}
 		}
+		this->_deviceSetup();
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
-		intermediateRenderTexture->_loadAsync();
-		intermediateRenderTexture->_ensureUploaded();
+		this->_tryCreateIntermediateRenderTexture(april::window->getWidth(), april::window->getHeight());
+		intermediateRenderTexture = (DirectX9_Texture*)this->_intermediateRenderTexture; // it changed
 		this->d3dDevice->SetRenderTarget(0, intermediateRenderTexture->_getSurface());
 		this->d3dDevice->BeginScene();
+		this->_updateDeviceState(this->state, true);
 		hlog::write(logTag, "Direct3D9 Device restored.");
 	}
 
@@ -371,7 +375,7 @@ namespace april
 			}
 			this->d3dpp->BackBufferWidth = w;
 			this->d3dpp->BackBufferHeight = h;
-			this->reset();
+			this->_deviceReset();
 		}
 		else
 		{
@@ -380,7 +384,6 @@ namespace april
 				this->_tryAssignChildWindow();
 			}
 			this->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
-			this->_updateIntermediateRenderTexture();
 		}
 	}
 
@@ -745,12 +748,10 @@ namespace april
 	
 	void DirectX9_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
-		this->d3dDevice->EndScene();
 		this->d3dDevice->SetRenderTarget(0, this->backBuffer);
-		this->d3dDevice->BeginScene();
 		this->_presentIntermediateRenderTexture();
-		RenderSystem::_devicePresentFrame(systemEnabled);
 		this->d3dDevice->EndScene();
+		RenderSystem::_devicePresentFrame(systemEnabled);
 		HRESULT hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
 		DirectX9_Texture* intermediateRenderTexture = (DirectX9_Texture*)this->_intermediateRenderTexture;
 		if (hr == D3DERR_DEVICELOST)
@@ -760,6 +761,8 @@ namespace april
 			if (intermediateRenderTexture != NULL)
 			{
 				intermediateRenderTexture->_deviceUnloadTexture();
+				delete intermediateRenderTexture;
+				this->_intermediateRenderTexture = NULL;
 			}
 			this->backBuffer->Release();
 			this->backBuffer = NULL;
@@ -772,7 +775,7 @@ namespace april
 				}
 				if (hr == D3DERR_DEVICENOTRESET)
 				{
-					hlog::write(logTag, "Resetting device...");
+					hlog::write(logTag, "Resetting Direct3D9 Device...");
 					hr = this->d3dDevice->Reset(this->d3dpp);
 					if (!FAILED(hr))
 					{
@@ -790,19 +793,16 @@ namespace april
 					{
 						throw Exception("Unable to reset Direct3D device, Out of Video Memory!");
 					}
-					else if (hr == D3DERR_DRIVERINTERNALERROR)
-					{
-						throw Exception("Unable to reset Direct3D device, Driver internal error!");
-					}
 					else
 					{
-						hlog::errorf(logTag, "Failed to reset device!, context: DirectX9_RenderSystem::_devicePresentFrame() hresult: %08X", hr);
+						hlog::errorf(logTag, "Failed to reset device!, context: DirectX9_RenderSystem::_devicePresentFrame() hresult: 0x%08X", hr);
 					}
 				}
 				else if (hr == D3DERR_DRIVERINTERNALERROR)
 				{
 					throw Exception("Unable to reset Direct3D device, Driver Internal Error while testing cooperative level!");
 				}
+				// not handling D3DERR_DEVICELOST, because one should keep retrying in that case
 				for_iter (i, 0, 10)
 				{
 					april::window->checkEvents();
@@ -832,7 +832,8 @@ namespace april
 					hthread::sleep(1.0f);
 				}
 			}
-			intermediateRenderTexture = (DirectX9_Texture*)this->_intermediateRenderTexture; // it changed
+			this->_updateIntermediateRenderTexture();
+			intermediateRenderTexture = (DirectX9_Texture*)this->_intermediateRenderTexture; // it could have changed
 			this->d3dDevice->SetRenderTarget(0, intermediateRenderTexture->_getSurface());
 			this->d3dDevice->BeginScene();
 		}
@@ -840,7 +841,6 @@ namespace april
 
 	void DirectX9_RenderSystem::_deviceRepeatLastFrame()
 	{
-		this->_updateIntermediateRenderTexture();
 		this->_devicePresentFrame(true);
 	}
 

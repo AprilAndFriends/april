@@ -470,7 +470,6 @@ namespace april
 	
 	bool RenderSystem::update(float timeDelta)
 	{
-		this->_updateIntermediateRenderTexture();
 		bool result = false;
 		int previousRepeatCount = -1;
 		hmutex::ScopeLock lock(&this->asyncMutex);
@@ -1543,17 +1542,20 @@ namespace april
 
 	void RenderSystem::_presentIntermediateRenderTexture()
 	{
-		int width = this->_intermediateRenderTexture->getWidth();
-		int height = this->_intermediateRenderTexture->getHeight();
-		this->_intermediateState->viewport.setSize((float)width, (float)height);
-		this->_intermediateState->projectionMatrix.setOrthoProjection(grect(1.0f - 2.0f * this->pixelOffset / width, 1.0f - 2.0f * this->pixelOffset / height, 2.0f, 2.0f));
-		this->_intermediateState->texture = this->_intermediateRenderTexture;
-		this->_updateDeviceState(this->_intermediateState, true);
-		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
-		this->state->viewportChanged = true;
-		this->state->modelviewMatrixChanged = true;
-		this->state->projectionMatrixChanged = true;
-		this->_updateDeviceState(this->state);
+		if (this->_intermediateRenderTexture != NULL)
+		{
+			int width = this->_intermediateRenderTexture->getWidth();
+			int height = this->_intermediateRenderTexture->getHeight();
+			this->_intermediateState->viewport.setSize((float)width, (float)height);
+			this->_intermediateState->projectionMatrix.setOrthoProjection(grect(1.0f - 2.0f * this->pixelOffset / width, 1.0f - 2.0f * this->pixelOffset / height, 2.0f, 2.0f));
+			this->_intermediateState->texture = this->_intermediateRenderTexture;
+			this->_updateDeviceState(this->_intermediateState, true);
+			this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
+			this->state->viewportChanged = true;
+			this->state->modelviewMatrixChanged = true;
+			this->state->projectionMatrixChanged = true;
+			this->_updateDeviceState(this->state);
+		}
 	}
 
 	unsigned int RenderSystem::_numPrimitives(const RenderOperation& renderOperation, int count) const
