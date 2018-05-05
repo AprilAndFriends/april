@@ -55,6 +55,7 @@ namespace april
 	static _GetTouchInputInfo _getTouchInputInfo = NULL;
 	static _CloseTouchInputHandle _closeTouchInputHandle = NULL;
 	static _RegisterTouchWindow _registerTouchWindow = NULL;
+	bool _touchEnabled = true;
 
 	Win32_Window::Win32_Window() : Window()
 	{
@@ -119,20 +120,28 @@ namespace april
 		}
 		// create window
 		this->hWnd = CreateWindowExW(exstyle, APRIL_WIN32_WINDOW_CLASS, this->title.wStr().c_str(), style, x, y, width, height, NULL, NULL, hinst, NULL);
-		// this workaround is required to properly support everything before Win7
-		if (_getTouchInputInfo == NULL && _closeTouchInputHandle == NULL && _registerTouchWindow == NULL)
+		
+		if (options.enableTouchInput)
 		{
-			HMODULE user32Dll = LoadLibraryW(L"user32.dll");
-			if (user32Dll != NULL)
+			// this workaround is required to properly support everything before Win7
+			if (_getTouchInputInfo == NULL && _closeTouchInputHandle == NULL && _registerTouchWindow == NULL)
 			{
-				_getTouchInputInfo = (_GetTouchInputInfo)GetProcAddress(user32Dll, "GetTouchInputInfo");
-				_closeTouchInputHandle = (_CloseTouchInputHandle)GetProcAddress(user32Dll, "CloseTouchInputHandle");
-				_registerTouchWindow = (_RegisterTouchWindow)GetProcAddress(user32Dll, "RegisterTouchWindow");
-				if (_registerTouchWindow != NULL)
+				HMODULE user32Dll = LoadLibraryW(L"user32.dll");
+				if (user32Dll != NULL)
 				{
-					_registerTouchWindow(this->hWnd, TWF_WANTPALM);
+					_getTouchInputInfo = (_GetTouchInputInfo)GetProcAddress(user32Dll, "GetTouchInputInfo");
+					_closeTouchInputHandle = (_CloseTouchInputHandle)GetProcAddress(user32Dll, "CloseTouchInputHandle");
+					_registerTouchWindow = (_RegisterTouchWindow)GetProcAddress(user32Dll, "RegisterTouchWindow");
+					if (_registerTouchWindow != NULL)
+					{
+						_registerTouchWindow(this->hWnd, TWF_WANTPALM);
+					}
 				}
 			}
+		}
+		else
+		{
+			_touchEnabled = false;
 		}
 		RECT clientRect;
 		GetClientRect(this->hWnd, &clientRect);
@@ -742,7 +751,7 @@ namespace april
 		case WM_LBUTTONDOWN:
 		case WM_MBUTTONDOWN:
 		case WM_RBUTTONDOWN:
-			if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
+			if (!_touchEnabled || (GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
 			{
 				WIN32_WINDOW->_mouseMessages = 0;
 				if (!april::window->isFullscreen())
@@ -761,7 +770,7 @@ namespace april
 		case WM_LBUTTONUP:
 		case WM_MBUTTONUP:
 		case WM_RBUTTONUP:
-			if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
+			if (!_touchEnabled || (GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
 			{
 				WIN32_WINDOW->_mouseMessages = 0;
 				if (!april::window->isFullscreen())
@@ -778,7 +787,7 @@ namespace april
 			}
 			break;
 		case WM_MOUSEMOVE:
-			if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
+			if (!_touchEnabled || (GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
 			{
 				if (WIN32_WINDOW->_mouseMessages > 0)
 				{
@@ -797,7 +806,7 @@ namespace april
 			}
 			break;
 		case WM_MOUSEWHEEL:
-			if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
+			if (!_touchEnabled || (GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
 			{
 				_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 				if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
@@ -811,7 +820,7 @@ namespace april
 			}
 			break;
 		case WM_MOUSEHWHEEL:
-			if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
+			if (!_touchEnabled || (GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) != MOUSEEVENTF_FROMTOUCH)
 			{
 				_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 				if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)

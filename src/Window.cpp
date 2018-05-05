@@ -55,6 +55,7 @@ namespace april
 		this->suspendUpdateThread = true;
 		this->keyPause = april::Key::None;
 		this->mac_displayLinkIgnoreSystemRedraw = false;
+		this->enableTouchInput = true;
 		this->defaultWindowModeResolutionFactor = 0.8f;
 	}
 	

@@ -72,7 +72,8 @@ namespace april
 			float defaultWindowModeResolutionFactor;
 			/// @brief Special hack for Mac implementations.
 			bool mac_displayLinkIgnoreSystemRedraw; // TODOa - probably should be refactored or removed
-
+			/// @brief toggle to enable/disable touch input on platforms that support it, enabled by default
+			bool enableTouchInput;
 			/// @brief Basic constructor.
 			Options();
 			/// @brief Destructor.
