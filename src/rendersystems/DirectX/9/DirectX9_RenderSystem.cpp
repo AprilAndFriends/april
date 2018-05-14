@@ -841,7 +841,10 @@ namespace april
 
 	void DirectX9_RenderSystem::_deviceRepeatLastFrame()
 	{
-		this->_devicePresentFrame(true);
+		if (this->_intermediateRenderTexture != NULL)
+		{
+			this->_devicePresentFrame(true);
+		}
 	}
 
 	void DirectX9_RenderSystem::_deviceCopyRenderTargetData(Texture* source, Texture* destination)

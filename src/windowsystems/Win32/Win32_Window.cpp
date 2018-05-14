@@ -632,7 +632,10 @@ namespace april
 				ShowWindow(WIN32_WINDOW->hWnd, SW_SHOW);
 				UpdateWindow(WIN32_WINDOW->hWnd);
 				april::window->queueSizeChange(april::window->getWidth(), april::window->getHeight(), april::window->isFullscreen());
-				april::application->renderFrameSync(); // TODO - implement this properly once render-to-texture frame duplication is implemented
+				if (_sizeChanging) // this doesn't work right during fullscreen switching so it's only used when resizing the window
+				{
+					april::application->renderFrameSync();
+				}
 			}
 			_initialSize = false;
 			break;
