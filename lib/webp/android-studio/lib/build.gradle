@@ -7,7 +7,6 @@ android {
 	defaultConfig {
 		externalNativeBuild {
 			cmake {
-				arguments "-DANDROID_ARM_NEON=TRUE"
 			}
 		}
 	}

@@ -79,6 +79,8 @@ include_directories(AFTER "../../src")
 
 add_definitions(
 	-DWEBP_USE_THREAD
+	-mfloat-abi=softfp
+	-mfpu=neon
 )
 
 target_link_libraries(
