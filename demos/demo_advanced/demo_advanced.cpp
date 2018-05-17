@@ -170,7 +170,7 @@ class UpdateDelegate : public april::UpdateDelegate
 	{
 		// clear the screen and set orthographic projection
 		april::rendersys->clear();
-		april::rendersys->setOrthoProjection(drawRect + gvec2(0.0, -200.0f));
+		april::rendersys->setOrthoProjection(drawRect);
 		// reset the blend mode
 		april::rendersys->setBlendMode(april::BlendMode::BlendMode::Alpha);
 		// save the default matrices so they can be restored later
