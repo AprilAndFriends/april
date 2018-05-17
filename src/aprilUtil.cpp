@@ -57,6 +57,8 @@ namespace april
 		HL_ENUM_DEFINE(ColorMode, Multiply);
 		HL_ENUM_DEFINE(ColorMode, AlphaMap);
 		HL_ENUM_DEFINE(ColorMode, Lerp);
+		HL_ENUM_DEFINE(ColorMode, Desaturate);
+		HL_ENUM_DEFINE(ColorMode, Sepia);
 	));
 
 	void rgbToHsl(unsigned char r, unsigned char g, unsigned char b, float* h, float* s, float* l)

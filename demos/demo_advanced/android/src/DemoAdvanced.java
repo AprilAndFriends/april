@@ -1,10 +1,10 @@
-package com.april.demoSimple;
+package com.april.demoAdvanced;
 
-public class DemoSimple extends com.april.Activity
+public class DemoAdvanced extends com.april.Activity
 {
 	static
 	{
-		System.loadLibrary("demo_simple");
+		System.loadLibrary("demo_advanced");
 	}
 	
 	@Override

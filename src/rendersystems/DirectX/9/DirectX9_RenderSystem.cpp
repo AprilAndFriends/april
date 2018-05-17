@@ -626,6 +626,54 @@ namespace april
 				this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(systemColor.a, systemColor.r, systemColor.g, systemColor.b));
 			}
 		}
+		else if (colorMode == ColorMode::Desaturate)
+		{
+			static bool reported = false;
+			if (!reported)
+			{
+				hlog::errorf(logTag, "The color mode '%s' is not properly supported right now in rendersystem '%s'. A compatibility mode will be used. This error will be printed only once.", colorMode.getName().cStr(), this->getName().cStr());
+			}
+			reported = true;
+			if (useTexture)
+			{
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+			}
+			else
+			{
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG2);
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG2);
+			}
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
+			this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(systemColor.a, systemColor.r * 2 / 3, systemColor.g * 2 / 3, systemColor.b * 2 / 3));
+		}
+		else if (colorMode == ColorMode::Sepia)
+		{
+			static bool reported = false;
+			if (!reported)
+			{
+				hlog::errorf(logTag, "The color mode '%s' is not properly supported right now in rendersystem '%s'. A compatibility mode will be used. This error will be printed only once.", colorMode.getName().cStr(), this->getName().cStr());
+			}
+			reported = true;
+			if (useTexture)
+			{
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+			}
+			else
+			{
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG2);
+				this->d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG2);
+			}
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR);
+			this->d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TFACTOR);
+			this->d3dDevice->SetRenderState(D3DRS_TEXTUREFACTOR, D3DCOLOR_ARGB(systemColor.a, systemColor.r, systemColor.g * 7 / 10, systemColor.b / 10));
+		}
 		else
 		{
 			hlog::warn(logTag, "Trying to set unsupported color mode!");

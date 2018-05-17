@@ -15,6 +15,11 @@
 #define APRIL_OPENGLES_DEFAULT_SHADERS_H
 
 #define SHADER_AlphaHack_ALPHA_THRESHOLD "0.01" // combination of alpha using compressed RGB components can lead to very small, but non-zero alpha value
+#define MAKE_DESATURATE(color) "dot(" #color ".rgb, vec3(0.2125, 0.7154, 0.0721))"
+#define MAKE_SEPIA_R(color) #color ".r * 0.393 + " #color ".g * 0.769 + " #color ".b * 0.189"
+#define MAKE_SEPIA_G(color) #color ".r * 0.349 + " #color ".g * 0.686 + " #color ".b * 0.168"
+#define MAKE_SEPIA_B(color) #color ".r * 0.272 + " #color ".g * 0.534 + " #color ".b * 0.131"
+#define MAKE_SEPIA(color) "vec3(" MAKE_SEPIA_R(color) ", " MAKE_SEPIA_G(color) ", " MAKE_SEPIA_B(color) ")"
 
 // general header defines
 #define SHADER_Plain_Include "\
@@ -137,6 +142,21 @@
 		gl_FragColor = vec4(mix(vec3(1.0, 1.0, 1.0), systemColor.rgb, lerpAlpha), systemColor.a); \n\
 	} \n\
 "
+#define SHADER_PixelDesaturate SHADER_PIXEL_Plain_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp float value = " MAKE_DESATURATE(systemColor) "; \n\
+		gl_FragColor = vec4(value, value, value, systemColor.a); \n\
+	} \n\
+"
+#define SHADER_PixelSepia SHADER_PIXEL_Plain_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		gl_FragColor = vec4(" MAKE_SEPIA(systemColor) ", systemColor.a); \n\
+	} \n\
+"
 
 #define SHADER_PixelTexturedMultiply SHADER_PIXEL_Textured_Include "\
 	void main(void) \n\
@@ -156,6 +176,23 @@
 	{ \n\
 		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
 		gl_FragColor = vec4(mix(tex.rgb, systemColor.rgb, lerpAlpha), tex.a * systemColor.a); \n\
+	} \n\
+"
+#define SHADER_PixelTexturedDesaturate SHADER_PIXEL_Textured_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		highp float value = " MAKE_DESATURATE(tex) "; \n\
+		gl_FragColor = vec4(value, value, value, tex.a * systemColor.a); \n\
+	} \n\
+"
+#define SHADER_PixelTexturedSepia SHADER_PIXEL_Textured_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		gl_FragColor = vec4(" MAKE_SEPIA(tex) ", tex.a * systemColor.a); \n\
 	} \n\
 "
 
@@ -178,6 +215,20 @@
 		gl_FragColor = vec4(mix(vec3(1.0, 1.0, 1.0), colorFrag.rgb, lerpAlpha), colorFrag.a); \n\
 	} \n\
 "
+#define SHADER_PixelColoredDesaturate SHADER_PIXEL_Colored_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		gl_FragColor = colorFrag; \n\
+	} \n\
+"
+#define SHADER_PixelColoredSepia SHADER_PIXEL_Colored_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		gl_FragColor = colorFrag; \n\
+	} \n\
+"
 
 #define SHADER_PixelColoredTexturedMultiply SHADER_PIXEL_ColoredTextured_Include "\
 	void main(void) \n\
@@ -197,6 +248,23 @@
 	{ \n\
 		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
 		gl_FragColor = vec4(mix(tex.rgb, colorFrag.rgb, lerpAlpha), tex.a * colorFrag.a); \n\
+	} \n\
+"
+#define SHADER_PixelColoredTexturedDesaturate SHADER_PIXEL_ColoredTextured_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		highp float value = " MAKE_DESATURATE(tex) "; \n\
+		gl_FragColor = vec4(value, value, value, tex.a * colorFrag.a); \n\
+	} \n\
+"
+#define SHADER_PixelColoredTexturedSepia SHADER_PIXEL_ColoredTextured_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		gl_FragColor = vec4(" MAKE_SEPIA(tex) ", tex.a * colorFrag.a); \n\
 	} \n\
 "
 
@@ -224,6 +292,33 @@
 		gl_FragColor = newColor; \n\
 	} \n\
 "
+#define SHADER_PixelTexturedDesaturate_AlphaHack SHADER_PIXEL_Textured_AlphaHack_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		highp float value = " MAKE_DESATURATE(tex) "; \n\
+		highp vec4 newColor = vec4(value, value, value, texture2D(sampler2dAlpha, texFrag).r * systemColor.a); \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
+	} \n\
+"
+#define SHADER_PixelTexturedSepia_AlphaHack SHADER_PIXEL_Textured_AlphaHack_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		highp vec4 newColor = vec4(" MAKE_SEPIA(tex) ", texture2D(sampler2dAlpha, texFrag).r * systemColor.a); \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
+	} \n\
+"
 
 #define SHADER_PixelColoredTexturedMultiply_AlphaHack SHADER_PIXEL_ColoredTextured_AlphaHack_Include "\
 	void main(void) \n\
@@ -241,6 +336,33 @@
 	void main(void) \n\
 	{ \n\
 		highp vec4 newColor = vec4(mix(texture2D(sampler2d, texFrag).rgb, colorFrag.rgb, lerpAlpha), texture2D(sampler2dAlpha, texFrag).r * colorFrag.a); \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
+	} \n\
+"
+#define SHADER_PixelColoredTexturedDesaturate_AlphaHack SHADER_PIXEL_ColoredTextured_AlphaHack_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		highp float value = " MAKE_DESATURATE(tex) "; \n\
+		highp vec4 newColor = vec4(value, value, value, texture2D(sampler2dAlpha, texFrag).r * colorFrag.a); \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
+	} \n\
+"
+#define SHADER_PixelColoredTexturedSepia_AlphaHack SHADER_PIXEL_ColoredTextured_AlphaHack_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		highp vec4 newColor = vec4(" MAKE_SEPIA(tex) ", texture2D(sampler2dAlpha, texFrag).r * colorFrag.a); \n\
 		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
 		{ \n\
 			discard; \n\

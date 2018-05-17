@@ -170,7 +170,7 @@ class UpdateDelegate : public april::UpdateDelegate
 	{
 		// clear the screen and set orthographic projection
 		april::rendersys->clear();
-		april::rendersys->setOrthoProjection(drawRect);
+		april::rendersys->setOrthoProjection(drawRect + gvec2(0.0, -200.0f));
 		// reset the blend mode
 		april::rendersys->setBlendMode(april::BlendMode::BlendMode::Alpha);
 		// save the default matrices so they can be restored later
@@ -200,15 +200,13 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->setColorMode(april::ColorMode::Multiply, 1.0f);
 		// blending examples
 		april::rendersys->translate(gvec2(-50, 300));
-		for_iter (i, 0, 4)
+		for_iter (i, 0, april::BlendMode::getValues().size())
 		{
 			april::rendersys->setTexture(textures[1]);
 			april::rendersys->setBlendMode(april::BlendMode::Alpha);
-
 			april::rendersys->translate(gvec2(90, -32));
 			april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
 			april::rendersys->translate(gvec2(32, 32));
-
 			april::rendersys->setTexture(textures[2]);
 			april::rendersys->setBlendMode(april::BlendMode::fromInt(i));
 			april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
@@ -217,7 +215,7 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->setBlendMode(april::BlendMode::Alpha);
 		//color mode examples
 		april::rendersys->translate(gvec2(-50, 450));
-		for_iter (i, 0, 3)
+		for_iter (i, 0, april::ColorMode::getValues().size())
 		{
 			april::rendersys->setTexture(textures[1]);
 			april::rendersys->setColorMode(april::ColorMode::Multiply, 1.0f);
@@ -228,6 +226,7 @@ class UpdateDelegate : public april::UpdateDelegate
 			april::rendersys->setColorMode(april::ColorMode::fromInt(i), 0.5f);
 			april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
 		}
+		april::rendersys->setColorMode(april::ColorMode::Multiply, 1.0f);
 		april::rendersys->setModelviewMatrix(modelviewMatrix);
 		april::rendersys->setTexture(textures[3]);
 		april::rendersys->translate(gvec2(0, 0));

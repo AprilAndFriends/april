@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		package="com.april.demoSimple"
+		package="com.april.demoAdvanced"
 		android:versionCode="5000"
 		android:versionName="5.0.0">
 		
@@ -8,11 +8,11 @@
 	<uses-feature android:glEsVersion="0x00020000"/>
 	<uses-feature android:name="android.hardware.screen.landscape"/>
 	
-	<application android:label="Demo Simple"
+	<application android:label="Demo Advanced"
 			android:icon="@drawable/icon"
 			android:theme="@style/AprilSplashScreen">
-		<activity android:name=".DemoSimple"
-				android:label="Demo Simple"
+		<activity android:name=".DemoAdvanced"
+				android:label="Demo Advanced"
 				android:screenOrientation="sensorLandscape"
 				android:launchMode="singleTask">
 			<intent-filter>

@@ -96,6 +96,14 @@ namespace april
 		/// @brief Linear Interpolation.
 		/// @note Requires usage of additional lerp-factor when setting the ColorMode.
 		HL_ENUM_DECLARE(ColorMode, Lerp);
+		/// @var static const ColorMode ColorMode::Desaturate
+		/// @brief Desaturation filter.
+		/// @note Requires usage of additional lerp-factor when setting the ColorMode.
+		HL_ENUM_DECLARE(ColorMode, Desaturate);
+		/// @var static const ColorMode ColorMode::Sepia
+		/// @brief Sepia filter.
+		/// @note Requires usage of additional lerp-factor when setting the ColorMode.
+		HL_ENUM_DECLARE(ColorMode, Sepia);
 	));
 
 	/// @brief Represents a plain vertex.

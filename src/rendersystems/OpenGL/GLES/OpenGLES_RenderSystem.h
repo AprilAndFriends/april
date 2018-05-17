@@ -53,38 +53,62 @@ namespace april
 		OpenGLES_PixelShader* pixelShaderMultiply;
 		OpenGLES_PixelShader* pixelShaderAlphaMap;
 		OpenGLES_PixelShader* pixelShaderLerp;
+		OpenGLES_PixelShader* pixelShaderDesaturate;
+		OpenGLES_PixelShader* pixelShaderSepia;
 		OpenGLES_PixelShader* pixelShaderTexturedMultiply;
 		OpenGLES_PixelShader* pixelShaderTexturedAlphaMap;
 		OpenGLES_PixelShader* pixelShaderTexturedLerp;
+		OpenGLES_PixelShader* pixelShaderTexturedDesaturate;
+		OpenGLES_PixelShader* pixelShaderTexturedSepia;
 		OpenGLES_PixelShader* pixelShaderColoredMultiply;
 		OpenGLES_PixelShader* pixelShaderColoredAlphaMap;
 		OpenGLES_PixelShader* pixelShaderColoredLerp;
+		OpenGLES_PixelShader* pixelShaderColoredDesaturate;
+		OpenGLES_PixelShader* pixelShaderColoredSepia;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedMultiply;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedAlphaMap;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedLerp;
+		OpenGLES_PixelShader* pixelShaderColoredTexturedDesaturate;
+		OpenGLES_PixelShader* pixelShaderColoredTexturedSepia;
 #ifdef _ANDROID
 		OpenGLES_PixelShader* pixelShaderTexturedMultiply_AlphaHack;
 		OpenGLES_PixelShader* pixelShaderTexturedLerp_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderTexturedDesaturate_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderTexturedSepia_AlphaHack;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedMultiply_AlphaHack;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedLerp_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderColoredTexturedDesaturate_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderColoredTexturedSepia_AlphaHack;
 #endif
 		ShaderProgram* shaderMultiply;
 		ShaderProgram* shaderAlphaMap;
 		ShaderProgram* shaderLerp;
+		ShaderProgram* shaderDesaturate;
+		ShaderProgram* shaderSepia;
 		ShaderProgram* shaderTexturedMultiply;
 		ShaderProgram* shaderTexturedAlphaMap;
 		ShaderProgram* shaderTexturedLerp;
+		ShaderProgram* shaderTexturedDesaturate;
+		ShaderProgram* shaderTexturedSepia;
 		ShaderProgram* shaderColoredMultiply;
 		ShaderProgram* shaderColoredAlphaMap;
 		ShaderProgram* shaderColoredLerp;
+		ShaderProgram* shaderColoredDesaturate;
+		ShaderProgram* shaderColoredSepia;
 		ShaderProgram* shaderColoredTexturedMultiply;
 		ShaderProgram* shaderColoredTexturedAlphaMap;
 		ShaderProgram* shaderColoredTexturedLerp;
+		ShaderProgram* shaderColoredTexturedDesaturate;
+		ShaderProgram* shaderColoredTexturedSepia;
 #ifdef _ANDROID
 		ShaderProgram* shaderTexturedMultiply_AlphaHack;
 		ShaderProgram* shaderTexturedLerp_AlphaHack;
+		ShaderProgram* shaderTexturedDesaturate_AlphaHack;
+		ShaderProgram* shaderTexturedSepia_AlphaHack;
 		ShaderProgram* shaderColoredTexturedMultiply_AlphaHack;
 		ShaderProgram* shaderColoredTexturedLerp_AlphaHack;
+		ShaderProgram* shaderColoredTexturedDesaturate_AlphaHack;
+		ShaderProgram* shaderColoredTexturedSepia_AlphaHack;
 #endif
 #ifdef _ANDROID
 		bool etc1Supported;
