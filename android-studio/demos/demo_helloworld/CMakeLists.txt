@@ -22,13 +22,6 @@ add_subdirectory("../../../lib/jpeg/android-studio/lib" jpeg)
 add_subdirectory("../../../lib/png/android-studio/lib" png)
 add_subdirectory("../../lib" april)
 
-find_library(liblog log)
-find_library(libz z)
-find_library(libc c)
-find_library(libdl dl)
-find_library(libandroid android)
-find_library(libGLESv2 GLESv2)
-
 target_link_libraries(
 	demo_helloworld
 	april
