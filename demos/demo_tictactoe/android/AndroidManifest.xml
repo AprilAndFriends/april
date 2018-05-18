@@ -10,10 +10,11 @@
 	
 	<application android:label="Demo Tic Tac Toe"
 			android:icon="@drawable/icon"
-			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+			android:theme="@style/AprilSplashScreen">
 		<activity android:name=".DemoTicTacToe"
 				android:label="Demo Tic Tac Toe"
-				android:screenOrientation="sensorLandscape">
+				android:screenOrientation="sensorLandscape"
+				android:launchMode="singleTask">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>

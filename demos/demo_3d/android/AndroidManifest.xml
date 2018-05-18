@@ -10,7 +10,7 @@
 	
 	<application android:label="Demo 3D"
 			android:icon="@drawable/icon"
-			android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+			android:theme="@style/AprilSplashScreen">
 		<activity android:name=".Demo3d"
 				android:label="Demo 3D"
 				android:screenOrientation="sensorLandscape"
