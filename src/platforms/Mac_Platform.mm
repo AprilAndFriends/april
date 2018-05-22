@@ -133,8 +133,38 @@ namespace april
 
 	hstr _getUserDataPath_platform()
 	{
-		hlog::warn(logTag, "Cannot use getUserDataPath() on this platform.");
-		return ".";
+		hstr path;
+		NSSearchPathDirectory destDir = NSApplicationSupportDirectory;
+		NSAutoreleasePool *arp = [[NSAutoreleasePool alloc] init]; 
+		CFArrayRef destDirArr = (CFArrayRef)NSSearchPathForDirectoriesInDomains(destDir, NSUserDomainMask, YES);
+		CFStringRef destDirPath = (CFStringRef)CFArrayGetValueAtIndex(destDirArr, 0);
+		char* cpath_alloc = NULL;
+		int buffersize = CFStringGetMaximumSizeOfFileSystemRepresentation(destDirPath) + 1;
+		cpath_alloc = (char*)malloc(buffersize);
+		CFStringGetFileSystemRepresentation(destDirPath, cpath_alloc, buffersize);
+		path = cpath_alloc;
+		if (cpath_alloc != NULL)
+		{
+			free(cpath_alloc);
+		}
+		[arp release];
+		// sandboxed app should use bundle ID
+		NSDictionary* environ = [[NSProcessInfo processInfo] environment];
+		BOOL appInSandbox = ([environ objectForKey:@"APP_SANDBOX_CONTAINER_ID"] != nil);
+		hstr bundleID = [[[NSBundle mainBundle] bundleIdentifier] UTF8String];
+		if (appInSandbox)
+		{
+			path = path + "/" + bundleID + "/" + gameName;
+		}
+		else
+		{
+			path = path + "/" + gameName;
+		}
+		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+		const char* dir = [[[NSBundle mainBundle] resourcePath] UTF8String];
+		hdir::chdir(dir);
+		[pool release];	
+		return path;
 	}
 	
 	int64_t _getRamConsumption_platform()
