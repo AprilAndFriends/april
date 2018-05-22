@@ -156,11 +156,7 @@ namespace april
 		hstr bundleID = [[[NSBundle mainBundle] bundleIdentifier] UTF8String];
 		if (appInSandbox)
 		{
-			path = path + "/" + bundleID + "/" + gameName;
-		}
-		else
-		{
-			path = path + "/" + gameName;
+			path += "/" + bundleID;
 		}
 		hdir::chdir(cwd); // safe is safe
 		return path;
