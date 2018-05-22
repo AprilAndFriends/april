@@ -141,7 +141,7 @@ namespace april
 		CFArrayRef destDirArr = (CFArrayRef)NSSearchPathForDirectoriesInDomains(destDir, NSUserDomainMask, YES);
 		CFStringRef destDirPath = (CFStringRef)CFArrayGetValueAtIndex(destDirArr, 0);
 		char* cpath_alloc = NULL;
-		int buffersize = CFStringGetMaximumSizeOfFileSystemRepresentation(destDirPath) + 1;
+		int buffersize = (int)CFStringGetMaximumSizeOfFileSystemRepresentation(destDirPath) + 1;
 		cpath_alloc = (char*)malloc(buffersize);
 		CFStringGetFileSystemRepresentation(destDirPath, cpath_alloc, buffersize);
 		path = cpath_alloc;
@@ -154,6 +154,7 @@ namespace april
 		NSDictionary* environ = [[NSProcessInfo processInfo] environment];
 		BOOL appInSandbox = ([environ objectForKey:@"APP_SANDBOX_CONTAINER_ID"] != nil);
 		hstr bundleID = [[[NSBundle mainBundle] bundleIdentifier] UTF8String];
+		hstr gameName = "TEMP";
 		if (appInSandbox)
 		{
 			path += "/" + bundleID;
