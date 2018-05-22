@@ -112,6 +112,7 @@ namespace april
 
 	hstr _getUserDataPath_platform()
 	{
+		hstr cwd = hdir::cwd();
 		hstr path;
 		NSSearchPathDirectory destDir;
 		destDir = NSDocumentDirectory;
@@ -128,10 +129,7 @@ namespace april
 			free(cpath_alloc);
 		}
 		[arp release];
-		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-		const char* dir = [[[NSBundle mainBundle] resourcePath] UTF8String];
-		hdir::chdir(dir);
-		[pool release];	
+		hdir::chdir(cwd); // safe is safe
 		return path;
 	}
 	

@@ -134,6 +134,7 @@ namespace april
 
 	hstr _getUserDataPath_platform()
 	{
+		hstr cwd = hdir::cwd();
 		hstr path;
 		NSSearchPathDirectory destDir = NSApplicationSupportDirectory;
 		NSAutoreleasePool *arp = [[NSAutoreleasePool alloc] init]; 
@@ -161,10 +162,7 @@ namespace april
 		{
 			path = path + "/" + gameName;
 		}
-		NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-		const char* dir = [[[NSBundle mainBundle] resourcePath] UTF8String];
-		hdir::chdir(dir);
-		[pool release];	
+		hdir::chdir(cwd); // safe is safe
 		return path;
 	}
 	
