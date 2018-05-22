@@ -234,6 +234,14 @@ namespace april
 		}
 		Window::setParam(param, value);
 	}
+	
+	void iOS_Window::handleFocusChange(bool focused)
+	{
+		if (this->focused != focused) // this can happen on iOS
+		{
+			Window::handleFocusChange(focused);
+		}
+	}
 
 	float iOS_Window::_getTouchScale() const
 	{
