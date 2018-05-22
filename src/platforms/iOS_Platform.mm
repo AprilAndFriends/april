@@ -13,6 +13,7 @@
 #include <sys/sysctl.h>
 #import <UIKit/UIKit.h>
 #include <gtypes/Vector2.h>
+#include <hltypes/hdir.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #import <CoreGraphics/CoreGraphics.h>

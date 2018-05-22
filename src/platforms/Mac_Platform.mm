@@ -20,6 +20,7 @@
 #import <Foundation/NSString.h>
 
 #include <gtypes/Vector2.h>
+#include <hltypes/hdir.h>
 #include <hltypes/hlog.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
