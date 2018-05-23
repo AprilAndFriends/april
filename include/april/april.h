@@ -47,9 +47,6 @@ namespace april
 		/// @var static const RenderSystemType RenderSystemType::OpenGL1
 		/// @brief Use OpenGL 1 render system if available.
 		HL_ENUM_DECLARE(RenderSystemType, OpenGL1);
-		/// @var static const RenderSystemType RenderSystemType::OpenGLES1
-		/// @brief Use OpenGLES 1 render system if available.
-		HL_ENUM_DECLARE(RenderSystemType, OpenGLES1);
 		/// @var static const RenderSystemType RenderSystemType::OpenGLES2
 		/// @brief Use OpenGLES 2 render system if available.
 		HL_ENUM_DECLARE(RenderSystemType, OpenGLES2);

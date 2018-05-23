@@ -21,27 +21,18 @@
 	#include <TargetConditionals.h>
 #endif
 #ifdef _IOS
-	#ifdef _OPENGLES1
-		#include <OpenGLES/ES1/gl.h>
-		#include <OpenGLES/ES1/glext.h>
-	#elif defined(_OPENGLES2)
+	#ifdef _OPENGLES2
 		#include <OpenGLES/ES2/gl.h>
 		#include <OpenGLES/ES2/glext.h>
 	#endif
 #elif defined(_ANDROID)
-	#ifdef _OPENGLES1
-		#include <GLES/gl.h>
-		#define GL_GLEXT_PROTOTYPES
-		#include <GLES/glext.h>
-	#elif defined(_OPENGLES2)
+	#ifdef _OPENGLES2
 		#include <GLES2/gl2.h>
 		#define GL_GLEXT_PROTOTYPES
 		#include <GLES2/gl2ext.h>
 	#endif
 #else
-	#ifdef _OPENGLES1
-		#include <GLES/gl.h>
-	#elif defined(_OPENGLES2)
+	#ifdef _OPENGLES2
 		#include <GLES2/gl2.h>
 	#else
 		#include <stdlib.h>

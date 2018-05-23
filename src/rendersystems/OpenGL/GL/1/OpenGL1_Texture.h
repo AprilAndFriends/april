@@ -14,19 +14,22 @@
 #ifndef APRIL_OPENGL1_TEXTURE_H
 #define APRIL_OPENGL1_TEXTURE_H
 
-#include "OpenGLC_Texture.h"
+#include "OpenGL_Texture.h"
 
 namespace april
 {
-	class OpenGL1_Texture : public OpenGLC_Texture
+	class OpenGL1_RenderSystem;
+
+	class OpenGL1_Texture : public OpenGL_Texture
 	{
 	public:
+		friend class OpenGL1_RenderSystem;
+
 		OpenGL1_Texture(bool fromResource);
 		~OpenGL1_Texture();
 
 	};
 
 }
-
 #endif
 #endif

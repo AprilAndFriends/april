@@ -87,13 +87,7 @@ namespace april
 				this->destroy();
 				return false;
 			}
-			if (renderSystemName == april::RenderSystemType::OpenGLES1.getName())
-			{
-				this->pi32ConfigAttribs[4] = EGL_RENDERABLE_TYPE;
-				this->pi32ConfigAttribs[5] = EGL_OPENGL_ES_BIT;
-				this->pi32ConfigAttribs[6] = EGL_NONE;
-			}
-			else if (renderSystemName == april::RenderSystemType::OpenGLES2.getName())
+			if (renderSystemName == april::RenderSystemType::OpenGLES2.getName())
 			{
 				this->pi32ConfigAttribs[4] = EGL_RENDERABLE_TYPE;
 				this->pi32ConfigAttribs[5] = EGL_OPENGL_ES2_BIT;

@@ -22,13 +22,9 @@
 
 namespace april
 {
-	class OpenGLES1_Texture;
-
 	class OpenGLES2_RenderSystem : public OpenGLES_RenderSystem
 	{
 	public:
-		friend class OpenGLES1_Texture;
-
 		OpenGLES2_RenderSystem();
 		~OpenGLES2_RenderSystem();
 

@@ -37,9 +37,6 @@
 #ifdef _OPENGL1
 #include "OpenGL1_RenderSystem.h"
 #endif
-#ifdef _OPENGLES1
-#include "OpenGLES1_RenderSystem.h"
-#endif
 #ifdef _OPENGLES2
 #include "OpenGLES2_RenderSystem.h"
 #endif
@@ -78,8 +75,6 @@
 		#define RS_INTERNAL_DEFAULT RenderSystemType::DirectX12
 	#elif defined(_OPENGL1)
 		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGL1
-	#elif defined(_OPENGLES1)
-		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES1
 	#elif defined(_OPENGLES2)
 		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES2
 	#endif
@@ -94,8 +89,6 @@
 	#ifdef _IOS
 		#ifdef _OPENGLES2
 			#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES2
-		#elif defined(_OPENGLES1)
-			#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES1
 		#endif
 		#define WS_INTERNAL_DEFAULT WindowType::iOS
 	#else
@@ -110,9 +103,7 @@
 	#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGL1
 	#define WS_INTERNAL_DEFAULT WindowType::SDL
 #elif defined(_ANDROID)
-	#ifdef _OPENGLES1
-		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES1
-	#elif defined(_OPENGLES2)
+	#ifdef _OPENGLES2
 		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES2
 	#endif
 	#ifdef _ANDROIDJNI_WINDOW
@@ -194,7 +185,6 @@ namespace april
 		HL_ENUM_DEFINE(RenderSystemType, DirectX11);
 		HL_ENUM_DEFINE(RenderSystemType, DirectX12);
 		HL_ENUM_DEFINE(RenderSystemType, OpenGL1);
-		HL_ENUM_DEFINE(RenderSystemType, OpenGLES1);
 		HL_ENUM_DEFINE(RenderSystemType, OpenGLES2);
 	));
 
@@ -279,12 +269,6 @@ namespace april
 		if (april::rendersys == NULL && renderSystem == RenderSystemType::OpenGL1)
 		{
 			april::rendersys = new OpenGL1_RenderSystem();
-		}
-#endif
-#ifdef _OPENGLES1
-		if (april::rendersys == NULL && renderSystem == RenderSystemType::OpenGLES1)
-		{
-			april::rendersys = new OpenGLES1_RenderSystem();
 		}
 #endif
 #ifdef _OPENGLES2

@@ -312,7 +312,6 @@ namespace april
 #ifdef _OPENGL
 		harray<hstr> renderSystems;
 		renderSystems += april::RenderSystemType::OpenGL1.getName();
-		renderSystems += april::RenderSystemType::OpenGLES1.getName();
 		renderSystems += april::RenderSystemType::OpenGLES2.getName();
 		if (renderSystems.has(april::rendersys->getName()))
 		{

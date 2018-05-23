@@ -90,9 +90,6 @@
     <Filter Include="Header Files\rendersystems\OpenGL\GLES\2">
       <UniqueIdentifier>{f6e5fbbc-2ee1-4d75-bee2-ee0be9b1e3d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\rendersystems\OpenGL\GL\ES1">
-      <UniqueIdentifier>{edd447d4-a504-4c48-b697-0c95a178fb75}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\rendersystems\OpenGL\GL">
       <UniqueIdentifier>{01a4b864-24fd-4f83-b65c-e637cc980177}</UniqueIdentifier>
     </Filter>
@@ -101,9 +98,6 @@
     </Filter>
     <Filter Include="Source Files\rendersystems\OpenGL\GLES\2">
       <UniqueIdentifier>{34ab2985-e17c-4c50-ad9d-0761eccf6fa5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\rendersystems\OpenGL\GL\ES1">
-      <UniqueIdentifier>{8646ebab-15a0-4b45-8f1c-7f0f44be853b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\rendersystems\OpenGL\GL\1">
       <UniqueIdentifier>{9928026c-27fb-4619-aa07-f9c4c33d2e8b}</UniqueIdentifier>
@@ -272,23 +266,11 @@
     <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_Texture.cpp">
       <Filter>Source Files\rendersystems\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\rendersystems\OpenGL\GL\OpenGLC_RenderSystem.cpp">
-      <Filter>Source Files\rendersystems\OpenGL\GL</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\rendersystems\OpenGL\GL\OpenGLC_Texture.cpp">
-      <Filter>Source Files\rendersystems\OpenGL\GL</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GL\1\OpenGL1_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\OpenGL\GL\1</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GL\1\OpenGL1_Texture.cpp">
       <Filter>Source Files\rendersystems\OpenGL\GL\1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\rendersystems\OpenGL\GL\ES1\OpenGLES1_RenderSystem.cpp">
-      <Filter>Source Files\rendersystems\OpenGL\GL\ES1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\rendersystems\OpenGL\GL\ES1\OpenGLES1_Texture.cpp">
-      <Filter>Source Files\rendersystems\OpenGL\GL\ES1</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_RenderSystem.cpp">
       <Filter>Source Files\rendersystems\OpenGL\GLES</Filter>
@@ -553,12 +535,6 @@
     <ClInclude Include="..\..\src\TextureAsync.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\rendersystems\OpenGL\GL\OpenGLC_RenderSystem.h">
-      <Filter>Header Files\rendersystems\OpenGL\GL</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\rendersystems\OpenGL\GL\OpenGLC_Texture.h">
-      <Filter>Header Files\rendersystems\OpenGL\GL</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GL\1\OpenGL1_RenderSystem.h">
       <Filter>Header Files\rendersystems\OpenGL\GL\1</Filter>
     </ClInclude>
@@ -570,12 +546,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_Texture.h">
       <Filter>Header Files\rendersystems\OpenGL\GLES</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\rendersystems\OpenGL\GL\ES1\OpenGLES1_RenderSystem.h">
-      <Filter>Header Files\rendersystems\OpenGL\GL\ES1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\rendersystems\OpenGL\GL\ES1\OpenGLES1_Texture.h">
-      <Filter>Header Files\rendersystems\OpenGL\GL\ES1</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\2\OpenGLES2_PixelShader.h">
       <Filter>Header Files\rendersystems\OpenGL\GLES\2</Filter>

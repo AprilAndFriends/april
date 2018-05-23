@@ -14,14 +14,14 @@
 #ifndef APRIL_OPENGL1_RENDER_SYSTEM_H
 #define APRIL_OPENGL1_RENDER_SYSTEM_H
 
-#include "OpenGLC_RenderSystem.h"
+#include "OpenGL_RenderSystem.h"
 
 namespace april
 {
 	class OpenGL1_Texture;
 	class Window;
 
-	class OpenGL1_RenderSystem : public OpenGLC_RenderSystem
+	class OpenGL1_RenderSystem : public OpenGL_RenderSystem
 	{
 	public:
 		friend class OpenGL1_Texture;
@@ -30,13 +30,30 @@ namespace april
 		~OpenGL1_RenderSystem();
 
 	protected:
+		Color deviceState_color;
+		unsigned int deviceState_matrixMode;
+
 		void _deviceInit();
 		void _deviceSetupCaps();
 		void _deviceSetup();
 
 		Texture* _deviceCreateTexture(bool fromResource);
 
+		void _setDeviceModelviewMatrix(const gmat4& matrix);
+		void _setDeviceProjectionMatrix(const gmat4& matrix);
+		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
 		void _setDeviceBlendMode(const BlendMode& blendMode);
+		void _setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
+		void _setDeviceTexture(Texture* texture);
+
+		void _setDeviceColor(const Color& color, bool forceUpdate = false);
+		void _setDeviceMatrixMode(unsigned int mode, bool forceUpdate = false);
+		void _setGlTextureEnabled(bool enabled);
+		void _setGlColorEnabled(bool enabled);
+		void _setGlVertexPointer(int stride, const void* pointer);
+		void _setGlTexturePointer(int stride, const void* pointer);
+		void _setGlColorPointer(int stride, const void* pointer);
+
 
 #if defined(_WIN32) && !defined(_WINRT)
 		HGLRC hRC;
