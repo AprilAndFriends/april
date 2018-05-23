@@ -43,7 +43,7 @@ namespace april
 		}
 #endif
 		hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
-		hlog::write(logTag, "Extensions supported: " + extensions);
+		hlog::write(logTag, "Extensions supported:\n- " + extensions.trimmedRight().replaced(" ", "\n- "));
 #ifndef _WINRT
 		this->caps.npotTexturesLimited = (extensions.contains("IMG_texture_npot") || extensions.contains("APPLE_texture_2D_limited_npot"));
 #else
