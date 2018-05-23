@@ -1503,9 +1503,9 @@ namespace april
 						if (this->_tryCreateIntermediateRenderTexture(width, height))
 						{
 							this->_deviceCopyRenderTargetData(oldTexture, this->_intermediateRenderTexture);
-							if (this->state->texture == oldTexture)
+							if (this->deviceState->texture == oldTexture)
 							{
-								this->state->texture = NULL;
+								this->deviceState->texture = NULL;
 							}
 							oldTexture->_deviceUnloadTexture();
 							delete oldTexture;
@@ -1551,10 +1551,7 @@ namespace april
 			this->_intermediateState->texture = this->_intermediateRenderTexture;
 			this->_updateDeviceState(this->_intermediateState, true);
 			this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
-			this->state->viewportChanged = true;
-			this->state->modelviewMatrixChanged = true;
-			this->state->projectionMatrixChanged = true;
-			this->_updateDeviceState(this->state);
+			// no need to restore state with _updateDeviceState() here, present frame command does it on its own?
 		}
 	}
 
