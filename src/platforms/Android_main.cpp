@@ -215,20 +215,26 @@ namespace april
 
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)
 	{
-#ifdef _ANDROIDJNI_WINDOW
-		bool focused = (jFocused != JNI_FALSE);
-		hlog::write(logTag, "onWindowFocusChanged(" + hstr(focused) + ")");
-		PROTECTED_WINDOW_CALL(queueFocusChange(focused));
+#if defined(_ANDROID) && defined(_ANDROIDJNI_WINDOW)
+		if (april::window != NULL && april::window->getName() == WindowType::AndroidJNI.getName())
+		{
+			bool focused = (jFocused != JNI_FALSE);
+			hlog::write(logTag, "onWindowFocusChanged(" + hstr(focused) + ")");
+			april::window->queueFocusChange(focused);
+		}
 #endif
 	}
 
 	void JNICALL _JNI_onVirtualKeyboardChanged(JNIEnv* env, jclass classe, jboolean jVisible, jfloat jHeightRatio)
 	{
-#ifdef _ANDROIDJNI_WINDOW
-		bool visible = (jVisible != JNI_FALSE);
-		float heightRatio = (float)jHeightRatio;
-		hlog::write(logTag, "onVirtualKeyboardChanged(" + hstr(visible) + ", " + hstr(heightRatio) + ")");
-		PROTECTED_WINDOW_CALL(queueVirtualKeyboardChange(visible, heightRatio));
+#ifdef _ANDROID
+		if (april::window != NULL)
+		{
+			bool visible = (jVisible != JNI_FALSE);
+			float heightRatio = (float)jHeightRatio;
+			hlog::write(logTag, "onVirtualKeyboardChanged(" + hstr(visible) + ", " + hstr(heightRatio) + ")");
+			april::window->queueVirtualKeyboardChange(visible, heightRatio);
+		}
 #endif
 	}
 
