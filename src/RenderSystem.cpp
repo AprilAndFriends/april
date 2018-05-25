@@ -197,7 +197,7 @@ namespace april
 		this->options = options;
 		this->state->reset();
 		this->deviceState->reset();
-		// currently distable due to a glitch
+		// currently disabled due to a glitch
 #if !defined(_IOS) && !defined(_ANDROID) && !defined(_WINRT)
 		if (!this->caps.renderTarget)
 #endif
@@ -497,7 +497,7 @@ namespace april
 		{
 			previousRepeatCount = this->lastAsyncCommandQueue->getRepeatCount();
 		}
-		// currently distable due to a glitch
+		// currently disabled due to a glitch
 #if !defined(_IOS) && !defined(_ANDROID) && !defined(_WINRT)
 		if (this->frameDuplicates > 0 && this->caps.renderTarget && this->_renderTargetDuplicatesCount > 0)
 		{
