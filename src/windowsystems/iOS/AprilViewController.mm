@@ -17,13 +17,8 @@
 #include "april.h"
 #include "iOS_Window.h"
 
-extern EAGLView *glview;
-static UIImageView *mImageView;
-
-unsigned int _getIosGlFramebufferId()
-{
-	return (glview != nil ? (unsigned int)glview->viewFramebuffer : 0);
-}
+extern EAGLView* glview;
+static UIImageView* mImageView = NULL;
 
 @implementation AprilViewController
 bool g_wnd_rotating = 0;

@@ -66,10 +66,6 @@
 #define _SELECT_SHADER(useTexture, useColor, type) \
 	(useTexture ? (useColor ? this->shaderColoredTextured ## type : this->shaderTextured ## type) : (useColor ? this->shaderColored ## type : this->shader ## type));
 
-#ifdef _IOS
-unsigned int _getIosGlFramebufferId();
-#endif
-
 namespace april
 {
 	OpenGLES_RenderSystem::ShaderProgram::ShaderProgram() : glShaderProgram(0)
@@ -122,12 +118,13 @@ namespace april
 	}
 
 	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(), deviceState_matrixChanged(true), deviceState_systemColorChanged(true),
-		deviceState_colorModeFactorChanged(true), framebufferId(0), renderTarget(NULL), deviceState_shader(NULL)
+		deviceState_colorModeFactorChanged(true), framebufferId(0), renderbufferId(0), renderTarget(NULL), deviceState_shader(NULL)
 	{
 #ifdef _ANDROID
 		this->etc1Supported = false;
 #endif
-		this->caps.renderTarget = true;
+		// TODO - remove this once render target has been confirmed to work properly in all cases
+		//this->caps.renderTarget = true;
 	}
 
 	OpenGLES_RenderSystem::~OpenGLES_RenderSystem()
@@ -214,9 +211,8 @@ namespace april
 		{
 			return false;
 		}
-#ifdef _IOS
-		this->framebufferId = _getIosGlFramebufferId();
-#endif
+		glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&this->framebufferId);
+		glGetIntegerv(GL_RENDERBUFFER_BINDING, (GLint*)&this->renderbufferId);
 		return true;
 	}
 
@@ -227,6 +223,7 @@ namespace april
 			return false;
 		}
 		this->framebufferId = 0;
+		this->renderbufferId = 0;
 		this->_destroyShaders();
 		return true;
 	}
@@ -236,7 +233,11 @@ namespace april
 		OpenGL_RenderSystem::_deviceAssignWindow(window);
 		this->renderTarget = NULL;
 		this->_updateIntermediateRenderTexture();
-		glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_intermediateRenderTexture)->framebufferId);
+		if (this->_intermediateRenderTexture != NULL)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_intermediateRenderTexture)->framebufferId);
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		}
 	}
 
 	void OpenGLES_RenderSystem::_deviceSuspend()
@@ -663,11 +664,19 @@ namespace april
 
 	void OpenGLES_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, this->framebufferId);
-		this->_presentIntermediateRenderTexture();
+		if (this->_intermediateRenderTexture != NULL)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, this->framebufferId);
+			glBindRenderbuffer(GL_RENDERBUFFER, this->renderbufferId);
+			this->_presentIntermediateRenderTexture();
+		}
 		OpenGL_RenderSystem::_devicePresentFrame(systemEnabled);
 		this->_updateIntermediateRenderTexture();
-		glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_intermediateRenderTexture)->framebufferId);
+		if (this->_intermediateRenderTexture != NULL)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_intermediateRenderTexture)->framebufferId);
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		}
 	}
 
 	void OpenGLES_RenderSystem::_deviceCopyRenderTargetData(Texture* source, Texture* destination)

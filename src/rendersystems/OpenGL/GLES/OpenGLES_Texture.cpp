@@ -48,7 +48,6 @@ namespace april
 			this->_uploadPotSafeClearData();
 			glBindFramebuffer(GL_FRAMEBUFFER, this->framebufferId);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->textureId, 0);
-			//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 		// data has to be uploaded right away if compressed texture
 #ifdef _IOS

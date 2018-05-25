@@ -197,10 +197,7 @@ namespace april
 		this->options = options;
 		this->state->reset();
 		this->deviceState->reset();
-		// currently disabled due to a glitch
-#if !defined(_IOS) && !defined(_ANDROID) && !defined(_WINRT)
 		if (!this->caps.renderTarget)
-#endif
 		{
 			this->lastAsyncCommandQueue = new AsyncCommandQueue();
 		}
@@ -497,18 +494,14 @@ namespace april
 		{
 			previousRepeatCount = this->lastAsyncCommandQueue->getRepeatCount();
 		}
-		// currently disabled due to a glitch
-#if !defined(_IOS) && !defined(_ANDROID) && !defined(_WINRT)
-		if (this->frameDuplicates > 0 && this->caps.renderTarget && this->_renderTargetDuplicatesCount > 0)
+		if (this->frameDuplicates > 0 && this->caps.renderTarget && this->_intermediateRenderTexture != NULL && this->_renderTargetDuplicatesCount > 0)
 		{
 			lock.release();
 			this->_devicePresentFrame(false);
 			--this->_renderTargetDuplicatesCount;
 			result = true;
 		}
-		else
-#endif
-		if (this->frameDuplicates > 0 && this->lastAsyncCommandQueue != NULL && previousRepeatCount > 0)
+		else if (this->frameDuplicates > 0 && this->lastAsyncCommandQueue != NULL && previousRepeatCount > 0)
 		{
 			this->processingAsync = true;
 			lock.release();

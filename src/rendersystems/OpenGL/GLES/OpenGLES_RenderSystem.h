@@ -118,6 +118,7 @@ namespace april
 		bool deviceState_systemColorChanged;
 		bool deviceState_colorModeFactorChanged;
 		unsigned int framebufferId;
+		unsigned int renderbufferId;
 		// TODOa - these need to be refactored
 		OpenGLES_Texture* renderTarget;
 		ShaderProgram* deviceState_shader;
