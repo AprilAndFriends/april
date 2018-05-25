@@ -19,6 +19,12 @@
 
 extern EAGLView *glview;
 static UIImageView *mImageView;
+
+unsigned int _getIosGlFramebufferId()
+{
+	return (unsigned int)glview->viewFramebuffer;
+}
+
 @implementation AprilViewController
 bool g_wnd_rotating = 0;
 

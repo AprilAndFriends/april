@@ -13,8 +13,8 @@
 #import <CoreMotion/CMMotionManager.h>
 #import <UIKit/UIKit.h>
 #import <OpenGLES/EAGL.h>
-#import <OpenGLES/ES1/gl.h>
-#import <OpenGLES/ES1/glext.h>
+#import <OpenGLES/ES2/gl.h>
+#import <OpenGLES/ES2/glext.h>
 
 /*
 This class wraps the CAEAGLLayer from CoreAnimation into a convenient UIView subclass.
@@ -32,9 +32,6 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
     CADisplayLink *displayLink;
 	EAGLContext *context;
 	
-	/* OpenGL names for the renderbuffer and framebuffers used to render to this view */
-	GLuint viewRenderbuffer, viewFramebuffer;
-	
 	/* OpenGL name for the depth buffer that is attached to viewFramebuffer, if it exists (0 if it does not exist) */
 	GLuint depthRenderbuffer;
 	
@@ -47,6 +44,10 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 	bool app_started;
 	bool displayLinkAttached;
 	int frameInterval;
+	/* OpenGL names for the renderbuffer and framebuffers used to render to this view */
+	GLuint viewRenderbuffer;
+	GLuint viewFramebuffer;
+	
 }
 
 - (void)startAnimation;

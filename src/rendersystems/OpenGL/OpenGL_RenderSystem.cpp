@@ -41,6 +41,10 @@
 #define _SEGMENTED_RENDERING
 #endif
 
+#ifdef _IOS
+unsigned int _getIosGlFramebufferId();
+#endif
+
 namespace april
 {
 	// translation from abstract render ops to gl's render ops
@@ -56,9 +60,8 @@ namespace april
 
 	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), blendSeparationSupported(false), deviceState_vertexStride(0),
 		deviceState_vertexPointer(NULL), deviceState_textureStride(0), deviceState_texturePointer(NULL), deviceState_colorStride(0),
-		deviceState_colorPointer(NULL), renderTarget(NULL)
+		deviceState_colorPointer(NULL), framebufferId(0), renderTarget(NULL)
 	{
-		april::TexturedVertex* v = this->_intermediateRenderVertices;
 		// because GL has to defy screen logic and has (0,0) in the bottom left corner
 		for_iter (i, 0, 6)
 		{
@@ -91,11 +94,15 @@ namespace april
 
 	bool OpenGL_RenderSystem::_deviceCreate(RenderSystem::Options options)
 	{
+#ifdef _IOS
+		this->framebufferId = _getIosGlFramebufferId();
+#endif
 		return true;
 	}
 
 	bool OpenGL_RenderSystem::_deviceDestroy()
 	{
+		this->framebufferId = 0;
 #if defined(_WIN32) && !defined(_WINRT)
 		this->_releaseWindow();
 #endif
@@ -390,7 +397,7 @@ namespace april
 
 	void OpenGL_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, this->framebufferId);
 		this->_presentIntermediateRenderTexture();
 		RenderSystem::_devicePresentFrame(systemEnabled);
 		this->_updateIntermediateRenderTexture();

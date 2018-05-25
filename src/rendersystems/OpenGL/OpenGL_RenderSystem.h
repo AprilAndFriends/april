@@ -21,6 +21,7 @@
 	#include <TargetConditionals.h>
 #endif
 #ifdef _IOS
+	#define GL_OES_framebuffer_object
 	#ifdef _OPENGLES2
 		#include <OpenGLES/ES2/gl.h>
 		#include <OpenGLES/ES2/glext.h>
@@ -73,6 +74,7 @@ namespace april
 		~OpenGL_RenderSystem();
 
 		int getVRam() const;
+		HL_DEFINE_SET(unsigned int, framebufferId, FramebufferId);
 
 		Image::Format getNativeTextureFormat(Image::Format format) const;
 		unsigned int getNativeColorUInt(const april::Color& color) const;
@@ -91,6 +93,7 @@ namespace april
 		const void* deviceState_texturePointer;
 		int deviceState_colorStride;
 		const void* deviceState_colorPointer;
+		unsigned int framebufferId;
 		// TODOa - these need to be refactored
 		OpenGL_Texture* renderTarget;
 

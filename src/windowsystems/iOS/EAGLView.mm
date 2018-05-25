@@ -93,7 +93,7 @@
     self.displayLink = nil;
 	if ((self = [super initWithFrame:frame]))
 	{
-		app_started = 0;
+		app_started = false;
 		frameInterval = 1;
 		displayLinkAttached = false;
 		// Get the layer
@@ -311,8 +311,8 @@
 #endif
 		return;
 	}
-//	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer); // commented this out on June 8th 2012, it's probably reduntant, but I'll keep it here for a while just in case. -- kspes
-	[context presentRenderbuffer:GL_RENDERBUFFER_OES];
+	//glBindRenderbuffer(GL_RENDERBUFFER, viewRenderbuffer); // commented out on May 25th 2018, because currently alternate renderbuffers aren't used
+	[context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
 - (void)layoutSubviews
@@ -327,25 +327,25 @@
 
 - (BOOL)createFramebuffer
 {
-	glGenFramebuffersOES(1, &viewFramebuffer);
-	glGenRenderbuffersOES(1, &viewRenderbuffer);
-	glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
-	glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
-	[context renderbufferStorage:GL_RENDERBUFFER_OES fromDrawable:(CAEAGLLayer*)self.layer];
-	glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_RENDERBUFFER_OES, viewRenderbuffer);
-	glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
-	glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
+	glGenFramebuffers(1, &viewFramebuffer);
+	glGenRenderbuffers(1, &viewRenderbuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, viewFramebuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, viewRenderbuffer);
+	[context renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)self.layer];
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, viewRenderbuffer);
+	glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &backingWidth);
+	glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &backingHeight);
 	NSString* depth = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"april_depth_buffer"];
 	if (depth != nil)
 	{
-		glGenRenderbuffersOES(1, &depthRenderbuffer);
-		glBindRenderbufferOES(GL_RENDERBUFFER_OES, depthRenderbuffer);
-		glRenderbufferStorageOES(GL_RENDERBUFFER_OES, GL_DEPTH_COMPONENT16_OES, backingWidth, backingHeight);
-		glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, depthRenderbuffer);
+		glGenRenderbuffers(1, &depthRenderbuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, depthRenderbuffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, backingWidth, backingHeight);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthRenderbuffer);
 	}
-	if (glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES) != GL_FRAMEBUFFER_COMPLETE_OES)
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
-		hlog::writef(april::logTag, "failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
+		hlog::writef(april::logTag, "failed to make complete framebuffer object %x", glCheckFramebufferStatus(GL_FRAMEBUFFER));
 		return NO;
 	}
 	// clear crap from previous renders. I often got a magenta colored initial screen without this
@@ -358,13 +358,13 @@
 
 - (void)destroyFramebuffer
 {
-	glDeleteFramebuffersOES(1, &viewFramebuffer);
+	glDeleteFramebuffers(1, &viewFramebuffer);
 	viewFramebuffer = 0;
-	glDeleteRenderbuffersOES(1, &viewRenderbuffer);
+	glDeleteRenderbuffers(1, &viewRenderbuffer);
 	viewRenderbuffer = 0;
-	if (depthRenderbuffer)
+	if (depthRenderbuffer != 0)
 	{
-		glDeleteRenderbuffersOES(1, &depthRenderbuffer);
+		glDeleteRenderbuffers(1, &depthRenderbuffer);
 		depthRenderbuffer = 0;
 	}
 }
