@@ -74,15 +74,10 @@ namespace april
 		~OpenGL_RenderSystem();
 
 		int getVRam() const;
-		HL_DEFINE_SET(unsigned int, framebufferId, FramebufferId);
 
 		Image::Format getNativeTextureFormat(Image::Format format) const;
 		unsigned int getNativeColorUInt(const april::Color& color) const;
 		Image* takeScreenshot(Image::Format format);
-
-		// TODOa - these need to be refactored
-		Texture* getRenderTarget();
-		void setRenderTarget(Texture* source);
 
 	protected:
 		bool blendSeparationSupported;
@@ -93,15 +88,11 @@ namespace april
 		const void* deviceState_texturePointer;
 		int deviceState_colorStride;
 		const void* deviceState_colorPointer;
-		unsigned int framebufferId;
-		// TODOa - these need to be refactored
-		OpenGL_Texture* renderTarget;
 
 		void _deviceInit();
 		bool _deviceCreate(Options options);
 		bool _deviceDestroy();
 		void _deviceAssignWindow(Window* window);
-		void _deviceReset();
 		void _deviceSetupCaps();
 		void _deviceSetup();
 
@@ -122,9 +113,6 @@ namespace april
 		void _deviceRender(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count);
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
-		void _devicePresentFrame(bool systemEnabled);
-		void _deviceRepeatLastFrame();
-		void _deviceCopyRenderTargetData(Texture* source, Texture* destination);
 
 		void _setDeviceVertexPointer(int stride, const void* pointer, bool forceUpdate = false);
 		void _setDeviceTexturePointer(int stride, const void* pointer, bool forceUpdate = false);

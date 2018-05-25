@@ -66,11 +66,14 @@
 #define _SELECT_SHADER(useTexture, useColor, type) \
 	(useTexture ? (useColor ? this->shaderColoredTextured ## type : this->shaderTextured ## type) : (useColor ? this->shaderColored ## type : this->shader ## type));
 
+#ifdef _IOS
+unsigned int _getIosGlFramebufferId();
+#endif
+
 namespace april
 {
 	OpenGLES_RenderSystem::ShaderProgram::ShaderProgram() : glShaderProgram(0)
 	{
-		
 	}
 
 	OpenGLES_RenderSystem::ShaderProgram::~ShaderProgram()
@@ -118,12 +121,13 @@ namespace april
 		return true;
 	}
 
-	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(), deviceState_matrixChanged(true),
-		deviceState_systemColorChanged(true), deviceState_colorModeFactorChanged(true)
+	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(), deviceState_matrixChanged(true), deviceState_systemColorChanged(true),
+		deviceState_colorModeFactorChanged(true), framebufferId(0), renderTarget(NULL), deviceState_shader(NULL)
 	{
 #ifdef _ANDROID
 		this->etc1Supported = false;
 #endif
+		this->caps.renderTarget = true;
 	}
 
 	OpenGLES_RenderSystem::~OpenGLES_RenderSystem()
@@ -201,6 +205,7 @@ namespace april
 		this->deviceState_systemColorChanged = true;
 		this->deviceState_colorModeFactorChanged = true;
 		this->deviceState_shader = NULL;
+		this->renderTarget = NULL;
 	}
 
 	bool OpenGLES_RenderSystem::_deviceCreate(RenderSystem::Options options)
@@ -209,6 +214,9 @@ namespace april
 		{
 			return false;
 		}
+#ifdef _IOS
+		this->framebufferId = _getIosGlFramebufferId();
+#endif
 		return true;
 	}
 
@@ -218,15 +226,35 @@ namespace april
 		{
 			return false;
 		}
+		this->framebufferId = 0;
 		this->_destroyShaders();
 		return true;
+	}
+
+	void OpenGLES_RenderSystem::_deviceAssignWindow(Window* window)
+	{
+		OpenGL_RenderSystem::_deviceAssignWindow(window);
+		this->renderTarget = NULL;
+		this->_updateIntermediateRenderTexture();
+		glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_intermediateRenderTexture)->framebufferId);
 	}
 
 	void OpenGLES_RenderSystem::_deviceSuspend()
 	{
 		OpenGL_RenderSystem::_deviceSuspend();
 		this->_deviceUnloadTextures();
+		if (this->_intermediateRenderTexture != NULL)
+		{
+			((OpenGLES_Texture*)this->_intermediateRenderTexture)->_deviceUnloadTexture();
+		}
 		this->_destroyShaders();
+	}
+
+	void OpenGLES_RenderSystem::_deviceReset()
+	{
+		RenderSystem::_deviceReset();
+		this->_updateIntermediateRenderTexture();
+		this->_deviceSetRenderTarget(this->renderTarget);
 	}
 
 	void OpenGLES_RenderSystem::_deviceSetupCaps()
@@ -633,6 +661,38 @@ namespace april
 		}
 	}
 
+	void OpenGLES_RenderSystem::_devicePresentFrame(bool systemEnabled)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, this->framebufferId);
+		this->_presentIntermediateRenderTexture();
+		OpenGL_RenderSystem::_devicePresentFrame(systemEnabled);
+		this->_updateIntermediateRenderTexture();
+		glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_intermediateRenderTexture)->framebufferId);
+	}
+
+	void OpenGLES_RenderSystem::_deviceCopyRenderTargetData(Texture* source, Texture* destination)
+	{
+		if (source->getType() != Texture::Type::RenderTarget)
+		{
+			hlog::error(logTag, "Cannot copy render target data, source texture is not a render target!");
+			return;
+		}
+		if (destination->getType() != Texture::Type::RenderTarget)
+		{
+			hlog::error(logTag, "Cannot copy render target data, destination texture is not a render target!");
+			return;
+		}
+		glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)destination)->framebufferId);
+		this->_intermediateState->viewport.setSize((float)source->getWidth(), (float)source->getHeight());
+		this->_intermediateState->projectionMatrix.setOrthoProjection(
+			grect(1.0f - 2.0f * this->pixelOffset / source->getWidth(), 1.0f - 2.0f * this->pixelOffset / source->getHeight(), 2.0f, 2.0f));
+		this->_intermediateState->texture = source;
+		this->_updateDeviceState(this->_intermediateState, true);
+		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		this->_updateDeviceState(this->state, true);
+	}
+
 	void OpenGLES_RenderSystem::_setGlTextureEnabled(bool enabled)
 	{
 		enabled ? glEnableVertexAttribArray(TEXTURE_ARRAY) : glDisableVertexAttribArray(TEXTURE_ARRAY);
@@ -656,6 +716,33 @@ namespace april
 	void OpenGLES_RenderSystem::_setGlColorPointer(int stride, const void* pointer)
 	{
 		glVertexAttribPointer(COLOR_ARRAY, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, pointer);
+	}
+
+	// TODOa - these need to be refactored, they can't be called directly like this
+	Texture* OpenGLES_RenderSystem::_getRenderTarget()
+	{
+		return this->renderTarget;
+	}
+
+	void OpenGLES_RenderSystem::_deviceSetRenderTarget(Texture* source)
+	{
+		OpenGLES_Texture* texture = (OpenGLES_Texture*)source;
+		if (texture == NULL)
+		{
+			if (this->_intermediateRenderTexture != NULL)
+			{
+				glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_intermediateRenderTexture)->framebufferId);
+			}
+			else
+			{
+				glBindFramebuffer(GL_FRAMEBUFFER, this->framebufferId);
+			}
+		}
+		else
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, texture->framebufferId);
+		}
+		this->renderTarget = texture;
 	}
 
 }

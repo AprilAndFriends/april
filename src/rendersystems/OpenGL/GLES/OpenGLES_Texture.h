@@ -29,6 +29,7 @@ namespace april
 		~OpenGLES_Texture();
 
 	protected:
+		unsigned int framebufferId;
 #ifdef _ANDROID
 		unsigned int alphaTextureId;
 #endif

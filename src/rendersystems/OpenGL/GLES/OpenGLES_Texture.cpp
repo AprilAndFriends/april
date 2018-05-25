@@ -19,7 +19,7 @@
 
 namespace april
 {
-	OpenGLES_Texture::OpenGLES_Texture(bool fromResource) : OpenGL_Texture(fromResource)
+	OpenGLES_Texture::OpenGLES_Texture(bool fromResource) : OpenGL_Texture(fromResource), framebufferId(0)
 	{
 #ifdef _ANDROID
 		this->alphaTextureId = 0;
@@ -35,6 +35,20 @@ namespace april
 		if (!OpenGL_Texture::_deviceCreateTexture(data, size))
 		{
 			return false;
+		}
+		if (this->type == Type::RenderTarget)
+		{
+			glGenFramebuffers(1, &this->framebufferId);
+			if (this->framebufferId == 0)
+			{
+				hlog::error(logTag, "Cannot create GL frame buffer for: " + this->_getInternalName());
+				return false;
+			}
+			this->_setCurrentTexture();
+			this->_uploadPotSafeClearData();
+			glBindFramebuffer(GL_FRAMEBUFFER, this->framebufferId);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->textureId, 0);
+			//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 		// data has to be uploaded right away if compressed texture
 #ifdef _IOS
@@ -90,6 +104,11 @@ namespace april
 
 	bool OpenGLES_Texture::_deviceDestroyTexture()
 	{
+		if (this->framebufferId != 0)
+		{
+			glDeleteFramebuffers(1, &this->framebufferId);
+			this->framebufferId = 0;
+		}
 #ifdef _ANDROID
 		if (this->alphaTextureId != 0)
 		{

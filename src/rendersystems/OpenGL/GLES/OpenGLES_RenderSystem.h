@@ -117,11 +117,16 @@ namespace april
 		bool deviceState_matrixChanged;
 		bool deviceState_systemColorChanged;
 		bool deviceState_colorModeFactorChanged;
+		unsigned int framebufferId;
+		// TODOa - these need to be refactored
+		OpenGLES_Texture* renderTarget;
 		ShaderProgram* deviceState_shader;
 
 		void _deviceInit();
 		bool _deviceCreate(Options options);
 		bool _deviceDestroy();
+		void _deviceAssignWindow(Window* window);
+		void _deviceReset();
 		void _deviceSuspend();
 		void _deviceSetupCaps();
 		void _deviceSetup();
@@ -138,11 +143,18 @@ namespace april
 		void _setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
 		void _updateShader(bool forceUpdate);
 
+		void _devicePresentFrame(bool systemEnabled);
+		void _deviceCopyRenderTargetData(Texture* source, Texture* destination);
+
 		void _setGlTextureEnabled(bool enabled);
 		void _setGlColorEnabled(bool enabled);
 		void _setGlVertexPointer(int stride, const void* pointer);
 		void _setGlTexturePointer(int stride, const void* pointer);
 		void _setGlColorPointer(int stride, const void* pointer);
+
+		// TODOa - these need to be refactored, they can't be called directly like this
+		Texture* _getRenderTarget();
+		void _deviceSetRenderTarget(Texture* source);
 
 	};
 	

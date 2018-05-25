@@ -55,6 +55,7 @@ namespace april
 		this->name = april::RenderSystemType::DirectX9.getName();
 		this->pixelOffset = 0.5f;
 		this->_supportsA8Surface = false;
+		this->caps.renderTarget = true;
 		this->_deviceInit();
 	}
 
@@ -887,14 +888,6 @@ namespace april
 		}
 	}
 
-	void DirectX9_RenderSystem::_deviceRepeatLastFrame()
-	{
-		if (this->_intermediateRenderTexture != NULL)
-		{
-			this->_devicePresentFrame(true);
-		}
-	}
-
 	void DirectX9_RenderSystem::_deviceCopyRenderTargetData(Texture* source, Texture* destination)
 	{
 		if (source->getType() != Texture::Type::RenderTarget)
@@ -938,7 +931,14 @@ namespace april
 		DirectX9_Texture* texture = (DirectX9_Texture*)source;
 		if (texture == NULL)
 		{
-			this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_intermediateRenderTexture)->_getSurface());
+			if (this->_intermediateRenderTexture != NULL)
+			{
+				this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_intermediateRenderTexture)->_getSurface());
+			}
+			else
+			{
+				this->d3dDevice->SetRenderTarget(0, NULL);
+			}
 		}
 		else
 		{

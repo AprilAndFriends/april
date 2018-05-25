@@ -99,7 +99,6 @@ namespace april
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
 		void _devicePresentFrame(bool systemEnabled);
-		void _deviceRepeatLastFrame();
 		void _deviceCopyRenderTargetData(Texture* source, Texture* destination);
 
 		static D3DPRIMITIVETYPE _dx9RenderOperations[];

@@ -161,6 +161,9 @@ namespace april
 			bool npotTextures;
 			/// @brief Supported texture pixel formats.
 			harray<Image::Format> textureFormats;
+			/// @brief Whether render targets are supported properly. Also 
+			/// @note This also controls internal rendertarget usage for basic rendering.
+			bool renderTarget;
 
 			/// @brief Basic constructor.
 			Caps();
@@ -886,7 +889,7 @@ namespace april
 		virtual void _deviceRepeatLastFrame();
 		/// @brief Copies RenderTarget data from one texture to another.
 		/// @note Both textures must be render targets.
-		virtual void _deviceCopyRenderTargetData(Texture* source, Texture* destination) = 0;
+		virtual void _deviceCopyRenderTargetData(Texture* source, Texture* destination);
 		/// @brief Updates the intermediate render texture.
 		void _updateIntermediateRenderTexture();
 		/// @brief Creates the intermediate render texture.

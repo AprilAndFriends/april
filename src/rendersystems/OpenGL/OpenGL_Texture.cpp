@@ -25,7 +25,7 @@ namespace april
 {
 	bool OpenGL_Texture::_preventRecursion = false;
 
-	OpenGL_Texture::OpenGL_Texture(bool fromResource) : Texture(fromResource), textureId(0), frameBufferId(0), glFormat(0), internalFormat(0)
+	OpenGL_Texture::OpenGL_Texture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0), internalFormat(0)
 	{
 	}
 
@@ -35,78 +35,15 @@ namespace april
 
 	bool OpenGL_Texture::_deviceCreateTexture(unsigned char* data, int size)
 	{
-		if (this->type == Type::RenderTarget)
-		{
-			glGenFramebuffers(1, &this->frameBufferId);
-			if (this->frameBufferId == 0)
-			{
-				hlog::error(logTag, "Cannot create GL frame buffer for: " + this->_getInternalName());
-				return false;
-			}
-		}
 		glGenTextures(1, &this->textureId);
-		if (this->textureId == 0)
-		{
-			if (this->frameBufferId != 0)
-			{
-				glDeleteFramebuffers(1, &this->frameBufferId);
-				this->frameBufferId = 0;
-			}
-			return false;
-		}
-		if (this->frameBufferId != 0)
-		{
-			this->_setCurrentTexture();
-			this->_uploadPotSafeClearData();
-			int error = 0;
-			// Set "renderedTexture" as our colour attachement #0
-			glBindFramebuffer(GL_FRAMEBUFFER, this->frameBufferId);
-			//this->_uploadToGpu();
-			error = glGetError();
-			if (error != GL_NO_ERROR)
-			{
-				hlog::errorf(logTag, "glBindFramebuffer(): 0x%X", error);
-			}
-			//glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, this->textureId, 0);
-			//glFramebufferTextureOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, this->textureId, 0);
-			//*
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->textureId, 0);
-			error = glGetError();
-			if (error != GL_NO_ERROR)
-			{
-				hlog::errorf(logTag, "glFramebufferTexture2D(): 0x%X", error);
-			}
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			error = glGetError();
-			if (error != GL_NO_ERROR)
-			{
-				hlog::errorf(logTag, "glBindFramebuffer(0): 0x%X", error);
-			}
-			//hlog::error(logTag, "OK");
-			//*/
-			/*
-			glDrawBuffersEXT
-			//glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
-
-			// Set the list of draw buffers.
-			GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-			glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
-			*/
-		}
-
 		this->firstUpload = true;
-		return true;
+		return (this->textureId != 0);
 	}
 	
 	bool OpenGL_Texture::_deviceDestroyTexture()
 	{
 		if (this->textureId != 0)
 		{
-			if (this->frameBufferId != 0)
-			{
-				glDeleteFramebuffers(1, &this->frameBufferId);
-				this->frameBufferId = 0;
-			}
 			glDeleteTextures(1, &this->textureId);
 			this->textureId = 0;
 			this->firstUpload = true;
@@ -183,12 +120,6 @@ namespace april
 		APRIL_OGL_RENDERSYS->deviceState->texture = this;
 	}
 
-	void OpenGL_Texture::_unsetCurrentTexture()
-	{
-		//APRIL_OGL_RENDERSYS->_setDeviceTexture(NULL);
-		//APRIL_OGL_RENDERSYS->deviceState->texture = NULL;
-	}
-
 	Texture::Lock OpenGL_Texture::_tryLockSystem(int x, int y, int w, int h)
 	{
 		Lock lock;
@@ -221,24 +152,6 @@ namespace april
 					}
 					glTexSubImage2D(GL_TEXTURE_2D, 0, lock.dx, lock.dy, lock.w, lock.h, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
 				}
-				if (this->frameBufferId != 0)
-				{
-					hlog::warnf(logTag, "_unlockSystem()");
-					int error = 0;
-					glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->textureId, 0);
-					error = glGetError();
-					if (error != GL_NO_ERROR)
-					{
-						hlog::errorf(logTag, "glFramebufferTexture2D(): 0x%X", error);
-					}
-					glBindFramebuffer(GL_FRAMEBUFFER, 0);
-					error = glGetError();
-					if (error != GL_NO_ERROR)
-					{
-						hlog::errorf(logTag, "glBindFramebuffer(0): 0x%X", error);
-					}
-				}
-				this->_unsetCurrentTexture();
 				this->firstUpload = false;
 			}
 		}
@@ -276,24 +189,6 @@ namespace april
 				}
 			}
 		}
-		if (this->frameBufferId != 0)
-		{
-			hlog::warnf(logTag, "_uploadToGpu()");
-			int error = 0;
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->textureId, 0);
-			error = glGetError();
-			if (error != GL_NO_ERROR)
-			{
-				hlog::errorf(logTag, "glFramebufferTexture2D(): 0x%X", error);
-			}
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			error = glGetError();
-			if (error != GL_NO_ERROR)
-			{
-				hlog::errorf(logTag, "glBindFramebuffer(0): 0x%X", error);
-			}
-		}
-		this->_unsetCurrentTexture();
 		this->firstUpload = false;
 		return true;
 	}
@@ -313,24 +208,6 @@ namespace april
 			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, w, h, 0, this->glFormat, GL_UNSIGNED_BYTE, newData);
 			glError = glGetError();
 			SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, w, h, 0, this->glFormat, GL_UNSIGNED_BYTE, newData));
-			if (this->frameBufferId != 0)
-			{
-				hlog::warnf(logTag, "_uploadPotSafeData()");
-				int error = 0;
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->textureId, 0);
-				error = glGetError();
-				if (error != GL_NO_ERROR)
-				{
-					hlog::errorf(logTag, "glFramebufferTexture2D(): 0x%X", error);
-				}
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-				error = glGetError();
-				if (error != GL_NO_ERROR)
-				{
-					hlog::errorf(logTag, "glBindFramebuffer(0): 0x%X", error);
-				}
-			}
-			this->_unsetCurrentTexture();
 			delete[] newData;
 		}
 	}
@@ -354,24 +231,6 @@ namespace april
 			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
 			glError = glGetError();
 			SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor));
-			if (this->frameBufferId != 0)
-			{
-				hlog::warnf(logTag, "_uploadPotSafeClearData()");
-				int error = 0;
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->textureId, 0);
-				error = glGetError();
-				if (error != GL_NO_ERROR)
-				{
-					hlog::errorf(logTag, "glFramebufferTexture2D(): 0x%X", error);
-				}
-				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-				error = glGetError();
-				if (error != GL_NO_ERROR)
-				{
-					hlog::errorf(logTag, "glBindFramebuffer(0): 0x%X", error);
-				}
-			}
-			this->_unsetCurrentTexture();
 			delete[] clearColor;
 		}
 	}

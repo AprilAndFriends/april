@@ -93,6 +93,7 @@ namespace april
 		this->npotTexturesLimited = false;
 		this->npotTextures = false;
 		this->textureFormats = Image::Format::getValues();
+		this->renderTarget = false;
 	}
 
 	RenderSystem::Caps::~Caps()
@@ -361,7 +362,7 @@ namespace april
 			}
 			if (this->renderMode == RenderMode::Layered2D)
 			{
-				throw Exception("Currently " + RenderMode::Layered2D.getName() + " is not supported!");
+				throw Exception("Currently " + RenderMode::Layered2D.getName() + " is not supported! It will likely be removed in the future.");
 				/*
 				this->renderHelper = new RenderHelperLayered2D(options);
 				this->renderHelper->create();
@@ -1467,15 +1468,21 @@ namespace april
 
 	void RenderSystem::_deviceRepeatLastFrame()
 	{
-		// TODOtx - enable this once it's ready
-		//this->_presentIntermediateRenderTexture();
-		//this->_devicePresentFrame(true);
+		if (this->_intermediateRenderTexture != NULL)
+		{
+			this->_devicePresentFrame(true);
+		}
+	}
+
+	void RenderSystem::_deviceCopyRenderTargetData(Texture* source, Texture* destination)
+	{
+		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
 	}
 
 	void RenderSystem::_updateIntermediateRenderTexture()
 	{
 		// texture update
-		if (this->created && april::window != NULL)
+		if (this->created && april::window != NULL && this->caps.renderTarget)
 		{
 			int width = april::window->getWidth();
 			int height = april::window->getHeight();
@@ -1522,6 +1529,10 @@ namespace april
 
 	bool RenderSystem::_tryCreateIntermediateRenderTexture(int width, int height)
 	{
+		if (!this->caps.renderTarget)
+		{
+			return false;
+		}
 		this->_intermediateRenderTexture = this->_deviceCreateTexture(false);
 		bool result = this->_intermediateRenderTexture->_createRenderTarget(width, height, april::Image::Format::RGBX);
 		if (result)
