@@ -149,6 +149,13 @@ namespace april
 		this->_queuedFrameDuplicates = -1;
 		this->_intermediateRenderTexture = NULL;
 		this->_intermediateState = new RenderState();
+		april::TexturedVertex* v = this->_intermediateRenderVertices;
+		v[0].x = -1.0f;	v[0].y = -1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;
+		v[1].x = 1.0f;	v[1].y = -1.0f;	v[1].z = 0.0f;	v[1].u = 1.0f;	v[1].v = 0.0f;
+		v[2].x = -1.0f;	v[2].y = 1.0f;	v[2].z = 0.0f;	v[2].u = 0.0f;	v[2].v = 1.0f;
+		v[3] = v[1];
+		v[4] = v[2];
+		v[5].x = 1.0f;	v[5].y = 1.0f;	v[5].z = 0.0f;	v[5].u = 1.0f;	v[5].v = 1.0f;
 	}
 	
 	RenderSystem::~RenderSystem()
@@ -1483,14 +1490,6 @@ namespace april
 					}
 					// setting up the RenderState
 					this->_intermediateState->useTexture = true;
-					// setting up vertices
-					april::TexturedVertex* v = this->_intermediateRenderVertices;
-					v[0].x = -1.0f;	v[0].y = -1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;
-					v[1].x = 1.0f;	v[1].y = -1.0f;	v[1].z = 0.0f;	v[1].u = 1.0f;	v[1].v = 0.0f;
-					v[2].x = -1.0f;	v[2].y = 1.0f;	v[2].z = 0.0f;	v[2].u = 0.0f;	v[2].v = 1.0f;
-					v[3] = v[1];
-					v[4] = v[2];
-					v[5].x = 1.0f;	v[5].y = 1.0f;	v[5].z = 0.0f;	v[5].u = 1.0f;	v[5].v = 1.0f;
 				}
 				else
 				{

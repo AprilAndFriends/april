@@ -54,10 +54,16 @@ namespace april
 		GL_TRIANGLE_FAN,	// RO_TRIANGLE_FAN
 	};
 
-	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), blendSeparationSupported(false),
-		deviceState_vertexStride(0), deviceState_vertexPointer(NULL), deviceState_textureStride(0),
-		deviceState_texturePointer(NULL), deviceState_colorStride(0), deviceState_colorPointer(NULL)
+	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), blendSeparationSupported(false), deviceState_vertexStride(0),
+		deviceState_vertexPointer(NULL), deviceState_textureStride(0), deviceState_texturePointer(NULL), deviceState_colorStride(0),
+		deviceState_colorPointer(NULL), renderTarget(NULL)
 	{
+		april::TexturedVertex* v = this->_intermediateRenderVertices;
+		// because GL has to defy screen logic and has (0,0) in the bottom left corner
+		for_iter (i, 0, 6)
+		{
+			this->_intermediateRenderVertices[i].y = -this->_intermediateRenderVertices[i].y;
+		}
 #if defined(_WIN32) && !defined(_WINRT)
 		this->hWnd = 0;
 		this->hDC = 0;
@@ -76,6 +82,7 @@ namespace april
 		this->deviceState_texturePointer = NULL;
 		this->deviceState_colorStride = 0;
 		this->deviceState_colorPointer = NULL;
+		this->renderTarget = NULL;
 #if defined(_WIN32) && !defined(_WINRT)
 		this->hWnd = 0;
 		this->hDC = 0;
@@ -100,6 +107,22 @@ namespace april
 #if defined(_WIN32) && !defined(_WINRT)
 		this->_initWin32(window);
 #endif
+		this->renderTarget = NULL;
+		this->_updateIntermediateRenderTexture();
+		glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGL_Texture*)this->_intermediateRenderTexture)->frameBufferId);
+	}
+
+	void OpenGL_RenderSystem::_deviceReset()
+	{
+		OpenGL_Texture* intermediateRenderTexture = (OpenGL_Texture*)this->_intermediateRenderTexture;
+		if (intermediateRenderTexture != NULL)
+		{
+			intermediateRenderTexture->_ensureAsyncCompleted();
+			intermediateRenderTexture->_deviceUnloadTexture();
+		}
+		RenderSystem::_deviceReset();
+		this->_updateIntermediateRenderTexture();
+		this->setRenderTarget(this->renderTarget);
 	}
 
 	void OpenGL_RenderSystem::_deviceSetupCaps()
@@ -367,17 +390,42 @@ namespace april
 
 	void OpenGL_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		this->_presentIntermediateRenderTexture();
 		RenderSystem::_devicePresentFrame(systemEnabled);
+		this->_updateIntermediateRenderTexture();
+		glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGL_Texture*)this->_intermediateRenderTexture)->frameBufferId);
 	}
 
 	void OpenGL_RenderSystem::_deviceRepeatLastFrame()
 	{
-		//RenderSystem::_deviceRepeatLastFrame();
+		if (this->_intermediateRenderTexture != NULL)
+		{
+			this->_devicePresentFrame(true);
+		}
 	}
 
 	void OpenGL_RenderSystem::_deviceCopyRenderTargetData(Texture* source, Texture* destination)
 	{
-		
+		if (source->getType() != Texture::Type::RenderTarget)
+		{
+			hlog::error(logTag, "Cannot copy render target data, source texture is not a render target!");
+			return;
+		}
+		if (destination->getType() != Texture::Type::RenderTarget)
+		{
+			hlog::error(logTag, "Cannot copy render target data, destination texture is not a render target!");
+			return;
+		}
+		glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGL_Texture*)destination)->frameBufferId);
+		this->_intermediateState->viewport.setSize((float)source->getWidth(), (float)source->getHeight());
+		this->_intermediateState->projectionMatrix.setOrthoProjection(
+			grect(1.0f - 2.0f * this->pixelOffset / source->getWidth(), 1.0f - 2.0f * this->pixelOffset / source->getHeight(), 2.0f, 2.0f));
+		this->_intermediateState->texture = source;
+		this->_updateDeviceState(this->_intermediateState, true);
+		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		this->_updateDeviceState(this->state, true);
 	}
 
 	void OpenGL_RenderSystem::_setDeviceVertexPointer(int stride, const void* pointer, bool forceUpdate)
@@ -478,6 +526,25 @@ namespace april
 		}
 		delete[] temp;
 		return image;
+	}
+
+	Texture* OpenGL_RenderSystem::getRenderTarget()
+	{
+		return this->renderTarget;
+	}
+
+	void OpenGL_RenderSystem::setRenderTarget(Texture* source)
+	{
+		OpenGL_Texture* texture = (OpenGL_Texture*)source;
+		if (texture == NULL)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGL_Texture*)this->_intermediateRenderTexture)->frameBufferId);
+		}
+		else
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, texture->frameBufferId);
+		}
+		this->renderTarget = texture;
 	}
 
 }

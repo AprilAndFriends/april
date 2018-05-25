@@ -14,6 +14,7 @@
 #ifndef APRIL_OPENGL_TEXTURE_H
 #define APRIL_OPENGL_TEXTURE_H
 
+#include "OpenGL_RenderSystem.h" // for GL header inclusion
 #include "Texture.h"
 
 // the memory warning message will likely print "volatile", but that's normal
@@ -52,10 +53,12 @@ namespace april
 
 	protected:
 		unsigned int textureId;
+		unsigned int frameBufferId;
 		int glFormat;
 		int internalFormat;
 
 		void _setCurrentTexture();
+		void _unsetCurrentTexture();
 
 		bool _deviceCreateTexture(unsigned char* data, int size);
 		bool _deviceDestroyTexture();

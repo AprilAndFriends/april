@@ -78,6 +78,10 @@ namespace april
 		unsigned int getNativeColorUInt(const april::Color& color) const;
 		Image* takeScreenshot(Image::Format format);
 
+		// TODOa - these need to be refactored
+		Texture* getRenderTarget();
+		void setRenderTarget(Texture* source);
+
 	protected:
 		bool blendSeparationSupported;
 
@@ -87,11 +91,14 @@ namespace april
 		const void* deviceState_texturePointer;
 		int deviceState_colorStride;
 		const void* deviceState_colorPointer;
+		// TODOa - these need to be refactored
+		OpenGL_Texture* renderTarget;
 
 		void _deviceInit();
 		bool _deviceCreate(Options options);
 		bool _deviceDestroy();
 		void _deviceAssignWindow(Window* window);
+		void _deviceReset();
 		void _deviceSetupCaps();
 		void _deviceSetup();
 
