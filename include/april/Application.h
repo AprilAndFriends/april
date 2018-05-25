@@ -111,7 +111,11 @@ namespace april
 		/// @brief Resumes application.
 		/// @note This is usually called internally in some implementations.
 		void resume();
-		/// @brief Processes and render a single frame.
+		/// @brief Processes and render a single frame without stopping the update thread.
+		/// @param[in] systemEnabled Whether the system present is actually enabled.
+		/// @note This is usually called internally in some implementations, due to specific OS limitations.
+		void repeatLastFrame(bool systemEnabled);
+		/// @brief Processes and render a single frame and stops the update thread.
 		/// @note This is usually called internally in some implementations, due to specific OS limitations.
 		void renderFrameSync();
 		/// @brief Queues a message box display.

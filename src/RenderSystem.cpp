@@ -148,6 +148,7 @@ namespace april
 		this->statCurrentFrameLineCount = 0;
 		this->statLastFrameLineCount = 0;
 		this->_queuedFrameDuplicates = -1;
+		this->_renderTargetDuplicatesCount = 0;
 		this->_intermediateRenderTexture = NULL;
 		this->_intermediateState = new RenderState();
 		april::TexturedVertex* v = this->_intermediateRenderVertices;
@@ -196,7 +197,10 @@ namespace april
 		this->options = options;
 		this->state->reset();
 		this->deviceState->reset();
-		this->lastAsyncCommandQueue = new AsyncCommandQueue();
+		if (!this->caps.renderTarget)
+		{
+			this->lastAsyncCommandQueue = new AsyncCommandQueue();
+		}
 		this->statCurrentFrameRenderCalls = 0;
 		this->statLastFrameRenderCalls = 0;
 		this->statCurrentFrameTextureSwitches = 0;
@@ -207,6 +211,7 @@ namespace april
 		this->statLastFrameTriangleCount = 0;
 		this->statCurrentFrameLineCount = 0;
 		this->statLastFrameLineCount = 0;
+		this->_renderTargetDuplicatesCount = 0;
 		// create the actual device
 		this->_deviceInit();
 		if (!this->_deviceCreate(options))
@@ -257,8 +262,11 @@ namespace april
 		// misc
 		this->state->reset();
 		this->deviceState->reset();
-		delete this->lastAsyncCommandQueue;
-		this->lastAsyncCommandQueue = NULL;
+		if (this->lastAsyncCommandQueue != NULL)
+		{
+			delete this->lastAsyncCommandQueue;
+			this->lastAsyncCommandQueue = NULL;
+		}
 		foreach (AsyncCommandQueue*, it, this->asyncCommandQueues)
 		{
 			delete (*it);
@@ -274,6 +282,7 @@ namespace april
 		this->statLastFrameTriangleCount = 0;
 		this->statCurrentFrameLineCount = 0;
 		this->statLastFrameLineCount = 0;
+		this->_renderTargetDuplicatesCount = 0;
 		this->_deviceDestroy();
 		this->_deviceInit();
 	}
@@ -485,7 +494,14 @@ namespace april
 		{
 			previousRepeatCount = this->lastAsyncCommandQueue->getRepeatCount();
 		}
-		if (this->frameDuplicates > 0 && this->lastAsyncCommandQueue != NULL && previousRepeatCount > 0)
+		if (this->frameDuplicates > 0 && this->caps.renderTarget && this->_renderTargetDuplicatesCount > 0)
+		{
+			lock.release();
+			this->_devicePresentFrame(false);
+			--this->_renderTargetDuplicatesCount;
+			result = true;
+		}
+		else if (this->frameDuplicates > 0 && this->lastAsyncCommandQueue != NULL && previousRepeatCount > 0)
 		{
 			this->processingAsync = true;
 			lock.release();
@@ -533,7 +549,11 @@ namespace april
 			lock.acquire(&this->asyncMutex);
 			this->processingAsync = false;
 			lock.release();
-			if (this->lastAsyncCommandQueue != NULL)
+			if (this->caps.renderTarget)
+			{
+				this->_renderTargetDuplicatesCount = this->frameDuplicates;
+			}
+			else if (this->lastAsyncCommandQueue != NULL)
 			{
 				if (this->frameDuplicates > 0)
 				{
@@ -561,6 +581,7 @@ namespace april
 				lock.acquire(&this->_frameDuplicatesMutex);
 				this->frameDuplicates = this->_queuedFrameDuplicates;
 				this->_queuedFrameDuplicates = -1;
+				this->_renderTargetDuplicatesCount = 0;
 			}
 			else if (previousRepeatCount < this->lastAsyncCommandQueue->getRepeatCount())
 			{
@@ -1466,11 +1487,11 @@ namespace april
 		april::window->_presentFrame(systemEnabled);
 	}
 
-	void RenderSystem::_deviceRepeatLastFrame()
+	void RenderSystem::_deviceRepeatLastFrame(bool systemEnabled)
 	{
 		if (this->_intermediateRenderTexture != NULL)
 		{
-			this->_devicePresentFrame(true);
+			this->_devicePresentFrame(systemEnabled);
 		}
 	}
 

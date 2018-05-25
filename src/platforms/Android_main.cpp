@@ -127,15 +127,9 @@ namespace april
 					april::application->updateInitializing(true);
 					return true;
 				}
-				// on Android this must not continue until something has been renderered due to swapBuffer() being called externally
-				while (!april::application->update())
+				if (!april::application->update())
 				{
-					// // special hack required for being able to stop rendering when onPause() happens
-					if (_activityPaused || april::application->getState() != april::Application::State::Running)
-					{
-						break;
-					}
-					hthread::sleep(0.001f);
+					april::application->repeatLastFrame(false);
 				}
 			}
 			catch (hexception& e)

@@ -336,10 +336,15 @@ namespace april
 		}
 	}
 
+	void Application::repeatLastFrame(bool systemEnabled)
+	{
+		april::rendersys->_deviceRepeatLastFrame(systemEnabled);
+	}
+
 	void Application::renderFrameSync()
 	{
 		hmutex::ScopeLock lock(&this->updateMutex);
-		april::rendersys->_deviceRepeatLastFrame();
+		this->repeatLastFrame(true);
 	}
 
 	void Application::queueMessageBox(const MessageBoxData& data)

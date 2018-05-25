@@ -885,8 +885,9 @@ namespace april
 		/// @param[in] systemEnabled Whether the system present is actually enabled.
 		virtual void _devicePresentFrame(bool systemEnabled);
 		/// @brief Renders previous frame again.
+		/// @param[in] systemEnabled Whether the system present is actually enabled.
 		/// @see _devicePresentFrame
-		virtual void _deviceRepeatLastFrame();
+		virtual void _deviceRepeatLastFrame(bool systemEnabled);
 		/// @brief Copies RenderTarget data from one texture to another.
 		/// @note Both textures must be render targets.
 		virtual void _deviceCopyRenderTargetData(Texture* source, Texture* destination);
@@ -917,6 +918,8 @@ namespace april
 	private:
 		/// @brief Queued value for frameDuplicates.
 		int _queuedFrameDuplicates;
+		/// @brief Number of remaining render target duplicates.
+		int _renderTargetDuplicatesCount;
 		/// @brief Mutex required for handling frameDuplicates change.
 		hmutex _frameDuplicatesMutex;
 
