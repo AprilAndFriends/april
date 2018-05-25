@@ -1561,22 +1561,6 @@ namespace april
 			this->_intermediateState->texture = this->_intermediateRenderTexture;
 			this->_updateDeviceState(this->_intermediateState, true);
 			this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
-			// TODO - render test, remove
-			/*
-			RenderState tempState(*this->_intermediateState);
-			static unsigned int color = this->getNativeColorUInt(april::Color::Cyan);
-			static ColoredVertex v[3];
-			for_iter (i, 0, 3)
-			{
-				v[i].set(this->_intermediateRenderVertices[i].toGvec3());
-				v[i].color = color;
-			}
-			tempState.useTexture = false;
-			tempState.texture = NULL;
-			tempState.useColor = true;
-			this->_updateDeviceState(&tempState, true);
-			this->_deviceRender(RenderOperation::TriangleList, v, 3);
-			*/
 			// no need to restore state with _updateDeviceState() here, present frame command does it on its own?
 		}
 	}
