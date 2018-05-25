@@ -197,7 +197,10 @@ namespace april
 		this->options = options;
 		this->state->reset();
 		this->deviceState->reset();
+		// currently distable due to a glitch
+#if !defined(_IOS) && !defined(_WINRT)
 		if (!this->caps.renderTarget)
+#endif
 		{
 			this->lastAsyncCommandQueue = new AsyncCommandQueue();
 		}
@@ -494,6 +497,8 @@ namespace april
 		{
 			previousRepeatCount = this->lastAsyncCommandQueue->getRepeatCount();
 		}
+		// currently distable due to a glitch
+#if !defined(_IOS) && !defined(_WINRT)
 		if (this->frameDuplicates > 0 && this->caps.renderTarget && this->_renderTargetDuplicatesCount > 0)
 		{
 			lock.release();
@@ -501,7 +506,9 @@ namespace april
 			--this->_renderTargetDuplicatesCount;
 			result = true;
 		}
-		else if (this->frameDuplicates > 0 && this->lastAsyncCommandQueue != NULL && previousRepeatCount > 0)
+		else
+#endif
+		if (this->frameDuplicates > 0 && this->lastAsyncCommandQueue != NULL && previousRepeatCount > 0)
 		{
 			this->processingAsync = true;
 			lock.release();
