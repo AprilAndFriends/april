@@ -22,7 +22,7 @@ static UIImageView *mImageView;
 
 unsigned int _getIosGlFramebufferId()
 {
-	return (unsigned int)glview->viewFramebuffer;
+	return (glview != nil ? (unsigned int)glview->viewFramebuffer : 0);
 }
 
 @implementation AprilViewController
