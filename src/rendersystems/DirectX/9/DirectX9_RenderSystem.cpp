@@ -55,7 +55,7 @@ namespace april
 		this->name = april::RenderSystemType::DirectX9.getName();
 		this->pixelOffset = 0.5f;
 		this->_supportsA8Surface = false;
-		this->caps.renderTarget = true;
+		//this->caps.renderTarget = true;
 		this->_deviceInit();
 	}
 
@@ -177,7 +177,10 @@ namespace april
 		this->d3dDevice->Present(NULL, NULL, NULL, NULL);
 		this->d3dDevice->EndScene();
 		this->_updateIntermediateRenderTexture();
-		this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_intermediateRenderTexture)->_getSurface());
+		if (this->_intermediateRenderTexture != NULL)
+		{
+			this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_intermediateRenderTexture)->_getSurface());
+		}
 		this->d3dDevice->BeginScene();
 	}
 
@@ -232,8 +235,11 @@ namespace april
 		this->_deviceSetup();
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 		this->_tryCreateIntermediateRenderTexture(april::window->getWidth(), april::window->getHeight());
-		intermediateRenderTexture = (DirectX9_Texture*)this->_intermediateRenderTexture; // it changed
-		this->d3dDevice->SetRenderTarget(0, intermediateRenderTexture->_getSurface());
+		if (this->_intermediateRenderTexture != NULL)
+		{
+			intermediateRenderTexture = (DirectX9_Texture*)this->_intermediateRenderTexture; // it changed
+			this->d3dDevice->SetRenderTarget(0, intermediateRenderTexture->_getSurface());
+		}
 		this->d3dDevice->BeginScene();
 		this->_updateDeviceState(this->state, true);
 		hlog::write(logTag, "Direct3D9 Device restored.");
@@ -861,8 +867,11 @@ namespace april
 			this->_deviceSetup();
 			this->d3dDevice->GetRenderTarget(0, &this->backBuffer); // update backbuffer pointer
 			this->_tryCreateIntermediateRenderTexture(april::window->getWidth(), april::window->getHeight());
-			intermediateRenderTexture = (DirectX9_Texture*)this->_intermediateRenderTexture; // it changed
-			this->d3dDevice->SetRenderTarget(0, intermediateRenderTexture->_getSurface());
+			if (this->_intermediateRenderTexture != NULL)
+			{
+				intermediateRenderTexture = (DirectX9_Texture*)this->_intermediateRenderTexture; // it changed
+				this->d3dDevice->SetRenderTarget(0, intermediateRenderTexture->_getSurface());
+			}
 			this->d3dDevice->BeginScene();
 			this->_updateDeviceState(this->state, true);
 			hlog::write(logTag, "Direct3D9 Device restored.");
@@ -882,8 +891,11 @@ namespace april
 				}
 			}
 			this->_updateIntermediateRenderTexture();
-			intermediateRenderTexture = (DirectX9_Texture*)this->_intermediateRenderTexture; // it could have changed
-			this->d3dDevice->SetRenderTarget(0, intermediateRenderTexture->_getSurface());
+			if (this->_intermediateRenderTexture != NULL)
+			{
+				intermediateRenderTexture = (DirectX9_Texture*)this->_intermediateRenderTexture; // it could have changed
+				this->d3dDevice->SetRenderTarget(0, intermediateRenderTexture->_getSurface());
+			}
 			this->d3dDevice->BeginScene();
 		}
 	}
