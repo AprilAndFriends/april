@@ -31,7 +31,7 @@ namespace april
 		int getWidth() const;
 		int getHeight() const;
 		void setTitle(chstr value);
-		gtypes::Vector2 getCursorPosition() const;
+		gvec2f getCursorPosition() const;
 		void* getBackendId() const;
 		bool isVirtualKeyboardVisible() const;
 		
