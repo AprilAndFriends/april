@@ -184,6 +184,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aded9ee95a3a35dab461e55e4056f2cd7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aded9ee95a3a35dab461e55e4056f2cd7">fillRect</a> (int x, int y, int w, int h, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
 <tr class="memdesc:aded9ee95a3a35dab461e55e4056f2cd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills a rectangle area with one color.  <a href="#aded9ee95a3a35dab461e55e4056f2cd7">More...</a><br /></td></tr>
 <tr class="separator:aded9ee95a3a35dab461e55e4056f2cd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd7cb986524534b72ed369d3d803cb61"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#acd7cb986524534b72ed369d3d803cb61">blitRect</a> (int x, int y, int w, int h, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
+<tr class="memdesc:acd7cb986524534b72ed369d3d803cb61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blits a rectangle area with one color.  <a href="#acd7cb986524534b72ed369d3d803cb61">More...</a><br /></td></tr>
+<tr class="separator:acd7cb986524534b72ed369d3d803cb61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abff80a0c97d28053e9a524ef77863d73"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#abff80a0c97d28053e9a524ef77863d73">copyPixelData</a> (unsigned char **output, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> <a class="el" href="classapril_1_1_texture.html#ac54ea5d8c9c8227f6c1769e2d29c6ad9">format</a>)</td></tr>
 <tr class="memdesc:abff80a0c97d28053e9a524ef77863d73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the image data into a buffer.  <a href="#abff80a0c97d28053e9a524ef77863d73">More...</a><br /></td></tr>
 <tr class="separator:abff80a0c97d28053e9a524ef77863d73"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,18 +232,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3f1010ab55a2038b823351aa0966605c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a3f1010ab55a2038b823351aa0966605c">insertAlphaMap</a> (<a class="el" href="classapril_1_1_texture.html">Texture</a> *texture, unsigned char median, int ambiguity)</td></tr>
 <tr class="memdesc:a3f1010ab55a2038b823351aa0966605c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts image data as alpha channel into this image.  <a href="#a3f1010ab55a2038b823351aa0966605c">More...</a><br /></td></tr>
 <tr class="separator:a3f1010ab55a2038b823351aa0966605c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23478b1f97e9a35d6f2597980ab413de"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a23478b1f97e9a35d6f2597980ab413de">getPixel</a> (cgvec2 position)</td></tr>
-<tr class="memdesc:a23478b1f97e9a35d6f2597980ab413de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the color of a specific pixel.  <a href="#a23478b1f97e9a35d6f2597980ab413de">More...</a><br /></td></tr>
-<tr class="separator:a23478b1f97e9a35d6f2597980ab413de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02205c40e53006299801eb3bb22dae52"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a02205c40e53006299801eb3bb22dae52">setPixel</a> (cgvec2 position, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
-<tr class="memdesc:a02205c40e53006299801eb3bb22dae52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the color of a specific pixel.  <a href="#a02205c40e53006299801eb3bb22dae52">More...</a><br /></td></tr>
-<tr class="separator:a02205c40e53006299801eb3bb22dae52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8b365934d42ef652b00f9d915daa089"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#af8b365934d42ef652b00f9d915daa089">getInterpolatedPixel</a> (cgvec2 position)</td></tr>
-<tr class="memdesc:af8b365934d42ef652b00f9d915daa089"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the linearly interpolated color between two pixels.  <a href="#af8b365934d42ef652b00f9d915daa089">More...</a><br /></td></tr>
-<tr class="separator:af8b365934d42ef652b00f9d915daa089"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56715df9f0efb53a80bf0423e43465dd"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a56715df9f0efb53a80bf0423e43465dd">fillRect</a> (cgrect rect, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
-<tr class="memdesc:a56715df9f0efb53a80bf0423e43465dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills a rectangle area with one color.  <a href="#a56715df9f0efb53a80bf0423e43465dd">More...</a><br /></td></tr>
-<tr class="separator:a56715df9f0efb53a80bf0423e43465dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa52920b97db787ffbb74e0b60485f1b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aa52920b97db787ffbb74e0b60485f1b0">getPixel</a> (cgvec2i position)</td></tr>
+<tr class="memdesc:aa52920b97db787ffbb74e0b60485f1b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the color of a specific pixel.  <a href="#aa52920b97db787ffbb74e0b60485f1b0">More...</a><br /></td></tr>
+<tr class="separator:aa52920b97db787ffbb74e0b60485f1b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3b5fe594e1aece8ec4b2b7658ce0c74"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ac3b5fe594e1aece8ec4b2b7658ce0c74">setPixel</a> (cgvec2i position, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
+<tr class="memdesc:ac3b5fe594e1aece8ec4b2b7658ce0c74"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the color of a specific pixel.  <a href="#ac3b5fe594e1aece8ec4b2b7658ce0c74">More...</a><br /></td></tr>
+<tr class="separator:ac3b5fe594e1aece8ec4b2b7658ce0c74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95c8520ea0e47e5ee560048296ce64ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a95c8520ea0e47e5ee560048296ce64ac">getInterpolatedPixel</a> (cgvec2f position)</td></tr>
+<tr class="memdesc:a95c8520ea0e47e5ee560048296ce64ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the linearly interpolated color between two pixels.  <a href="#a95c8520ea0e47e5ee560048296ce64ac">More...</a><br /></td></tr>
+<tr class="separator:a95c8520ea0e47e5ee560048296ce64ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dcbad5372c1c1eb40884b2017521242"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a1dcbad5372c1c1eb40884b2017521242">fillRect</a> (cgrecti rect, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
+<tr class="memdesc:a1dcbad5372c1c1eb40884b2017521242"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills a rectangle area with one color.  <a href="#a1dcbad5372c1c1eb40884b2017521242">More...</a><br /></td></tr>
+<tr class="separator:a1dcbad5372c1c1eb40884b2017521242"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9ce23f1fdac99283cff7e90e94dd77d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ad9ce23f1fdac99283cff7e90e94dd77d">blitRect</a> (cgrecti rect, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
+<tr class="memdesc:ad9ce23f1fdac99283cff7e90e94dd77d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blits a rectangle area with one color.  <a href="#ad9ce23f1fdac99283cff7e90e94dd77d">More...</a><br /></td></tr>
+<tr class="separator:ad9ce23f1fdac99283cff7e90e94dd77d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab34da931fe3fccf335902764c78b4b0e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ab34da931fe3fccf335902764c78b4b0e">copyPixelData</a> (unsigned char **output)</td></tr>
 <tr class="memdesc:ab34da931fe3fccf335902764c78b4b0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the image data into a buffer.  <a href="#ab34da931fe3fccf335902764c78b4b0e">More...</a><br /></td></tr>
 <tr class="separator:ab34da931fe3fccf335902764c78b4b0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -250,60 +256,60 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a255eb97f4adc160825d80b4f562afcc3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a255eb97f4adc160825d80b4f562afcc3">write</a> (int sx, int sy, int sw, int sh, int dx, int dy, <a class="el" href="classapril_1_1_image.html">Image</a> *image)</td></tr>
 <tr class="memdesc:a255eb97f4adc160825d80b4f562afcc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the image.  <a href="#a255eb97f4adc160825d80b4f562afcc3">More...</a><br /></td></tr>
 <tr class="separator:a255eb97f4adc160825d80b4f562afcc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a998d0f5be1d84b722475a2b27c8bd3b6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a998d0f5be1d84b722475a2b27c8bd3b6">write</a> (cgrect srcRect, cgvec2 destPosition, unsigned char *srcData, int srcWidth, int srcHeight, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> srcFormat)</td></tr>
-<tr class="memdesc:a998d0f5be1d84b722475a2b27c8bd3b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the image.  <a href="#a998d0f5be1d84b722475a2b27c8bd3b6">More...</a><br /></td></tr>
-<tr class="separator:a998d0f5be1d84b722475a2b27c8bd3b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae150a664f9517b1aad3c55a261179625"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ae150a664f9517b1aad3c55a261179625">write</a> (cgrect srcRect, cgvec2 destPosition, <a class="el" href="classapril_1_1_texture.html">Texture</a> *texture)</td></tr>
-<tr class="memdesc:ae150a664f9517b1aad3c55a261179625"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the image.  <a href="#ae150a664f9517b1aad3c55a261179625">More...</a><br /></td></tr>
-<tr class="separator:ae150a664f9517b1aad3c55a261179625"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a687db2146ff921d78379df3750bf77d4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a687db2146ff921d78379df3750bf77d4">write</a> (cgrect srcRect, cgvec2 destPosition, <a class="el" href="classapril_1_1_image.html">Image</a> *image)</td></tr>
-<tr class="memdesc:a687db2146ff921d78379df3750bf77d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the image.  <a href="#a687db2146ff921d78379df3750bf77d4">More...</a><br /></td></tr>
-<tr class="separator:a687db2146ff921d78379df3750bf77d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a293b10462362366d5c00a00efdbff325"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a293b10462362366d5c00a00efdbff325">write</a> (cgrecti srcRect, cgvec2i destPosition, unsigned char *srcData, int srcWidth, int srcHeight, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> srcFormat)</td></tr>
+<tr class="memdesc:a293b10462362366d5c00a00efdbff325"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the image.  <a href="#a293b10462362366d5c00a00efdbff325">More...</a><br /></td></tr>
+<tr class="separator:a293b10462362366d5c00a00efdbff325"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2370ca6bd77e01891cbe2341c3e01d85"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a2370ca6bd77e01891cbe2341c3e01d85">write</a> (cgrecti srcRect, cgvec2i destPosition, <a class="el" href="classapril_1_1_texture.html">Texture</a> *texture)</td></tr>
+<tr class="memdesc:a2370ca6bd77e01891cbe2341c3e01d85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the image.  <a href="#a2370ca6bd77e01891cbe2341c3e01d85">More...</a><br /></td></tr>
+<tr class="separator:a2370ca6bd77e01891cbe2341c3e01d85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c8d41acebe97ec09c3fd2e0be519ba2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a2c8d41acebe97ec09c3fd2e0be519ba2">write</a> (cgrecti srcRect, cgvec2i destPosition, <a class="el" href="classapril_1_1_image.html">Image</a> *image)</td></tr>
+<tr class="memdesc:a2c8d41acebe97ec09c3fd2e0be519ba2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the image.  <a href="#a2c8d41acebe97ec09c3fd2e0be519ba2">More...</a><br /></td></tr>
+<tr class="separator:a2c8d41acebe97ec09c3fd2e0be519ba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a226a1f02cd5ed895b1a5b666f701e55a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a226a1f02cd5ed895b1a5b666f701e55a">writeStretch</a> (int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, <a class="el" href="classapril_1_1_image.html">Image</a> *image)</td></tr>
 <tr class="memdesc:a226a1f02cd5ed895b1a5b666f701e55a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the image while trying to stretch the pixels. Stretched pixels will be linearly interpolated.  <a href="#a226a1f02cd5ed895b1a5b666f701e55a">More...</a><br /></td></tr>
 <tr class="separator:a226a1f02cd5ed895b1a5b666f701e55a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af04b287200710afa257273845280cd6d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#af04b287200710afa257273845280cd6d">writeStretch</a> (cgrect srcRect, cgrect destRect, unsigned char *srcData, int srcWidth, int srcHeight, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> srcFormat)</td></tr>
-<tr class="memdesc:af04b287200710afa257273845280cd6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the image while trying to stretch the pixels. Stretched pixels will be linearly interpolated.  <a href="#af04b287200710afa257273845280cd6d">More...</a><br /></td></tr>
-<tr class="separator:af04b287200710afa257273845280cd6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69f6ac6257ad2202227bc45b59afd5d4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a69f6ac6257ad2202227bc45b59afd5d4">writeStretch</a> (cgrect srcRect, cgrect destRect, <a class="el" href="classapril_1_1_texture.html">Texture</a> *texture)</td></tr>
-<tr class="memdesc:a69f6ac6257ad2202227bc45b59afd5d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the image while trying to stretch the pixels. Stretched pixels will be linearly interpolated.  <a href="#a69f6ac6257ad2202227bc45b59afd5d4">More...</a><br /></td></tr>
-<tr class="separator:a69f6ac6257ad2202227bc45b59afd5d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a471147790cebe75271bf732f60e34d82"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a471147790cebe75271bf732f60e34d82">writeStretch</a> (cgrect srcRect, cgrect destRect, <a class="el" href="classapril_1_1_image.html">Image</a> *image)</td></tr>
-<tr class="memdesc:a471147790cebe75271bf732f60e34d82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the image while trying to stretch the pixels. Stretched pixels will be linearly interpolated.  <a href="#a471147790cebe75271bf732f60e34d82">More...</a><br /></td></tr>
-<tr class="separator:a471147790cebe75271bf732f60e34d82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1b0d358c7e8fc1c43c29e6a2e8030ba"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aa1b0d358c7e8fc1c43c29e6a2e8030ba">writeStretch</a> (cgrecti srcRect, cgrecti destRect, unsigned char *srcData, int srcWidth, int srcHeight, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> srcFormat)</td></tr>
+<tr class="memdesc:aa1b0d358c7e8fc1c43c29e6a2e8030ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the image while trying to stretch the pixels. Stretched pixels will be linearly interpolated.  <a href="#aa1b0d358c7e8fc1c43c29e6a2e8030ba">More...</a><br /></td></tr>
+<tr class="separator:aa1b0d358c7e8fc1c43c29e6a2e8030ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ccf16bada4ed782cf6b195ce629ffd6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a3ccf16bada4ed782cf6b195ce629ffd6">writeStretch</a> (cgrecti srcRect, cgrecti destRect, <a class="el" href="classapril_1_1_texture.html">Texture</a> *texture)</td></tr>
+<tr class="memdesc:a3ccf16bada4ed782cf6b195ce629ffd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the image while trying to stretch the pixels. Stretched pixels will be linearly interpolated.  <a href="#a3ccf16bada4ed782cf6b195ce629ffd6">More...</a><br /></td></tr>
+<tr class="separator:a3ccf16bada4ed782cf6b195ce629ffd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab35c445996f0edef93a5b24d9be3167f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ab35c445996f0edef93a5b24d9be3167f">writeStretch</a> (cgrecti srcRect, cgrecti destRect, <a class="el" href="classapril_1_1_image.html">Image</a> *image)</td></tr>
+<tr class="memdesc:ab35c445996f0edef93a5b24d9be3167f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the image while trying to stretch the pixels. Stretched pixels will be linearly interpolated.  <a href="#ab35c445996f0edef93a5b24d9be3167f">More...</a><br /></td></tr>
+<tr class="separator:ab35c445996f0edef93a5b24d9be3167f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2b24e7cc4b603af5922ee224fc3d69e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aa2b24e7cc4b603af5922ee224fc3d69e">blit</a> (int sx, int sy, int sw, int sh, int dx, int dy, <a class="el" href="classapril_1_1_image.html">Image</a> *image, unsigned char alpha=255)</td></tr>
 <tr class="memdesc:aa2b24e7cc4b603af5922ee224fc3d69e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does an image data block transfer onto the image.  <a href="#aa2b24e7cc4b603af5922ee224fc3d69e">More...</a><br /></td></tr>
 <tr class="separator:aa2b24e7cc4b603af5922ee224fc3d69e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2952ce6055062c5a0aad864e806c4ef7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a2952ce6055062c5a0aad864e806c4ef7">blit</a> (cgrect srcRect, cgvec2 destPosition, unsigned char *srcData, int srcWidth, int srcHeight, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> srcFormat, unsigned char alpha=255)</td></tr>
-<tr class="memdesc:a2952ce6055062c5a0aad864e806c4ef7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does an image data block transfer onto the image.  <a href="#a2952ce6055062c5a0aad864e806c4ef7">More...</a><br /></td></tr>
-<tr class="separator:a2952ce6055062c5a0aad864e806c4ef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22dd1d7deb5abd9b5ea4c4108d8792d1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a22dd1d7deb5abd9b5ea4c4108d8792d1">blit</a> (cgrect srcRect, cgvec2 destPosition, <a class="el" href="classapril_1_1_texture.html">Texture</a> *texture, unsigned char alpha=255)</td></tr>
-<tr class="memdesc:a22dd1d7deb5abd9b5ea4c4108d8792d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does an image data block transfer onto the image.  <a href="#a22dd1d7deb5abd9b5ea4c4108d8792d1">More...</a><br /></td></tr>
-<tr class="separator:a22dd1d7deb5abd9b5ea4c4108d8792d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae00ce1bc5100aeec639546f23fb83424"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ae00ce1bc5100aeec639546f23fb83424">blit</a> (cgrect srcRect, cgvec2 destPosition, <a class="el" href="classapril_1_1_image.html">Image</a> *image, unsigned char alpha=255)</td></tr>
-<tr class="memdesc:ae00ce1bc5100aeec639546f23fb83424"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does an image data block transfer onto the image.  <a href="#ae00ce1bc5100aeec639546f23fb83424">More...</a><br /></td></tr>
-<tr class="separator:ae00ce1bc5100aeec639546f23fb83424"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c0e51fe25b135fc7b74cd4c41caafe9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a4c0e51fe25b135fc7b74cd4c41caafe9">blit</a> (cgrecti srcRect, cgvec2i destPosition, unsigned char *srcData, int srcWidth, int srcHeight, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> srcFormat, unsigned char alpha=255)</td></tr>
+<tr class="memdesc:a4c0e51fe25b135fc7b74cd4c41caafe9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does an image data block transfer onto the image.  <a href="#a4c0e51fe25b135fc7b74cd4c41caafe9">More...</a><br /></td></tr>
+<tr class="separator:a4c0e51fe25b135fc7b74cd4c41caafe9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e821138724e54a5fbf9f1761dbbbf0b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a9e821138724e54a5fbf9f1761dbbbf0b">blit</a> (cgrecti srcRect, cgvec2i destPosition, <a class="el" href="classapril_1_1_texture.html">Texture</a> *texture, unsigned char alpha=255)</td></tr>
+<tr class="memdesc:a9e821138724e54a5fbf9f1761dbbbf0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does an image data block transfer onto the image.  <a href="#a9e821138724e54a5fbf9f1761dbbbf0b">More...</a><br /></td></tr>
+<tr class="separator:a9e821138724e54a5fbf9f1761dbbbf0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4b9b024c4da03f270bf7f034df811a4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ab4b9b024c4da03f270bf7f034df811a4">blit</a> (cgrecti srcRect, cgvec2i destPosition, <a class="el" href="classapril_1_1_image.html">Image</a> *image, unsigned char alpha=255)</td></tr>
+<tr class="memdesc:ab4b9b024c4da03f270bf7f034df811a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does an image data block transfer onto the image.  <a href="#ab4b9b024c4da03f270bf7f034df811a4">More...</a><br /></td></tr>
+<tr class="separator:ab4b9b024c4da03f270bf7f034df811a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5b63111c1b68e7e053c3506eedf19a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#af5b63111c1b68e7e053c3506eedf19a0">blitStretch</a> (int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, <a class="el" href="classapril_1_1_image.html">Image</a> *image, unsigned char alpha=255)</td></tr>
 <tr class="memdesc:af5b63111c1b68e7e053c3506eedf19a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does a stretched image data block transfer onto the image.  <a href="#af5b63111c1b68e7e053c3506eedf19a0">More...</a><br /></td></tr>
 <tr class="separator:af5b63111c1b68e7e053c3506eedf19a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a296410da287fb7bd3921df7ffcabfe70"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a296410da287fb7bd3921df7ffcabfe70">blitStretch</a> (cgrect srcRect, cgrect destRect, unsigned char *srcData, int srcWidth, int srcHeight, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> srcFormat, unsigned char alpha=255)</td></tr>
-<tr class="memdesc:a296410da287fb7bd3921df7ffcabfe70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does a stretched image data block transfer onto the image.  <a href="#a296410da287fb7bd3921df7ffcabfe70">More...</a><br /></td></tr>
-<tr class="separator:a296410da287fb7bd3921df7ffcabfe70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af58313aa735027d4a5aed8442df31348"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#af58313aa735027d4a5aed8442df31348">blitStretch</a> (cgrect srcRect, cgrect destRect, <a class="el" href="classapril_1_1_texture.html">Texture</a> *texture, unsigned char alpha=255)</td></tr>
-<tr class="memdesc:af58313aa735027d4a5aed8442df31348"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does a stretched image data block transfer onto the image.  <a href="#af58313aa735027d4a5aed8442df31348">More...</a><br /></td></tr>
-<tr class="separator:af58313aa735027d4a5aed8442df31348"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e7fc8faa90a320affbf5b3916fb05e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a1e7fc8faa90a320affbf5b3916fb05e6">blitStretch</a> (cgrect srcRect, cgrect destRect, <a class="el" href="classapril_1_1_image.html">Image</a> *image, unsigned char alpha=255)</td></tr>
-<tr class="memdesc:a1e7fc8faa90a320affbf5b3916fb05e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does a stretched image data block transfer onto the image.  <a href="#a1e7fc8faa90a320affbf5b3916fb05e6">More...</a><br /></td></tr>
-<tr class="separator:a1e7fc8faa90a320affbf5b3916fb05e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38373302a82d0dde6618e5424438419f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a38373302a82d0dde6618e5424438419f">rotateHue</a> (cgrect rect, float degrees)</td></tr>
-<tr class="memdesc:a38373302a82d0dde6618e5424438419f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotates the pixel hue of a rectangle area on the image.  <a href="#a38373302a82d0dde6618e5424438419f">More...</a><br /></td></tr>
-<tr class="separator:a38373302a82d0dde6618e5424438419f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee1b7ac09c92fbe3bd3deb0ed79852d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#aee1b7ac09c92fbe3bd3deb0ed79852d2">saturate</a> (cgrect rect, float factor)</td></tr>
-<tr class="memdesc:aee1b7ac09c92fbe3bd3deb0ed79852d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes the saturation level of pixels of a rectangle area on the image.  <a href="#aee1b7ac09c92fbe3bd3deb0ed79852d2">More...</a><br /></td></tr>
-<tr class="separator:aee1b7ac09c92fbe3bd3deb0ed79852d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a309a60aa807c726f6e43dad5091dea21"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a309a60aa807c726f6e43dad5091dea21">invert</a> (cgrect rect)</td></tr>
-<tr class="memdesc:a309a60aa807c726f6e43dad5091dea21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inverts the pixel colors of a rectangle area on the image.  <a href="#a309a60aa807c726f6e43dad5091dea21">More...</a><br /></td></tr>
-<tr class="separator:a309a60aa807c726f6e43dad5091dea21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b5ca216eb4993f4828449fc769dcbb2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a7b5ca216eb4993f4828449fc769dcbb2">blitStretch</a> (cgrecti srcRect, cgrecti destRect, unsigned char *srcData, int srcWidth, int srcHeight, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> srcFormat, unsigned char alpha=255)</td></tr>
+<tr class="memdesc:a7b5ca216eb4993f4828449fc769dcbb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does a stretched image data block transfer onto the image.  <a href="#a7b5ca216eb4993f4828449fc769dcbb2">More...</a><br /></td></tr>
+<tr class="separator:a7b5ca216eb4993f4828449fc769dcbb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a050882204b20630f43ce837747602d5d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a050882204b20630f43ce837747602d5d">blitStretch</a> (cgrecti srcRect, cgrecti destRect, <a class="el" href="classapril_1_1_texture.html">Texture</a> *texture, unsigned char alpha=255)</td></tr>
+<tr class="memdesc:a050882204b20630f43ce837747602d5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does a stretched image data block transfer onto the image.  <a href="#a050882204b20630f43ce837747602d5d">More...</a><br /></td></tr>
+<tr class="separator:a050882204b20630f43ce837747602d5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77fd193676f258b8e56a85fa71125b50"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a77fd193676f258b8e56a85fa71125b50">blitStretch</a> (cgrecti srcRect, cgrecti destRect, <a class="el" href="classapril_1_1_image.html">Image</a> *image, unsigned char alpha=255)</td></tr>
+<tr class="memdesc:a77fd193676f258b8e56a85fa71125b50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does a stretched image data block transfer onto the image.  <a href="#a77fd193676f258b8e56a85fa71125b50">More...</a><br /></td></tr>
+<tr class="separator:a77fd193676f258b8e56a85fa71125b50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3859670232a7c45946583c07a747f50"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ae3859670232a7c45946583c07a747f50">rotateHue</a> (cgrecti rect, float degrees)</td></tr>
+<tr class="memdesc:ae3859670232a7c45946583c07a747f50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rotates the pixel hue of a rectangle area on the image.  <a href="#ae3859670232a7c45946583c07a747f50">More...</a><br /></td></tr>
+<tr class="separator:ae3859670232a7c45946583c07a747f50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad54bd7ae460c2f71a9b5841dc16b0106"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#ad54bd7ae460c2f71a9b5841dc16b0106">saturate</a> (cgrecti rect, float factor)</td></tr>
+<tr class="memdesc:ad54bd7ae460c2f71a9b5841dc16b0106"><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes the saturation level of pixels of a rectangle area on the image.  <a href="#ad54bd7ae460c2f71a9b5841dc16b0106">More...</a><br /></td></tr>
+<tr class="separator:ad54bd7ae460c2f71a9b5841dc16b0106"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a690dde31567f8fa8e2e8fac9d0ef18f8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a690dde31567f8fa8e2e8fac9d0ef18f8">invert</a> (cgrecti rect)</td></tr>
+<tr class="memdesc:a690dde31567f8fa8e2e8fac9d0ef18f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inverts the pixel colors of a rectangle area on the image.  <a href="#a690dde31567f8fa8e2e8fac9d0ef18f8">More...</a><br /></td></tr>
+<tr class="separator:a690dde31567f8fa8e2e8fac9d0ef18f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf4fe83f3079f01c264ce8a7f98a7287"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#abf4fe83f3079f01c264ce8a7f98a7287">insertAlphaMap</a> (<a class="el" href="classapril_1_1_image.html">Image</a> *image, unsigned char median, int ambiguity)</td></tr>
 <tr class="memdesc:abf4fe83f3079f01c264ce8a7f98a7287"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inserts image data as alpha channel into this image.  <a href="#abf4fe83f3079f01c264ce8a7f98a7287">More...</a><br /></td></tr>
 <tr class="separator:abf4fe83f3079f01c264ce8a7f98a7287"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -399,6 +405,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a60a05fb58547fd651cc8c07a33f7fbab"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a60a05fb58547fd651cc8c07a33f7fbab">_rawFillRect</a> (int x, int y, int w, int h, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
 <tr class="memdesc:a60a05fb58547fd651cc8c07a33f7fbab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills a rectangle area with one color without safety checks. Used internally only.  <a href="#a60a05fb58547fd651cc8c07a33f7fbab">More...</a><br /></td></tr>
 <tr class="separator:a60a05fb58547fd651cc8c07a33f7fbab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a4efd8830baee386cd8506d0816974b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#a9a4efd8830baee386cd8506d0816974b">_rawBlitRect</a> (int x, int y, int w, int h, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
+<tr class="memdesc:a9a4efd8830baee386cd8506d0816974b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Blits a rectangle area with one color without safety checks. Used internally only.  <a href="#a9a4efd8830baee386cd8506d0816974b">More...</a><br /></td></tr>
+<tr class="separator:a9a4efd8830baee386cd8506d0816974b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af134d90fe3ffad90f7f96a4e6edb5d6e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_texture.html#af134d90fe3ffad90f7f96a4e6edb5d6e">_rawWrite</a> (int sx, int sy, int sw, int sh, int dx, int dy, unsigned char *srcData, int srcWidth, int srcHeight, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> srcFormat)</td></tr>
 <tr class="memdesc:af134d90fe3ffad90f7f96a4e6edb5d6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes image data directly onto the texture without safety checks. Used internally only.  <a href="#af134d90fe3ffad90f7f96a4e6edb5d6e">More...</a><br /></td></tr>
 <tr class="separator:af134d90fe3ffad90f7f96a4e6edb5d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1446,6 +1455,73 @@ This is called internally. </dd></dl>
 
 </div>
 </div>
+<a id="a9a4efd8830baee386cd8506d0816974b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a4efd8830baee386cd8506d0816974b">&#9670;&nbsp;</a></span>_rawBlitRect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool april::Texture::_rawBlitRect </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>w</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;&#160;</td>
+          <td class="paramname"><em>color</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Blits a rectangle area with one color without safety checks. Used internally only. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>X-coordinate. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>Y-coordinate. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">w</td><td>Width of the area. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">h</td><td>Height of the area. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">color</td><td>The <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> used for blitting. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if successful. </dd></dl>
+
+</div>
+</div>
 <a id="a1747672a4c2010d5559111d7665d5e5a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1747672a4c2010d5559111d7665d5e5a">&#9670;&nbsp;</a></span>_rawClear()</h2>
 
@@ -2367,8 +2443,8 @@ The parameter alpha is especially useful when blitting source images that don't 
 
 </div>
 </div>
-<a id="a2952ce6055062c5a0aad864e806c4ef7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2952ce6055062c5a0aad864e806c4ef7">&#9670;&nbsp;</a></span>blit() <span class="overload">[4/6]</span></h2>
+<a id="a4c0e51fe25b135fc7b74cd4c41caafe9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c0e51fe25b135fc7b74cd4c41caafe9">&#9670;&nbsp;</a></span>blit() <span class="overload">[4/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2376,13 +2452,13 @@ The parameter alpha is especially useful when blitting source images that don't 
         <tr>
           <td class="memname">bool april::Texture::blit </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>srcRect</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">cgvec2&#160;</td>
+          <td class="paramtype">cgvec2i&#160;</td>
           <td class="paramname"><em>destPosition</em>, </td>
         </tr>
         <tr>
@@ -2444,8 +2520,8 @@ The parameter alpha is especially useful when blitting source images that don't 
 
 </div>
 </div>
-<a id="a22dd1d7deb5abd9b5ea4c4108d8792d1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a22dd1d7deb5abd9b5ea4c4108d8792d1">&#9670;&nbsp;</a></span>blit() <span class="overload">[5/6]</span></h2>
+<a id="a9e821138724e54a5fbf9f1761dbbbf0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e821138724e54a5fbf9f1761dbbbf0b">&#9670;&nbsp;</a></span>blit() <span class="overload">[5/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2453,13 +2529,13 @@ The parameter alpha is especially useful when blitting source images that don't 
         <tr>
           <td class="memname">bool april::Texture::blit </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>srcRect</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">cgvec2&#160;</td>
+          <td class="paramtype">cgvec2i&#160;</td>
           <td class="paramname"><em>destPosition</em>, </td>
         </tr>
         <tr>
@@ -2500,8 +2576,8 @@ The parameter alpha is especially useful when blitting source images that don't 
 
 </div>
 </div>
-<a id="ae00ce1bc5100aeec639546f23fb83424"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae00ce1bc5100aeec639546f23fb83424">&#9670;&nbsp;</a></span>blit() <span class="overload">[6/6]</span></h2>
+<a id="ab4b9b024c4da03f270bf7f034df811a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4b9b024c4da03f270bf7f034df811a4">&#9670;&nbsp;</a></span>blit() <span class="overload">[6/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2509,13 +2585,13 @@ The parameter alpha is especially useful when blitting source images that don't 
         <tr>
           <td class="memname">bool april::Texture::blit </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>srcRect</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">cgvec2&#160;</td>
+          <td class="paramtype">cgvec2i&#160;</td>
           <td class="paramname"><em>destPosition</em>, </td>
         </tr>
         <tr>
@@ -2553,6 +2629,104 @@ The parameter alpha is especially useful when blitting source images that don't 
 <dd>
 The parameter alpha is especially useful when blitting source images that don't have an alpha channel. </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classapril_1_1_texture.html#afc3087fc47dd91ae87d69e14b36b4ff2" title="Does an image data block transfer onto the texture. ">blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)</a> </dd></dl>
+
+</div>
+</div>
+<a id="acd7cb986524534b72ed369d3d803cb61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd7cb986524534b72ed369d3d803cb61">&#9670;&nbsp;</a></span>blitRect() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool april::Texture::blitRect </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>w</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;&#160;</td>
+          <td class="paramname"><em>color</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Blits a rectangle area with one color. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>X-coordinate. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>Y-coordinate. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">w</td><td>Width of the area. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">h</td><td>Height of the area. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">color</td><td>The <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> used for blitting. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if successful. </dd></dl>
+
+</div>
+</div>
+<a id="ad9ce23f1fdac99283cff7e90e94dd77d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9ce23f1fdac99283cff7e90e94dd77d">&#9670;&nbsp;</a></span>blitRect() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool april::Texture::blitRect </td>
+          <td>(</td>
+          <td class="paramtype">cgrecti&#160;</td>
+          <td class="paramname"><em>rect</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;&#160;</td>
+          <td class="paramname"><em>color</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Blits a rectangle area with one color. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">rect</td><td>The rectangle area. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">color</td><td>The <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> used for blitting. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if successful. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classapril_1_1_texture.html#acd7cb986524534b72ed369d3d803cb61" title="Blits a rectangle area with one color. ">blitRect(int x, int y, int w, int h, const Color&amp; color)</a> </dd></dl>
 
 </div>
 </div>
@@ -2869,8 +3043,8 @@ The parameter alpha is especially useful when blitting source images that don't 
 
 </div>
 </div>
-<a id="a296410da287fb7bd3921df7ffcabfe70"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a296410da287fb7bd3921df7ffcabfe70">&#9670;&nbsp;</a></span>blitStretch() <span class="overload">[4/6]</span></h2>
+<a id="a7b5ca216eb4993f4828449fc769dcbb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b5ca216eb4993f4828449fc769dcbb2">&#9670;&nbsp;</a></span>blitStretch() <span class="overload">[4/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2878,13 +3052,13 @@ The parameter alpha is especially useful when blitting source images that don't 
         <tr>
           <td class="memname">bool april::Texture::blitStretch </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>srcRect</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>destRect</em>, </td>
         </tr>
         <tr>
@@ -2946,8 +3120,8 @@ The parameter alpha is especially useful when blitting source images that don't 
 
 </div>
 </div>
-<a id="af58313aa735027d4a5aed8442df31348"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af58313aa735027d4a5aed8442df31348">&#9670;&nbsp;</a></span>blitStretch() <span class="overload">[5/6]</span></h2>
+<a id="a050882204b20630f43ce837747602d5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a050882204b20630f43ce837747602d5d">&#9670;&nbsp;</a></span>blitStretch() <span class="overload">[5/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2955,13 +3129,13 @@ The parameter alpha is especially useful when blitting source images that don't 
         <tr>
           <td class="memname">bool april::Texture::blitStretch </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>srcRect</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>destRect</em>, </td>
         </tr>
         <tr>
@@ -3002,8 +3176,8 @@ The parameter alpha is especially useful when blitting source images that don't 
 
 </div>
 </div>
-<a id="a1e7fc8faa90a320affbf5b3916fb05e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e7fc8faa90a320affbf5b3916fb05e6">&#9670;&nbsp;</a></span>blitStretch() <span class="overload">[6/6]</span></h2>
+<a id="a77fd193676f258b8e56a85fa71125b50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77fd193676f258b8e56a85fa71125b50">&#9670;&nbsp;</a></span>blitStretch() <span class="overload">[6/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3011,13 +3185,13 @@ The parameter alpha is especially useful when blitting source images that don't 
         <tr>
           <td class="memname">bool april::Texture::blitStretch </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>srcRect</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>destRect</em>, </td>
         </tr>
         <tr>
@@ -3255,8 +3429,8 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
 
 </div>
 </div>
-<a id="a56715df9f0efb53a80bf0423e43465dd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a56715df9f0efb53a80bf0423e43465dd">&#9670;&nbsp;</a></span>fillRect() <span class="overload">[2/2]</span></h2>
+<a id="a1dcbad5372c1c1eb40884b2017521242"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1dcbad5372c1c1eb40884b2017521242">&#9670;&nbsp;</a></span>fillRect() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3264,7 +3438,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
         <tr>
           <td class="memname">bool april::Texture::fillRect </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>rect</em>, </td>
         </tr>
         <tr>
@@ -3475,8 +3649,8 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
 
 </div>
 </div>
-<a id="af8b365934d42ef652b00f9d915daa089"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af8b365934d42ef652b00f9d915daa089">&#9670;&nbsp;</a></span>getInterpolatedPixel() <span class="overload">[2/2]</span></h2>
+<a id="a95c8520ea0e47e5ee560048296ce64ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95c8520ea0e47e5ee560048296ce64ac">&#9670;&nbsp;</a></span>getInterpolatedPixel() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3484,7 +3658,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
         <tr>
           <td class="memname"><a class="el" href="classapril_1_1_color.html">Color</a> april::Texture::getInterpolatedPixel </td>
           <td>(</td>
-          <td class="paramtype">cgvec2&#160;</td>
+          <td class="paramtype">cgvec2f&#160;</td>
           <td class="paramname"><em>position</em></td><td>)</td>
           <td></td>
         </tr>
@@ -3541,8 +3715,8 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
 
 </div>
 </div>
-<a id="a23478b1f97e9a35d6f2597980ab413de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a23478b1f97e9a35d6f2597980ab413de">&#9670;&nbsp;</a></span>getPixel() <span class="overload">[2/2]</span></h2>
+<a id="aa52920b97db787ffbb74e0b60485f1b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa52920b97db787ffbb74e0b60485f1b0">&#9670;&nbsp;</a></span>getPixel() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3550,7 +3724,7 @@ The data will be copied in the same pixel format as this <a class="el" href="cla
         <tr>
           <td class="memname"><a class="el" href="classapril_1_1_color.html">Color</a> april::Texture::getPixel </td>
           <td>(</td>
-          <td class="paramtype">cgvec2&#160;</td>
+          <td class="paramtype">cgvec2i&#160;</td>
           <td class="paramname"><em>position</em></td><td>)</td>
           <td></td>
         </tr>
@@ -3829,8 +4003,8 @@ This is an expensive operation and should be used sparingly. </dd></dl>
 
 </div>
 </div>
-<a id="a309a60aa807c726f6e43dad5091dea21"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a309a60aa807c726f6e43dad5091dea21">&#9670;&nbsp;</a></span>invert() <span class="overload">[2/2]</span></h2>
+<a id="a690dde31567f8fa8e2e8fac9d0ef18f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a690dde31567f8fa8e2e8fac9d0ef18f8">&#9670;&nbsp;</a></span>invert() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3838,7 +4012,7 @@ This is an expensive operation and should be used sparingly. </dd></dl>
         <tr>
           <td class="memname">bool april::Texture::invert </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>rect</em></td><td>)</td>
           <td></td>
         </tr>
@@ -4064,8 +4238,8 @@ This is an expensive operation and should be used sparingly. </dd></dl>
 
 </div>
 </div>
-<a id="a38373302a82d0dde6618e5424438419f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38373302a82d0dde6618e5424438419f">&#9670;&nbsp;</a></span>rotateHue() <span class="overload">[2/2]</span></h2>
+<a id="ae3859670232a7c45946583c07a747f50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3859670232a7c45946583c07a747f50">&#9670;&nbsp;</a></span>rotateHue() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4073,7 +4247,7 @@ This is an expensive operation and should be used sparingly. </dd></dl>
         <tr>
           <td class="memname">bool april::Texture::rotateHue </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>rect</em>, </td>
         </tr>
         <tr>
@@ -4167,8 +4341,8 @@ This is an expensive operation and should be used sparingly. </dd></dl>
 
 </div>
 </div>
-<a id="aee1b7ac09c92fbe3bd3deb0ed79852d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee1b7ac09c92fbe3bd3deb0ed79852d2">&#9670;&nbsp;</a></span>saturate() <span class="overload">[2/2]</span></h2>
+<a id="ad54bd7ae460c2f71a9b5841dc16b0106"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad54bd7ae460c2f71a9b5841dc16b0106">&#9670;&nbsp;</a></span>saturate() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4176,7 +4350,7 @@ This is an expensive operation and should be used sparingly. </dd></dl>
         <tr>
           <td class="memname">bool april::Texture::saturate </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>rect</em>, </td>
         </tr>
         <tr>
@@ -4253,8 +4427,8 @@ This is an expensive operation and should be used sparingly. </dd></dl>
 
 </div>
 </div>
-<a id="a02205c40e53006299801eb3bb22dae52"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a02205c40e53006299801eb3bb22dae52">&#9670;&nbsp;</a></span>setPixel() <span class="overload">[2/2]</span></h2>
+<a id="ac3b5fe594e1aece8ec4b2b7658ce0c74"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3b5fe594e1aece8ec4b2b7658ce0c74">&#9670;&nbsp;</a></span>setPixel() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4262,7 +4436,7 @@ This is an expensive operation and should be used sparingly. </dd></dl>
         <tr>
           <td class="memname">bool april::Texture::setPixel </td>
           <td>(</td>
-          <td class="paramtype">cgvec2&#160;</td>
+          <td class="paramtype">cgvec2i&#160;</td>
           <td class="paramname"><em>position</em>, </td>
         </tr>
         <tr>
@@ -4586,8 +4760,8 @@ This should usually not be used externally. load() uses this internally when the
 
 </div>
 </div>
-<a id="a998d0f5be1d84b722475a2b27c8bd3b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a998d0f5be1d84b722475a2b27c8bd3b6">&#9670;&nbsp;</a></span>write() <span class="overload">[4/6]</span></h2>
+<a id="a293b10462362366d5c00a00efdbff325"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a293b10462362366d5c00a00efdbff325">&#9670;&nbsp;</a></span>write() <span class="overload">[4/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4595,13 +4769,13 @@ This should usually not be used externally. load() uses this internally when the
         <tr>
           <td class="memname">bool april::Texture::write </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>srcRect</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">cgvec2&#160;</td>
+          <td class="paramtype">cgvec2i&#160;</td>
           <td class="paramname"><em>destPosition</em>, </td>
         </tr>
         <tr>
@@ -4654,8 +4828,8 @@ This should usually not be used externally. load() uses this internally when the
 
 </div>
 </div>
-<a id="ae150a664f9517b1aad3c55a261179625"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae150a664f9517b1aad3c55a261179625">&#9670;&nbsp;</a></span>write() <span class="overload">[5/6]</span></h2>
+<a id="a2370ca6bd77e01891cbe2341c3e01d85"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2370ca6bd77e01891cbe2341c3e01d85">&#9670;&nbsp;</a></span>write() <span class="overload">[5/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4663,13 +4837,13 @@ This should usually not be used externally. load() uses this internally when the
         <tr>
           <td class="memname">bool april::Texture::write </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>srcRect</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">cgvec2&#160;</td>
+          <td class="paramtype">cgvec2i&#160;</td>
           <td class="paramname"><em>destPosition</em>, </td>
         </tr>
         <tr>
@@ -4701,8 +4875,8 @@ This should usually not be used externally. load() uses this internally when the
 
 </div>
 </div>
-<a id="a687db2146ff921d78379df3750bf77d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a687db2146ff921d78379df3750bf77d4">&#9670;&nbsp;</a></span>write() <span class="overload">[6/6]</span></h2>
+<a id="a2c8d41acebe97ec09c3fd2e0be519ba2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c8d41acebe97ec09c3fd2e0be519ba2">&#9670;&nbsp;</a></span>write() <span class="overload">[6/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -4710,13 +4884,13 @@ This should usually not be used externally. load() uses this internally when the
         <tr>
           <td class="memname">bool april::Texture::write </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>srcRect</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">cgvec2&#160;</td>
+          <td class="paramtype">cgvec2i&#160;</td>
           <td class="paramname"><em>destPosition</em>, </td>
         </tr>
         <tr>
@@ -5034,8 +5208,8 @@ This should usually not be used externally. load() uses this internally when the
 
 </div>
 </div>
-<a id="af04b287200710afa257273845280cd6d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af04b287200710afa257273845280cd6d">&#9670;&nbsp;</a></span>writeStretch() <span class="overload">[4/6]</span></h2>
+<a id="aa1b0d358c7e8fc1c43c29e6a2e8030ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1b0d358c7e8fc1c43c29e6a2e8030ba">&#9670;&nbsp;</a></span>writeStretch() <span class="overload">[4/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -5043,13 +5217,13 @@ This should usually not be used externally. load() uses this internally when the
         <tr>
           <td class="memname">bool april::Texture::writeStretch </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>srcRect</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>destRect</em>, </td>
         </tr>
         <tr>
@@ -5102,8 +5276,8 @@ This should usually not be used externally. load() uses this internally when the
 
 </div>
 </div>
-<a id="a69f6ac6257ad2202227bc45b59afd5d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69f6ac6257ad2202227bc45b59afd5d4">&#9670;&nbsp;</a></span>writeStretch() <span class="overload">[5/6]</span></h2>
+<a id="a3ccf16bada4ed782cf6b195ce629ffd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ccf16bada4ed782cf6b195ce629ffd6">&#9670;&nbsp;</a></span>writeStretch() <span class="overload">[5/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -5111,13 +5285,13 @@ This should usually not be used externally. load() uses this internally when the
         <tr>
           <td class="memname">bool april::Texture::writeStretch </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>srcRect</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>destRect</em>, </td>
         </tr>
         <tr>
@@ -5149,8 +5323,8 @@ This should usually not be used externally. load() uses this internally when the
 
 </div>
 </div>
-<a id="a471147790cebe75271bf732f60e34d82"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a471147790cebe75271bf732f60e34d82">&#9670;&nbsp;</a></span>writeStretch() <span class="overload">[6/6]</span></h2>
+<a id="ab35c445996f0edef93a5b24d9be3167f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab35c445996f0edef93a5b24d9be3167f">&#9670;&nbsp;</a></span>writeStretch() <span class="overload">[6/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -5158,13 +5332,13 @@ This should usually not be used externally. load() uses this internally when the
         <tr>
           <td class="memname">bool april::Texture::writeStretch </td>
           <td>(</td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>srcRect</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">cgrect&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>destRect</em>, </td>
         </tr>
         <tr>

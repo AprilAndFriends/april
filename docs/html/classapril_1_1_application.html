@@ -136,8 +136,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a12a2a443d1e09b247e9d13e2ccb4726f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a12a2a443d1e09b247e9d13e2ccb4726f">resume</a> ()</td></tr>
 <tr class="memdesc:a12a2a443d1e09b247e9d13e2ccb4726f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resumes application.  <a href="#a12a2a443d1e09b247e9d13e2ccb4726f">More...</a><br /></td></tr>
 <tr class="separator:a12a2a443d1e09b247e9d13e2ccb4726f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a61738d72e80e6f6eeea21068bcb0f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a4a61738d72e80e6f6eeea21068bcb0f0">repeatLastFrame</a> (bool systemEnabled)</td></tr>
+<tr class="memdesc:a4a61738d72e80e6f6eeea21068bcb0f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes and render a single frame without stopping the update thread.  <a href="#a4a61738d72e80e6f6eeea21068bcb0f0">More...</a><br /></td></tr>
+<tr class="separator:a4a61738d72e80e6f6eeea21068bcb0f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e09ae655e30a8f05a60e17f280bfcbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a4e09ae655e30a8f05a60e17f280bfcbf">renderFrameSync</a> ()</td></tr>
-<tr class="memdesc:a4e09ae655e30a8f05a60e17f280bfcbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes and render a single frame.  <a href="#a4e09ae655e30a8f05a60e17f280bfcbf">More...</a><br /></td></tr>
+<tr class="memdesc:a4e09ae655e30a8f05a60e17f280bfcbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes and render a single frame and stops the update thread.  <a href="#a4e09ae655e30a8f05a60e17f280bfcbf">More...</a><br /></td></tr>
 <tr class="separator:a4e09ae655e30a8f05a60e17f280bfcbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ad3e7115aee0b8081e59dc34ffe7f9f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a7ad3e7115aee0b8081e59dc34ffe7f9f">queueMessageBox</a> (const <a class="el" href="classapril_1_1_message_box_data.html">MessageBoxData</a> &amp;data)</td></tr>
 <tr class="memdesc:a7ad3e7115aee0b8081e59dc34ffe7f9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a message box display.  <a href="#a7ad3e7115aee0b8081e59dc34ffe7f9f">More...</a><br /></td></tr>
@@ -502,7 +505,34 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Processes and render a single frame. </p>
+<p>Processes and render a single frame and stops the update thread. </p>
+<dl class="section note"><dt>Note</dt><dd>This is usually called internally in some implementations, due to specific OS limitations. </dd></dl>
+
+</div>
+</div>
+<a id="a4a61738d72e80e6f6eeea21068bcb0f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a61738d72e80e6f6eeea21068bcb0f0">&#9670;&nbsp;</a></span>repeatLastFrame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void april::Application::repeatLastFrame </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>systemEnabled</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Processes and render a single frame without stopping the update thread. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">systemEnabled</td><td>Whether the system present is actually enabled. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section note"><dt>Note</dt><dd>This is usually called internally in some implementations, due to specific OS limitations. </dd></dl>
 
 </div>
