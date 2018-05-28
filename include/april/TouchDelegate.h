@@ -31,7 +31,7 @@ namespace april
 
 		/// @brief Called when the number of touches or their position changes.
 		/// @param[in] touches A list of touch coordinates.
-		virtual void onTouch(const harray<gvec2>& touches);
+		virtual void onTouch(const harray<gvec2f>& touches);
 
 	};
 

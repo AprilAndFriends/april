@@ -19,7 +19,7 @@ namespace april
 		HL_ENUM_DEFINE(MotionEvent::Type, Gyroscope);
 	));
 
-	MotionEvent::MotionEvent(Type type, cgvec3 motionVector)
+	MotionEvent::MotionEvent(Type type, cgvec3f motionVector)
 	{
 		this->type = type;
 		this->motionVector = motionVector;

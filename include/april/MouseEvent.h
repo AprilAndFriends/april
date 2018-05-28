@@ -49,7 +49,7 @@ namespace april
 		/// @brief The event type.
 		Type type;
 		/// @brief The pointer position.
-		gvec2 position;
+		gvec2f position;
 		/// @brief The key code.
 		Key keyCode;
 		
@@ -57,7 +57,7 @@ namespace april
 		/// @param[in] type The event type.
 		/// @param[in] position The pointer position.
 		/// @param[in] keyCode The key code.
-		MouseEvent(Type type, cgvec2 position, Key keyCode);
+		MouseEvent(Type type, cgvec2f position, Key keyCode);
 		
 	};
 

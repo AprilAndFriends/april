@@ -48,12 +48,12 @@ namespace april
 		/// @brief The event type.
 		Type type;
 		/// @brief Motion data vector.
-		gvec3 motionVector;
+		gvec3f motionVector;
 
 		/// @brief Constructor.
 		/// @param[in] type The event type.
 		/// @param[in] motionVector Motion data vector.
-		MotionEvent(Type type, cgvec3 motionVector);
+		MotionEvent(Type type, cgvec3f motionVector);
 
 	};
 

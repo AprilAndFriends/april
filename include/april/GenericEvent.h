@@ -63,8 +63,8 @@ namespace april
 		float floatValue;
 		/// @brief A bool value related to the event.
 		bool boolValue;
-		/// @brief A gvec2 value related to the event.
-		gvec2 gvec2Value;
+		/// @brief A gvec2f value related to the event.
+		gvec2f gvec2fValue;
 
 		/// @brief Constructor.
 		/// @param[in] type The event type.
@@ -90,8 +90,8 @@ namespace april
 		GenericEvent(Type type, bool boolValue, float floatValue);
 		/// @brief Constructor.
 		/// @param[in] type The event type.
-		/// @param[in] gvec2Value A gvec2 value related to the event.
-		GenericEvent(Type type, cgvec2 gvec2Value);
+		/// @param[in] gvec2fValue A gvec2f value related to the event.
+		GenericEvent(Type type, cgvec2f gvec2fValue);
 
 	};
 

@@ -25,11 +25,11 @@ namespace april
 	{
 	public:
 		/// @brief Active touch pointers.
-		harray<gvec2> touches;
+		harray<gvec2f> touches;
 		
 		/// @brief Constructor.
 		/// @param[in] touches Active touch pointers.
-		TouchEvent(const harray<gvec2>& touches);
+		TouchEvent(const harray<gvec2f>& touches);
 		
 	};
 

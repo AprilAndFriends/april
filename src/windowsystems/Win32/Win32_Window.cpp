@@ -766,7 +766,7 @@ namespace april
 				{
 					WIN32_WINDOW->_updateCursorPosition();
 				}
-				april::window->queueMouseInput(MouseEvent::Type::Down, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), _getKeyFromMessage(message));
+				april::window->queueMouseInput(MouseEvent::Type::Down, gvec2f((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), _getKeyFromMessage(message));
 			}
 			break;
 		case WM_LBUTTONUP:
@@ -785,7 +785,7 @@ namespace april
 				{
 					WIN32_WINDOW->_updateCursorPosition();
 				}
-				april::window->queueMouseInput(MouseEvent::Type::Up, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), _getKeyFromMessage(message));
+				april::window->queueMouseInput(MouseEvent::Type::Up, gvec2f((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), _getKeyFromMessage(message));
 			}
 			break;
 		case WM_MOUSEMOVE:
@@ -803,7 +803,7 @@ namespace april
 					{
 						WIN32_WINDOW->_updateCursorPosition();
 					}
-					april::window->queueMouseInput(MouseEvent::Type::Move, gvec2((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), Key::None);
+					april::window->queueMouseInput(MouseEvent::Type::Move, gvec2f((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), Key::None);
 				}
 			}
 			break;
@@ -813,11 +813,11 @@ namespace april
 				_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 				if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 				{
-					april::window->queueMouseInput(MouseEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), Key::None);
+					april::window->queueMouseInput(MouseEvent::Type::Scroll, gvec2f(0.0f, -(float)_wheelDelta), Key::None);
 				}
 				else
 				{
-					april::window->queueMouseInput(MouseEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), Key::None);
+					april::window->queueMouseInput(MouseEvent::Type::Scroll, gvec2f(-(float)_wheelDelta, 0.0f), Key::None);
 				}
 			}
 			break;
@@ -827,11 +827,11 @@ namespace april
 				_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 				if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 				{
-					april::window->queueMouseInput(MouseEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), Key::None);
+					april::window->queueMouseInput(MouseEvent::Type::Scroll, gvec2f(-(float)_wheelDelta, 0.0f), Key::None);
 				}
 				else
 				{
-					april::window->queueMouseInput(MouseEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), Key::None);
+					april::window->queueMouseInput(MouseEvent::Type::Scroll, gvec2f(0.0f, -(float)_wheelDelta), Key::None);
 				}
 			}
 			break;

@@ -22,7 +22,7 @@ namespace april
 	{
 	}
 
-	void TouchDelegate::onTouch(const harray<gvec2>& touches)
+	void TouchDelegate::onTouch(const harray<gvec2f>& touches)
 	{
 		hlog::debug(logTag, "Event onTouch() was not implemented.");
 	}

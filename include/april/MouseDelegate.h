@@ -31,7 +31,7 @@ namespace april
 		virtual ~MouseDelegate();
 
 		/// @brief The cursor position in the current callback.
-		HL_DEFINE_GETSET(gvec2, currentCursorPosition, CurrentCursorPosition);
+		HL_DEFINE_GETSET(gvec2f, currentCursorPosition, CurrentCursorPosition);
 
 		/// @brief Called when a mouse button is pressed.
 		/// @param[in] keyCode The key's number code.
@@ -51,7 +51,7 @@ namespace april
 
 	protected:
 		/// @brief The cursor position in the current callback.
-		gvec2 currentCursorPosition;
+		gvec2f currentCursorPosition;
 
 	};
 

@@ -31,11 +31,11 @@ extern bool g_wnd_rotating;
 
 namespace april
 {
-	// TODOx - convert to gvec2 so it can be included in the class
+	// TODOx - convert to gvec2f so it can be included in the class
 	static harray<UITouch*> g_touches;
 	
 	// TODOx - probably not needed anymore
-	void updateCursorPosition(gvec2 touch)
+	void updateCursorPosition(gvec2f touch)
 	{
 		float scale = ((iOS_Window*) window)->_getTouchScale();
 		// return value stored in cursorX and cursorY		
@@ -271,7 +271,7 @@ namespace april
 		for_iter (i, 0, touches.size())
 		{
 			point = [touches[i] locationInView:glview];
-			this->queueTouchInput(MouseEvent::Type::Down, gvec2(point.x * scale, point.y * scale), previousSize + i);
+			this->queueTouchInput(MouseEvent::Type::Down, gvec2f(point.x * scale, point.y * scale), previousSize + i);
 		}
 	}
 
@@ -292,7 +292,7 @@ namespace april
 		for_iter (i, 0, touches.size())
 		{
 			point = [touches[i] locationInView:glview];
-			this->queueTouchInput(MouseEvent::Type::Up, gvec2(point.x * scale, point.y * scale), indices[i]);
+			this->queueTouchInput(MouseEvent::Type::Up, gvec2f(point.x * scale, point.y * scale), indices[i]);
 		}
 	}
 	
@@ -318,7 +318,7 @@ namespace april
 		for_iter (i, 0, touches.size())
 		{
 			point = [touches[i] locationInView:glview];
-			this->queueTouchInput(MouseEvent::Type::Move, gvec2(point.x * scale, point.y * scale), indices[i]);
+			this->queueTouchInput(MouseEvent::Type::Move, gvec2f(point.x * scale, point.y * scale), indices[i]);
 		}
 	}
 	

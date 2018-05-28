@@ -53,10 +53,10 @@ namespace april
 		this->floatValue = floatValue;
 	}
 
-	GenericEvent::GenericEvent(Type type, cgvec2 gvec2Value) : intValue(0), intValueOther(0), floatValue(0.0f), boolValue(false)
+	GenericEvent::GenericEvent(Type type, cgvec2f gvec2fValue) : intValue(0), intValueOther(0), floatValue(0.0f), boolValue(false)
 	{
 		this->type = type;
-		this->gvec2Value = gvec2Value;
+		this->gvec2fValue = gvec2fValue;
 	}
 
 }

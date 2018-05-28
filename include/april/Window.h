@@ -124,7 +124,7 @@ namespace april
 		/// @brief The system cursor.
 		HL_DEFINE_GET(Cursor*, cursor, Cursor);
 		/// @brief The cursor position.
-		HL_DEFINE_GET(gvec2, cursorPosition, CursorPosition);
+		HL_DEFINE_GET(gvec2f, cursorPosition, CursorPosition);
 		/// @brief Whether the virtual keyboard is visible.
 		HL_DEFINE_IS(virtualKeyboardVisible, VirtualKeyboardVisible);
 		/// @brief The ratio of how much height of the Window the virtual keyboard takes up.
@@ -141,7 +141,7 @@ namespace april
 		void setInputModeTranslations(hmap<InputMode, InputMode> value);
 		/// @brief Gets the Window size.
 		/// @return The Window size.
-		gvec2 getSize() const;
+		gvec2f getSize() const;
 		/// @brief Gets the Window size aspect ratio.
 		/// @return The Window size aspect ratio.
 		float getAspectRatio() const;
@@ -295,7 +295,7 @@ namespace april
 		/// @param[in] type The event type.
 		/// @param[in] position The pointer position.
 		/// @param[in] keyCode The key code.
-		virtual void handleMouseInput(MouseEvent::Type type, cgvec2 position, Key keyCode);
+		virtual void handleMouseInput(MouseEvent::Type type, cgvec2f position, Key keyCode);
 		/// @brief Handles a keyboard event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] keyCode The key code.
@@ -303,7 +303,7 @@ namespace april
 		virtual void handleKeyInput(KeyEvent::Type type, Key keyCode, unsigned int charCode);
 		/// @brief Handles a touch event and propagates it to the delegate.
 		/// @param[in] touches Active touch pointers.
-		virtual void handleTouchInput(const harray<gvec2>& touches);
+		virtual void handleTouchInput(const harray<gvec2f>& touches);
 		/// @brief Handles a controller event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] controllerIndex Index of the controller.
@@ -313,7 +313,7 @@ namespace april
 		/// @brief Handles a motion event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] motionVector Motion data vector.
-		virtual void handleMotionInput(MotionEvent::Type type, cgvec3 motionVector);
+		virtual void handleMotionInput(MotionEvent::Type type, cgvec3f motionVector);
 
 		/// @brief Handles a keyboard key press event and propagates it to the delegate.
 		/// @param[in] type The event type.
@@ -360,7 +360,7 @@ namespace april
 		/// @param[in] position The pointer position.
 		/// @param[in] keyCode The key code.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueMouseInput(MouseEvent::Type type, cgvec2 position, Key keyCode);
+		virtual void queueMouseInput(MouseEvent::Type type, cgvec2f position, Key keyCode);
 		/// @brief Queues a keyboard event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] keyCode The key code.
@@ -372,7 +372,7 @@ namespace april
 		/// @param[in] position The pointer position.
 		/// @param[in] index The pointer index.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueTouchInput(MouseEvent::Type type, cgvec2 position, int index);
+		virtual void queueTouchInput(MouseEvent::Type type, cgvec2f position, int index);
 		/// @brief Queues a controller event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] controllerIndex Index of the controller.
@@ -384,7 +384,7 @@ namespace april
 		/// @param[in] type The event type.
 		/// @param[in] motionVector Motion data vector.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueMotionInput(MotionEvent::Type type, cgvec3 motionVector);
+		virtual void queueMotionInput(MotionEvent::Type type, cgvec3f motionVector);
 
 		/// @brief Performs the update of one frame.
 		/// @param[in] timeDelta Time that has passed since the last frame.
@@ -435,7 +435,7 @@ namespace april
 		/// @note Used when restoring the window size after switching from fullscreen to windowed.
 		int lastHeight;
 		/// @brief Current cursor position.
-		gvec2 cursorPosition;
+		gvec2f cursorPosition;
 		/// @brief Current system cursor.
 		Cursor* cursor;
 		/// @brief Whether the system cursor is visible.
@@ -455,7 +455,7 @@ namespace april
 		/// @brief Whether multi-touch mode is currently active.
 		bool multiTouchActive;
 		/// @brief The current active touch pointers.
-		harray<gvec2> touches;
+		harray<gvec2f> touches;
 		/// @brief Queued mouse events.
 		harray<MouseEvent> mouseEvents;
 		/// @brief Queued keyboard events.

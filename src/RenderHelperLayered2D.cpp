@@ -19,7 +19,7 @@ namespace april
 	// optimizations, but they are not thread-safe
 	static PlainVertex pv[LINE_VERTEX_POOL_SIZE];
 	static TexturedVertex tv[LINE_VERTEX_POOL_SIZE];
-	static const grect screenRect(-1.0f, -1.0f, 2.0f, 2.0f);
+	static const grectf screenRect(-1.0f, -1.0f, 2.0f, 2.0f);
 
 	RenderHelperLayered2D::RenderCall::RenderCall(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, Color color) :
 		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(false)
@@ -79,7 +79,7 @@ namespace april
 		}
 	}
 
-	RenderHelperLayered2D::Layer::Layer(int index, RenderCall* renderCall, cgrect rect)
+	RenderHelperLayered2D::Layer::Layer(int index, RenderCall* renderCall, cgrectf rect)
 	{
 		this->index = index;
 		this->rects += rect;
@@ -340,7 +340,7 @@ namespace april
 
 	bool RenderHelperLayered2D::_checkCurrentIntersection(Layer* layer)
 	{
-		foreach (grect, it, layer->rects)
+		foreach (grectf, it, layer->rects)
 		{
 			if (this->_boundingRect.intersects(*it))
 			{
@@ -642,7 +642,7 @@ namespace april
 		return true;
 	}
 
-	bool RenderHelperLayered2D::drawRect(cgrect rect, const Color& color)
+	bool RenderHelperLayered2D::drawRect(cgrectf rect, const Color& color)
 	{
 		pv[0].x = pv[2].x = pv[4].x = pv[5].x = rect.x;
 		pv[0].y = pv[1].y = pv[4].y = pv[6].y = rect.y;
@@ -651,7 +651,7 @@ namespace april
 		return this->render(RenderOperation::LineList, pv, LINE_VERTEX_POOL_SIZE, color);
 	}
 
-	bool RenderHelperLayered2D::drawFilledRect(cgrect rect, const Color& color)
+	bool RenderHelperLayered2D::drawFilledRect(cgrectf rect, const Color& color)
 	{
 		pv[0].x = pv[2].x = pv[4].x = rect.x;
 		pv[0].y = pv[1].y = pv[3].y = rect.y;
@@ -660,12 +660,12 @@ namespace april
 		return this->render(RenderOperation::TriangleList, pv, TRIANGLE_VERTEX_POOL_SIZE, color);
 	}
 
-	bool RenderHelperLayered2D::drawTexturedRect(cgrect rect, cgrect src)
+	bool RenderHelperLayered2D::drawTexturedRect(cgrectf rect, cgrectf src)
 	{
 		return this->drawTexturedRect(rect, src, Color::White);
 	}
 
-	bool RenderHelperLayered2D::drawTexturedRect(cgrect rect, cgrect src, const Color& color)
+	bool RenderHelperLayered2D::drawTexturedRect(cgrectf rect, cgrectf src, const Color& color)
 	{
 		tv[0].x = tv[2].x = tv[4].x = rect.x;
 		tv[0].y = tv[1].y = tv[3].y = rect.y;

@@ -52,10 +52,10 @@ namespace april
 		bool render(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color);
 		bool render(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count);
 		bool render(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
-		bool drawRect(cgrect rect, const Color& color);
-		bool drawFilledRect(cgrect rect, const Color& color);
-		bool drawTexturedRect(cgrect rect, cgrect src);
-		bool drawTexturedRect(cgrect rect, cgrect src, const Color& color);
+		bool drawRect(cgrectf rect, const Color& color);
+		bool drawFilledRect(cgrectf rect, const Color& color);
+		bool drawTexturedRect(cgrectf rect, cgrectf src);
+		bool drawTexturedRect(cgrectf rect, cgrectf src, const Color& color);
 
 	protected:
 		class RenderCall
@@ -85,12 +85,12 @@ namespace april
 			int index;
 			RenderState state;
 			RenderOperation renderOperation;
-			harray<grect> rects;
+			harray<grectf> rects;
 			harray<ColoredVertex> coloredVertices;
 			harray<ColoredTexturedVertex> coloredTexturedVertices;
 			harray<Layer*> parallelLayers;
 
-			Layer(int index, RenderCall* renderCall, cgrect rect);
+			Layer(int index, RenderCall* renderCall, cgrectf rect);
 			~Layer();
 
 		};
@@ -127,9 +127,9 @@ namespace april
 		unsigned int _nativeColor;
 		int _potCount;
 		gmat4 _transformationMatrix;
-		gvec2 _min;
-		gvec2 _max;
-		grect _boundingRect;
+		gvec2f _min;
+		gvec2f _max;
+		grectf _boundingRect;
 
 		void _updateVertices(RenderCall* renderCall, PlainVertex* vertices, int count, Color color);
 		void _updateVertices(RenderCall* renderCall, TexturedVertex* vertices, int count, Color color);

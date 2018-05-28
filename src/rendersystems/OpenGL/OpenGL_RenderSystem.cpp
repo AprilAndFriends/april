@@ -163,13 +163,13 @@ namespace april
 
 	void OpenGL_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
 	{
-		grect viewport(0.0f, 0.0f, (float)w, (float)h);
+		grectf viewport(0.0f, 0.0f, (float)w, (float)h);
 		this->setViewport(viewport);
 		this->setOrthoProjection(viewport);
 		this->_updateDeviceState(this->state, true);
 	}
 
-	void OpenGL_RenderSystem::_setDeviceViewport(cgrect rect)
+	void OpenGL_RenderSystem::_setDeviceViewport(cgrectf rect)
 	{
 		// because GL has to defy screen logic and has (0,0) in the bottom left corner
 		glViewport((int)rect.x, (int)(april::window->getHeight() - rect.h - rect.y), (int)rect.w, (int)rect.h);

@@ -396,30 +396,30 @@ namespace april
 		/// @param[in] position Pixel coordinate.
 		/// @return The Color of the pixel.
 		/// @see getPixel(int x, int y)
-		Color getPixel(cgvec2 position);
+		Color getPixel(cgvec2f position);
 		/// @brief Sets the color of a specific pixel.
 		/// @param[in] position Pixel coordinate.
 		/// @param[in] color The new Color of the pixel.
 		/// @return True if successful.
 		/// @see setPixel(int x, int y, const Color& color)
-		bool setPixel(cgvec2 position, const Color& color);
+		bool setPixel(cgvec2f position, const Color& color);
 		/// @brief Gets the linearly interpolated color between two pixels.
 		/// @param[in] position Pixel coordinate.
 		/// @return The interpolated Color of the pixel.
 		/// @see getInterpolatedPixel(float x, float y)
-		Color getInterpolatedPixel(cgvec2 position);
+		Color getInterpolatedPixel(cgvec2f position);
 		/// @brief Fills a rectangle area with one color.
 		/// @param[in] rect The rectangle area.
 		/// @param[in] color The Color used for filling.
 		/// @return True if successful.
 		/// @see fillRect(int x, int y, int w, int h, const Color& color)
-		bool fillRect(cgrect rect, const Color& color);
+		bool fillRect(cgrectf rect, const Color& color);
 		/// @brief Blits a rectangle area with one color.
 		/// @param[in] rect The rectangle area.
 		/// @param[in] color The Color used for blitting.
 		/// @return True if successful.
 		/// @see blitRect(int x, int y, int w, int h, const Color& color)
-		bool blitRect(cgrect rect, const Color& color);
+		bool blitRect(cgrectf rect, const Color& color);
 		/// @brief Copies the image data into a buffer.
 		/// @param[out] output The output buffer.
 		/// @return True if successful.
@@ -451,7 +451,7 @@ namespace april
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten.
 		/// @see write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
-		bool write(cgrect srcRect, cgvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		bool write(cgrectf srcRect, cgvec2f destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		/// @brief Writes image data directly onto the image.
 		/// @param[in] srcRect Source data rectangle.
 		/// @param[in] destPosition Destination coordinates.
@@ -459,7 +459,7 @@ namespace april
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten.
 		/// @see write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
-		bool write(cgrect srcRect, cgvec2 destPosition, Texture* texture);
+		bool write(cgrectf srcRect, cgvec2f destPosition, Texture* texture);
 		/// @brief Writes image data directly onto the image.
 		/// @param[in] srcRect Source data rectangle.
 		/// @param[in] destPosition Destination coordinates.
@@ -467,7 +467,7 @@ namespace april
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten.
 		/// @see write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
-		bool write(cgrect srcRect, cgvec2 destPosition, Image* image);
+		bool write(cgrectf srcRect, cgvec2f destPosition, Image* image);
 
 		/// @brief Writes image data directly onto the image while trying to stretch the pixels. Stretched pixels will be linearly interpolated.
 		/// @param[in] sx Source data X-coordinate.
@@ -493,7 +493,7 @@ namespace april
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten.
 		/// @see writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
-		bool writeStretch(cgrect srcRect, cgrect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		bool writeStretch(cgrectf srcRect, cgrectf destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
 		/// @brief Writes image data directly onto the image while trying to stretch the pixels. Stretched pixels will be linearly interpolated.
 		/// @param[in] srcRect Source data rectangle.
 		/// @param[in] destRect Destination rectangle.
@@ -501,7 +501,7 @@ namespace april
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten.
 		/// @see writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
-		bool writeStretch(cgrect srcRect, cgrect destRect, Texture* texture);
+		bool writeStretch(cgrectf srcRect, cgrectf destRect, Texture* texture);
 		/// @brief Writes image data directly onto the image while trying to stretch the pixels. Stretched pixels will be linearly interpolated.
 		/// @param[in] srcRect Source data rectangle.
 		/// @param[in] destRect Destination rectangle.
@@ -509,7 +509,7 @@ namespace april
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten.
 		/// @see writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
-		bool writeStretch(cgrect srcRect, cgrect destRect, Image* image);
+		bool writeStretch(cgrectf srcRect, cgrectf destRect, Image* image);
 		/// @brief Does an image data block transfer onto the image.
 		/// @param[in] sx Source data X-coordinate.
 		/// @param[in] sy Source data Y-coordinate.
@@ -536,7 +536,7 @@ namespace april
 		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
 		/// @note The parameter alpha is especially useful when blitting source images that don't have an alpha channel.
 		/// @see blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
-		bool blit(cgrect srcRect, cgvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
+		bool blit(cgrectf srcRect, cgvec2f destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
 		/// @brief Does an image data block transfer onto the image.
 		/// @param[in] srcRect Source data rectangle.
 		/// @param[in] destPosition Destination coordinates.
@@ -546,7 +546,7 @@ namespace april
 		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
 		/// @note The parameter alpha is especially useful when blitting source images that don't have an alpha channel.
 		/// @see blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
-		bool blit(cgrect srcRect, cgvec2 destPosition, Texture* texture, unsigned char alpha = 255);
+		bool blit(cgrectf srcRect, cgvec2f destPosition, Texture* texture, unsigned char alpha = 255);
 		/// @brief Does an image data block transfer onto the image.
 		/// @param[in] srcRect Source data rectangle.
 		/// @param[in] destPosition Destination coordinates.
@@ -556,7 +556,7 @@ namespace april
 		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
 		/// @note The parameter alpha is especially useful when blitting source images that don't have an alpha channel.
 		/// @see blit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
-		bool blit(cgrect srcRect, cgvec2 destPosition, Image* image, unsigned char alpha = 255);
+		bool blit(cgrectf srcRect, cgvec2f destPosition, Image* image, unsigned char alpha = 255);
 		/// @brief Does a stretched image data block transfer onto the image.
 		/// @param[in] sx Source data X-coordinate.
 		/// @param[in] sy Source data Y-coordinate.
@@ -585,7 +585,7 @@ namespace april
 		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
 		/// @note The parameter alpha is especially useful when blitting source images that don't have an alpha channel.
 		/// @see blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
-		bool blitStretch(cgrect srcRect, cgrect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
+		bool blitStretch(cgrectf srcRect, cgrectf destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
 		/// @brief Does a stretched image data block transfer onto the image.
 		/// @param[in] srcRect Source data rectangle.
 		/// @param[in] destRect Destination rectangle.
@@ -595,7 +595,7 @@ namespace april
 		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
 		/// @note The parameter alpha is especially useful when blitting source images that don't have an alpha channel.
 		/// @see blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
-		bool blitStretch(cgrect srcRect, cgrect destRect, Texture* texture, unsigned char alpha = 255);
+		bool blitStretch(cgrectf srcRect, cgrectf destRect, Texture* texture, unsigned char alpha = 255);
 		/// @brief Does a stretched image data block transfer onto the image.
 		/// @param[in] srcRect Source data rectangle.
 		/// @param[in] destRect Destination rectangle.
@@ -605,25 +605,25 @@ namespace april
 		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
 		/// @note The parameter alpha is especially useful when blitting source images that don't have an alpha channel.
 		/// @see blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
-		bool blitStretch(cgrect srcRect, cgrect destRect, Image* image, unsigned char alpha = 255);
+		bool blitStretch(cgrectf srcRect, cgrectf destRect, Image* image, unsigned char alpha = 255);
 		/// @brief Rotates the pixel hue of a rectangle area on the image.
 		/// @param[in] rect Rectangle area.
 		/// @param[in] degrees By how many degrees the the should be rotated.
 		/// @return True if successful.
 		/// @note This is lossy operation.
 		/// @note This is an expensive operation and should be used sparingly.
-		bool rotateHue(cgrect rect, float degrees);
+		bool rotateHue(cgrectf rect, float degrees);
 		/// @brief Changes the saturation level of pixels of a rectangle area on the image.
 		/// @param[in] rect Rectangle area.
 		/// @param[in] factor The saturation multiplier factor.
 		/// @return True if successful.
 		/// @note This is lossy operation.
 		/// @note This is an expensive operation and should be used sparingly.
-		bool saturate(cgrect rect, float factor);
+		bool saturate(cgrectf rect, float factor);
 		/// @brief Inverts the pixel colors of a rectangle area on the image.
 		/// @param[in] rect Rectangle area.
 		/// @return True if successful.
-		bool invert(cgrect rect);
+		bool invert(cgrectf rect);
 		/// @brief Inserts image data as alpha channel into this image.
 		/// @param[in] image The source Image.
 		/// @param[in] median The median value for insertion.

@@ -19,7 +19,7 @@ namespace april
 		HL_ENUM_DEFINE(MouseEvent::Type, Scroll);
 	));
 
-	MouseEvent::MouseEvent(Type type, cgvec2 position, Key keyCode)
+	MouseEvent::MouseEvent(Type type, cgvec2f position, Key keyCode)
 	{
 		this->type = type;
 		this->position = position;

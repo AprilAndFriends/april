@@ -259,10 +259,10 @@ namespace april
 		bool hasTexturesReadyForUpload() const;
 		/// @brief Gets the render viewport.
 		/// @return The render viewport.
-		grect getViewport() const;
+		grectf getViewport() const;
 		/// @brief Sets the render viewport.
 		/// @param[in] value The viewport rectangle.
-		void setViewport(cgrect value);
+		void setViewport(cgrectf value);
 		/// @brief Gets the current modelview matrix.
 		/// @return The current modelview matrix.
 		gmat4 getModelviewMatrix() const;
@@ -375,25 +375,25 @@ namespace april
 
 		/// @brief Gets the ortho-projection rectangle.
 		/// @return The ortho-projection rectangle.
-		grect getOrthoProjection() const;
+		grectf getOrthoProjection() const;
 		/// @brief Activate ortho-projection using a rectangle.
 		/// @param[in] rect The ortho-projection rectangle.
-		void setOrthoProjection(cgrect rect);
+		void setOrthoProjection(cgrectf rect);
 		/// @brief Activate ortho-projection using a rectangle.
 		/// @param[in] rect The ortho-projection rectangle.
 		/// @param[in] nearZ The near clipping plane Z coordinate.
 		/// @param[in] farZ The far clipping plane Z coordinate.
-		void setOrthoProjection(cgrect rect, float nearZ, float farZ);
+		void setOrthoProjection(cgrectf rect, float nearZ, float farZ);
 		/// @brief Activate ortho-projection using just the size.
 		/// @param[in] size The ortho-projection size.
 		/// @note This assumes the coordinates of the ortho-projection is (0,0).
-		void setOrthoProjection(cgvec2 size);
+		void setOrthoProjection(cgvec2f size);
 		/// @brief Activate ortho-projection using just the size.
 		/// @param[in] size The ortho-projection size.
 		/// @param[in] nearZ The near clipping plane Z coordinate.
 		/// @param[in] farZ The far clipping plane Z coordinate.
 		/// @note This assumes the coordinates of the ortho-projection is (0,0).
-		void setOrthoProjection(cgvec2 size, float nearZ, float farZ);
+		void setOrthoProjection(cgvec2f size, float nearZ, float farZ);
 		/// @brief Sets the current depth-buffer state.
 		/// @param[in] enabled Whether to enable or disable the depth-buffer itself.
 		/// @param[in] writeEnabled Whether writing to the depth-buffer is enabled.
@@ -432,11 +432,11 @@ namespace april
 		void translate(float x, float y, float z = 0.0f);
 		/// @brief Translates the modelview matrix.
 		/// @param[in] vector The translation vector.
-		void translate(cgvec3 vector);
+		void translate(cgvec3f vector);
 		/// @brief Translates the modelview matrix.
 		/// @param[in] vector The 2D translation vector.
 		/// @note This ignores the Z-coordinate.
-		void translate(cgvec2 vector);
+		void translate(cgvec2f vector);
 		/// @brief Rotates the modelview matrix around the -Z axis.
 		/// @param[in] angle Angle to rotate.
 		void rotate(float angle);
@@ -450,7 +450,7 @@ namespace april
 		/// @brief Rotates the modelview matrix around an axis.
 		/// @param[in] axis The rotation axis.
 		/// @param[in] angle Angle to rotate.
-		void rotate(cgvec3 axis, float angle);
+		void rotate(cgvec3f axis, float angle);
 		/// @brief Scales the modelview matrix by a certain factor.
 		/// @param[in] factor The scaling factor.
 		void scale(float factor);
@@ -461,16 +461,16 @@ namespace april
 		void scale(float factorX, float factorY, float factorZ);
 		/// @brief Scales the modelview matrix by a certain factor.
 		/// @param[in] vector The scaling vector.
-		void scale(cgvec3 vector);
+		void scale(cgvec3f vector);
 		/// @brief Scales the modelview matrix by a certain factor.
 		/// @param[in] vector The 2D scaling vector.
 		/// @note This ignores the Z-coordinate.
-		void scale(cgvec2 vector);
+		void scale(cgvec2f vector);
 		/// @brief Sets the modelview matrix up to look toward a certain point.
 		/// @param[in] eye The origin position of the camera.
 		/// @param[in] target The target position where to look.
 		/// @param[in] up The up-vector to decide the roll angle of the camera.
-		void lookAt(cgvec3 eye, cgvec3 target, cgvec3 up);
+		void lookAt(cgvec3f eye, cgvec3f target, cgvec3f up);
 		/// @brief Sets the perspective of the modelview matrix.
 		/// @param[in] fov The angle of the field of view.
 		/// @param[in] aspect The aspect ratio of the viewport.
@@ -528,25 +528,25 @@ namespace april
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] color Color of the rectangle.
 		/// @note Calling this will effectively set the current texture to NULL.
-		void drawRect(cgrect rect, const Color& color);
+		void drawRect(cgrectf rect, const Color& color);
 		/// @brief Renders a rectangle filled with a color.
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] color Color of the rectangle.
 		/// @note Calling this will effectively set the current texture to NULL.
-		void drawFilledRect(cgrect rect, const Color& color);
+		void drawFilledRect(cgrectf rect, const Color& color);
 		/// @brief Renders a textured rectangle.
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] src UV rectangle on the currently set Texture.
 		/// @note Remember to call setTexture() before calling this.
 		/// @see setTexture
-		void drawTexturedRect(cgrect rect, cgrect src);
+		void drawTexturedRect(cgrectf rect, cgrectf src);
 		/// @brief Renders a textured rectangle.
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] src UV rectangle on the currently set Texture.
 		/// @param[in] color Color that should be applied to the texture.
 		/// @note Remember to call setTexture() before calling this.
 		/// @see setTexture
-		void drawTexturedRect(cgrect rect, cgrect src, const Color& color);
+		void drawTexturedRect(cgrectf rect, cgrectf src, const Color& color);
 
 		/// @brief Finds the actual filename of a texture resource file.
 		/// @param[in] filename Resource filename without the extension.
@@ -742,7 +742,7 @@ namespace april
 
 		/// @brief Sets the device viewport.
 		/// @param[in] rect The viewport rectangle.
-		virtual void _setDeviceViewport(cgrect rect) = 0;
+		virtual void _setDeviceViewport(cgrectf rect) = 0;
 		/// @brief Sets the device modelview matrix.
 		/// @param[in] matrix The current modelview matrix.
 		virtual void _setDeviceModelviewMatrix(const gmat4& matrix) = 0;
@@ -823,20 +823,20 @@ namespace april
 		/// @param[in] color Color of the rectangle.
 		/// @note Calling this will effectively set the current texture to NULL.
 		/// @see drawRect
-		void _drawRectInternal(cgrect rect, const Color& color);
+		void _drawRectInternal(cgrectf rect, const Color& color);
 		/// @brief Renders a rectangle filled with a color.
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] color Color of the rectangle.
 		/// @note Calling this will effectively set the current texture to NULL.
 		/// @see drawFilledRect
-		void _drawFilledRectInternal(cgrect rect, const Color& color);
+		void _drawFilledRectInternal(cgrectf rect, const Color& color);
 		/// @brief Renders a textured rectangle.
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] src UV rectangle on the currently set Texture.
 		/// @note Remember to call setTexture() before calling this.
 		/// @see setTexture
 		/// @see drawTexturedRect
-		void _drawTexturedRectInternal(cgrect rect, cgrect src);
+		void _drawTexturedRectInternal(cgrectf rect, cgrectf src);
 		/// @brief Renders a textured rectangle.
 		/// @param[in] rect Position and size of the rectangle.
 		/// @param[in] src UV rectangle on the currently set Texture.
@@ -844,7 +844,7 @@ namespace april
 		/// @note Remember to call setTexture() before calling this.
 		/// @see setTexture
 		/// @see drawTexturedRect
-		void _drawTexturedRectInternal(cgrect rect, cgrect src, const Color& color);
+		void _drawTexturedRectInternal(cgrectf rect, cgrectf src, const Color& color);
 		/// @brief Increases all relevant rendering stats.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
 		/// @param[in] count How many vertices will be rendered.

@@ -259,10 +259,10 @@ namespace april
 	[self setTitle:[NSString stringWithUTF8String:april::window->getTitle().cStr()]];
 }
 
-- (gvec2) transformCocoaPoint:(NSPoint) point
+- (gvec2f) transformCocoaPoint:(NSPoint) point
 {
 	// TODOa - optimize
-	return gvec2(point.x, [self.contentView bounds].size.height - point.y);
+	return gvec2f(point.x, [self.contentView bounds].size.height - point.y);
 }
 
 - (april::Key) getMouseButtonCode:(NSEvent*) event
@@ -286,7 +286,7 @@ namespace april
 
 - (void) mouseDown:(NSEvent*) event
 {
-	gvec2 position = [self transformCocoaPoint:[event locationInWindow]];
+	gvec2f position = [self transformCocoaPoint:[event locationInWindow]];
 	april::window->queueMouseInput(april::MouseEvent::Type::Down, position * MAC_WINDOW->scalingFactor, [self getMouseButtonCode:event]);
 }
 
@@ -302,7 +302,7 @@ namespace april
 
 - (void) mouseUp:(NSEvent*) event
 {
-	gvec2 position = [self transformCocoaPoint:[event locationInWindow]];
+	gvec2f position = [self transformCocoaPoint:[event locationInWindow]];
 	april::window->queueMouseInput(april::MouseEvent::Type::Up, position * MAC_WINDOW->scalingFactor, [self getMouseButtonCode:event]);
 }
 
@@ -318,7 +318,7 @@ namespace april
 
 - (void) mouseMoved:(NSEvent*) event
 {
-	gvec2 position = [self transformCocoaPoint:[event locationInWindow]];
+	gvec2f position = [self transformCocoaPoint:[event locationInWindow]];
 	april::window->queueMouseInput(april::MouseEvent::Type::Move, position * MAC_WINDOW->scalingFactor, april::Key::None);
 	// Hack for Lion fullscreen bug, when the user moves the cursor quickly to and from the dock area,
 	// the cursor gets reset to the default arrow, this hack counters that.
@@ -483,7 +483,7 @@ NSString* translateInputForKeyDown(NSEvent* event)
 
 - (void) scrollWheel:(NSEvent*) event
 {
-	gvec2 position(-[event deltaX], -[event deltaY]);
+	gvec2f position(-[event deltaX], -[event deltaY]);
 	if (position.x != 0.0f || position.y != 0.0f)
 	{
 		april::window->queueMouseInput(april::MouseEvent::Type::Scroll, position, april::Key::None);

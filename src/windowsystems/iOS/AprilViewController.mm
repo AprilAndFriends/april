@@ -138,7 +138,7 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
         }
     }
     pnglist += secondaryList;
-	hmap<hstr, gvec2> imageProps;
+	hmap<hstr, gvec2f> imageProps;
 	for_iter (i, 0, 2)
 	{
 		foreach (hstr, it, pnglist)
@@ -149,7 +149,7 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 			{
 				s = s.rsplit("/", 1)[1].replaced(".png", "");
 			}
-			imageProps[s] = gvec2(img.size.width, img.size.height);
+			imageProps[s] = gvec2f(img.size.width, img.size.height);
 			// Has image same scale and dimensions as our current device's screen?
 			if (img.scale == screenScale && (CGSizeEqualToSize(img.size, screenSize)))
 			{
@@ -170,7 +170,7 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 		// so let's try to find the most fitting image
 		hlog::write(april::logTag, "Failed to find exact launch image for device, trying search by nearest aspect ratio");
 		screenSize = originalScreenSize;
-		gvec2 size;
+		gvec2f size;
 		float aspect = 0.0f;
 		float diff = 0.0f;
 		float bestFit = 0.0f;
@@ -179,8 +179,8 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 		{
 			bestFit = 10000.0f;
 			aspect = screenSize.width / screenSize.height;
-			screenDiagonal = gvec2(screenSize.width, screenSize.height).squaredLength();
-			foreach_m (gvec2, it, imageProps)
+			screenDiagonal = gvec2f(screenSize.width, screenSize.height).squaredLength();
+			foreach_m (gvec2f, it, imageProps)
 			{
 				s = it->first;
 				size = it->second;

@@ -172,12 +172,12 @@ namespace april
 
 	void JNICALL _JNI_onTouch(JNIEnv* env, jclass classe, jint type, jfloat x, jfloat y, jint index)
 	{
-		PROTECTED_WINDOW_CALL(queueTouchInput(MouseEvent::Type::fromInt((int)type), gvec2((float)x, (float)y), (int)index));
+		PROTECTED_WINDOW_CALL(queueTouchInput(MouseEvent::Type::fromInt((int)type), gvec2f((float)x, (float)y), (int)index));
 	}
 
 	void JNICALL _JNI_onScroll(JNIEnv* env, jclass classe, jfloat x, jfloat y)
 	{
-		PROTECTED_WINDOW_CALL(queueMouseInput(MouseEvent::Type::Scroll, gvec2((float)x, (float)y), april::Key::None));
+		PROTECTED_WINDOW_CALL(queueMouseInput(MouseEvent::Type::Scroll, gvec2f((float)x, (float)y), april::Key::None));
 	}
 
 	void JNICALL _JNI_onButtonDown(JNIEnv* env, jclass classe, jint controllerIndex, jint buttonCode)
@@ -197,27 +197,27 @@ namespace april
 
 	void JNICALL _JNI_onAccelerometer(JNIEnv* env, jclass classe, jfloat x, jfloat y, jfloat z)
 	{
-		PROTECTED_WINDOW_CALL(queueMotionInput(MotionEvent::Type::Accelerometer, gvec3(x, y, z)));
+		PROTECTED_WINDOW_CALL(queueMotionInput(MotionEvent::Type::Accelerometer, gvec3f(x, y, z)));
 	}
 
 	void JNICALL _JNI_onLinearAccelerometer(JNIEnv* env, jclass classe, jfloat x, jfloat y, jfloat z)
 	{
-		PROTECTED_WINDOW_CALL(queueMotionInput(MotionEvent::Type::LinearAccelerometer, gvec3(x, y, z)));
+		PROTECTED_WINDOW_CALL(queueMotionInput(MotionEvent::Type::LinearAccelerometer, gvec3f(x, y, z)));
 	}
 
 	void JNICALL _JNI_onGravity(JNIEnv* env, jclass classe, jfloat x, jfloat y, jfloat z)
 	{
-		PROTECTED_WINDOW_CALL(queueMotionInput(MotionEvent::Type::Gravity, gvec3(x, y, z)));
+		PROTECTED_WINDOW_CALL(queueMotionInput(MotionEvent::Type::Gravity, gvec3f(x, y, z)));
 	}
 
 	void JNICALL _JNI_onRotation(JNIEnv* env, jclass classe, jfloat x, jfloat y, jfloat z)
 	{
-		PROTECTED_WINDOW_CALL(queueMotionInput(MotionEvent::Type::Rotation, gvec3(x, y, z)));
+		PROTECTED_WINDOW_CALL(queueMotionInput(MotionEvent::Type::Rotation, gvec3f(x, y, z)));
 	}
 
 	void JNICALL _JNI_onGyroscope(JNIEnv* env, jclass classe, jfloat x, jfloat y, jfloat z)
 	{
-		PROTECTED_WINDOW_CALL(queueMotionInput(MotionEvent::Type::Gyroscope, gvec3(x, y, z)));
+		PROTECTED_WINDOW_CALL(queueMotionInput(MotionEvent::Type::Gyroscope, gvec3f(x, y, z)));
 	}
 
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)

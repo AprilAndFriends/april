@@ -416,7 +416,7 @@ namespace april
 		april::rendersys->assignWindow(april::window);
 		// one special hack for one special backend
 #ifdef _WINUWP
-		april::rendersys->setViewport(grect(0.0f, 0.0f, (float)w, (float)h));
+		april::rendersys->setViewport(grectf(0.0f, 0.0f, (float)w, (float)h));
 #endif
 		april::rendersys->getCaps(); // calling getCaps() here is required here so it's initialized on certain platforms
 		april::rendersys->clear(); // make sure the backbuffer is clear after initialization

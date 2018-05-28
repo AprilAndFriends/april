@@ -92,7 +92,7 @@ namespace april
 		}
 	}
 
-	void AndroidJNI_Window::queueTouchInput(const MouseEvent::Type& type, cgvec2 position, int index)
+	void AndroidJNI_Window::queueTouchInput(const MouseEvent::Type& type, cgvec2f position, int index)
 	{
 		if (type == MouseEvent::Type::Down || type == MouseEvent::Type::Up)
 		{

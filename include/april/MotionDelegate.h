@@ -42,19 +42,19 @@ namespace april
 
 		/// @brief Called when the accelerometer of the device detects changes.
 		/// @param[in] motionVector Accelerometer vector in the Cartesian coordinate system.
-		virtual void onAccelerometer(cgvec3 motionVector);
+		virtual void onAccelerometer(cgvec3f motionVector);
 		/// @brief Called when the linear accelerometer of the device detects changes.
 		/// @param[in] motionVector Linear accelerometer vector in the Cartesian coordinate system.
-		virtual void onLinearAccelerometer(cgvec3 motionVector);
+		virtual void onLinearAccelerometer(cgvec3f motionVector);
 		/// @brief Called when the gravity vector of the device changes.
 		/// @param[in] motionVector Gravity vector in the Cartesian coordinate system.
-		virtual void onGravity(cgvec3 motionVector);
+		virtual void onGravity(cgvec3f motionVector);
 		/// @brief Called when the rotation of the device changes.
 		/// @param[in] motionVector Rotation vector equal to the last three components of a unit quaternion.
-		virtual void onRotation(cgvec3 motionVector);
+		virtual void onRotation(cgvec3f motionVector);
 		/// @brief Called when the gyroscope of the device detects changes.
 		/// @param[in] motionVector Movement vector in the Cartesian coordinate system.
-		virtual void onGyroscope(cgvec3 motionVector);
+		virtual void onGyroscope(cgvec3f motionVector);
 
 	protected:
 		/// @brief Whether accelerometer sensor is used.

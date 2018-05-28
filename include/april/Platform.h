@@ -43,7 +43,7 @@ namespace april
 		/// @note On some platforms this information is not available directly and might return some values that are note entirely accurate.
 		int ram;
 		/// @brief Current screen resolution.
-		gvec2 displayResolution;
+		gvec2f displayResolution;
 		/// @brief Current screen DPI.
 		float displayDpi;
 		/// @brief scaling factor for retina displays. eg retina macs have 2, iPhone8+ has 3, most have 1

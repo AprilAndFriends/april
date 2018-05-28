@@ -40,7 +40,7 @@ namespace april
 		HL_DEFINE_IS(cursorInside, CursorInside);
 		int getWidth(const);
 		int getHeight() const;
-		gvec2 getCursorPosition() const;
+		gvec2f getCursorPosition() const;
 		void* getBackendId() const;
 		void setResolution(int w, int h, bool fullscreen);
 

@@ -104,9 +104,6 @@
 #define INVERTED_LEFT_SHIFT(value) (_INVERTED_LEFT_SHIFT(value) | _L_ALPHA)
 #define INVERTED_LEFT_SHIFT_WITH_ALPHA(value) (_INVERTED_LEFT_SHIFT(value) | _L_SHIFT_ALPHA(value))
 
-#define HROUND_GRECT(rect) hround(rect.x), hround(rect.y), hround(rect.w), hround(rect.h)
-#define HROUND_GVEC2(vec2) hround(vec2.x), hround(vec2.y)
-
 namespace april
 {
 	HL_ENUM_CLASS_DEFINE(Image::Format,
@@ -434,17 +431,17 @@ namespace april
 
 	// overloads
 
-	Color Image::getPixel(cgvec2 position) const
+	Color Image::getPixel(cgvec2i position) const
 	{
-		return this->getPixel(hround(position.x), hround(position.y));
+		return this->getPixel(position.x, position.y);
 	}
 	
-	bool Image::setPixel(cgvec2 position, const Color& color)
+	bool Image::setPixel(cgvec2i position, const Color& color)
 	{
-		return this->setPixel(hround(position.x), hround(position.y), color);
+		return this->setPixel(position.x, position.y, color);
 	}
 	
-	Color Image::getInterpolatedPixel(cgvec2 position) const
+	Color Image::getInterpolatedPixel(cgvec2f position) const
 	{
 		return this->getInterpolatedPixel(position.x, position.y);
 	}
@@ -454,14 +451,14 @@ namespace april
 		return (this->data != NULL && Image::convertToFormat(this->w, this->h, this->data, this->format, output, this->format, false));
 	}
 
-	bool Image::fillRect(cgrect rect, const Color& color)
+	bool Image::fillRect(cgrecti rect, const Color& color)
 	{
-		return this->fillRect(HROUND_GRECT(rect), color);
+		return this->fillRect(rect.x, rect.y, rect.w, rect.h, color);
 	}
 
-	bool Image::blitRect(cgrect rect, const Color& color)
+	bool Image::blitRect(cgrecti rect, const Color& color)
 	{
-		return this->blitRect(HROUND_GRECT(rect), color);
+		return this->blitRect(rect.x, rect.y, rect.w, rect.h, color);
 	}
 
 	bool Image::write(int sx, int sy, int sw, int sh, int dx, int dy, Image* other)
@@ -469,14 +466,14 @@ namespace april
 		return this->write(sx, sy, sw, sh, dx, dy, other->data, other->w, other->h, other->format);
 	}
 
-	bool Image::write(cgrect srcRect, cgvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	bool Image::write(cgrecti srcRect, cgvec2i destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		return this->write(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), srcData, srcWidth, srcHeight, srcFormat);
+		return this->write(srcRect.x, srcRect.y, srcRect.w, srcRect.h, destPosition.x, destPosition.y, srcData, srcWidth, srcHeight, srcFormat);
 	}
 
-	bool Image::write(cgrect srcRect, cgvec2 destPosition, Image* other)
+	bool Image::write(cgrecti srcRect, cgvec2i destPosition, Image* other)
 	{
-		return this->write(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), other->data, other->w, other->h, other->format);
+		return this->write(srcRect.x, srcRect.y, srcRect.w, srcRect.h, destPosition.x, destPosition.y, other->data, other->w, other->h, other->format);
 	}
 
 	bool Image::writeStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* other)
@@ -484,14 +481,14 @@ namespace april
 		return this->writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, other->data, other->w, other->h, other->format);
 	}
 
-	bool Image::writeStretch(cgrect srcRect, cgrect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	bool Image::writeStretch(cgrecti srcRect, cgrecti destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		return this->writeStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), srcData, srcWidth, srcHeight, srcFormat);
+		return this->writeStretch(srcRect.x, srcRect.y, srcRect.w, srcRect.h, destRect.x, destRect.y, destRect.w, destRect.h, srcData, srcWidth, srcHeight, srcFormat);
 	}
 
-	bool Image::writeStretch(cgrect srcRect, cgrect destRect, Image* other)
+	bool Image::writeStretch(cgrecti srcRect, cgrecti destRect, Image* other)
 	{
-		return this->writeStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), other->data, other->w, other->h, other->format);
+		return this->writeStretch(srcRect.x, srcRect.y, srcRect.w, srcRect.h, destRect.x, destRect.y, destRect.w, destRect.h, other->data, other->w, other->h, other->format);
 	}
 
 	bool Image::blit(int sx, int sy, int sw, int sh, int dx, int dy, Image* other, unsigned char alpha)
@@ -499,14 +496,14 @@ namespace april
 		return this->blit(sx, sy, sw, sh, dx, dy, other->data, other->w, other->h, other->format, alpha);
 	}
 
-	bool Image::blit(cgrect srcRect, cgvec2 destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
+	bool Image::blit(cgrecti srcRect, cgvec2i destPosition, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
-		return this->blit(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), srcData, srcWidth, srcHeight, srcFormat);
+		return this->blit(srcRect.x, srcRect.y, srcRect.w, srcRect.h, destPosition.x, destPosition.y, srcData, srcWidth, srcHeight, srcFormat);
 	}
 
-	bool Image::blit(cgrect srcRect, cgvec2 destPosition, Image* other, unsigned char alpha)
+	bool Image::blit(cgrecti srcRect, cgvec2i destPosition, Image* other, unsigned char alpha)
 	{
-		return this->blit(HROUND_GRECT(srcRect), HROUND_GVEC2(destPosition), other->data, other->w, other->h, other->format, alpha);
+		return this->blit(srcRect.x, srcRect.y, srcRect.w, srcRect.h, destPosition.x, destPosition.y, other->data, other->w, other->h, other->format, alpha);
 	}
 
 	bool Image::blitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, Image* other, unsigned char alpha)
@@ -514,24 +511,24 @@ namespace april
 		return this->blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, other->data, other->w, other->h, other->format, alpha);
 	}
 
-	bool Image::blitStretch(cgrect srcRect, cgrect destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
+	bool Image::blitStretch(cgrecti srcRect, cgrecti destRect, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
 	{
-		return this->blitStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), srcData, srcWidth, srcHeight, srcFormat);
+		return this->blitStretch(srcRect.x, srcRect.y, srcRect.w, srcRect.h, destRect.x, destRect.y, destRect.w, destRect.h, srcData, srcWidth, srcHeight, srcFormat);
 	}
 
-	bool Image::blitStretch(cgrect srcRect, cgrect destRect, Image* other, unsigned char alpha)
+	bool Image::blitStretch(cgrecti srcRect, cgrecti destRect, Image* other, unsigned char alpha)
 	{
-		return this->blitStretch(HROUND_GRECT(srcRect), HROUND_GRECT(destRect), other->data, other->w, other->h, other->format, alpha);
+		return this->blitStretch(srcRect.x, srcRect.y, srcRect.w, srcRect.h, destRect.x, destRect.y, destRect.w, destRect.h, other->data, other->w, other->h, other->format, alpha);
 	}
 
-	bool Image::rotateHue(cgrect rect, float degrees)
+	bool Image::rotateHue(cgrecti rect, float degrees)
 	{
-		return this->rotateHue(HROUND_GRECT(rect), degrees);
+		return this->rotateHue(rect.x, rect.y, rect.w, rect.h, degrees);
 	}
 
-	bool Image::saturate(cgrect rect, float factor)
+	bool Image::saturate(cgrecti rect, float factor)
 	{
-		return this->saturate(HROUND_GRECT(rect), factor);
+		return this->saturate(rect.x, rect.y, rect.w, rect.h, factor);
 	}
 
 	bool Image::insertAlphaMap(unsigned char* srcData, Format srcFormat)

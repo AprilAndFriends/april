@@ -496,7 +496,7 @@ namespace april
 		
 		if (mouseButton == AK_WHEELUP || mouseButton == AK_WHEELDN)
 		{
-			gvec2 scroll;
+			gvec2f scroll;
 			scroll.x = (!this->scrollHorizontal ? 0.0f : (mouseButton == AK_WHEELUP ? -1.0f : 1.0f));
 			scroll.y = (this->scrollHorizontal ? 0.0f : (mouseButton == AK_WHEELUP ? -1.0f : 1.0f));
 			this->handleMouseEvent(mouseEvent, scroll, mouseButton);

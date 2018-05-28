@@ -298,7 +298,7 @@ namespace april
 		this->_deviceAssignWindow(window);
 		this->_deviceSetupCaps();
 		this->_deviceSetup();
-		grect viewport(0.0f, 0.0f, april::window->getSize());
+		grectf viewport(0.0f, 0.0f, april::window->getSize());
 		this->setViewport(viewport);
 		this->setIdentityTransform();
 		this->setOrthoProjection(viewport);
@@ -338,7 +338,7 @@ namespace april
 
 	void RenderSystem::_deviceSetupDisplayModes()
 	{
-		gvec2 resolution = april::getSystemInfo().displayResolution;
+		gvec2f resolution = april::getSystemInfo().displayResolution;
 		this->displayModes += RenderSystem::DisplayMode((int)resolution.x, (int)resolution.y, 60);
 	}
 
@@ -452,12 +452,12 @@ namespace april
 		return false;
 	}
 	
-	grect RenderSystem::getViewport() const
+	grectf RenderSystem::getViewport() const
 	{
 		return this->state->viewport;
 	}
 
-	void RenderSystem::setViewport(cgrect value)
+	void RenderSystem::setViewport(cgrectf value)
 	{
 		this->state->viewport = value;
 		this->state->viewportChanged = true;
@@ -798,9 +798,9 @@ namespace april
 		delete shader;
 	}
 
-	grect RenderSystem::getOrthoProjection() const
+	grectf RenderSystem::getOrthoProjection() const
 	{
-		grect result;
+		grectf result;
 		if (this->state->projectionMatrix.data[0] != 0.0f && this->state->projectionMatrix.data[5] != 0.0f)
 		{
 			result.w = 2.0f / this->state->projectionMatrix.data[0];
@@ -812,26 +812,26 @@ namespace april
 		return result;
 	}
 
-	void RenderSystem::setOrthoProjection(cgrect rect)
+	void RenderSystem::setOrthoProjection(cgrectf rect)
 	{
 		this->state->projectionMatrix.setOrthoProjection(rect - rect.getSize() * this->pixelOffset / april::window->getSize());
 		this->state->projectionMatrixChanged = true;
 	}
 
-	void RenderSystem::setOrthoProjection(cgrect rect, float nearZ, float farZ)
+	void RenderSystem::setOrthoProjection(cgrectf rect, float nearZ, float farZ)
 	{
 		this->state->projectionMatrix.setOrthoProjection(rect - rect.getSize() * this->pixelOffset / april::window->getSize(), nearZ, farZ);
 		this->state->projectionMatrixChanged = true;
 	}
 
-	void RenderSystem::setOrthoProjection(cgvec2 size)
+	void RenderSystem::setOrthoProjection(cgvec2f size)
 	{
-		this->setOrthoProjection(grect(0.0f, 0.0f, size));
+		this->setOrthoProjection(grectf(0.0f, 0.0f, size));
 	}
 
-	void RenderSystem::setOrthoProjection(cgvec2 size, float nearZ, float farZ)
+	void RenderSystem::setOrthoProjection(cgvec2f size, float nearZ, float farZ)
 	{
-		this->setOrthoProjection(grect(0.0f, 0.0f, size), nearZ, farZ);
+		this->setOrthoProjection(grectf(0.0f, 0.0f, size), nearZ, farZ);
 	}
 
 	void RenderSystem::setDepthBuffer(bool enabled, bool writeEnabled)
@@ -880,13 +880,13 @@ namespace april
 		this->state->modelviewMatrixChanged = true;
 	}
 	
-	void RenderSystem::translate(cgvec3 vector)
+	void RenderSystem::translate(cgvec3f vector)
 	{
 		this->state->modelviewMatrix.translate(vector);
 		this->state->modelviewMatrixChanged = true;
 	}
 
-	void RenderSystem::translate(cgvec2 vector)
+	void RenderSystem::translate(cgvec2f vector)
 	{
 		this->state->modelviewMatrix.translate(vector.x, vector.y, 0.0f);
 		this->state->modelviewMatrixChanged = true;
@@ -904,7 +904,7 @@ namespace april
 		this->state->modelviewMatrixChanged = true;
 	}	
 	
-	void RenderSystem::rotate(cgvec3 axis, float angle)
+	void RenderSystem::rotate(cgvec3f axis, float angle)
 	{
 		this->state->modelviewMatrix.rotate(axis, angle);
 		this->state->modelviewMatrixChanged = true;
@@ -922,19 +922,19 @@ namespace april
 		this->state->modelviewMatrixChanged = true;
 	}
 	
-	void RenderSystem::scale(cgvec3 vector)
+	void RenderSystem::scale(cgvec3f vector)
 	{
 		this->state->modelviewMatrix.scale(vector);
 		this->state->modelviewMatrixChanged = true;
 	}
 
-	void RenderSystem::scale(cgvec2 vector)
+	void RenderSystem::scale(cgvec2f vector)
 	{
 		this->state->modelviewMatrix.scale(vector.x, vector.y, 1.0f);
 		this->state->modelviewMatrixChanged = true;
 	}
 
-	void RenderSystem::lookAt(cgvec3 eye, cgvec3 target, cgvec3 up)
+	void RenderSystem::lookAt(cgvec3f eye, cgvec3f target, cgvec3f up)
 	{
 		this->state->modelviewMatrix.lookAt(eye, target, up);
 		this->state->modelviewMatrixChanged = true;
@@ -1182,7 +1182,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::drawRect(cgrect rect, const Color& color)
+	void RenderSystem::drawRect(cgrectf rect, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -1194,7 +1194,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::drawFilledRect(cgrect rect, const Color& color)
+	void RenderSystem::drawFilledRect(cgrectf rect, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -1206,7 +1206,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::drawTexturedRect(cgrect rect, cgrect src)
+	void RenderSystem::drawTexturedRect(cgrectf rect, cgrectf src)
 	{
 		if (this->renderHelper == NULL || !this->renderHelper->drawTexturedRect(rect, src))
 		{
@@ -1214,7 +1214,7 @@ namespace april
 		}
 	}
 
-	void RenderSystem::drawTexturedRect(cgrect rect, cgrect src, const Color& color)
+	void RenderSystem::drawTexturedRect(cgrectf rect, cgrectf src, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -1288,7 +1288,7 @@ namespace april
 		this->_addAsyncCommand(new VertexRenderCommand<ColoredTexturedVertex>(*this->state, renderOperation, vertices, count));
 	}
 
-	void RenderSystem::_drawRectInternal(cgrect rect, const Color& color)
+	void RenderSystem::_drawRectInternal(cgrectf rect, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -1301,7 +1301,7 @@ namespace april
 		this->_renderInternal(RenderOperation::LineStrip, pv, 5, color);
 	}
 
-	void RenderSystem::_drawFilledRectInternal(cgrect rect, const Color& color)
+	void RenderSystem::_drawFilledRectInternal(cgrectf rect, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -1314,7 +1314,7 @@ namespace april
 		this->_renderInternal(RenderOperation::TriangleStrip, pv, 4, color);
 	}
 	
-	void RenderSystem::_drawTexturedRectInternal(cgrect rect, cgrect src)
+	void RenderSystem::_drawTexturedRectInternal(cgrectf rect, cgrectf src)
 	{
 		tv[0].x = tv[2].x = rect.x;
 		tv[0].y = tv[1].y = rect.y;
@@ -1327,7 +1327,7 @@ namespace april
 		this->_renderInternal(RenderOperation::TriangleStrip, tv, 4);
 	}
 	
-	void RenderSystem::_drawTexturedRectInternal(cgrect rect, cgrect src, const Color& color)
+	void RenderSystem::_drawTexturedRectInternal(cgrectf rect, cgrectf src, const Color& color)
 	{
 		if (color.a == 0)
 		{
@@ -1578,7 +1578,7 @@ namespace april
 			int width = this->_intermediateRenderTexture->getWidth();
 			int height = this->_intermediateRenderTexture->getHeight();
 			this->_intermediateState->viewport.setSize((float)width, (float)height);
-			this->_intermediateState->projectionMatrix.setOrthoProjection(grect(1.0f - 2.0f * this->pixelOffset / width, 1.0f - 2.0f * this->pixelOffset / height, 2.0f, 2.0f));
+			this->_intermediateState->projectionMatrix.setOrthoProjection(grectf(1.0f - 2.0f * this->pixelOffset / width, 1.0f - 2.0f * this->pixelOffset / height, 2.0f, 2.0f));
 			this->_intermediateState->texture = this->_intermediateRenderTexture;
 			this->_updateDeviceState(this->_intermediateState, true);
 			this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);

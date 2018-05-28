@@ -233,9 +233,9 @@ namespace april
 		}
 	}
 
-	gvec2 Window::getSize() const
+	gvec2f Window::getSize() const
 	{
-		return gvec2((float)this->getWidth(), (float)this->getHeight());
+		return gvec2f((float)this->getWidth(), (float)this->getHeight());
 	}
 	
 	float Window::getAspectRatio() const
@@ -271,7 +271,7 @@ namespace april
 
 	bool Window::isCursorInside() const
 	{
-		return grect(0.0f, 0.0f, this->getSize()).isPointInside(this->getCursorPosition());
+		return grectf(0.0f, 0.0f, this->getSize()).isPointInside(this->getCursorPosition());
 	}
 
 	void Window::setFullscreen(bool value)
@@ -410,7 +410,7 @@ namespace april
 			this->handleLowMemoryWarning();
 		}
 		// due to possible problems with multiple scroll events in one frame, consecutive scroll events are merged (and so are move events for convenience)
-		gvec2 cumulativeScroll;
+		gvec2f cumulativeScroll;
 		for_iter (i, 0, mouseEvents.size())
 		{
 			if (mouseEvents[i].type != MouseEvent::Type::Cancel && mouseEvents[i].type != MouseEvent::Type::Scroll)
@@ -579,7 +579,7 @@ namespace april
 		}
 	}
 
-	void Window::handleMouseInput(MouseEvent::Type type, cgvec2 position, Key keyCode)
+	void Window::handleMouseInput(MouseEvent::Type type, cgvec2f position, Key keyCode)
 	{
 		if (this->mouseDelegate != NULL)
 		{
@@ -683,7 +683,7 @@ namespace april
 		}
 	}
 
-	void Window::handleTouchInput(const harray<gvec2>& touches)
+	void Window::handleTouchInput(const harray<gvec2f>& touches)
 	{
 		if (this->touchDelegate != NULL)
 		{
@@ -724,7 +724,7 @@ namespace april
 		}
 	}
 
-	void Window::handleMotionInput(MotionEvent::Type type, cgvec3 motionVector)
+	void Window::handleMotionInput(MotionEvent::Type type, cgvec3f motionVector)
 	{
 		if (this->motionDelegate != NULL)
 		{
@@ -794,7 +794,7 @@ namespace april
 		this->genericEvents += GenericEvent(GenericEvent::Type::LowMemoryWarning);
 	}
 
-	void Window::queueMouseInput(MouseEvent::Type type, cgvec2 position, Key keyCode)
+	void Window::queueMouseInput(MouseEvent::Type type, cgvec2f position, Key keyCode)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		this->mouseEvents += MouseEvent(type, position, keyCode);
@@ -806,10 +806,10 @@ namespace april
 		this->keyEvents += KeyEvent(type, keyCode, charCode);
 	}
 
-	void Window::queueTouchInput(MouseEvent::Type type, cgvec2 position, int index)
+	void Window::queueTouchInput(MouseEvent::Type type, cgvec2f position, int index)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
-		harray<gvec2> previousTouches = this->touches;
+		harray<gvec2f> previousTouches = this->touches;
 		if (type == MouseEvent::Type::Down)
 		{
 			if (index < this->touches.size()) // DOWN event of an already indexed touch, never happened so far
@@ -869,7 +869,7 @@ namespace april
 		this->controllerEvents += ControllerEvent(type, controllerIndex, buttonCode, axisValue);
 	}
 
-	void Window::queueMotionInput(MotionEvent::Type type, cgvec3 motionVector)
+	void Window::queueMotionInput(MotionEvent::Type type, cgvec3f motionVector)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		this->motionEvents += MotionEvent(type, motionVector);

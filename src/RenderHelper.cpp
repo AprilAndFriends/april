@@ -84,25 +84,25 @@ namespace april
 		return false;
 	}
 
-	bool RenderHelper::drawRect(cgrect rect, const Color& color)
+	bool RenderHelper::drawRect(cgrectf rect, const Color& color)
 	{
 		this->flush();
 		return false;
 	}
 
-	bool RenderHelper::drawFilledRect(cgrect rect, const Color& color)
+	bool RenderHelper::drawFilledRect(cgrectf rect, const Color& color)
 	{
 		this->flush();
 		return false;
 	}
 
-	bool RenderHelper::drawTexturedRect(cgrect rect, cgrect src)
+	bool RenderHelper::drawTexturedRect(cgrectf rect, cgrectf src)
 	{
 		this->flush();
 		return false;
 	}
 
-	bool RenderHelper::drawTexturedRect(cgrect rect, cgrect src, const Color& color)
+	bool RenderHelper::drawTexturedRect(cgrectf rect, cgrectf src, const Color& color)
 	{
 		this->flush();
 		return false;
