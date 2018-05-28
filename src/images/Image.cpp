@@ -1097,7 +1097,6 @@ namespace april
 		{
 			return true;
 		}
-		static int srcBpp = 4;
 		int destBpp = destFormat.getBpp();
 		unsigned char* dest = NULL;
 		int i = 0;
