@@ -308,7 +308,7 @@ namespace april
 		return (this->isValid() ? Image::getPixel(x, y, this->data, this->w, this->h, this->format) : Color::Clear);
 	}
 	
-	bool Image::setPixel(int x, int y, Color color)
+	bool Image::setPixel(int x, int y, const Color& color)
 	{
 		return (this->isValid() && Image::setPixel(x, y, color, this->data, this->w, this->h, this->format));
 	}
@@ -318,9 +318,14 @@ namespace april
 		return (this->isValid() ? Image::getInterpolatedPixel(x, y, this->data, this->w, this->h, this->format) : Color::Clear);
 	}
 	
-	bool Image::fillRect(int x, int y, int w, int h, Color color)
+	bool Image::fillRect(int x, int y, int w, int h, const Color& color)
 	{
 		return (this->isValid() && Image::fillRect(x, y, w, h, color, this->data, this->w, this->h, this->format));
+	}
+
+	bool Image::blitRect(int x, int y, int w, int h, const Color& color)
+	{
+		return (this->isValid() && Image::blitRect(x, y, w, h, color, this->data, this->w, this->h, this->format));
 	}
 
 	bool Image::copyPixelData(unsigned char** output, Format format) const
@@ -452,6 +457,11 @@ namespace april
 	bool Image::fillRect(cgrect rect, const Color& color)
 	{
 		return this->fillRect(HROUND_GRECT(rect), color);
+	}
+
+	bool Image::blitRect(cgrect rect, const Color& color)
+	{
+		return this->blitRect(HROUND_GRECT(rect), color);
 	}
 
 	bool Image::write(int sx, int sy, int sw, int sh, int dx, int dy, Image* other)
@@ -1074,6 +1084,79 @@ namespace april
 			}
 		}
 		return true;
+	}
+
+	bool Image::blitRect(int x, int y, int w, int h, const Color& color, unsigned char* destData, int destWidth, int destHeight, Format destFormat)
+	{
+		if (!Image::correctRect(x, y, w, h, destWidth, destHeight))
+		{
+			return false;
+		}
+		// it's invisible anyway, so let's say it's successful
+		if (color.a == 0)
+		{
+			return true;
+		}
+		static int srcBpp = 4;
+		int destBpp = destFormat.getBpp();
+		unsigned char* dest = NULL;
+		int i = 0;
+		int j = 0;
+		unsigned char a0 = color.a;
+		unsigned char invertedAlpha = 255 - a0;
+		int pmr = (int)color.r * a0; // premultiplied red
+		if (destBpp == 1)
+		{
+			for_iterx (j, 0, h)
+			{
+				for_iterx (i, 0, w)
+				{
+					dest = &destData[((x + i) + (y + i) * destWidth) * destBpp];
+					dest[0] = (pmr + dest[0] * invertedAlpha) / 255;
+				}
+			}
+			return true;
+		}
+		int pmg = (int)color.g * a0; // premultiplied green
+		int pmb = (int)color.b * a0; // premultiplied blue
+		int dr = -1;
+		int dg = -1;
+		int db = -1;
+		if (destBpp == 3 || !CHECK_ALPHA_FORMAT(destFormat)) // 3 BPP and 4 BPP without alpha
+		{
+			destFormat.getChannelIndices(&dr, &dg, &db, NULL);
+			for_iterx (j, 0, h)
+			{
+				for_iterx (i, 0, w)
+				{
+					dest = &destData[((x + i) + (y + j) * destWidth) * destBpp];
+					dest[dr] = (pmr + dest[dr] * invertedAlpha) / 255;
+					dest[dg] = (pmg + dest[dg] * invertedAlpha) / 255;
+					dest[db] = (pmb + dest[db] * invertedAlpha) / 255;
+				}
+			}
+			return true;
+		}
+		int da = -1;
+		if (destBpp == 4) // 4 BPP with alpha
+		{
+			unsigned char a1 = 0;
+			destFormat.getChannelIndices(&dr, &dg, &db, &da);
+			for_iterx (j, 0, h)
+			{
+				for_iterx (i, 0, w)
+				{
+					dest = &destData[((x + i) + (y + j) * destWidth) * destBpp];
+					a1 = invertedAlpha * dest[da] / 255;
+					dest[da] = a0 + a1;
+					dest[dr] = (pmr + dest[dr] * a1) / dest[da];
+					dest[dg] = (pmg + dest[dg] * a1) / dest[da];
+					dest[db] = (pmb + dest[db] * a1) / dest[da];
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	bool Image::write(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Format srcFormat,

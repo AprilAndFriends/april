@@ -163,7 +163,7 @@ namespace april
 		/// @param[in] y Y-coordinate.
 		/// @param[in] color The new Color of the pixel.
 		/// @return True if successful.
-		bool setPixel(int x, int y, Color color);
+		bool setPixel(int x, int y, const Color& color);
 		/// @brief Gets the linearly interpolated color between two pixels.
 		/// @param[in] x Decimal X-coordinate.
 		/// @param[in] y Decimal Y-coordinate.
@@ -176,7 +176,15 @@ namespace april
 		/// @param[in] h Height of the area.
 		/// @param[in] color The Color used for filling.
 		/// @return True if successful.
-		bool fillRect(int x, int y, int w, int h, Color color);
+		bool fillRect(int x, int y, int w, int h, const april::Color& color);
+		/// @brief Blits a rectangle area with one color.
+		/// @param[in] x X-coordinate.
+		/// @param[in] y Y-coordinate.
+		/// @param[in] w Width of the area.
+		/// @param[in] h Height of the area.
+		/// @param[in] color The Color used for blitting.
+		/// @return True if successful.
+		bool blitRect(int x, int y, int w, int h, const april::Color& color);
 		/// @brief Copies the image data into a buffer.
 		/// @param[out] output The output buffer.
 		/// @param[in] format In what format the output should be done.
@@ -337,6 +345,12 @@ namespace april
 		/// @return True if successful.
 		/// @see fillRect(int x, int y, int w, int h, const Color& color)
 		bool fillRect(cgrect rect, const Color& color);
+		/// @brief Blits a rectangle area with one color.
+		/// @param[in] rect The rectangle area.
+		/// @param[in] color The Color used for blitting.
+		/// @return True if successful.
+		/// @see blitRect(int x, int y, int w, int h, const Color& color)
+		bool blitRect(cgrect rect, const Color& color);
 		/// @brief Copies the image data into a buffer.
 		/// @param[out] output The output buffer.
 		/// @return True if successful.
@@ -643,6 +657,19 @@ namespace april
 		/// @return True if successful.
 		/// @note This is usually called internally only.
 		static bool fillRect(int x, int y, int w, int h, const Color& color, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
+		/// @brief Blits a rectangle area with one color in raw image data.
+		/// @param[in] x X-coordinate.
+		/// @param[in] y Y-coordinate.
+		/// @param[in] w Width of the area.
+		/// @param[in] h Height of the area.
+		/// @param[in] color The Color used for blitting.
+		/// @param[in,out] destData The destination raw image data.
+		/// @param[in] destWidth The width of destination raw image data.
+		/// @param[in] destHeight The height of destination raw image data.
+		/// @param[in] destFormat The pixel format of destination raw image data.
+		/// @return True if successful.
+		/// @note This is usually called internally only.
+		static bool blitRect(int x, int y, int w, int h, const Color& color, unsigned char* destData, int destWidth, int destHeight, Format destFormat);
 		/// @brief Writes image data directly onto raw image data.
 		/// @param[in] sx Source data X-coordinate.
 		/// @param[in] sy Source data Y-coordinate.

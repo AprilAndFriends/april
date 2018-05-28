@@ -212,6 +212,14 @@ namespace april
 		/// @param[in] color The Color used for filling.
 		/// @return True if successful.
 		bool fillRect(int x, int y, int w, int h, const Color& color);
+		/// @brief Blits a rectangle area with one color.
+		/// @param[in] x X-coordinate.
+		/// @param[in] y Y-coordinate.
+		/// @param[in] w Width of the area.
+		/// @param[in] h Height of the area.
+		/// @param[in] color The Color used for blitting.
+		/// @return True if successful.
+		bool blitRect(int x, int y, int w, int h, const Color& color);
 		/// @brief Copies the image data into a buffer.
 		/// @param[out] output The output buffer.
 		/// @param[in] format In what format the output should be done.
@@ -406,6 +414,12 @@ namespace april
 		/// @return True if successful.
 		/// @see fillRect(int x, int y, int w, int h, const Color& color)
 		bool fillRect(cgrect rect, const Color& color);
+		/// @brief Blits a rectangle area with one color.
+		/// @param[in] rect The rectangle area.
+		/// @param[in] color The Color used for blitting.
+		/// @return True if successful.
+		/// @see blitRect(int x, int y, int w, int h, const Color& color)
+		bool blitRect(cgrect rect, const Color& color);
 		/// @brief Copies the image data into a buffer.
 		/// @param[out] output The output buffer.
 		/// @return True if successful.
@@ -850,6 +864,14 @@ namespace april
 		/// @param[in] color The Color used for filling.
 		/// @return True if successful.
 		bool _rawFillRect(int x, int y, int w, int h, const Color& color);
+		/// @brief Blits a rectangle area with one color without safety checks. Used internally only.
+		/// @param[in] x X-coordinate.
+		/// @param[in] y Y-coordinate.
+		/// @param[in] w Width of the area.
+		/// @param[in] h Height of the area.
+		/// @param[in] color The Color used for blitting.
+		/// @return True if successful.
+		bool _rawBlitRect(int x, int y, int w, int h, const Color& color);
 		/// @brief Writes image data directly onto the texture without safety checks. Used internally only.
 		/// @param[in] sx Source data X-coordinate.
 		/// @param[in] sy Source data Y-coordinate.

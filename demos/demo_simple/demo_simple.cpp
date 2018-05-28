@@ -232,6 +232,7 @@ void __aprilApplicationInit()
 	manualTexture->rotateHue(256, 0, 256, 256, 180.0f);
 	manualTexture->blit(0, 0, texture->getWidth(), texture->getHeight(), 256, 128, texture, 96);
 	manualTexture->blitStretch(texture->getWidth() / 2, 0, texture->getWidth() / 2, texture->getHeight(), 128, 256, 700, 200, texture, 208);
+	manualTexture->blitRect(320, 0, 48, 192, april::Color(april::Color::Green, 128));
 }
 
 void __aprilApplicationDestroy()

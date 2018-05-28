@@ -939,6 +939,25 @@ namespace april
 		return result;
 	}
 
+	bool Texture::blitRect(int x, int y, int w, int h, const Color& color)
+	{
+		if (!this->_isWritable())
+		{
+			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
+			return false;
+		}
+		return this->_rawBlitRect(x, y, w, h, color);
+	}
+
+	bool Texture::_rawBlitRect(int x, int y, int w, int h, const Color& color)
+	{
+		this->waitForAsyncLoad();
+		hmutex::ScopeLock lock(&this->asyncDataMutex);
+		bool result = Image::blitRect(x, y, w, h, color, this->data, this->width, this->height, this->format);
+		this->dirty |= result;
+		return result;
+	}
+
 	bool Texture::copyPixelData(unsigned char** output, Image::Format format)
 	{
 		if (!this->_isReadable())
@@ -1223,6 +1242,11 @@ namespace april
 	bool Texture::fillRect(cgrect rect, const Color& color)
 	{
 		return this->fillRect(HROUND_GRECT(rect), color);
+	}
+
+	bool Texture::blitRect(cgrect rect, const Color& color)
+	{
+		return this->blitRect(HROUND_GRECT(rect), color);
 	}
 
 	bool Texture::copyPixelData(unsigned char** output)
