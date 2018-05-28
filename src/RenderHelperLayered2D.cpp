@@ -493,7 +493,7 @@ namespace april
 		this->_transformationMatrix = renderCall->state.projectionMatrix * renderCall->state.modelviewMatrix;
 		for_iter (i, 0, count)
 		{
-			this->_coloredVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3());
+			this->_coloredVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3f());
 			this->_coloredVertices[i].color = this->_nativeColor;
 		}
 	}
@@ -505,7 +505,7 @@ namespace april
 		this->_transformationMatrix = renderCall->state.projectionMatrix * renderCall->state.modelviewMatrix;
 		for_iter (i, 0, count)
 		{
-			this->_coloredTexturedVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3());
+			this->_coloredTexturedVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3f());
 			this->_coloredTexturedVertices[i].u = vertices[i].u;
 			this->_coloredTexturedVertices[i].v = vertices[i].v;
 			this->_coloredTexturedVertices[i].color = this->_nativeColor;
@@ -519,7 +519,7 @@ namespace april
 		this->_transformationMatrix = renderCall->state.projectionMatrix * renderCall->state.modelviewMatrix;
 		for_iter (i, 0, count)
 		{
-			this->_coloredVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3());
+			this->_coloredVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3f());
 		}
 	}
 
@@ -530,7 +530,7 @@ namespace april
 		this->_transformationMatrix = renderCall->state.projectionMatrix * renderCall->state.modelviewMatrix;
 		for_iter (i, 0, count)
 		{
-			this->_coloredTexturedVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3());
+			this->_coloredTexturedVertices[i].set(this->_transformationMatrix * vertices[i].toGvec3f());
 		}
 	}
 

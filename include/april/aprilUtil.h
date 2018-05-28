@@ -139,7 +139,7 @@ namespace april
 
 		/// @brief Returns the position as gtypes::Vector3.
 		/// @return The position as gtypes::Vector3.
-		inline gvec3f toGvec3()										{ return gvec3f(this->x, this->y, this->z); }
+		inline gvec3f toGvec3f()										{ return gvec3f(this->x, this->y, this->z); }
 
 	};
 
@@ -378,7 +378,7 @@ namespace april
 	/// @param[in] string The string to use for conversion.
 	/// @return A gtypes::Vector2.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport inline gvec2f hstrToGvec2(chstr string)
+	aprilFnExport inline gvec2f hstrToGvec2f(chstr string)
 	{
 		harray<hstr> data = string.split(APRIL_HSTR_SEPARATOR);
 		if (data.size() != 2)
@@ -391,7 +391,7 @@ namespace april
 	/// @param[in] string The string to use for conversion.
 	/// @return A gtypes::Vector3.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport inline gvec3f hstrToGvec3(chstr string)
+	aprilFnExport inline gvec3f hstrToGvec3f(chstr string)
 	{
 		harray<hstr> data = string.split(APRIL_HSTR_SEPARATOR);
 		if (data.size() != 3)
@@ -404,7 +404,7 @@ namespace april
 	/// @param[in] string The string to use for conversion.
 	/// @return A gtypes::Rectangle.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport inline grectf hstrToGrect(chstr string)
+	aprilFnExport inline grectf hstrToGrectf(chstr string)
 	{
 		harray<hstr> data = string.split(APRIL_HSTR_SEPARATOR);
 		if (data.size() != 4)
