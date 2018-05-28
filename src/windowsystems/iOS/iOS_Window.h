@@ -31,7 +31,6 @@ namespace april
 		int getWidth() const;
 		int getHeight() const;
 		void setTitle(chstr value);
-		gvec2f getCursorPosition() const;
 		void* getBackendId() const;
 		bool isVirtualKeyboardVisible() const;
 		
