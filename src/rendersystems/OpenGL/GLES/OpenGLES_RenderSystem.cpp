@@ -690,14 +690,16 @@ namespace april
 			hlog::error(logTag, "Cannot copy render target data, destination texture is not a render target!");
 			return;
 		}
+		unsigned int previousFramebufferId = 0;
+		glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&previousFramebufferId);
 		glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)destination)->framebufferId);
-		this->_intermediateState->viewport.setSize((float)source->getWidth(), (float)source->getHeight());
+		this->_intermediateState->viewport.setSize(source->getWidth(), source->getHeight());
 		this->_intermediateState->projectionMatrix.setOrthoProjection(
 			grectf(1.0f - 2.0f * this->pixelOffset / source->getWidth(), 1.0f - 2.0f * this->pixelOffset / source->getHeight(), 2.0f, 2.0f));
 		this->_intermediateState->texture = source;
 		this->_updateDeviceState(this->_intermediateState, true);
 		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
-		glBindFramebuffer(GL_FRAMEBUFFER, this->framebufferId);
+		glBindFramebuffer(GL_FRAMEBUFFER, previousFramebufferId);
 		this->_updateDeviceState(this->state, true);
 	}
 
