@@ -499,9 +499,9 @@ namespace april
 		if (this->frameDuplicates > 0 && this->caps.renderTarget && this->_intermediateRenderTexture != NULL && this->_renderTargetDuplicatesCount > 0)
 		{
 			lock.release();
-			RenderState state(*this->deviceState);
+			RenderState deviceState(*this->deviceState);
 			this->_devicePresentFrame(false);
-			this->_updateDeviceState(&state, true);
+			this->_updateDeviceState(&deviceState, true);
 			--this->_renderTargetDuplicatesCount;
 			result = true;
 		}
@@ -1503,7 +1503,9 @@ namespace april
 	{
 		if (this->_intermediateRenderTexture != NULL)
 		{
+			RenderState deviceState(*this->deviceState);
 			this->_devicePresentFrame(systemEnabled);
+			this->_updateDeviceState(&deviceState, true);
 		}
 	}
 
@@ -1591,6 +1593,7 @@ namespace april
 			this->_intermediateState->projectionMatrix.setOrthoProjection(grectf(1.0f - 2.0f * this->pixelOffset / width, 1.0f - 2.0f * this->pixelOffset / height, 2.0f, 2.0f));
 			this->_intermediateState->texture = this->_intermediateRenderTexture;
 			this->_updateDeviceState(this->_intermediateState, true);
+			this->_deviceClear(false);
 			this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT);
 			// no need to restore state with _updateDeviceState() here, present frame command does it on its own?
 		}

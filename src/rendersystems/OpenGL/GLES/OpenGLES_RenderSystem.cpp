@@ -123,8 +123,9 @@ namespace april
 #ifdef _ANDROID
 		this->etc1Supported = false;
 #endif
-		// TODOr - remove this once render target has been confirmed to work properly in all cases
-		//this->caps.renderTarget = true;
+#ifndef _IOS // TODOr - remove this once render target has been confirmed to work properly in all cases
+		this->caps.renderTarget = true;
+#endif
 	}
 
 	OpenGLES_RenderSystem::~OpenGLES_RenderSystem()
@@ -255,7 +256,10 @@ namespace april
 	{
 		RenderSystem::_deviceReset();
 		this->_updateIntermediateRenderTexture();
-		this->_deviceSetRenderTarget(this->renderTarget);
+		if (this->_intermediateRenderTexture != NULL)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_intermediateRenderTexture)->framebufferId);
+		}
 	}
 
 	void OpenGLES_RenderSystem::_deviceSetupCaps()
@@ -698,10 +702,11 @@ namespace april
 		this->_intermediateState->projectionMatrix.setOrthoProjection(
 			grectf(1.0f - 2.0f * this->pixelOffset / source->getWidth(), 1.0f - 2.0f * this->pixelOffset / source->getHeight(), 2.0f, 2.0f));
 		this->_intermediateState->texture = source;
+		RenderState deviceState(*this->deviceState);
 		this->_updateDeviceState(this->_intermediateState, true);
-		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
+		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT);
 		glBindFramebuffer(GL_FRAMEBUFFER, previousFramebufferId);
-		this->_updateDeviceState(this->state, true);
+		this->_updateDeviceState(&deviceState, true);
 	}
 
 	void OpenGLES_RenderSystem::_setGlTextureEnabled(bool enabled)

@@ -59,7 +59,7 @@ namespace april
 		deviceState_colorPointer(NULL)
 	{
 		// because GL has to defy screen logic and has (0,0) in the bottom left corner
-		for_iter (i, 0, 6)
+		for_iter (i, 0, APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT)
 		{
 			this->_intermediateRenderVertices[i].y = -this->_intermediateRenderVertices[i].y;
 		}

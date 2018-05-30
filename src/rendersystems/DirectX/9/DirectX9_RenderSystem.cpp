@@ -921,12 +921,13 @@ namespace april
 		this->_intermediateState->projectionMatrix.setOrthoProjection(
 			grectf(1.0f - 2.0f * this->pixelOffset / source->getWidth(), 1.0f - 2.0f * this->pixelOffset / source->getHeight(), 2.0f, 2.0f));
 		this->_intermediateState->texture = source;
+		RenderState deviceState(*this->deviceState);
 		this->_updateDeviceState(this->_intermediateState, true);
-		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
+		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT);
 		this->d3dDevice->EndScene();
 		this->d3dDevice->SetRenderTarget(0, previousRenderTarget);
 		this->d3dDevice->BeginScene();
-		this->_updateDeviceState(this->state, true);
+		this->_updateDeviceState(&deviceState, true);
 	}
 
 	Texture* DirectX9_RenderSystem::getRenderTarget()
