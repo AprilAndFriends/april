@@ -127,6 +127,7 @@ namespace april
 					april::application->updateInitializing(true);
 					return true;
 				}
+				/*
 				// TODO - remove this once render target has been confirmed to work properly in all cases
 				// on Android this must not continue until something has been renderered due to swapBuffer() being called externally
 				while (!april::application->update())
@@ -138,12 +139,11 @@ namespace april
 					}
 					hthread::sleep(0.001f);
 				}
-				/*
+				*/
 				if (!april::application->update())
 				{
 					april::application->repeatLastFrame(false);
 				}
-				*/
 			}
 			catch (hexception& e)
 			{

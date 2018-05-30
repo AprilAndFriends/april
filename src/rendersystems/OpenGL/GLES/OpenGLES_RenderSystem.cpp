@@ -123,7 +123,8 @@ namespace april
 #ifdef _ANDROID
 		this->etc1Supported = false;
 #endif
-		this->caps.renderTarget = true;
+		// TODOr - remove this once render target has been confirmed to work properly in all cases
+		//this->caps.renderTarget = true;
 	}
 
 	OpenGLES_RenderSystem::~OpenGLES_RenderSystem()
