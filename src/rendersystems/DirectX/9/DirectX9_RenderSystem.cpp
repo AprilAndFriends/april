@@ -55,8 +55,7 @@ namespace april
 		this->name = april::RenderSystemType::DirectX9.getName();
 		this->pixelOffset = 0.5f;
 		this->_supportsA8Surface = false;
-		// TODOr - remove this once render target has been confirmed to work properly in all cases
-		//this->caps.renderTarget = true;
+		this->caps.renderTarget = true;
 		this->_deviceInit();
 	}
 
