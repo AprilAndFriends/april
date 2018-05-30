@@ -375,7 +375,7 @@ namespace april
 				{
 					this->_tryUnassignChildWindow();
 				}
-				this->setViewport(grectf(0.0f, 0.0f, (float)w, (float)h));
+				this->setViewport(grecti(0, 0, w, h));
 				SystemInfo info = april::getSystemInfo();
 				w = (int)info.displayResolution.x;
 				h = (int)info.displayResolution.y;
@@ -390,19 +390,19 @@ namespace april
 			{
 				this->_tryAssignChildWindow();
 			}
-			this->setViewport(grectf(0.0f, 0.0f, (float)w, (float)h));
+			this->setViewport(grecti(0, 0, w, h));
 		}
 	}
 
-	void DirectX9_RenderSystem::_setDeviceViewport(cgrectf rect)
+	void DirectX9_RenderSystem::_setDeviceViewport(cgrecti rect)
 	{
 		D3DVIEWPORT9 viewport;
 		viewport.MinZ = 0.0f;
 		viewport.MaxZ = 1.0f;
-		viewport.X = (int)rect.x;
-		viewport.Y = (int)rect.y;
-		viewport.Width = (int)rect.w;
-		viewport.Height = (int)rect.h;
+		viewport.X = rect.x;
+		viewport.Y = rect.y;
+		viewport.Width = rect.w;
+		viewport.Height = rect.h;
 		this->d3dDevice->SetViewport(&viewport);
 	}
 
@@ -917,7 +917,7 @@ namespace april
 		this->d3dDevice->EndScene();
 		this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)destination)->_getSurface());
 		this->d3dDevice->BeginScene();
-		this->_intermediateState->viewport.setSize((float)source->getWidth(), (float)source->getHeight());
+		this->_intermediateState->viewport.setSize(source->getWidth(), source->getHeight());
 		this->_intermediateState->projectionMatrix.setOrthoProjection(
 			grectf(1.0f - 2.0f * this->pixelOffset / source->getWidth(), 1.0f - 2.0f * this->pixelOffset / source->getHeight(), 2.0f, 2.0f));
 		this->_intermediateState->texture = source;

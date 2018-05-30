@@ -26,7 +26,7 @@ namespace april
 	
 	void RenderState::reset()
 	{
-		this->viewport.set(0.0f, 0.0f, 1.0f, 1.0f);
+		this->viewport.set(0, 0, 1, 1);
 		this->viewportChanged = true;
 		this->modelviewMatrixChanged = true;
 		this->projectionMatrix.setIdentity();

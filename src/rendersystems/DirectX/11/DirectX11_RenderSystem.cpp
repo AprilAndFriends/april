@@ -611,7 +611,7 @@ namespace april
 		}
 	}
 
-	void DirectX11_RenderSystem::_setDeviceViewport(cgrect rect)
+	void DirectX11_RenderSystem::_setDeviceViewport(cgrecti rect)
 	{
 		grect viewport = rect;
 		// this is needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
@@ -619,36 +619,36 @@ namespace april
 		gvec2 resolution = april::getSystemInfo().displayResolution;
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();
-		if (viewport.x < 0.0f)
+		if (viewport.x < 0)
 		{
 			viewport.w += viewport.x;
-			viewport.x = 0.0f;
+			viewport.x = 0;
 		}
-		if (viewport.y < 0.0f)
+		if (viewport.y < 0)
 		{
 			viewport.h += viewport.y;
-			viewport.y = 0.0f;
+			viewport.y = 0;
 		}
-		viewport.w = hclamp(viewport.w, 0.0f, hmax(w - viewport.x, 0.0f));
-		viewport.h = hclamp(viewport.h, 0.0f, hmax(h - viewport.y, 0.0f));
-		if (viewport.w > 0.0f && viewport.h > 0.0f)
+		viewport.w = hclamp(viewport.w, 0, hmax(w - viewport.x, 0));
+		viewport.h = hclamp(viewport.h, 0, hmax(h - viewport.y, 0));
+		if (viewport.w > 0 && viewport.h > 0)
 		{
-			viewport.x = hclamp(viewport.x, 0.0f, (float)w);
-			viewport.y = hclamp(viewport.y, 0.0f, (float)h);
+			viewport.x = hclamp(viewport.x, 0, w);
+			viewport.y = hclamp(viewport.y, 0, h);
 		}
 		else
 		{
-			viewport.set((float)w, (float)h, 0.0f, 0.0f);
+			viewport.set(w, h, 0, 0);
 		}
 		// setting the system viewport
 		D3D11_VIEWPORT dx11Viewport;
 		dx11Viewport.MinDepth = D3D11_MIN_DEPTH;
 		dx11Viewport.MaxDepth = D3D11_MAX_DEPTH;
 		// these double-casts are to ensure consistent behavior among rendering systems
-		dx11Viewport.TopLeftX = (float)(int)viewport.x;
-		dx11Viewport.TopLeftY = (float)(int)viewport.y;
-		dx11Viewport.Width = (float)(int)viewport.w;
-		dx11Viewport.Height = (float)(int)viewport.h;
+		dx11Viewport.TopLeftX = (float)viewport.x;
+		dx11Viewport.TopLeftY = (float)viewport.y;
+		dx11Viewport.Width = (float)viewport.w;
+		dx11Viewport.Height = (float)viewport.h;
 		this->d3dDeviceContext->RSSetViewports(1, &dx11Viewport);
 	}
 

@@ -26,7 +26,7 @@ namespace april
 	{
 	public:
 		/// @brief The current viewport.
-		grectf viewport;
+		grecti viewport;
 		/// @brief Whether the viewport has changed.
 		bool viewportChanged;
 		/// @brief The current modelview matrix.

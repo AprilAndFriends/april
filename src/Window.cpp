@@ -233,9 +233,9 @@ namespace april
 		}
 	}
 
-	gvec2f Window::getSize() const
+	gvec2i Window::getSize() const
 	{
-		return gvec2f((float)this->getWidth(), (float)this->getHeight());
+		return gvec2i(this->getWidth(), this->getHeight());
 	}
 	
 	float Window::getAspectRatio() const

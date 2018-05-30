@@ -141,7 +141,7 @@ namespace april
 		void setInputModeTranslations(hmap<InputMode, InputMode> value);
 		/// @brief Gets the Window size.
 		/// @return The Window size.
-		gvec2f getSize() const;
+		gvec2i getSize() const;
 		/// @brief Gets the Window size aspect ratio.
 		/// @return The Window size aspect ratio.
 		float getAspectRatio() const;

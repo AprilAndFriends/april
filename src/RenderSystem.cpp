@@ -151,6 +151,8 @@ namespace april
 		this->_renderTargetDuplicatesCount = 0;
 		this->_intermediateRenderTexture = NULL;
 		this->_intermediateState = new RenderState();
+		// setting up the RenderState and other data for intermediate render texture
+		this->_intermediateState->useTexture = true;
 		april::TexturedVertex* v = this->_intermediateRenderVertices;
 		v[0].x = -1.0f;	v[0].y = -1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;
 		v[1].x = 1.0f;	v[1].y = -1.0f;	v[1].z = 0.0f;	v[1].u = 1.0f;	v[1].v = 0.0f;
@@ -298,7 +300,7 @@ namespace april
 		this->_deviceAssignWindow(window);
 		this->_deviceSetupCaps();
 		this->_deviceSetup();
-		grectf viewport(0.0f, 0.0f, april::window->getSize());
+		grecti viewport(0, 0, window->getSize());
 		this->setViewport(viewport);
 		this->setIdentityTransform();
 		this->setOrthoProjection(viewport);
@@ -452,12 +454,12 @@ namespace april
 		return false;
 	}
 	
-	grectf RenderSystem::getViewport() const
+	grecti RenderSystem::getViewport() const
 	{
 		return this->state->viewport;
 	}
 
-	void RenderSystem::setViewport(cgrectf value)
+	void RenderSystem::setViewport(cgrecti value)
 	{
 		this->state->viewport = value;
 		this->state->viewportChanged = true;
@@ -1516,8 +1518,6 @@ namespace april
 					{
 						throw Exception("Couldn't create intermediate render texture!");
 					}
-					// setting up the RenderState
-					this->_intermediateState->useTexture = true;
 				}
 				else
 				{
@@ -1577,11 +1577,11 @@ namespace april
 		{
 			int width = this->_intermediateRenderTexture->getWidth();
 			int height = this->_intermediateRenderTexture->getHeight();
-			this->_intermediateState->viewport.setSize((float)width, (float)height);
+			this->_intermediateState->viewport.setSize(width, height);
 			this->_intermediateState->projectionMatrix.setOrthoProjection(grectf(1.0f - 2.0f * this->pixelOffset / width, 1.0f - 2.0f * this->pixelOffset / height, 2.0f, 2.0f));
 			this->_intermediateState->texture = this->_intermediateRenderTexture;
 			this->_updateDeviceState(this->_intermediateState, true);
-			this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
+			this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT);
 			// no need to restore state with _updateDeviceState() here, present frame command does it on its own?
 		}
 	}

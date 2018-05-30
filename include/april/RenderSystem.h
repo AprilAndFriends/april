@@ -28,6 +28,8 @@
 #include "Image.h"
 #include "Texture.h"
 
+#define APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT 6
+
 namespace april
 {
 	class Application;
@@ -259,10 +261,10 @@ namespace april
 		bool hasTexturesReadyForUpload() const;
 		/// @brief Gets the render viewport.
 		/// @return The render viewport.
-		grectf getViewport() const;
+		grecti getViewport() const;
 		/// @brief Sets the render viewport.
 		/// @param[in] value The viewport rectangle.
-		void setViewport(cgrectf value);
+		void setViewport(cgrecti value);
 		/// @brief Gets the current modelview matrix.
 		/// @return The current modelview matrix.
 		gmat4 getModelviewMatrix() const;
@@ -630,7 +632,7 @@ namespace april
 		/// @brief Fixed RenderState for rendering the intermediate render texture.
 		RenderState* _intermediateState;
 		/// @brief Fixed vertices for rendering the intermediate render texture.
-		april::TexturedVertex _intermediateRenderVertices[6];
+		april::TexturedVertex _intermediateRenderVertices[APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT];
 
 		/// @brief How many times a render call was called during this frame.
 		int statCurrentFrameRenderCalls;
@@ -742,7 +744,7 @@ namespace april
 
 		/// @brief Sets the device viewport.
 		/// @param[in] rect The viewport rectangle.
-		virtual void _setDeviceViewport(cgrectf rect) = 0;
+		virtual void _setDeviceViewport(cgrecti rect) = 0;
 		/// @brief Sets the device modelview matrix.
 		/// @param[in] matrix The current modelview matrix.
 		virtual void _setDeviceModelviewMatrix(const gmat4& matrix) = 0;

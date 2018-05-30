@@ -98,7 +98,7 @@ namespace april
 
 		void _deviceChangeResolution(int w, int h, bool fullscreen);
 
-		void _setDeviceViewport(cgrectf rect);
+		void _setDeviceViewport(cgrecti rect);
 		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
 		void _setDeviceRenderMode(bool useTexture, bool useColor);
 		void _setDeviceTexture(Texture* texture);

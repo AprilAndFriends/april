@@ -22,7 +22,7 @@ namespace april
 	class ResetCommand : public StateUpdateCommand
 	{
 	public:
-		ResetCommand(const RenderState& state, cgvec2f windowSize);
+		ResetCommand(const RenderState& state, cgvec2i windowSize);
 
 		bool isFinalizer() const { return true; }
 		bool isSystemCommand() const { return true; }
@@ -30,7 +30,7 @@ namespace april
 		void execute();
 
 	protected:
-		gvec2f windowSize;
+		gvec2i windowSize;
 
 	};
 	

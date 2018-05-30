@@ -48,7 +48,7 @@ protected:
 
 	april::Texture* _deviceCreateTexture(bool fromResource);
 
-	void _setDeviceViewport(cgrect rect);
+	void _setDeviceViewport(cgrecti rect);
 	void _setDeviceModelviewMatrix(const gmat4& matrix);
 	void _setDeviceProjectionMatrix(const gmat4& matrix);
 	void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);

@@ -764,7 +764,7 @@ namespace april
 		}
 	}
 
-	void DirectX12_RenderSystem::_setDeviceViewport(cgrect rect)
+	void DirectX12_RenderSystem::_setDeviceViewport(cgrecti rect)
 	{
 		// not used
 	}
