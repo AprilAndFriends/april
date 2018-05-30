@@ -691,13 +691,13 @@ namespace april
 			return;
 		}
 		glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)destination)->framebufferId);
-		this->_intermediateState->viewport.setSize(source->getWidth(), source->getHeight());
+		this->_intermediateState->viewport.setSize((float)source->getWidth(), (float)source->getHeight());
 		this->_intermediateState->projectionMatrix.setOrthoProjection(
 			grectf(1.0f - 2.0f * this->pixelOffset / source->getWidth(), 1.0f - 2.0f * this->pixelOffset / source->getHeight(), 2.0f, 2.0f));
 		this->_intermediateState->texture = source;
 		this->_updateDeviceState(this->_intermediateState, true);
 		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, 6);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, this->framebufferId);
 		this->_updateDeviceState(this->state, true);
 	}
 
