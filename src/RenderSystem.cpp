@@ -499,7 +499,9 @@ namespace april
 		if (this->frameDuplicates > 0 && this->caps.renderTarget && this->_intermediateRenderTexture != NULL && this->_renderTargetDuplicatesCount > 0)
 		{
 			lock.release();
+			RenderState state(*this->deviceState);
 			this->_devicePresentFrame(false);
+			this->_updateDeviceState(&state, true);
 			--this->_renderTargetDuplicatesCount;
 			result = true;
 		}
@@ -553,7 +555,15 @@ namespace april
 			lock.release();
 			if (this->caps.renderTarget)
 			{
-				this->_renderTargetDuplicatesCount = this->frameDuplicates;
+				if (this->frameDuplicates > 0)
+				{
+					HL_LAMBDA_CLASS(_repeatableCommands, bool, ((AsyncCommand* const& command) { return command->isRepeatable(); }));
+					harray<AsyncCommand*> repeatableCommands = queue->commands.findAll(&_repeatableCommands::lambda);
+					if (repeatableCommands.size() > 0 && dynamic_cast<PresentFrameCommand*>(repeatableCommands.last()) != NULL)
+					{
+						this->_renderTargetDuplicatesCount = this->frameDuplicates;
+					}
+				}
 			}
 			else if (this->lastAsyncCommandQueue != NULL)
 			{

@@ -123,7 +123,7 @@ namespace april
 #ifdef _ANDROID
 		this->etc1Supported = false;
 #endif
-		// TODO - remove this once render target has been confirmed to work properly in all cases
+		// TODOr - remove this once render target has been confirmed to work properly in all cases
 		//this->caps.renderTarget = true;
 	}
 
