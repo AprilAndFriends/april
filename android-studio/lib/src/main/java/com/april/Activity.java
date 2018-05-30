@@ -1,6 +1,6 @@
 package com.april;
 
-/// @version 5.0
+/// @version 5.1
 
 import android.app.ActivityManager;
 import android.app.Dialog;

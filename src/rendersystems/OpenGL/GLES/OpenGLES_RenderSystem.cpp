@@ -1,5 +1,5 @@
 /// @file
-/// @version 5.0
+/// @version 5.1
 /// 
 /// @section LICENSE
 /// 
@@ -123,8 +123,7 @@ namespace april
 #ifdef _ANDROID
 		this->etc1Supported = false;
 #endif
-		// TODOr - remove this once render target has been confirmed to work properly in all cases
-		//this->caps.renderTarget = true;
+		this->caps.renderTarget = true;
 	}
 
 	OpenGLES_RenderSystem::~OpenGLES_RenderSystem()
