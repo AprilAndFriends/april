@@ -630,12 +630,14 @@ namespace april
 		int frameDuplicates;
 		/// @brief Current special texture used as utility for rendering.
 		Texture* _currentIntermediateRenderTexture;
+		/// @brief Last special texture used as utility for rendering.
+		Texture* _lastIntermediateRenderTexture;
 		/// @brief Special textures used as utility for rendering.
 		Texture* _intermediateRenderTextures[APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES];
 		/// @brief Index of current special textures used as utility for rendering.
 		int _intermediateRenderTextureIndex;
-		/// @brief Whether a swap of textures used as utility for rendering should occur after rendering.
-		bool _swapIntermediateRenderTexture;
+		/// @brief Whether an update of the last intermediate render textures should occur after rendering.
+		bool _updateLastIntermediateRenderTexture;
 		/// @brief Fixed RenderState for rendering the intermediate render texture.
 		RenderState* _intermediateState;
 		/// @brief Fixed vertices for rendering the intermediate render texture.
