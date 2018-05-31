@@ -155,6 +155,7 @@ namespace april
 			this->_intermediateRenderTextures[i] = NULL;
 		}
 		this->_intermediateRenderTextureIndex = 0;
+		this->_swapIntermediateRenderTexture = true;
 		this->_intermediateState = new RenderState();
 		// setting up the RenderState and other data for intermediate render texture
 		this->_intermediateState->useTexture = true;
@@ -509,7 +510,9 @@ namespace april
 		{
 			lock.release();
 			RenderState deviceState(*this->deviceState);
+			this->_swapIntermediateRenderTexture = false;
 			this->_devicePresentFrame(false);
+			this->_swapIntermediateRenderTexture = true;
 			this->_updateDeviceState(&deviceState, true);
 			--this->_renderTargetDuplicatesCount;
 			result = true;
@@ -1513,7 +1516,9 @@ namespace april
 		if (this->_currentIntermediateRenderTexture != NULL)
 		{
 			RenderState deviceState(*this->deviceState);
+			this->_swapIntermediateRenderTexture = false;
 			this->_devicePresentFrame(systemEnabled);
+			this->_swapIntermediateRenderTexture = true;
 			this->_updateDeviceState(&deviceState, true);
 		}
 	}
@@ -1644,8 +1649,11 @@ namespace april
 			this->_updateDeviceState(this->_intermediateState, true);
 			this->_deviceClear(false);
 			this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT);
-			this->_intermediateRenderTextureIndex = (this->_intermediateRenderTextureIndex + 1) % APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES;
-			this->_currentIntermediateRenderTexture = this->_intermediateRenderTextures[this->_intermediateRenderTextureIndex];
+			if (this->_swapIntermediateRenderTexture)
+			{
+				this->_intermediateRenderTextureIndex = (this->_intermediateRenderTextureIndex + 1) % APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES;
+				this->_currentIntermediateRenderTexture = this->_intermediateRenderTextures[this->_intermediateRenderTextureIndex];
+			}
 			// don't restore state with _updateDeviceState() here, calling functions must handle that
 		}
 	}

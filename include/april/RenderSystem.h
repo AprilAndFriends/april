@@ -632,8 +632,10 @@ namespace april
 		Texture* _currentIntermediateRenderTexture;
 		/// @brief Special textures used as utility for rendering.
 		Texture* _intermediateRenderTextures[APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES];
-		/// @brief Special textures used as utility for rendering.
+		/// @brief Index of current special textures used as utility for rendering.
 		int _intermediateRenderTextureIndex;
+		/// @brief Whether a swap of textures used as utility for rendering should occur after rendering.
+		bool _swapIntermediateRenderTexture;
 		/// @brief Fixed RenderState for rendering the intermediate render texture.
 		RenderState* _intermediateState;
 		/// @brief Fixed vertices for rendering the intermediate render texture.
