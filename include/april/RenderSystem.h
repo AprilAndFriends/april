@@ -28,6 +28,7 @@
 #include "Image.h"
 #include "Texture.h"
 
+#define APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES 2
 #define APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT 6
 
 namespace april
@@ -627,8 +628,12 @@ namespace april
 		int frameAdvanceUpdates;
 		/// @brief How many times a frame should be duplicated during rendering.
 		int frameDuplicates;
-		/// @brief Special texture used as utility for rendering.
-		Texture* _intermediateRenderTexture;
+		/// @brief Current special texture used as utility for rendering.
+		Texture* _currentIntermediateRenderTexture;
+		/// @brief Special textures used as utility for rendering.
+		Texture* _intermediateRenderTextures[APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES];
+		/// @brief Special textures used as utility for rendering.
+		int _intermediateRenderTextureIndex;
 		/// @brief Fixed RenderState for rendering the intermediate render texture.
 		RenderState* _intermediateState;
 		/// @brief Fixed vertices for rendering the intermediate render texture.
@@ -893,13 +898,16 @@ namespace april
 		/// @brief Copies RenderTarget data from one texture to another.
 		/// @note Both textures must be render targets.
 		virtual void _deviceCopyRenderTargetData(Texture* source, Texture* destination);
-		/// @brief Updates the intermediate render texture.
-		void _updateIntermediateRenderTexture();
-		/// @brief Creates the intermediate render texture.
+		/// @brief Updates the intermediate render textures.
+		void _updateIntermediateRenderTextures();
+		/// @brief Creates the intermediate render textures.
 		/// @param[in] width The texture width.
 		/// @param[in] height The texture height.
 		/// @return True if successful.
-		bool _tryCreateIntermediateRenderTexture(int width, int height);
+		bool _tryCreateIntermediateRenderTextures(int width, int height);
+		/// @brief Destroys the intermediate render texture.
+		/// @return True if successful.
+		bool _tryDestroyIntermediateRenderTextures();
 		/// @brief Renders the actual intermediate render texture.
 		void _presentIntermediateRenderTexture();
 		/// @brief Unloads all textures. Used internally only.

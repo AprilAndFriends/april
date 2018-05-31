@@ -149,7 +149,12 @@ namespace april
 		this->statLastFrameLineCount = 0;
 		this->_queuedFrameDuplicates = -1;
 		this->_renderTargetDuplicatesCount = 0;
-		this->_intermediateRenderTexture = NULL;
+		this->_currentIntermediateRenderTexture = NULL;
+		for_iter (i, 0, APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES)
+		{
+			this->_intermediateRenderTextures[i] = NULL;
+		}
+		this->_intermediateRenderTextureIndex = 0;
 		this->_intermediateState = new RenderState();
 		// setting up the RenderState and other data for intermediate render texture
 		this->_intermediateState->useTexture = true;
@@ -248,10 +253,14 @@ namespace april
 		hmutex::ScopeLock lockTextures(&this->texturesMutex);
 		harray<Texture*> textures = this->textures;
 		this->textures.clear();
-		if (this->_intermediateRenderTexture != NULL)
+		this->_currentIntermediateRenderTexture = NULL;
+		for_iter (i, 0, APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES)
 		{
-			textures += this->_intermediateRenderTexture;
-			this->_intermediateRenderTexture = NULL;
+			if (this->_intermediateRenderTextures[i] != NULL)
+			{
+				textures += this->_intermediateRenderTextures[i];
+				this->_intermediateRenderTextures[i] = NULL;
+			}
 		}
 		lockTextures.release();
 		this->waitForAsyncTextures();
@@ -496,7 +505,7 @@ namespace april
 		{
 			previousRepeatCount = this->lastAsyncCommandQueue->getRepeatCount();
 		}
-		if (this->frameDuplicates > 0 && this->caps.renderTarget && this->_intermediateRenderTexture != NULL && this->_renderTargetDuplicatesCount > 0)
+		if (this->frameDuplicates > 0 && this->caps.renderTarget && this->_currentIntermediateRenderTexture != NULL && this->_renderTargetDuplicatesCount > 0)
 		{
 			lock.release();
 			RenderState deviceState(*this->deviceState);
@@ -1501,7 +1510,7 @@ namespace april
 
 	void RenderSystem::_deviceRepeatLastFrame(bool systemEnabled)
 	{
-		if (this->_intermediateRenderTexture != NULL)
+		if (this->_currentIntermediateRenderTexture != NULL)
 		{
 			RenderState deviceState(*this->deviceState);
 			this->_devicePresentFrame(systemEnabled);
@@ -1514,7 +1523,7 @@ namespace april
 		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
 	}
 
-	void RenderSystem::_updateIntermediateRenderTexture()
+	void RenderSystem::_updateIntermediateRenderTextures()
 	{
 		// texture update
 		if (this->created && april::window != NULL && this->caps.renderTarget)
@@ -1524,9 +1533,9 @@ namespace april
 			if (width > 0 && height > 0)
 			{
 				// creating the texture the first time
-				if (this->_intermediateRenderTexture == NULL)
+				if (this->_currentIntermediateRenderTexture == NULL)
 				{
-					if (!this->_tryCreateIntermediateRenderTexture(width, height))
+					if (!this->_tryCreateIntermediateRenderTextures(width, height))
 					{
 						throw Exception("Couldn't create intermediate render texture!");
 					}
@@ -1534,14 +1543,14 @@ namespace april
 				else
 				{
 					// updating the texture size when necessary
-					int oldWidth = this->_intermediateRenderTexture->getWidth();
-					int oldHeight = this->_intermediateRenderTexture->getHeight();
+					int oldWidth = this->_currentIntermediateRenderTexture->getWidth();
+					int oldHeight = this->_currentIntermediateRenderTexture->getHeight();
 					if (width != oldWidth || height != oldHeight)
 					{
-						april::Texture* oldTexture = this->_intermediateRenderTexture;
-						if (this->_tryCreateIntermediateRenderTexture(width, height))
+						april::Texture* oldTexture = this->_currentIntermediateRenderTexture;
+						if (this->_tryCreateIntermediateRenderTextures(width, height))
 						{
-							this->_deviceCopyRenderTargetData(oldTexture, this->_intermediateRenderTexture);
+							this->_deviceCopyRenderTargetData(oldTexture, this->_currentIntermediateRenderTexture);
 							if (this->deviceState->texture == oldTexture)
 							{
 								this->deviceState->texture = NULL;
@@ -1552,7 +1561,7 @@ namespace april
 						else
 						{
 							hlog::error(logTag, "Couldn't create new intermediate render texture!");
-							this->_intermediateRenderTexture = oldTexture;
+							this->_currentIntermediateRenderTexture = oldTexture;
 						}
 					}
 				}
@@ -1560,42 +1569,84 @@ namespace april
 		}
 	}
 
-	bool RenderSystem::_tryCreateIntermediateRenderTexture(int width, int height)
+	bool RenderSystem::_tryCreateIntermediateRenderTextures(int width, int height)
 	{
 		if (!this->caps.renderTarget)
 		{
 			return false;
 		}
-		this->_intermediateRenderTexture = this->_deviceCreateTexture(false);
-		bool result = this->_intermediateRenderTexture->_createRenderTarget(width, height, april::Image::Format::RGBX);
+		this->_currentIntermediateRenderTexture = NULL;
+		bool result = false;
+		for_iter (i, 0, APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES)
+		{
+			this->_intermediateRenderTextures[i] = this->_deviceCreateTexture(false);
+			result = this->_intermediateRenderTextures[i]->_createRenderTarget(width, height, april::Image::Format::RGBX);
+			if (result)
+			{
+				this->_intermediateRenderTextures[i]->_loadAsync();
+				hmutex::ScopeLock lock;
+				result = this->_intermediateRenderTextures[i]->_upload(lock);
+			}
+			if (!result)
+			{
+				break;
+			}
+		}
 		if (result)
 		{
-			this->_intermediateRenderTexture->_loadAsync();
-			hmutex::ScopeLock lock;
-			result = this->_intermediateRenderTexture->_upload(lock);
+			this->_intermediateRenderTextureIndex = 0;
+			this->_currentIntermediateRenderTexture = this->_intermediateRenderTextures[0];
 		}
-		if (!result)
+		else
 		{
-			this->_intermediateRenderTexture->_deviceUnloadTexture();
-			delete this->_intermediateRenderTexture;
-			this->_intermediateRenderTexture = NULL;
+			for_iter (i, 0, APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES)
+			{
+				if (this->_intermediateRenderTextures[i] != NULL)
+				{
+					this->_intermediateRenderTextures[i]->_deviceUnloadTexture();
+					delete this->_intermediateRenderTextures[i];
+					this->_intermediateRenderTextures[i] = NULL;
+				}
+			}
 		}
 		return result;
 	}
 
+	bool RenderSystem::_tryDestroyIntermediateRenderTextures()
+	{
+		if (this->caps.renderTarget && this->_currentIntermediateRenderTexture != NULL)
+		{
+			for_iter (i, 0, APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES)
+			{
+				if (this->_intermediateRenderTextures[i] != NULL)
+				{
+					this->_intermediateRenderTextures[i]->_deviceUnloadTexture();
+					delete this->_intermediateRenderTextures[i];
+					this->_intermediateRenderTextures[i] = NULL;
+				}
+			}
+			this->_currentIntermediateRenderTexture = NULL;
+			this->_intermediateRenderTextureIndex = 0;
+			return true;
+		}
+		return false;
+	}
+
 	void RenderSystem::_presentIntermediateRenderTexture()
 	{
-		if (this->_intermediateRenderTexture != NULL)
+		if (this->_currentIntermediateRenderTexture != NULL)
 		{
-			int width = this->_intermediateRenderTexture->getWidth();
-			int height = this->_intermediateRenderTexture->getHeight();
+			int width = this->_currentIntermediateRenderTexture->getWidth();
+			int height = this->_currentIntermediateRenderTexture->getHeight();
 			this->_intermediateState->viewport.setSize(width, height);
 			this->_intermediateState->projectionMatrix.setOrthoProjection(grectf(1.0f - 2.0f * this->pixelOffset / width, 1.0f - 2.0f * this->pixelOffset / height, 2.0f, 2.0f));
-			this->_intermediateState->texture = this->_intermediateRenderTexture;
+			this->_intermediateState->texture = this->_currentIntermediateRenderTexture;
 			this->_updateDeviceState(this->_intermediateState, true);
 			this->_deviceClear(false);
 			this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT);
-			// no need to restore state with _updateDeviceState() here, present frame command does it on its own?
+			this->_intermediateRenderTextureIndex = (this->_intermediateRenderTextureIndex + 1) % APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES;
+			this->_currentIntermediateRenderTexture = this->_intermediateRenderTextures[this->_intermediateRenderTextureIndex];
+			// don't restore state with _updateDeviceState() here, calling functions must handle that
 		}
 	}
 
