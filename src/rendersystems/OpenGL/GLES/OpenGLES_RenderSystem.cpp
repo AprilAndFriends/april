@@ -84,30 +84,30 @@ namespace april
 	{
 		if (this->glShaderProgram != 0)
 		{
-			hlog::error(logTag, "Shader program alread created!");
+			hlog::error(logTag, "Shader program already created!");
 			return false;
 		}
-		this->glShaderProgram = glCreateProgram();
+		GL_SAFE_CALL(this->glShaderProgram = glCreateProgram, ());
 		if (this->glShaderProgram == 0)
 		{
 			hlog::error(logTag, "Could not create shader program!");
 			return false;
 		}
-		glAttachShader(this->glShaderProgram, pixelShaderId);
-		glAttachShader(this->glShaderProgram, vertexShaderId);
-		glBindAttribLocation(this->glShaderProgram, VERTEX_ARRAY, "position");
-		glBindAttribLocation(this->glShaderProgram, COLOR_ARRAY, "color");
-		glBindAttribLocation(this->glShaderProgram, TEXTURE_ARRAY, "tex");
-		glLinkProgram(this->glShaderProgram);
+		GL_SAFE_CALL(glAttachShader, (this->glShaderProgram, pixelShaderId));
+		GL_SAFE_CALL(glAttachShader, (this->glShaderProgram, vertexShaderId));
+		GL_SAFE_CALL(glBindAttribLocation, (this->glShaderProgram, VERTEX_ARRAY, "position"));
+		GL_SAFE_CALL(glBindAttribLocation, (this->glShaderProgram, COLOR_ARRAY, "color"));
+		GL_SAFE_CALL(glBindAttribLocation, (this->glShaderProgram, TEXTURE_ARRAY, "tex"));
+		GL_SAFE_CALL(glLinkProgram, (this->glShaderProgram));
 		GLint linked;
-		glGetProgramiv(this->glShaderProgram, GL_LINK_STATUS, &linked);
+		GL_SAFE_CALL(glGetProgramiv, (this->glShaderProgram, GL_LINK_STATUS, &linked));
 		if (linked == 0)
 		{
 			int messageSize = 0;
 			int written = 0;
-			glGetProgramiv(this->glShaderProgram, GL_INFO_LOG_LENGTH, &messageSize);
+			GL_SAFE_CALL(glGetProgramiv, (this->glShaderProgram, GL_INFO_LOG_LENGTH, &messageSize));
 			char* message = new char[messageSize];
-			glGetProgramInfoLog(this->glShaderProgram, messageSize, &written, message);
+			GL_SAFE_CALL(glGetProgramInfoLog, (this->glShaderProgram, messageSize, &written, message));
 			hlog::error(logTag, "Shader Program could not be linked! Error:\n" + hstr(message));
 			delete[] message;
 			glDeleteProgram(this->glShaderProgram);
@@ -122,10 +122,12 @@ namespace april
 	{
 #ifdef _ANDROID
 		this->etc1Supported = false;
-		this->_intermediateRenderTextureCount = 1; // Android has issues when 2 render targets are used
+#endif
+#ifdef _IOS
+		this->_intermediateRenderTextureCount = 2; // iOS has issues when only a single render target is used due to internal optimizations and texture locking
 #endif
 #ifndef _IOS // TODOr - remove this once render target has been confirmed to work properly in all cases
-		//this->caps.renderTarget = true;
+		this->caps.renderTarget = true;
 #endif
 	}
 
@@ -251,13 +253,13 @@ namespace april
 		}
 #endif
 		hstr extensions;
-		const GLubyte* extensionsString = glGetString(GL_EXTENSIONS);
+		GL_SAFE_CALL(const GLubyte* extensionsString = glGetString, (GL_EXTENSIONS));
 		if (extensionsString != NULL)
 		{
 			extensions = (const char*)extensionsString;
 		}
 		hlog::write(logTag, "Extensions supported:\n- " + extensions.trimmedRight().replaced(" ", "\n- "));
-#if defined(_IOS) || defined(_WINRT) // iOS devices support limited NPOT textures as per device specification since iPhone 3G S
+#if defined(_IOS) || defined(_WINRT) // iOS devices support limited NPOT textures as per device specification since iPhone 3GS
 		this->caps.npotTexturesLimited = true;
 #else
 		this->caps.npotTexturesLimited = (extensions.contains("IMG_texture_npot") || extensions.contains("APPLE_texture_2D_limited_npot"));
@@ -280,7 +282,7 @@ namespace april
 
 	void OpenGLES_RenderSystem::_deviceSetup()
 	{
-		glEnableVertexAttribArray(VERTEX_ARRAY);
+		GL_SAFE_CALL(glEnableVertexAttribArray, (VERTEX_ARRAY));
 		OpenGL_RenderSystem::_deviceSetup();
 		this->_createShaders();
 		this->deviceState->texture = NULL;
@@ -288,16 +290,16 @@ namespace april
 		this->deviceState_systemColorChanged = true;
 		this->deviceState_colorModeFactorChanged = true;
 		this->deviceState_shader = NULL;
-#ifndef _ANDROID
-		glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&this->framebufferId);
-		glGetIntegerv(GL_RENDERBUFFER_BINDING, (GLint*)&this->renderbufferId);
+#ifdef _IOS // this is only required for iOS
+		GL_SAFE_CALL(glGetIntegerv, (GL_FRAMEBUFFER_BINDING, (GLint*)&this->framebufferId));
+		GL_SAFE_CALL(glGetIntegerv, (GL_RENDERBUFFER_BINDING, (GLint*)&this->renderbufferId));
 #endif
 		this->_updateIntermediateRenderTextures();
 		if (this->_currentIntermediateRenderTexture != NULL)
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId);
-#ifndef _ANDROID
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId));
+#ifdef _IOS // this is only required for iOS
+			GL_SAFE_CALL(glBindRenderbuffer, (GL_RENDERBUFFER, 0));
 #endif
 		}
 	}
@@ -463,23 +465,23 @@ namespace april
 			// blending for the new generations
 			if (blendMode == BlendMode::Alpha)
 			{
-				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+				GL_SAFE_CALL(glBlendEquationSeparate, (GL_FUNC_ADD, GL_FUNC_ADD));
+				GL_SAFE_CALL(glBlendFuncSeparate, (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 			}
 			else if (blendMode == BlendMode::Add)
 			{
-				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+				GL_SAFE_CALL(glBlendEquationSeparate, (GL_FUNC_ADD, GL_FUNC_ADD));
+				GL_SAFE_CALL(glBlendFuncSeparate, (GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 			}
 			else if (blendMode == BlendMode::Subtract)
 			{
-				glBlendEquationSeparate(GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD);
-				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+				GL_SAFE_CALL(glBlendEquationSeparate, (GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD));
+				GL_SAFE_CALL(glBlendFuncSeparate, (GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 			}
 			else if (blendMode == BlendMode::Overwrite)
 			{
-				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-				glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
+				GL_SAFE_CALL(glBlendEquationSeparate, (GL_FUNC_ADD, GL_FUNC_ADD));
+				GL_SAFE_CALL(glBlendFuncSeparate, (GL_ONE, GL_ZERO, GL_ONE, GL_ZERO));
 			}
 			else
 			{
@@ -501,9 +503,9 @@ namespace april
 			OpenGLES_Texture* currentTexture = (OpenGLES_Texture*)texture;
 			if (currentTexture->alphaTextureId != 0)
 			{
-				glActiveTexture(GL_TEXTURE1);
-				glBindTexture(GL_TEXTURE_2D, currentTexture->alphaTextureId);
-				glActiveTexture(GL_TEXTURE0);
+				GL_SAFE_CALL(glActiveTexture, (GL_TEXTURE1));
+				GL_SAFE_CALL(glBindTexture, (GL_TEXTURE_2D, currentTexture->alphaTextureId));
+				GL_SAFE_CALL(glActiveTexture, (GL_TEXTURE0));
 			}
 		}
 #endif
@@ -597,26 +599,26 @@ namespace april
 			this->deviceState_shader = shader;
 			if (this->deviceState_shader != NULL)
 			{
-				glUseProgram(this->deviceState_shader->glShaderProgram);
+				GL_SAFE_CALL(glUseProgram, (this->deviceState_shader->glShaderProgram));
 			}
 			if (this->deviceState->useTexture)
 			{
-				glActiveTexture(GL_TEXTURE0);
+				GL_SAFE_CALL(glActiveTexture, (GL_TEXTURE0));
 			}
 			if (this->deviceState_shader != NULL)
 			{
-				int samplerLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "sampler2d");
+				GL_SAFE_CALL(int samplerLocation = glGetUniformLocation, (this->deviceState_shader->glShaderProgram, "sampler2d"));
 				if (samplerLocation >= 0)
 				{
-					glUniform1i(samplerLocation, 0);
+					GL_SAFE_CALL(glUniform1i, (samplerLocation, 0));
 				}
 #ifdef _ANDROID
 				if (useAlphaHack) // will only be true if this->deviceState->useTexture is true
 				{
-					samplerLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "sampler2dAlpha");
+					GL_SAFE_CALL(samplerLocation = glGetUniformLocation, (this->deviceState_shader->glShaderProgram, "sampler2dAlpha"));
 					if (samplerLocation >= 0)
 					{
-						glUniform1i(samplerLocation, 1);
+						GL_SAFE_CALL(glUniform1i, (samplerLocation, 1));
 					}
 				}
 #endif
@@ -626,13 +628,13 @@ namespace april
 		{
 			if (forceUpdate || this->deviceState_matrixChanged)
 			{
-				int matrixLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "transformationMatrix");
-				glUniformMatrix4fv(matrixLocation, 1, GL_FALSE, (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).data);
+				GL_SAFE_CALL(int matrixLocation = glGetUniformLocation, (this->deviceState_shader->glShaderProgram, "transformationMatrix"));
+				GL_SAFE_CALL(glUniformMatrix4fv, (matrixLocation, 1, GL_FALSE, (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).data));
 				this->deviceState_matrixChanged = false;
 			}
 			if (forceUpdate || this->deviceState_systemColorChanged)
 			{
-				int systemColorLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "systemColor");
+				GL_SAFE_CALL(int systemColorLocation = glGetUniformLocation, (this->deviceState_shader->glShaderProgram, "systemColor"));
 				if (systemColorLocation >= 0)
 				{
 					static float shaderSystemColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -640,18 +642,18 @@ namespace april
 					shaderSystemColor[1] = this->deviceState->systemColor.g_f();
 					shaderSystemColor[2] = this->deviceState->systemColor.b_f();
 					shaderSystemColor[3] = this->deviceState->systemColor.a_f();
-					glUniform4fv(systemColorLocation, 1, shaderSystemColor);
+					GL_SAFE_CALL(glUniform4fv, (systemColorLocation, 1, shaderSystemColor));
 				}
 				this->deviceState_systemColorChanged = false;
 			}
 			if (forceUpdate || this->deviceState_colorModeFactorChanged)
 			{
-				int lerpLocation = glGetUniformLocation(this->deviceState_shader->glShaderProgram, "lerpAlpha");
+				GL_SAFE_CALL(int lerpLocation = glGetUniformLocation, (this->deviceState_shader->glShaderProgram, "lerpAlpha"));
 				if (lerpLocation >= 0)
 				{
 					static float shaderColorModeFactor = 1.0f;
 					shaderColorModeFactor = this->deviceState->colorModeFactor;
-					glUniform1fv(lerpLocation, 1, &shaderColorModeFactor);
+					GL_SAFE_CALL(glUniform1fv, (lerpLocation, 1, &shaderColorModeFactor));
 				}
 				this->deviceState_colorModeFactorChanged = false;
 			}
@@ -662,9 +664,9 @@ namespace april
 	{
 		if (this->_currentIntermediateRenderTexture != NULL)
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, this->framebufferId);
-#ifndef _ANDROID
-			glBindRenderbuffer(GL_RENDERBUFFER, this->renderbufferId);
+			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, this->framebufferId));
+#ifdef _IOS // this is only required for iOS
+			GL_SAFE_CALL(glBindRenderbuffer, (GL_RENDERBUFFER, this->renderbufferId));
 #endif
 			this->_presentIntermediateRenderTexture();
 		}
@@ -672,9 +674,9 @@ namespace april
 		this->_updateIntermediateRenderTextures();
 		if (this->_currentIntermediateRenderTexture != NULL)
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId);
-#ifndef _ANDROID
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId));
+#ifdef _IOS // this is only required for iOS
+			GL_SAFE_CALL(glBindRenderbuffer, (GL_RENDERBUFFER, 0));
 #endif
 		}
 	}
@@ -692,8 +694,8 @@ namespace april
 			return;
 		}
 		unsigned int previousFramebufferId = 0;
-		glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&previousFramebufferId);
-		glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)destination)->framebufferId);
+		GL_SAFE_CALL(glGetIntegerv, (GL_FRAMEBUFFER_BINDING, (GLint*)&previousFramebufferId));
+		GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, ((OpenGLES_Texture*)destination)->framebufferId));
 		this->_intermediateState->viewport.setSize(source->getWidth(), source->getHeight());
 		this->_intermediateState->projectionMatrix.setOrthoProjection(
 			grectf(1.0f - 2.0f * this->pixelOffset / source->getWidth(), 1.0f - 2.0f * this->pixelOffset / source->getHeight(), 2.0f, 2.0f));
@@ -701,33 +703,47 @@ namespace april
 		RenderState deviceState(*this->deviceState);
 		this->_updateDeviceState(this->_intermediateState, true);
 		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT);
-		glBindFramebuffer(GL_FRAMEBUFFER, previousFramebufferId);
+		GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, previousFramebufferId));
 		this->_updateDeviceState(&deviceState, true);
 	}
 
 	void OpenGLES_RenderSystem::_setGlTextureEnabled(bool enabled)
 	{
-		enabled ? glEnableVertexAttribArray(TEXTURE_ARRAY) : glDisableVertexAttribArray(TEXTURE_ARRAY);
+		if (enabled)
+		{
+			GL_SAFE_CALL(glEnableVertexAttribArray, (TEXTURE_ARRAY));
+		}
+		else
+		{
+			GL_SAFE_CALL(glDisableVertexAttribArray, (TEXTURE_ARRAY));
+		}
 	}
 
 	void OpenGLES_RenderSystem::_setGlColorEnabled(bool enabled)
 	{
-		enabled ? glEnableVertexAttribArray(COLOR_ARRAY) : glDisableVertexAttribArray(COLOR_ARRAY);
+		if (enabled)
+		{
+			GL_SAFE_CALL(glEnableVertexAttribArray, (COLOR_ARRAY));
+		}
+		else
+		{
+			GL_SAFE_CALL(glDisableVertexAttribArray, (COLOR_ARRAY));
+		}
 	}
 
 	void OpenGLES_RenderSystem::_setGlVertexPointer(int stride, const void* pointer)
 	{
-		glVertexAttribPointer(VERTEX_ARRAY, 3, GL_FLOAT, GL_FALSE, stride, pointer);
+		GL_SAFE_CALL(glVertexAttribPointer, (VERTEX_ARRAY, 3, GL_FLOAT, GL_FALSE, stride, pointer));
 	}
 
 	void OpenGLES_RenderSystem::_setGlTexturePointer(int stride, const void* pointer)
 	{
-		glVertexAttribPointer(TEXTURE_ARRAY, 2, GL_FLOAT, GL_TRUE, stride, pointer);
+		GL_SAFE_CALL(glVertexAttribPointer, (TEXTURE_ARRAY, 2, GL_FLOAT, GL_TRUE, stride, pointer));
 	}
 
 	void OpenGLES_RenderSystem::_setGlColorPointer(int stride, const void* pointer)
 	{
-		glVertexAttribPointer(COLOR_ARRAY, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, pointer);
+		GL_SAFE_CALL(glVertexAttribPointer, (COLOR_ARRAY, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, pointer));
 	}
 
 	// TODOa - these need to be refactored, they can't be called directly like this
@@ -743,16 +759,16 @@ namespace april
 		{
 			if (this->_currentIntermediateRenderTexture != NULL)
 			{
-				glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId);
+				GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId));
 			}
 			else
 			{
-				glBindFramebuffer(GL_FRAMEBUFFER, this->framebufferId);
+				GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, this->framebufferId));
 			}
 		}
 		else
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, texture->framebufferId);
+			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, texture->framebufferId));
 		}
 		this->renderTarget = texture;
 	}

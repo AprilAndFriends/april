@@ -821,7 +821,7 @@ namespace april
 		/// @brief Gets the internal texture name.
 		/// @return The internal texture name.
 		/// @note This is usually used for debugging and logging purposes.
-		hstr _getInternalName() const;
+		virtual hstr _getInternalName() const;
 		/// @brief Checks whether TextureAsync needs to upload this texture to the GPU.
 		/// @return True if TextureAsync needs to upload this texture to the GPU.
 		bool _isAsyncUploadQueued();

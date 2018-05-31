@@ -109,7 +109,7 @@ namespace april
 
 	void OpenGL_RenderSystem::_deviceSetupCaps()
 	{
-		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &this->caps.maxTextureSize);
+		GL_SAFE_CALL(glGetIntegerv, (GL_MAX_TEXTURE_SIZE, &this->caps.maxTextureSize));
 	}
 
 #if defined(_WIN32) && !defined(_WINRT)
@@ -137,16 +137,16 @@ namespace april
 
 	void OpenGL_RenderSystem::_deviceSetup()
 	{
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		GL_SAFE_CALL(glClearColor, (0.0f, 0.0f, 0.0f, 1.0f));
 		// GL defaults
-		glEnable(GL_BLEND);
+		GL_SAFE_CALL(glEnable, (GL_BLEND));
 		// pixel data
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		GL_SAFE_CALL(glPixelStorei, (GL_UNPACK_ALIGNMENT, 1));
+		GL_SAFE_CALL(glPixelStorei,(GL_PACK_ALIGNMENT, 1));
 		// other
 		if (this->options.depthBuffer)
 		{
-			glDepthFunc(GL_LEQUAL);
+			GL_SAFE_CALL(glDepthFunc, (GL_LEQUAL));
 		}
 		this->_setGlTextureEnabled(this->deviceState->useTexture);
 		this->_setGlColorEnabled(this->deviceState->useColor);
@@ -171,13 +171,20 @@ namespace april
 	void OpenGL_RenderSystem::_setDeviceViewport(cgrecti rect)
 	{
 		// because GL has to defy screen logic and has (0,0) in the bottom left corner
-		glViewport(rect.x, april::window->getHeight() - rect.h - rect.y, rect.w, rect.h);
+		GL_SAFE_CALL(glViewport, (rect.x, april::window->getHeight() - rect.h - rect.y, rect.w, rect.h));
 	}
 
 	void OpenGL_RenderSystem::_setDeviceDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		enabled ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
-		glDepthMask(writeEnabled);
+		if (enabled)
+		{
+			GL_SAFE_CALL(glEnable, (GL_DEPTH_TEST))
+		}
+		else
+		{
+			GL_SAFE_CALL(glDisable, (GL_DEPTH_TEST));
+		}
+		GL_SAFE_CALL(glDepthMask, (writeEnabled));
 	}
 
 	void OpenGL_RenderSystem::_setDeviceRenderMode(bool useTexture, bool useColor)
@@ -197,11 +204,11 @@ namespace april
 	{
 		if (texture != NULL)
 		{
-			glBindTexture(GL_TEXTURE_2D, ((OpenGL_Texture*)texture)->textureId);
+			GL_SAFE_CALL(glBindTexture, (GL_TEXTURE_2D, ((OpenGL_Texture*)texture)->textureId));
 		}
 		else
 		{
-			glBindTexture(GL_TEXTURE_2D, 0);
+			GL_SAFE_CALL(glBindTexture, (GL_TEXTURE_2D, 0));
 		}
 	}
 
@@ -209,13 +216,13 @@ namespace april
 	{
 		if (textureFilter == Texture::Filter::Linear)
 		{
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 		}
 		else if (textureFilter == Texture::Filter::Nearest)
 		{
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
 		}
 		else
 		{
@@ -227,13 +234,13 @@ namespace april
 	{
 		if (textureAddressMode == Texture::AddressMode::Wrap)
 		{
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
 		}
 		else if (textureAddressMode == Texture::AddressMode::Clamp)
 		{
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 		}
 		else
 		{
@@ -245,15 +252,15 @@ namespace april
 	{
 		if (blendMode == BlendMode::Alpha)
 		{
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			GL_SAFE_CALL(glBlendFunc, (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 		}
 		else if (blendMode == BlendMode::Add)
 		{
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+			GL_SAFE_CALL(glBlendFunc, (GL_SRC_ALPHA, GL_ONE));
 		}
 		else
 		{
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			GL_SAFE_CALL(glBlendFunc, (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 			hlog::warn(logTag, "Trying to set unsupported blend mode!");
 		}
 	}
@@ -265,8 +272,8 @@ namespace april
 		{
 			mask |= GL_DEPTH_BUFFER_BIT;
 		}
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(mask);
+		GL_SAFE_CALL(glClearColor, (0.0f, 0.0f, 0.0f, 1.0f));
+		GL_SAFE_CALL(glClear, (mask));
 	}
 
 	void OpenGL_RenderSystem::_deviceClear(const Color& color, bool depth)
@@ -276,13 +283,13 @@ namespace april
 		{
 			mask |= GL_DEPTH_BUFFER_BIT;
 		}
-		glClearColor(color.r_f(), color.g_f(), color.b_f(), color.a_f());
-		glClear(mask);
+		GL_SAFE_CALL(glClearColor, (color.r_f(), color.g_f(), color.b_f(), color.a_f()));
+		GL_SAFE_CALL(glClear, (mask));
 	}
 
 	void OpenGL_RenderSystem::_deviceClearDepth()
 	{
-		glClear(GL_DEPTH_BUFFER_BIT);
+		GL_SAFE_CALL(glClear, (GL_DEPTH_BUFFER_BIT));
 	}
 
 	void OpenGL_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const PlainVertex* vertices, int count)
@@ -298,7 +305,7 @@ namespace april
 			size = this->_limitVertices(renderOperation, hmin(count - i, MAX_VERTEX_COUNT));
 #endif
 			this->_setDeviceVertexPointer(sizeof(PlainVertex), vertices);
-			glDrawArrays(_glRenderOperations[renderOperation.value], 0, size);
+			GL_SAFE_CALL(glDrawArrays, (_glRenderOperations[renderOperation.value], 0, size));
 #ifdef _SEGMENTED_RENDERING
 			vertices += size;
 		}
@@ -319,7 +326,7 @@ namespace april
 #endif
 			this->_setDeviceVertexPointer(sizeof(TexturedVertex), vertices);
 			this->_setDeviceTexturePointer(sizeof(TexturedVertex), &vertices->u);
-			glDrawArrays(_glRenderOperations[renderOperation.value], 0, size);
+			GL_SAFE_CALL(glDrawArrays, (_glRenderOperations[renderOperation.value], 0, size));
 #ifdef _SEGMENTED_RENDERING
 			vertices += size;
 		}
@@ -340,7 +347,7 @@ namespace april
 #endif
 			this->_setDeviceVertexPointer(sizeof(ColoredVertex), vertices);
 			this->_setDeviceColorPointer(sizeof(ColoredVertex), &vertices->color);
-			glDrawArrays(_glRenderOperations[renderOperation.value], 0, size);
+			GL_SAFE_CALL(glDrawArrays, (_glRenderOperations[renderOperation.value], 0, size));
 #ifdef _SEGMENTED_RENDERING
 			vertices += size;
 		}
@@ -362,7 +369,7 @@ namespace april
 			this->_setDeviceVertexPointer(sizeof(ColoredTexturedVertex), vertices);
 			this->_setDeviceColorPointer(sizeof(ColoredTexturedVertex), &vertices->color);
 			this->_setDeviceTexturePointer(sizeof(ColoredTexturedVertex), &vertices->u);
-			glDrawArrays(_glRenderOperations[renderOperation.value], 0, size);
+			GL_SAFE_CALL(glDrawArrays, (_glRenderOperations[renderOperation.value], 0, size));
 #ifdef _SEGMENTED_RENDERING
 			vertices += size;
 		}
@@ -457,7 +464,7 @@ namespace april
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();
 		unsigned char* temp = new unsigned char[w * (h + 1) * 4]; // 4 BPP and one extra row just in case some OpenGL implementations don't blit properly and cause a memory leak
-		glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, temp);
+		GL_SAFE_CALL(glReadPixels, (0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, temp));
 		unsigned char* data = NULL;
 		Image* image = NULL;
 		if (Image::convertToFormat(w, h, temp, Image::Format::RGBA, &data, format, false))

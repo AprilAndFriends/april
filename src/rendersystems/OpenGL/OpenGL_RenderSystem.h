@@ -53,6 +53,20 @@
 #define GL_ETCX_RGBA8_OES_HACK (GL_ETC1_RGB8_OES | (1u << 31))
 #endif
 
+#ifdef _DEBUG
+#define GL_SAFE_CALL(function, params) function params;
+#else
+#define GL_SAFE_CALL(function, params) \
+	function params; \
+	{ \
+		GLenum glErrorCode = glGetError(); \
+		if (glErrorCode != GL_NO_ERROR) \
+		{ \
+			hlog::warnf(logTag, "GL call returned something that did not indicate success. function: %s; code: 0x%X; file: %s:%d", #function, glErrorCode, __FILE__, __LINE__); \
+		} \
+	}
+#endif
+
 #include <hltypes/hstring.h>
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>

@@ -81,10 +81,12 @@ namespace april
 			result = this->_updateSystem();
 			if (singleUpdateOnly)
 			{
-				if (april::rendersys != NULL)
+#ifdef _ANDROID
+				if (april::rendersys != NULL && !result)
 				{
 					april::rendersys->_deviceRepeatLastFrame(false);
 				}
+#endif
 				return;
 			}
 			hthread::sleep(0.001f);

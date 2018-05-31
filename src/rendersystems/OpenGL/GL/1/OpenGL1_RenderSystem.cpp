@@ -111,7 +111,13 @@ namespace april
 			return;
 		}
 #endif
-		hstr extensions = (const char*)glGetString(GL_EXTENSIONS);
+		hstr extensions;
+		GL_SAFE_CALL(const GLubyte* extensionsString = glGetString, (GL_EXTENSIONS));
+		if (extensionsString != NULL)
+		{
+			extensions = (const char*)extensionsString;
+		}
+		hlog::write(logTag, "Extensions supported:\n- " + extensions.trimmedRight().replaced(" ", "\n- "));
 		if (extensions.contains("ARB_texture_non_power_of_two"))
 		{
 			this->caps.npotTexturesLimited = true;
@@ -119,7 +125,7 @@ namespace april
 			if (extensions.contains("ARB_fragment_program"))
 			{
 				int value = 0;
-				glGetIntegerv(GL_MAX_TEXTURE_SIZE, &value);
+				GL_SAFE_CALL(glGetIntegerv, (GL_MAX_TEXTURE_SIZE, &value));
 				if (value >= 8192)
 				{
 					this->caps.npotTextures = true;
@@ -135,13 +141,13 @@ namespace april
 
 	void OpenGL1_RenderSystem::_deviceSetup()
 	{
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glAlphaFunc(GL_GREATER, 0.0f);
-		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
-		glEnable(GL_TEXTURE_2D);
+		GL_SAFE_CALL(glEnableClientState, (GL_VERTEX_ARRAY));
+		GL_SAFE_CALL(glAlphaFunc, (GL_GREATER, 0.0f));
+		GL_SAFE_CALL(glPixelStorei, (GL_UNPACK_SKIP_ROWS, 0));
+		GL_SAFE_CALL(glPixelStorei, (GL_UNPACK_SKIP_PIXELS, 0));
+		GL_SAFE_CALL(glPixelStorei, (GL_UNPACK_ROW_LENGTH, 0));
+		GL_SAFE_CALL(glPixelStorei, (GL_UNPACK_SWAP_BYTES, GL_FALSE));
+		GL_SAFE_CALL(glEnable, (GL_TEXTURE_2D));
 		OpenGL_RenderSystem::_deviceSetup();
 		this->_setDeviceColor(this->deviceState_color, true);
 		this->_setDeviceMatrixMode(GL_MODELVIEW, true);
@@ -155,19 +161,26 @@ namespace april
 	void OpenGL1_RenderSystem::_setDeviceModelviewMatrix(const gmat4& matrix)
 	{
 		this->_setDeviceMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(matrix.data);
+		GL_SAFE_CALL(glLoadMatrixf, (matrix.data));
 	}
 
 	void OpenGL1_RenderSystem::_setDeviceProjectionMatrix(const gmat4& matrix)
 	{
 		this->_setDeviceMatrixMode(GL_PROJECTION);
-		glLoadMatrixf(matrix.data);
+		GL_SAFE_CALL(glLoadMatrixf, (matrix.data));
 	}
 
 	void OpenGL1_RenderSystem::_setDeviceDepthBuffer(bool enabled, bool writeEnabled)
 	{
 		OpenGL_RenderSystem::_setDeviceDepthBuffer(enabled, writeEnabled);
-		enabled ? glEnable(GL_ALPHA_TEST) : glDisable(GL_ALPHA_TEST);
+		if (enabled)
+		{
+			GL_SAFE_CALL(glEnable, (GL_ALPHA_TEST));
+		}
+		else
+		{
+			GL_SAFE_CALL(glDisable, (GL_ALPHA_TEST));
+		}
 	}
 
 	void OpenGL1_RenderSystem::_setDeviceTexture(Texture* texture)
@@ -185,12 +198,12 @@ namespace april
 				{
 					static gmat4 matrix;
 					matrix.setScale(currentTexture->effectiveWidth, currentTexture->effectiveHeight, 1.0f);
-					glLoadMatrixf(matrix.data);
+					GL_SAFE_CALL(glLoadMatrixf, (matrix.data));
 	}
 				else
 				{
 					static gmat4 matrix;
-					glLoadMatrixf(matrix.data);
+					GL_SAFE_CALL(glLoadMatrixf, (matrix.data));
 				}
 			}
 		}
@@ -204,23 +217,23 @@ namespace april
 			// blending for the new generations
 			if (blendMode == BlendMode::Alpha)
 			{
-				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+				GL_SAFE_CALL(glBlendEquationSeparate, (GL_FUNC_ADD, GL_FUNC_ADD));
+				GL_SAFE_CALL(glBlendFuncSeparate, (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 			}
 			else if (blendMode == BlendMode::Add)
 			{
-				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+				GL_SAFE_CALL(glBlendEquationSeparate, (GL_FUNC_ADD, GL_FUNC_ADD));
+				GL_SAFE_CALL(glBlendFuncSeparate, (GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 			}
 			else if (blendMode == BlendMode::Subtract)
 			{
-				glBlendEquationSeparate(GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD);
-				glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+				GL_SAFE_CALL(glBlendEquationSeparate, (GL_FUNC_REVERSE_SUBTRACT, GL_FUNC_ADD));
+				GL_SAFE_CALL(glBlendFuncSeparate, (GL_SRC_ALPHA, GL_ONE, GL_ONE, GL_ONE_MINUS_SRC_ALPHA));
 			}
 			else if (blendMode == BlendMode::Overwrite)
 			{
-				glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
-				glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO);
+				GL_SAFE_CALL(glBlendEquationSeparate, (GL_FUNC_ADD, GL_FUNC_ADD));
+				GL_SAFE_CALL(glBlendFuncSeparate, (GL_ONE, GL_ZERO, GL_ONE, GL_ZERO));
 			}
 			else
 			{
@@ -243,61 +256,61 @@ namespace april
 		constColor[3] = colorModeFactor;
 		if (colorMode == ColorMode::Multiply)
 		{
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+			GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE));
 			if (useTexture)
 			{
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR));
 			}
 			else
 			{
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PRIMARY_COLOR);
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PRIMARY_COLOR));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR));
 			}
 		}
 		else if (colorMode == ColorMode::AlphaMap)
 		{
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+			GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE));
 			if (useTexture)
 			{
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR));
 			}
 			else
 			{
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PRIMARY_COLOR);
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PRIMARY_COLOR));
 			}
-			glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-			glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
+			GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE));
+			GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR));
 		}
 		else if (colorMode == ColorMode::Lerp)
 		{
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+			GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE));
 			if (useTexture)
 			{
-				glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constColor);
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC2_RGB, GL_CONSTANT);
+				GL_SAFE_CALL(glTexEnvfv, (GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constColor));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC1_RGB, GL_TEXTURE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC2_RGB, GL_CONSTANT));
 			}
 			else
 			{
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PRIMARY_COLOR);
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PRIMARY_COLOR));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR));
 			}
 		}
 		else if (colorMode == ColorMode::Desaturate || colorMode == ColorMode::Sepia)
@@ -308,22 +321,22 @@ namespace april
 				hlog::errorf(logTag, "The color mode '%s' is not properly supported right now in rendersystem '%s'. A compatibility mode will be used. This error will be printed only once.", colorMode.getName().cStr(), this->getName().cStr());
 			}
 			reported = true;
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+			GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE));
 			if (useTexture)
 			{
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR);
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR);
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_TEXTURE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC1_ALPHA, GL_PRIMARY_COLOR));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_RGB, GL_TEXTURE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC1_RGB, GL_PRIMARY_COLOR));
 			}
 			else
 			{
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PRIMARY_COLOR);
-				glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-				glTexEnvi(GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR);
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_ALPHA, GL_PRIMARY_COLOR));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE));
+				GL_SAFE_CALL(glTexEnvi, (GL_TEXTURE_ENV, GL_SRC0_RGB, GL_PRIMARY_COLOR));
 			}
 		}
 		else
@@ -340,7 +353,7 @@ namespace april
 	{
 		if (forceUpdate || this->deviceState_color != color)
 		{
-			glColor4f(color.r_f(), color.g_f(), color.b_f(), color.a_f());
+			GL_SAFE_CALL(glColor4f, (color.r_f(), color.g_f(), color.b_f(), color.a_f()));
 			this->deviceState_color = color;
 		}
 	}
@@ -349,34 +362,48 @@ namespace april
 	{
 		if (forceUpdate || this->deviceState_matrixMode != mode)
 		{
-			glMatrixMode(mode);
+			GL_SAFE_CALL(glMatrixMode, (mode));
 			this->deviceState_matrixMode = mode;
 		}
 	}
 
 	void OpenGL1_RenderSystem::_setGlTextureEnabled(bool enabled)
 	{
-		enabled ? glEnableClientState(GL_TEXTURE_COORD_ARRAY) : glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		if (enabled)
+		{
+			GL_SAFE_CALL(glEnableClientState, (GL_TEXTURE_COORD_ARRAY));
+		}
+		else
+		{
+			GL_SAFE_CALL(glDisableClientState, (GL_TEXTURE_COORD_ARRAY));
+		}
 	}
 
 	void OpenGL1_RenderSystem::_setGlColorEnabled(bool enabled)
 	{
-		enabled ? glEnableClientState(GL_COLOR_ARRAY) : glDisableClientState(GL_COLOR_ARRAY);
+		if (enabled)
+		{
+			GL_SAFE_CALL(glEnableClientState, (GL_COLOR_ARRAY));
+		}
+		else
+		{
+			GL_SAFE_CALL(glDisableClientState, (GL_COLOR_ARRAY));
+		}
 	}
 
 	void OpenGL1_RenderSystem::_setGlVertexPointer(int stride, const void* pointer)
 	{
-		glVertexPointer(3, GL_FLOAT, stride, pointer);
+		GL_SAFE_CALL(glVertexPointer, (3, GL_FLOAT, stride, pointer));
 	}
 
 	void OpenGL1_RenderSystem::_setGlTexturePointer(int stride, const void* pointer)
 	{
-		glTexCoordPointer(2, GL_FLOAT, stride, pointer);
+		GL_SAFE_CALL(glTexCoordPointer, (2, GL_FLOAT, stride, pointer));
 	}
 
 	void OpenGL1_RenderSystem::_setGlColorPointer(int stride, const void* pointer)
 	{
-		glColorPointer(4, GL_UNSIGNED_BYTE, stride, pointer);
+		GL_SAFE_CALL(glColorPointer, (4, GL_UNSIGNED_BYTE, stride, pointer));
 	}
 
 }

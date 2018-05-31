@@ -38,7 +38,7 @@ namespace april
 		}
 		if (this->type == Type::RenderTarget)
 		{
-			glGenFramebuffers(1, &this->framebufferId);
+			GL_SAFE_CALL(glGenFramebuffers, (1, &this->framebufferId));
 			if (this->framebufferId == 0)
 			{
 				hlog::error(logTag, "Cannot create GL frame buffer for: " + this->_getInternalName());
@@ -46,8 +46,11 @@ namespace april
 			}
 			this->_setCurrentTexture();
 			this->_uploadPotSafeClearData();
-			glBindFramebuffer(GL_FRAMEBUFFER, this->framebufferId);
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->textureId, 0);
+			unsigned int previousFramebufferId = 0;
+			glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&previousFramebufferId);
+			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, this->framebufferId));
+			GL_SAFE_CALL(glFramebufferTexture2D, (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->textureId, 0));
+			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, previousFramebufferId));
 		}
 		// data has to be uploaded right away if compressed texture
 #ifdef _IOS
@@ -73,7 +76,7 @@ namespace april
 			if (this->dataFormat == GL_ETCX_RGBA8_OES_HACK)
 			{
 				size /= 2;
-				glGenTextures(1, &this->alphaTextureId);
+				GL_SAFE_CALL(glGenTextures, (1, &this->alphaTextureId));
 				if (this->alphaTextureId == 0)
 				{
 					hlog::warn(logTag, "Could not create alpha texture hack: " + this->_getInternalName());

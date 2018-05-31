@@ -151,7 +151,7 @@ namespace april
 		this->_renderTargetDuplicatesCount = 0;
 		this->_currentIntermediateRenderTexture = NULL;
 		this->_lastIntermediateRenderTexture = NULL;
-		this->_intermediateRenderTextureCount = 2;
+		this->_intermediateRenderTextureCount = 1;
 		this->_intermediateRenderTextureIndex = 0;
 		this->_updateLastIntermediateRenderTexture = true;
 		this->_intermediateState = new RenderState();
@@ -1003,10 +1003,15 @@ namespace april
 				++this->statCurrentFrameTextureSwitches;
 				state->texture->_ensureAsyncCompleted();
 				state->texture->_ensureUploaded();
-				// filtering and address mode applied before loading texture data, some systems are optimized to work like this (e.g. iOS OpenGLES guidelines suggest it)
+#ifdef _IOS // filtering and address mode applied before loading texture data, iOS OpenGLES guidelines suggest it
 				this->_setDeviceTextureFilter(state->texture->getFilter());
 				this->_setDeviceTextureAddressMode(state->texture->getAddressMode());
+#endif
 				this->_setDeviceTexture(state->texture);
+#ifndef _IOS // other systems like Android require these parameters to be set afterwards or else really weird stuff starts to happen
+				this->_setDeviceTextureFilter(state->texture->getFilter());
+				this->_setDeviceTextureAddressMode(state->texture->getAddressMode());
+#endif
 			}
 			else
 			{
@@ -1594,6 +1599,7 @@ namespace april
 		for_iter (i, 0, this->_intermediateRenderTextureCount)
 		{
 			texture = this->_deviceCreateTexture(false);
+			texture->setFilter(Texture::Filter::Nearest); // optimization since they are rendered pixel perfect anyway
 			this->_intermediateRenderTextures += texture;
 			result = texture->_createRenderTarget(width, height, april::Image::Format::RGBX);
 			if (result)
@@ -1653,7 +1659,8 @@ namespace april
 			int height = this->_currentIntermediateRenderTexture->getHeight();
 			this->_intermediateState->viewport.setSize(width, height);
 			this->_intermediateState->projectionMatrix.setOrthoProjection(grectf(1.0f - 2.0f * this->pixelOffset / width, 1.0f - 2.0f * this->pixelOffset / height, 2.0f, 2.0f));
-			this->_intermediateState->texture = this->_lastIntermediateRenderTexture;
+			this->_intermediateState->texture = this->_currentIntermediateRenderTexture;
+			RenderState deviceState(*this->deviceState);
 			this->_updateDeviceState(this->_intermediateState, true);
 			this->_deviceClear(false);
 			this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT);
@@ -1662,6 +1669,7 @@ namespace april
 				this->_intermediateRenderTextureIndex = (this->_intermediateRenderTextureIndex + 1) % this->_intermediateRenderTextures.size();
 				this->_currentIntermediateRenderTexture = this->_intermediateRenderTextures[this->_intermediateRenderTextureIndex];
 			}
+			this->_updateDeviceState(&deviceState, true);
 			// don't restore state with _updateDeviceState() here, calling functions must handle that
 		}
 	}

@@ -36,7 +36,7 @@ namespace april
 
 	bool OpenGLES_VertexShader::_createShader(chstr filename, const hstream& stream)
 	{
-		this->glShader = glCreateShader(GL_VERTEX_SHADER);
+		GL_SAFE_CALL(this->glShader = glCreateShader, (GL_VERTEX_SHADER));
 		if (this->glShader == 0)
 		{
 			hlog::error(logTag, "Shader could not be created!");
@@ -44,17 +44,17 @@ namespace april
 		}
 		unsigned char* data = (unsigned char*)stream;
 		int size = (int)stream.size();
-		glShaderSource(this->glShader, 1, (const char**)&data, &size);
-		glCompileShader(this->glShader);
+		GL_SAFE_CALL(glShaderSource, (this->glShader, 1, (const char**)&data, &size));
+		GL_SAFE_CALL(glCompileShader, (this->glShader));
 		GLint compiled = 0;
-		glGetShaderiv(this->glShader, GL_COMPILE_STATUS, &compiled);
+		GL_SAFE_CALL(glGetShaderiv, (this->glShader, GL_COMPILE_STATUS, &compiled));
 		if (compiled == 0)
 		{
 			int messageSize = 0;
 			int written = 0;
-			glGetShaderiv(this->glShader, GL_INFO_LOG_LENGTH, &messageSize);
+			GL_SAFE_CALL(glGetShaderiv, (this->glShader, GL_INFO_LOG_LENGTH, &messageSize));
 			char* message = new char[messageSize];
-			glGetShaderInfoLog(this->glShader, messageSize, &written, message);
+			GL_SAFE_CALL(glGetShaderInfoLog, (this->glShader, messageSize, &written, message));
 			hstr context = filename;
 			if (filename == "[raw]")
 			{
@@ -62,7 +62,7 @@ namespace april
 			}
 			hlog::error(logTag, "Shader could not be compiled!\n" + context + "\n" + hstr(message));
 			delete[] message;
-			glDeleteShader(this->glShader);
+			GL_SAFE_CALL(glDeleteShader, (this->glShader));
 			this->glShader = 0;
 			return false;
 		}

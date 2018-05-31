@@ -35,7 +35,7 @@ namespace april
 
 	bool OpenGL_Texture::_deviceCreateTexture(unsigned char* data, int size)
 	{
-		glGenTextures(1, &this->textureId);
+		GL_SAFE_CALL(glGenTextures, (1, &this->textureId));
 		this->firstUpload = true;
 		return (this->textureId != 0);
 	}
@@ -150,7 +150,7 @@ namespace april
 					{
 						this->_uploadPotSafeClearData();
 					}
-					glTexSubImage2D(GL_TEXTURE_2D, 0, lock.dx, lock.dy, lock.w, lock.h, this->glFormat, GL_UNSIGNED_BYTE, lock.data);
+					GL_SAFE_CALL(glTexSubImage2D, (GL_TEXTURE_2D, 0, lock.dx, lock.dy, lock.w, lock.h, this->glFormat, GL_UNSIGNED_BYTE, lock.data));
 				}
 				this->firstUpload = false;
 			}
@@ -179,13 +179,13 @@ namespace april
 			int srcBpp = srcFormat.getBpp();
 			if (sx == 0 && dx == 0 && sw == this->width && srcWidth == this->width)
 			{
-				glTexSubImage2D(GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + sy * srcWidth) * srcBpp]);
+				GL_SAFE_CALL(glTexSubImage2D, (GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + sy * srcWidth) * srcBpp]));
 			}
 			else
 			{
 				for_iter (j, 0, sh)
 				{
-					glTexSubImage2D(GL_TEXTURE_2D, 0, dx, (dy + j), sw, 1, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + (sy + j) * srcWidth) * srcBpp]);
+					GL_SAFE_CALL(glTexSubImage2D, (GL_TEXTURE_2D, 0, dx, (dy + j), sw, 1, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + (sy + j) * srcWidth) * srcBpp]));
 				}
 			}
 		}
