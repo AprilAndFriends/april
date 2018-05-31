@@ -75,11 +75,16 @@ namespace april
 	
 	void Application::updateInitializing(bool singleUpdateOnly)
 	{
+		bool result = false;
 		while (this->getState() == State::Starting)
 		{
-			this->_updateSystem();
+			result = this->_updateSystem();
 			if (singleUpdateOnly)
 			{
+				if (april::rendersys != NULL)
+				{
+					april::rendersys->_deviceRepeatLastFrame(false);
+				}
 				return;
 			}
 			hthread::sleep(0.001f);
@@ -158,7 +163,7 @@ namespace april
 		}
 	}
 
-	void Application::_updateSystem()
+	bool Application::_updateSystem()
 	{
 		this->_updateMessageBoxQueue();
 		TextureAsync::update();
@@ -168,8 +173,9 @@ namespace april
 		}
 		if (april::rendersys != NULL)
 		{
-			april::rendersys->update(0.0f); // might require some rendering
+			return april::rendersys->update(0.0f); // might require some rendering
 		}
+		return false;
 	}
 
 	void Application::_updateFps()

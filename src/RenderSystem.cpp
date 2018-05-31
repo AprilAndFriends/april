@@ -151,10 +151,7 @@ namespace april
 		this->_renderTargetDuplicatesCount = 0;
 		this->_currentIntermediateRenderTexture = NULL;
 		this->_lastIntermediateRenderTexture = NULL;
-		for_iter (i, 0, APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES)
-		{
-			this->_intermediateRenderTextures[i] = NULL;
-		}
+		this->_intermediateRenderTextureCount = 2;
 		this->_intermediateRenderTextureIndex = 0;
 		this->_updateLastIntermediateRenderTexture = true;
 		this->_intermediateState = new RenderState();
@@ -257,14 +254,8 @@ namespace april
 		this->textures.clear();
 		this->_currentIntermediateRenderTexture = NULL;
 		this->_lastIntermediateRenderTexture = NULL;
-		for_iter (i, 0, APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES)
-		{
-			if (this->_intermediateRenderTextures[i] != NULL)
-			{
-				textures += this->_intermediateRenderTextures[i];
-				this->_intermediateRenderTextures[i] = NULL;
-			}
-		}
+		textures += this->_intermediateRenderTextures;
+		this->_intermediateRenderTextures.clear();
 		lockTextures.release();
 		this->waitForAsyncTextures();
 		foreach (Texture*, it, textures)
@@ -1554,24 +1545,33 @@ namespace april
 					int oldHeight = this->_currentIntermediateRenderTexture->getHeight();
 					if (width != oldWidth || height != oldHeight)
 					{
-						april::Texture* oldTexture = this->_lastIntermediateRenderTexture;
+						harray<Texture*> oldTextures = this->_intermediateRenderTextures;
+						this->_intermediateRenderTextures.clear();
+						april::Texture* oldCurrentTexture = this->_currentIntermediateRenderTexture;
+						april::Texture* oldLastTexture = this->_lastIntermediateRenderTexture;
 						if (this->_tryCreateIntermediateRenderTextures(width, height))
 						{
-							if (oldTexture != NULL)
+							if (oldLastTexture != NULL)
 							{
-								this->_deviceCopyRenderTargetData(oldTexture, this->_lastIntermediateRenderTexture);
-								if (this->deviceState->texture == oldTexture)
+								this->_deviceCopyRenderTargetData(oldLastTexture, this->_lastIntermediateRenderTexture);
+								if (this->deviceState->texture == oldLastTexture)
 								{
 									this->deviceState->texture = NULL;
+									this->_setDeviceTexture(NULL);
 								}
-								oldTexture->_deviceUnloadTexture();
-								delete oldTexture;
+								foreach (Texture*, it, oldTextures)
+								{
+									(*it)->_deviceUnloadTexture();
+									delete (*it);
+								}
 							}
 						}
 						else
 						{
 							hlog::error(logTag, "Couldn't create new intermediate render texture!");
-							this->_lastIntermediateRenderTexture = oldTexture;
+							this->_intermediateRenderTextures = oldTextures;
+							this->_currentIntermediateRenderTexture = oldCurrentTexture;
+							this->_lastIntermediateRenderTexture = oldLastTexture;
 						}
 					}
 				}
@@ -1587,16 +1587,19 @@ namespace april
 		}
 		this->_currentIntermediateRenderTexture = NULL;
 		this->_lastIntermediateRenderTexture = NULL;
+		this->_intermediateRenderTextureIndex = 0;
 		bool result = false;
-		for_iter (i, 0, APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES)
+		hmutex::ScopeLock lock;
+		Texture* texture = NULL;
+		for_iter (i, 0, this->_intermediateRenderTextureCount)
 		{
-			this->_intermediateRenderTextures[i] = this->_deviceCreateTexture(false);
-			result = this->_intermediateRenderTextures[i]->_createRenderTarget(width, height, april::Image::Format::RGBX);
+			texture = this->_deviceCreateTexture(false);
+			this->_intermediateRenderTextures += texture;
+			result = texture->_createRenderTarget(width, height, april::Image::Format::RGBX);
 			if (result)
 			{
-				this->_intermediateRenderTextures[i]->_loadAsync();
-				hmutex::ScopeLock lock;
-				result = this->_intermediateRenderTextures[i]->_upload(lock);
+				texture->_loadAsync();
+				result = texture->_upload(lock);
 			}
 			if (!result)
 			{
@@ -1605,20 +1608,17 @@ namespace april
 		}
 		if (result)
 		{
-			this->_intermediateRenderTextureIndex = 0;
-			this->_currentIntermediateRenderTexture = this->_intermediateRenderTextures[0];
+			this->_currentIntermediateRenderTexture = this->_intermediateRenderTextures.first();
+			this->_lastIntermediateRenderTexture = this->_intermediateRenderTextures.last();
 		}
 		else
 		{
-			for_iter (i, 0, APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES)
+			foreach (Texture*, it, this->_intermediateRenderTextures)
 			{
-				if (this->_intermediateRenderTextures[i] != NULL)
-				{
-					this->_intermediateRenderTextures[i]->_deviceUnloadTexture();
-					delete this->_intermediateRenderTextures[i];
-					this->_intermediateRenderTextures[i] = NULL;
-				}
+				(*it)->_deviceUnloadTexture();
+				delete (*it);
 			}
+			this->_intermediateRenderTextures.clear();
 		}
 		return result;
 	}
@@ -1627,15 +1627,12 @@ namespace april
 	{
 		if (this->caps.renderTarget && this->_currentIntermediateRenderTexture != NULL)
 		{
-			for_iter (i, 0, APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES)
+			foreach (Texture*, it, this->_intermediateRenderTextures)
 			{
-				if (this->_intermediateRenderTextures[i] != NULL)
-				{
-					this->_intermediateRenderTextures[i]->_deviceUnloadTexture();
-					delete this->_intermediateRenderTextures[i];
-					this->_intermediateRenderTextures[i] = NULL;
-				}
+				(*it)->_deviceUnloadTexture();
+				delete (*it);
 			}
+			this->_intermediateRenderTextures.clear();
 			this->_currentIntermediateRenderTexture = NULL;
 			this->_lastIntermediateRenderTexture = NULL;
 			this->_intermediateRenderTextureIndex = 0;
@@ -1662,7 +1659,7 @@ namespace april
 			this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT);
 			if (this->_updateLastIntermediateRenderTexture)
 			{
-				this->_intermediateRenderTextureIndex = (this->_intermediateRenderTextureIndex + 1) % APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES;
+				this->_intermediateRenderTextureIndex = (this->_intermediateRenderTextureIndex + 1) % this->_intermediateRenderTextures.size();
 				this->_currentIntermediateRenderTexture = this->_intermediateRenderTextures[this->_intermediateRenderTextureIndex];
 			}
 			// don't restore state with _updateDeviceState() here, calling functions must handle that

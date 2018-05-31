@@ -122,9 +122,10 @@ namespace april
 	{
 #ifdef _ANDROID
 		this->etc1Supported = false;
+		this->_intermediateRenderTextureCount = 1; // Android has issues when 2 render targets are used
 #endif
 #ifndef _IOS // TODOr - remove this once render target has been confirmed to work properly in all cases
-		this->caps.renderTarget = true;
+		//this->caps.renderTarget = true;
 #endif
 	}
 
@@ -212,8 +213,6 @@ namespace april
 		{
 			return false;
 		}
-		glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&this->framebufferId);
-		glGetIntegerv(GL_RENDERBUFFER_BINDING, (GLint*)&this->renderbufferId);
 		return true;
 	}
 
@@ -233,33 +232,14 @@ namespace april
 	{
 		OpenGL_RenderSystem::_deviceAssignWindow(window);
 		this->renderTarget = NULL;
-		this->_updateIntermediateRenderTextures();
-		if (this->_currentIntermediateRenderTexture != NULL)
-		{
-			glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId);
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-		}
 	}
 
 	void OpenGLES_RenderSystem::_deviceSuspend()
 	{
 		OpenGL_RenderSystem::_deviceSuspend();
 		this->_deviceUnloadTextures();
-		if (this->_currentIntermediateRenderTexture != NULL)
-		{
-			((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->_deviceUnloadTexture();
-		}
+		this->_tryDestroyIntermediateRenderTextures();
 		this->_destroyShaders();
-	}
-
-	void OpenGLES_RenderSystem::_deviceReset()
-	{
-		RenderSystem::_deviceReset();
-		this->_updateIntermediateRenderTextures();
-		if (this->_currentIntermediateRenderTexture != NULL)
-		{
-			glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId);
-		}
 	}
 
 	void OpenGLES_RenderSystem::_deviceSetupCaps()
@@ -308,6 +288,18 @@ namespace april
 		this->deviceState_systemColorChanged = true;
 		this->deviceState_colorModeFactorChanged = true;
 		this->deviceState_shader = NULL;
+#ifndef _ANDROID
+		glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&this->framebufferId);
+		glGetIntegerv(GL_RENDERBUFFER_BINDING, (GLint*)&this->renderbufferId);
+#endif
+		this->_updateIntermediateRenderTextures();
+		if (this->_currentIntermediateRenderTexture != NULL)
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId);
+#ifndef _ANDROID
+			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+#endif
+		}
 	}
 
 	void OpenGLES_RenderSystem::_createShaders()
@@ -671,7 +663,9 @@ namespace april
 		if (this->_currentIntermediateRenderTexture != NULL)
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, this->framebufferId);
+#ifndef _ANDROID
 			glBindRenderbuffer(GL_RENDERBUFFER, this->renderbufferId);
+#endif
 			this->_presentIntermediateRenderTexture();
 		}
 		OpenGL_RenderSystem::_devicePresentFrame(systemEnabled);
@@ -679,7 +673,9 @@ namespace april
 		if (this->_currentIntermediateRenderTexture != NULL)
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId);
+#ifndef _ANDROID
 			glBindRenderbuffer(GL_RENDERBUFFER, 0);
+#endif
 		}
 	}
 

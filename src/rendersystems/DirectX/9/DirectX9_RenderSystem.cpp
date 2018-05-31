@@ -189,10 +189,7 @@ namespace april
 		RenderSystem::_deviceReset();
 		this->d3dDevice->EndScene();
 		this->_deviceUnloadTextures();
-		if (this->_currentIntermediateRenderTexture != NULL)
-		{
-			this->_tryDestroyIntermediateRenderTextures();
-		}
+		this->_tryDestroyIntermediateRenderTextures();
 		this->backBuffer->Release();
 		this->backBuffer = NULL;
 		HRESULT hr;
@@ -799,8 +796,11 @@ namespace april
 	
 	void DirectX9_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
-		this->d3dDevice->SetRenderTarget(0, this->backBuffer);
-		this->_presentIntermediateRenderTexture();
+		if (this->_currentIntermediateRenderTexture != NULL)
+		{
+			this->d3dDevice->SetRenderTarget(0, this->backBuffer);
+			this->_presentIntermediateRenderTexture();
+		}
 		this->d3dDevice->EndScene();
 		RenderSystem::_devicePresentFrame(systemEnabled);
 		HRESULT hr = this->d3dDevice->Present(NULL, NULL, NULL, NULL);
@@ -808,10 +808,7 @@ namespace april
 		{
 			hlog::write(logTag, "Direct3D9 Device lost, attempting to restore...");
 			this->_deviceUnloadTextures();
-			if (this->_currentIntermediateRenderTexture != NULL)
-			{
-				this->_tryDestroyIntermediateRenderTextures();
-			}
+			this->_tryDestroyIntermediateRenderTextures();
 			this->backBuffer->Release();
 			this->backBuffer = NULL;
 			while (april::application->getState() == Application::State::Running)

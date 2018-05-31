@@ -28,7 +28,6 @@
 #include "Image.h"
 #include "Texture.h"
 
-#define APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES 2
 #define APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT 6
 
 namespace april
@@ -633,7 +632,9 @@ namespace april
 		/// @brief Last special texture used as utility for rendering.
 		Texture* _lastIntermediateRenderTexture;
 		/// @brief Special textures used as utility for rendering.
-		Texture* _intermediateRenderTextures[APRIL_MAX_INTERMEDIATE_RENDER_TEXTURES];
+		harray<Texture*> _intermediateRenderTextures;
+		/// @brief Number of current special textures used as utility for rendering.
+		int _intermediateRenderTextureCount;
 		/// @brief Index of current special textures used as utility for rendering.
 		int _intermediateRenderTextureIndex;
 		/// @brief Whether an update of the last intermediate render textures should occur after rendering.

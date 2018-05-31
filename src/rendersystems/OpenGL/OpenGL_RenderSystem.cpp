@@ -140,7 +140,6 @@ namespace april
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		// GL defaults
 		glEnable(GL_BLEND);
-		glEnable(GL_TEXTURE_2D);
 		// pixel data
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);

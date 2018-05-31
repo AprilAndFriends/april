@@ -176,7 +176,7 @@ namespace april
 		/// @param[in] value New State.
 		void _setState(const State& value);
 		/// @brief Performs the update of one frame, but without any timer.
-		void _updateSystem();
+		bool _updateSystem();
 		/// @brief Processes message box displays.
 		void _updateMessageBoxQueue();
 		/// @brief Performs FPS counter update.

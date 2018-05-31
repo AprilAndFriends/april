@@ -141,6 +141,7 @@ namespace april
 		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
 		glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 		glPixelStorei(GL_UNPACK_SWAP_BYTES, GL_FALSE);
+		glEnable(GL_TEXTURE_2D);
 		OpenGL_RenderSystem::_deviceSetup();
 		this->_setDeviceColor(this->deviceState_color, true);
 		this->_setDeviceMatrixMode(GL_MODELVIEW, true);

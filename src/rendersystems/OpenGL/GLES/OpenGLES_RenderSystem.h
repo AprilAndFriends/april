@@ -127,7 +127,6 @@ namespace april
 		bool _deviceCreate(Options options);
 		bool _deviceDestroy();
 		void _deviceAssignWindow(Window* window);
-		void _deviceReset();
 		void _deviceSuspend();
 		void _deviceSetupCaps();
 		void _deviceSetup();
