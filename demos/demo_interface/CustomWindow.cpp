@@ -34,17 +34,14 @@ CustomWindow::~CustomWindow()
 	this->destroy();
 }
 
-bool CustomWindow::_systemCreate(int w, int h, bool fullscreen, chstr title, april::Window::Options options)
+void CustomWindow::_systemCreate(int w, int h, bool fullscreen, chstr title, april::Window::Options options)
 {
 	if (fullscreen)
 	{
 		hlog::warnf(LOG_TAG, "Window '%s' does not support fullscreen", this->name.cStr());
 		fullscreen = false;
 	}
-	if (!april::Window::_systemCreate(w, h, fullscreen, title, options))
-	{
-		return false;
-	}
+	april::Window::_systemCreate(w, h, fullscreen, title, options);
 	this->inputMode = april::InputMode::Mouse;
 	// Win32
 	WNDCLASSEXW wc;
@@ -84,22 +81,17 @@ bool CustomWindow::_systemCreate(int w, int h, bool fullscreen, chstr title, apr
 	// display the window on the screen
 	ShowWindow(this->hWnd, SW_SHOWNORMAL);
 	UpdateWindow(this->hWnd);
-	return true;
 }
 
-bool CustomWindow::destroy()
+void CustomWindow::_systemDestroy()
 {
-	if (!april::Window::destroy())
-	{
-		return false;
-	}
+	april::Window::destroy();
 	if (this->hWnd != 0)
 	{
 		DestroyWindow(this->hWnd);
 		UnregisterClassW(CUSTOM_WINDOW_CLASS, GetModuleHandle(0));
 		this->hWnd = 0;
 	}
-	return true;
 }
 
 int CustomWindow::getWidth() const
@@ -295,22 +287,22 @@ LRESULT CALLBACK CustomWindow::_processCallback(HWND hWnd, UINT message, WPARAM 
 		_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 		if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 		{
-			april::window->queueMouseEvent(april::MouseEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), april::Key::None);
+			april::window->queueMouseEvent(april::MouseEvent::Type::Scroll, gvec2f(0.0f, -(float)_wheelDelta), april::Key::None);
 		}
 		else
 		{
-			april::window->queueMouseEvent(april::MouseEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), april::Key::None);
+			april::window->queueMouseEvent(april::MouseEvent::Type::Scroll, gvec2f(-(float)_wheelDelta, 0.0f), april::Key::None);
 		}
 		break;
 	case WM_MOUSEHWHEEL:
 		_wheelDelta = (float)GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
 		if ((GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL) != MK_CONTROL)
 		{
-			april::window->queueMouseEvent(april::MouseEvent::Type::Scroll, gvec2(-(float)_wheelDelta, 0.0f), april::Key::None);
+			april::window->queueMouseEvent(april::MouseEvent::Type::Scroll, gvec2f(-(float)_wheelDelta, 0.0f), april::Key::None);
 		}
 		else
 		{
-			april::window->queueMouseEvent(april::MouseEvent::Type::Scroll, gvec2(0.0f, -(float)_wheelDelta), april::Key::None);
+			april::window->queueMouseEvent(april::MouseEvent::Type::Scroll, gvec2f(0.0f, -(float)_wheelDelta), april::Key::None);
 		}
 		break;
 	case WM_ACTIVATE:

@@ -55,13 +55,13 @@ april::ColoredVertex cv[3];
 april::ColoredTexturedVertex ctv[3];
 
 #if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
-grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+grectf drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 #else
-grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
+grectf drawRect(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
-gvec2 offset = drawRect.getSize() * 0.5f;
-grect textureRect;
-grect src(0.0f, 0.0f, 1.0f, 1.0f);
+gvec2f offset = drawRect.getSize() * 0.5f;
+grectf textureRect;
+grectf src(0.0f, 0.0f, 1.0f, 1.0f);
 bool mousePressed = false;
 
 class UpdateDelegate : public april::UpdateDelegate
@@ -78,11 +78,11 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->render(april::RenderOperation::TriangleStrip, dv, 4);
 		april::rendersys->setTexture(texture);
 		april::rendersys->drawTexturedRect(textureRect + offset, src);
-		april::rendersys->drawFilledRect(grect(0.0f, drawRect.h - 75.0f, 100.0f, 75.0f), april::Color::Yellow);
-		april::rendersys->drawFilledRect(grect(70.0f, drawRect.h - 65.0f, 80.0f, 55.0f), april::Color::Red);
+		april::rendersys->drawFilledRect(grectf(0.0f, drawRect.h - 75.0f, 100.0f, 75.0f), april::Color::Yellow);
+		april::rendersys->drawFilledRect(grectf(70.0f, drawRect.h - 65.0f, 80.0f, 55.0f), april::Color::Red);
 #ifdef _ENGINE_RENDER_TEST
 		// testing all render methods
-		april::rendersys->drawFilledRect(grect(drawRect.w - 110.0f, drawRect.h - 310.0f, 110.0f, 310.0f), april::Color::Black);
+		april::rendersys->drawFilledRect(grectf(drawRect.w - 110.0f, drawRect.h - 310.0f, 110.0f, 310.0f), april::Color::Black);
 		april::rendersys->render(april::RenderOperation::TriangleList, pv, 3);
 		april::rendersys->render(april::RenderOperation::TriangleList, &pv[1], 3, april::Color::Yellow);
 		april::rendersys->render(april::RenderOperation::TriangleList, tv, 3);
@@ -121,14 +121,14 @@ class MouseDelegate : public april::MouseDelegate
 
 	void onMouseUp(april::Key key)
 	{
-		gvec2 position = april::window->getCursorPosition();
+		gvec2f position = april::window->getCursorPosition();
 		hlog::writef(LOG_TAG, "- UP   x: %4.0f y: %4.0f button: %d", position.x, position.y, key.value);
 		mousePressed = false;
 	}
 
 	void onMouseMove()
 	{
-		gvec2 position = april::window->getCursorPosition();
+		gvec2f position = april::window->getCursorPosition();
 		hlog::writef(LOG_TAG, "- MOVE x: %4.0f y: %4.0f", position.x, position.y);
 		if (mousePressed)
 		{

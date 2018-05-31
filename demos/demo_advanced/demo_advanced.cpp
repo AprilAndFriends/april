@@ -74,20 +74,20 @@ april::ColoredTexturedVertex ctvQuad[4];
 april::TexturedVertex starStrip[10];
 
 #if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
-grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+grectf drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 #else
-grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
+grectf drawRect(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
-gvec2 offset = drawRect.getSize() * 0.5f;
-grect textureRect;
-grect src(0.0f, 0.0f, 1.0f, 1.0f);
+gvec2f offset = drawRect.getSize() * 0.5f;
+grectf textureRect;
+grectf src(0.0f, 0.0f, 1.0f, 1.0f);
 bool mousePressed = false;
 
 class Bone
 {
 public:
-	gvec2 position;
-	gvec2 point;
+	gvec2f position;
+	gvec2f point;
 	float length;
 
 	bool dragging;
@@ -95,21 +95,21 @@ public:
 	april::PlainVertex lineVertices[2];
 	april::PlainVertex circleVertices[CIRCLE_VERTEX_COUNT*3];
 
-	Bone(gvec2 position, float length)
+	Bone(gvec2f position, float length)
 	{
 		this->position = position;
 		this->dragging = false;
 		this->length = length;
-		this->point = this->position + gvec2(this->length, 0);
+		this->point = this->position + gvec2f(this->length, 0);
 	};
 
 	void update()
 	{
-		gvec2 direction = point - position;
+		gvec2f direction = point - position;
 		direction.normalize();
 		if (direction.length() <= 0.0f)
 		{
-			direction = gvec2(1, 0);
+			direction = gvec2f(1, 0);
 		}
 		direction *= length;
 		this->lineVertices[0].x = this->position.x; 
@@ -129,20 +129,20 @@ public:
 		}
 	}
 
-	void onClick(gvec2 mousePosition)
+	void onClick(gvec2f mousePosition)
 	{
-		gvec2 direction = point - position;
+		gvec2f direction = point - position;
 		direction.normalize();
 		direction *= length;
-		gvec2 circleCenter = this->position + direction;
-		gvec2 delta = (mousePosition - circleCenter);
+		gvec2f circleCenter = this->position + direction;
+		gvec2f delta = (mousePosition - circleCenter);
 		if (delta.length() < CIRCLE_RADIUS)
 		{
 			dragging = true;
 		}
 	}
 
-	void onDrag(gvec2 mousePosition)
+	void onDrag(gvec2f mousePosition)
 	{
 		if (dragging)
 		{
@@ -162,7 +162,7 @@ public:
 	}
 
 };
-Bone bone(gvec2(256, 256), 160);
+Bone bone(gvec2f(256, 256), 160);
 
 class UpdateDelegate : public april::UpdateDelegate
 {
@@ -178,35 +178,35 @@ class UpdateDelegate : public april::UpdateDelegate
 		gmat4 projectionMatrix = april::rendersys->getProjectionMatrix();
 		// line list polygon
 		april::rendersys->setTexture(NULL);
-		april::rendersys->translate(gvec2(256, 128));
+		april::rendersys->translate(gvec2f(256, 128));
 		april::rendersys->render(april::RenderOperation::LineList, sw, SHAPE_POLYGONS * 6);
 		// filled polygon
 		april::rendersys->setTexture(NULL);
-		april::rendersys->translate(gvec2(64, 0));
+		april::rendersys->translate(gvec2f(64, 0));
 		april::rendersys->render(april::RenderOperation::TriangleStrip, sf, SHAPE_VERTICES);
 		// textured polygon
 		april::rendersys->setTexture(textures[1]);
-		april::rendersys->translate(gvec2(64, 0));
+		april::rendersys->translate(gvec2f(64, 0));
 		april::rendersys->render(april::RenderOperation::TriangleStrip, sf, SHAPE_VERTICES);
 		// line strip polygon
 		april::rendersys->setTexture(NULL);
 		static float rotationAngle = 0.0f;
 		rotationAngle += timeDelta * 512;
-		april::rendersys->translate(gvec2(96, 32));
+		april::rendersys->translate(gvec2f(96, 32));
 		april::rendersys->rotate(rotationAngle);
 		april::rendersys->render(april::RenderOperation::LineStrip, starStrip, STAR_VERTICES);
 		// reset the modelview matrix
 		april::rendersys->setModelviewMatrix(modelviewMatrix);
 		april::rendersys->setColorMode(april::ColorMode::Multiply, 1.0f);
 		// blending examples
-		april::rendersys->translate(gvec2(-50, 300));
+		april::rendersys->translate(gvec2f(-50, 300));
 		for_iter (i, 0, april::BlendMode::getValues().size())
 		{
 			april::rendersys->setTexture(textures[1]);
 			april::rendersys->setBlendMode(april::BlendMode::Alpha);
-			april::rendersys->translate(gvec2(90, -32));
+			april::rendersys->translate(gvec2f(90, -32));
 			april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
-			april::rendersys->translate(gvec2(32, 32));
+			april::rendersys->translate(gvec2f(32, 32));
 			april::rendersys->setTexture(textures[2]);
 			april::rendersys->setBlendMode(april::BlendMode::fromInt(i));
 			april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
@@ -214,14 +214,14 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->setModelviewMatrix(modelviewMatrix);
 		april::rendersys->setBlendMode(april::BlendMode::Alpha);
 		//color mode examples
-		april::rendersys->translate(gvec2(-50, 450));
+		april::rendersys->translate(gvec2f(-50, 450));
 		for_iter (i, 0, april::ColorMode::getValues().size())
 		{
 			april::rendersys->setTexture(textures[1]);
 			april::rendersys->setColorMode(april::ColorMode::Multiply, 1.0f);
-			april::rendersys->translate(gvec2(90, -32));
+			april::rendersys->translate(gvec2f(90, -32));
 			april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
-			april::rendersys->translate(gvec2(32, 32));
+			april::rendersys->translate(gvec2f(32, 32));
 			april::rendersys->setTexture(textures[2]);
 			april::rendersys->setColorMode(april::ColorMode::fromInt(i), 0.5f);
 			april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
@@ -229,16 +229,16 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->setColorMode(april::ColorMode::Multiply, 1.0f);
 		april::rendersys->setModelviewMatrix(modelviewMatrix);
 		april::rendersys->setTexture(textures[3]);
-		april::rendersys->translate(gvec2(0, 0));
+		april::rendersys->translate(gvec2f(0, 0));
 		april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
-		april::rendersys->translate(gvec2(200, 0));
-		april::rendersys->scale(gvec2(-1, 1));		
+		april::rendersys->translate(gvec2f(200, 0));
+		april::rendersys->scale(gvec2f(-1, 1));		
 		april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
-		april::rendersys->translate(gvec2(0, 200));
-		april::rendersys->scale(gvec2(1, -1));
+		april::rendersys->translate(gvec2f(0, 200));
+		april::rendersys->scale(gvec2f(1, -1));
 		april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
-		april::rendersys->translate(gvec2(200, 0));
-		april::rendersys->scale(gvec2(-1, 1));
+		april::rendersys->translate(gvec2f(200, 0));
+		april::rendersys->scale(gvec2f(-1, 1));
 		april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
 		april::rendersys->setTexture(NULL);
 		// reset the matrices
@@ -249,7 +249,7 @@ class UpdateDelegate : public april::UpdateDelegate
 #ifdef _ENGINE_RENDER_TEST
 		// testing all render methods
 		april::rendersys->setTexture(textures[0]);
-		april::rendersys->drawFilledRect(grect(drawRect.w - 110.0f, drawRect.h - 310.0f, 110.0f, 310.0f), april::Color::Black);
+		april::rendersys->drawFilledRect(grectf(drawRect.w - 110.0f, drawRect.h - 310.0f, 110.0f, 310.0f), april::Color::Black);
 		april::rendersys->render(april::RenderOperation::TriangleList, pv, 3);
 		april::rendersys->render(april::RenderOperation::TriangleList, &pv[1], 3, april::Color::Yellow);
 		april::rendersys->render(april::RenderOperation::TriangleList, tv, 3);
@@ -293,7 +293,7 @@ class MouseDelegate : public april::MouseDelegate
 
 	void onMouseMove()
 	{
-		gvec2 position = april::window->getCursorPosition();
+		gvec2f position = april::window->getCursorPosition();
 		bone.onDrag(position);
 		if (mousePressed)
 		{
@@ -450,15 +450,15 @@ void __aprilApplicationInit()
 	sw[24] = sf[4]; sw[25] = sf[6]; sw[26] = sf[6]; sw[27] = sf[5]; sw[28] = sf[5]; sw[29] = sf[4];
 	sw[30] = sf[6]; sw[31] = sf[7]; sw[32] = sf[7]; sw[33] = sf[5]; sw[34] = sf[5]; sw[35] = sf[6];
 
-	gvec2 v[STAR_VERTICES];
-	v[0] = gvec2(0, 0);
-	v[1] = gvec2(10, -40);
-	v[2] = gvec2(20, 0);
-	v[3] = gvec2(60, 10);
-	v[4] = gvec2(20, 20);
-	v[5] = gvec2(10, 60);
-	v[6] = gvec2(0, 20);
-	v[7] = gvec2(-40, 10);
+	gvec2f v[STAR_VERTICES];
+	v[0] = gvec2f(0, 0);
+	v[1] = gvec2f(10, -40);
+	v[2] = gvec2f(20, 0);
+	v[3] = gvec2f(60, 10);
+	v[4] = gvec2f(20, 20);
+	v[5] = gvec2f(10, 60);
+	v[6] = gvec2f(0, 20);
+	v[7] = gvec2f(-40, 10);
 	v[8] = v[0];
 	for_iter (i, 0, STAR_VERTICES)
 	{

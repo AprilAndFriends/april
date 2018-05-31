@@ -42,14 +42,14 @@ april::Texture* ball = NULL;
 april::TexturedVertex v[4];
 
 #if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
-grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+grectf drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 #else
-grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
+grectf drawRect(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
-gvec2 size = drawRect.getSize() * 5 / 16;
+gvec2f size = drawRect.getSize() * 5 / 16;
 april::Color backgroundColor = april::Color::Black;
-gvec3 accelerometer(0.0f, 0.0f, 0.0f);
-gvec2 sizeFactor(0.001f, 0.001f); // 1 px is 1mm
+gvec3f accelerometer(0.0f, 0.0f, 0.0f);
+gvec2f sizeFactor(0.001f, 0.001f); // 1 px is 1mm
 float ballElasticityFactor = 0.5f;
 
 class Ball
@@ -62,8 +62,8 @@ public:
 
 	void update(float timeDelta)
 	{
-		gvec2 screenSize(drawRect.w - size, drawRect.h - size);
-		this->velocity += gvec2(accelerometer.x, -accelerometer.y) / sizeFactor * timeDelta; // (x, -y) because of screen space and accelerometer vector direction
+		gvec2f screenSize(drawRect.w - size, drawRect.h - size);
+		this->velocity += gvec2f(accelerometer.x, -accelerometer.y) / sizeFactor * timeDelta; // (x, -y) because of screen space and accelerometer vector direction
 		this->velocity *= 0.995f; // friction
 		this->position += this->velocity * timeDelta;
 		if (this->position.x < 0)
@@ -103,8 +103,8 @@ public:
 	}
 
 protected:
-	gvec2 position;
-	gvec2 velocity;
+	gvec2f position;
+	gvec2f velocity;
 
 	static const int size = 96;
 
@@ -151,7 +151,7 @@ public:
 		this->accelerometerEnabled = true;
 	}
 
-	void onAccelerometer(cgvec3 motionVector)
+	void onAccelerometer(cgvec3f motionVector)
 	{
 		hlog::writef(LOG_TAG, "motion vector: %g,%g,%g", motionVector.x, motionVector.y, motionVector.z);
 		accelerometer = motionVector;
@@ -213,7 +213,7 @@ void __aprilApplicationInit()
 	systemDelegate = new SystemDelegate();
 	motionDelegate = new MotionDelegate();
 #if defined(_ANDROID) || defined(_IOS)
-	gvec2 resolution = april::getSystemInfo().displayResolution;
+	gvec2f resolution = april::getSystemInfo().displayResolution;
 	hswap(resolution.x, resolution.y);
 	drawRect.setSize(resolution);
 #endif

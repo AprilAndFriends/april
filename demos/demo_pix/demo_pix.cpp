@@ -48,13 +48,13 @@
 april::Cursor* cursor = NULL;
 april::Texture* texture = NULL;
 #if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
-grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+grectf drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 #else
-grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
+grectf drawRect(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
-gvec2 offset = drawRect.getSize() * 0.5f;
-grect textureRect;
-grect src(0.0f, 0.0f, 1.0f, 1.0f);
+gvec2f offset = drawRect.getSize() * 0.5f;
+grectf textureRect;
+grectf src(0.0f, 0.0f, 1.0f, 1.0f);
 bool mousePressed = false;
 
 class UpdateDelegate : public april::UpdateDelegate
@@ -97,14 +97,14 @@ class MouseDelegate : public april::MouseDelegate
 
 	void onMouseUp(april::Key key)
 	{
-		gvec2 position = april::window->getCursorPosition();
+		gvec2f position = april::window->getCursorPosition();
 		hlog::writef(LOG_TAG, "- UP   x: %4.0f y: %4.0f button: %d", position.x, position.y, key.value);
 		mousePressed = false;
 	}
 
 	void onMouseMove()
 	{
-		gvec2 position = april::window->getCursorPosition();
+		gvec2f position = april::window->getCursorPosition();
 		hlog::writef(LOG_TAG, "- MOVE x: %4.0f y: %4.0f", position.x, position.y);
 		if (mousePressed)
 		{

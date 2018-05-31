@@ -37,9 +37,9 @@
 #include "CustomWindow.h"
 
 static april::Texture* texture = NULL;
-static grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
-static gvec2 offset = drawRect.getSize() * 0.5f;
-static grect textureRect;
+static grectf drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+static gvec2f offset = drawRect.getSize() * 0.5f;
+static grectf textureRect;
 static bool mousePressed = false;
 
 class UpdateDelegate : public april::UpdateDelegate
@@ -50,9 +50,9 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->setOrthoProjection(drawRect);
 		april::rendersys->drawFilledRect(drawRect, april::Color(64, 64, 64));
 		april::rendersys->setTexture(texture);
-		april::rendersys->drawTexturedRect(textureRect + offset, grect(0.0f, 0.0f, 1.0f, 1.0f));
-		april::rendersys->drawFilledRect(grect(0.0f, 0.0f, 100.0f, 75.0f), april::Color::Orange);
-		april::rendersys->drawFilledRect(grect(10.0f, 10.0f, 80.0f, 55.0f), april::Color::Yellow);
+		april::rendersys->drawTexturedRect(textureRect + offset, grectf(0.0f, 0.0f, 1.0f, 1.0f));
+		april::rendersys->drawFilledRect(grectf(0.0f, 0.0f, 100.0f, 75.0f), april::Color::Orange);
+		april::rendersys->drawFilledRect(grectf(10.0f, 10.0f, 80.0f, 55.0f), april::Color::Yellow);
 		return true;
 	}
 

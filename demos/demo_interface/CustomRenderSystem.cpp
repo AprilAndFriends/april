@@ -179,7 +179,7 @@ april::Texture* CustomRenderSystem::_deviceCreateTexture(bool fromResource)
 	return new CustomTexture(fromResource);
 }
 
-void CustomRenderSystem::_setDeviceViewport(cgrecti rect)
+void CustomRenderSystem::_setDeviceViewport(cgrectfi rect)
 {
 	// because GL has to defy screen logic and has (0,0) in the bottom left corner
 	glViewport((int)rect.x, (int)(april::window->getHeight() - rect.h - rect.y), (int)rect.w, (int)rect.h);

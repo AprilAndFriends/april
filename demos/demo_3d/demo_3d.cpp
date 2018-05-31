@@ -41,13 +41,13 @@ april::Cursor* cursor = NULL;
 april::Texture* texture = NULL;
 april::Texture* logo = NULL;
 april::TexturedVertex v[36];
-gvec2 cameraPosition(90.0f, 60.0f);
-gvec2 clickPosition;
+gvec2f cameraPosition(90.0f, 60.0f);
+gvec2f clickPosition;
 
 #if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
-grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+grectf drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 #else
-grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
+grectf drawRect(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
 
 class MouseDelegate : public april::MouseDelegate
@@ -92,13 +92,13 @@ public:
 
 	bool onUpdate(float timeDelta)
 	{
-		static gvec3 eye(0.0f, 0.0f, 6.0f);
-		static gvec3 target(0.0f, 0.0f, 0.0f);
-		static gvec3 up(0.0f, 1.0f, 0.0f);
+		static gvec3f eye(0.0f, 0.0f, 6.0f);
+		static gvec3f target(0.0f, 0.0f, 0.0f);
+		static gvec3f up(0.0f, 1.0f, 0.0f);
 		april::rendersys->clear(april::Color::Clear, true);
 		april::rendersys->lookAt(eye, target, up);
 		april::rendersys->setPerspective(60.0f, 1.0f / drawRect.getAspect(), 1.0f, 1000.0f);
-		gvec2 position = cameraPosition;
+		gvec2f position = cameraPosition;
 		if (mouseDelegate->isPressed())
 		{
 			position += april::window->getCursorPosition() - clickPosition;
@@ -200,7 +200,7 @@ void __aprilApplicationInit()
 	april::window->setCursor(cursor);
 	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "texture");
 	logo = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo");
-	gvec3 _v[8];
+	gvec3f _v[8];
 	_v[0].x = -1.0f;	_v[0].y = -1.0f;	_v[0].z = 1.0f;
 	_v[1].x = 1.0f;		_v[1].y = -1.0f;	_v[1].z = 1.0f;
 	_v[2].x = -1.0f;	_v[2].y = 1.0f;		_v[2].z = 1.0f;

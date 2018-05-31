@@ -41,11 +41,11 @@ april::Texture* ball = NULL;
 april::TexturedVertex v[4];
 
 #if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
-grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+grectf drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 #else
-grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
+grectf drawRect(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
-gvec2 size = drawRect.getSize() * 5 / 16;
+gvec2f size = drawRect.getSize() * 5 / 16;
 april::Color backgroundColor = april::Color::Black;
 
 class Ball
@@ -89,8 +89,8 @@ public:
 	}
 
 protected:
-	gvec2 position;
-	gvec2 velocity;
+	gvec2f position;
+	gvec2f velocity;
 
 	static const int size = 96;
 	static const int speed = 256;

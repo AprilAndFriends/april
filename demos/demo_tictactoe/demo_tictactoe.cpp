@@ -50,11 +50,11 @@ bool player = 0;
 april::TexturedVertex v[4];
 
 #if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
-grect drawRect(0.0f, 0.0f, 800.0f, 600.0f);
+grectf drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 #else
-grect drawRect(0.0f, 0.0f, 480.0f, 320.0f);
+grectf drawRect(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
-gvec2 size = drawRect.getSize() * 5 / 16;
+gvec2f size = drawRect.getSize() * 5 / 16;
 
 void draw_symbol(int x, int y, chstr symbol)
 {
@@ -140,10 +140,10 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->render(april::RenderOperation::TriangleStrip, v, 4);
 	
 		april::rendersys->setTexture(NULL);
-		april::rendersys->drawFilledRect(grect(size.x, 0, 10, drawRect.h), april::Color::Magenta);
-		april::rendersys->drawFilledRect(grect(size.x * 2 + 10, 0, 10, drawRect.h), april::Color::Magenta);
-		april::rendersys->drawFilledRect(grect(0, size.y, drawRect.w, 10), april::Color::Magenta);
-		april::rendersys->drawFilledRect(grect(0, size.y * 2 + 10, drawRect.w, 10), april::Color::Magenta);
+		april::rendersys->drawFilledRect(grectf(size.x, 0, 10, drawRect.h), april::Color::Magenta);
+		april::rendersys->drawFilledRect(grectf(size.x * 2 + 10, 0, 10, drawRect.h), april::Color::Magenta);
+		april::rendersys->drawFilledRect(grectf(0, size.y, drawRect.w, 10), april::Color::Magenta);
+		april::rendersys->drawFilledRect(grectf(0, size.y * 2 + 10, drawRect.w, 10), april::Color::Magenta);
 	
 		for (int j = 0; j < 3; j++)
 		{
@@ -211,7 +211,7 @@ class MouseDelegate : public april::MouseDelegate
 {
 	void onMouseUp(april::Key button)
 	{
-		gvec2 cursorPosition = april::window->getCursorPosition();
+		gvec2f cursorPosition = april::window->getCursorPosition();
 		float x = cursorPosition.x;
 		float y = cursorPosition.y;
 		if (!player)
