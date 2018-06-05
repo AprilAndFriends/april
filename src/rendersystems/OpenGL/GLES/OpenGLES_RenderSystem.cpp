@@ -124,7 +124,7 @@ namespace april
 		this->etc1Supported = false;
 #endif
 #ifdef _IOS
-		this->_intermediateRenderTextureCount = 2; // iOS has issues when only a single render target is used due to internal optimizations and texture locking
+		this->_intermediateRenderTextureCount = 3; // to avoid async blocks on iOS
 #endif
 #ifndef _IOS // TODOr - remove this once render target has been confirmed to work properly in all cases
 		this->caps.renderTarget = true;
