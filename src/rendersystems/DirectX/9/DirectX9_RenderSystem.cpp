@@ -55,7 +55,7 @@ namespace april
 		this->name = april::RenderSystemType::DirectX9.getName();
 		this->pixelOffset = 0.5f;
 		this->_supportsA8Surface = false;
-		this->caps.renderTarget = true;
+		//this->caps.renderTarget = true;
 		this->_deviceInit();
 	}
 
