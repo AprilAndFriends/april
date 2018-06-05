@@ -1554,21 +1554,22 @@ namespace april
 						this->_intermediateRenderTextures.clear();
 						april::Texture* oldCurrentTexture = this->_currentIntermediateRenderTexture;
 						april::Texture* oldLastTexture = this->_lastIntermediateRenderTexture;
+						int oldIndex = this->_intermediateRenderTextureIndex;
 						if (this->_tryCreateIntermediateRenderTextures(width, height))
 						{
 							if (oldLastTexture != NULL)
 							{
 								this->_deviceCopyRenderTargetData(oldLastTexture, this->_lastIntermediateRenderTexture);
-								if (this->deviceState->texture == oldLastTexture)
+							}
+							foreach (Texture*, it, oldTextures)
+							{
+								if (this->deviceState->texture == (*it))
 								{
 									this->deviceState->texture = NULL;
 									this->_setDeviceTexture(NULL);
 								}
-								foreach (Texture*, it, oldTextures)
-								{
-									(*it)->_deviceUnloadTexture();
-									delete (*it);
-								}
+								(*it)->_deviceUnloadTexture();
+								delete (*it);
 							}
 						}
 						else
@@ -1577,6 +1578,7 @@ namespace april
 							this->_intermediateRenderTextures = oldTextures;
 							this->_currentIntermediateRenderTexture = oldCurrentTexture;
 							this->_lastIntermediateRenderTexture = oldLastTexture;
+							this->_intermediateRenderTextureIndex = oldIndex;
 						}
 					}
 				}
@@ -1590,9 +1592,7 @@ namespace april
 		{
 			return false;
 		}
-		this->_currentIntermediateRenderTexture = NULL;
-		this->_lastIntermediateRenderTexture = NULL;
-		this->_intermediateRenderTextureIndex = 0;
+		this->_tryDestroyIntermediateRenderTextures();
 		bool result = false;
 		hmutex::ScopeLock lock;
 		Texture* texture = NULL;
@@ -1635,6 +1635,11 @@ namespace april
 		{
 			foreach (Texture*, it, this->_intermediateRenderTextures)
 			{
+				if (this->deviceState->texture == (*it))
+				{
+					this->deviceState->texture = NULL;
+					this->_setDeviceTexture(NULL);
+				}
 				(*it)->_deviceUnloadTexture();
 				delete (*it);
 			}

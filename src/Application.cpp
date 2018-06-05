@@ -326,7 +326,7 @@ namespace april
 			if (april::rendersys->getOptions().clearOnSuspend)
 			{
 				april::rendersys->_deviceClear(true);
-				april::rendersys->_devicePresentFrame(true);
+				april::rendersys->_deviceRepeatLastFrame(true);
 			}
 		}
 	}

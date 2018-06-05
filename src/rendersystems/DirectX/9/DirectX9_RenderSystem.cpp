@@ -55,7 +55,7 @@ namespace april
 		this->name = april::RenderSystemType::DirectX9.getName();
 		this->pixelOffset = 0.5f;
 		this->_supportsA8Surface = false;
-		//this->caps.renderTarget = true;
+		this->caps.renderTarget = true;
 		this->_deviceInit();
 	}
 
@@ -900,22 +900,14 @@ namespace april
 			hlog::error(logTag, "Cannot copy render target data, destination texture is not a render target!");
 			return;
 		}
-		IDirect3DSurface9* previousRenderTarget = NULL;
-		this->d3dDevice->GetRenderTarget(0, &previousRenderTarget);
-		this->d3dDevice->EndScene();
-		this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)destination)->_getSurface());
-		this->d3dDevice->BeginScene();
-		this->_intermediateState->viewport.setSize(source->getWidth(), source->getHeight());
-		this->_intermediateState->projectionMatrix.setOrthoProjection(
-			grectf(1.0f - 2.0f * this->pixelOffset / source->getWidth(), 1.0f - 2.0f * this->pixelOffset / source->getHeight(), 2.0f, 2.0f));
-		this->_intermediateState->texture = source;
-		RenderState deviceState(*this->deviceState);
-		this->_updateDeviceState(this->_intermediateState, true);
-		this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT);
-		this->d3dDevice->EndScene();
-		this->d3dDevice->SetRenderTarget(0, previousRenderTarget);
-		this->d3dDevice->BeginScene();
-		this->_updateDeviceState(&deviceState, true);
+		DirectX9_Texture* dx9Source = (DirectX9_Texture*)source;
+		DirectX9_Texture* dx9Destination = (DirectX9_Texture*)destination;
+		Texture::Lock sourceLock = dx9Source->_tryLockSystem(0, 0, dx9Source->getWidth(), dx9Source->getHeight());
+		Texture::Lock destinationLock = dx9Destination->_tryLockSystem(0, 0, dx9Destination->getWidth(), dx9Destination->getHeight());
+		Image::write(0, 0, hmin(sourceLock.dataWidth, destinationLock.dataWidth), hmin(sourceLock.dataHeight, destinationLock.dataHeight), 0, 0,
+			sourceLock.data, sourceLock.dataWidth, sourceLock.dataHeight, sourceLock.format, destinationLock.data, destinationLock.dataWidth, destinationLock.dataHeight, destinationLock.format);
+		dx9Source->_unlockSystem(sourceLock, false);
+		dx9Destination->_unlockSystem(destinationLock, true);
 	}
 
 	Texture* DirectX9_RenderSystem::getRenderTarget()
