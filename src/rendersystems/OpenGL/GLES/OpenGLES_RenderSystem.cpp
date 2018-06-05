@@ -123,9 +123,6 @@ namespace april
 #ifdef _ANDROID
 		this->etc1Supported = false;
 #endif
-#ifdef _IOS
-		this->_intermediateRenderTextureCount = 3; // to avoid async blocks on iOS
-#endif
 #ifndef _IOS // TODOr - remove this once render target has been confirmed to work properly in all cases
 		this->caps.renderTarget = true;
 #endif

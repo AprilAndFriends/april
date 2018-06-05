@@ -151,7 +151,7 @@ namespace april
 		this->_renderTargetDuplicatesCount = 0;
 		this->_currentIntermediateRenderTexture = NULL;
 		this->_lastIntermediateRenderTexture = NULL;
-		this->_intermediateRenderTextureCount = 2;
+		this->_intermediateRenderTextureCount = 1;
 		this->_intermediateRenderTextureIndex = 0;
 		this->_updateLastIntermediateRenderTexture = true;
 		this->_intermediateState = new RenderState();
