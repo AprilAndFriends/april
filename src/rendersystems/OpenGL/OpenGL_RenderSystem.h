@@ -67,9 +67,9 @@
 		}
 #endif
 
-#include <hltypes/hstring.h>
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
+#include <hltypes/hstring.h>
 
 #include "Color.h"
 #include "RenderSystem.h"
