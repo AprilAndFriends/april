@@ -356,7 +356,7 @@ namespace april
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
 	aprilFnExport inline hstr gvec2fToHstr(cgvec2f vector)
 	{
-		return hsprintf("%f%c%f", vector.x, APRIL_HSTR_SEPARATOR, vector.y);
+		return hsprintf("%s%c%s", hstr(vector.x).cStr(), APRIL_HSTR_SEPARATOR, hstr(vector.y).cStr());
 	}
 	/// @brief Creates a string representation for a gtypes::Vector3.
 	/// @param[in] vector The gtypes::Vector3 to convert.
@@ -364,7 +364,7 @@ namespace april
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
 	aprilFnExport inline hstr gvec3fToHstr(cgvec3f vector)
 	{
-		return hsprintf("%f%c%f%c%f", vector.x, APRIL_HSTR_SEPARATOR, vector.y, APRIL_HSTR_SEPARATOR, vector.z);
+		return hsprintf("%s%c%s%c%s", hstr(vector.x).cStr(), APRIL_HSTR_SEPARATOR, hstr(vector.y).cStr(), APRIL_HSTR_SEPARATOR, hstr(vector.z).cStr());
 	}
 	/// @brief Creates a string representation for a gtypes::Rectangle.
 	/// @param[in] rect The gtypes::Rectangle to convert.
@@ -372,7 +372,7 @@ namespace april
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
 	aprilFnExport inline hstr grectfToHstr(cgrectf rect)
 	{
-		return hsprintf("%f%c%f%c%f%c%f", rect.x, APRIL_HSTR_SEPARATOR, rect.y, APRIL_HSTR_SEPARATOR, rect.w, APRIL_HSTR_SEPARATOR, rect.h);
+		return hsprintf("%s%c%s%c%s%c%s", hstr(rect.x).cStr(), APRIL_HSTR_SEPARATOR, hstr(rect.y).cStr(), APRIL_HSTR_SEPARATOR, hstr(rect.w).cStr(), APRIL_HSTR_SEPARATOR, hstr(rect.h).cStr());
 	}
 	/// @brief Creates gtypes::Vector2 from a string representation.
 	/// @param[in] string The string to use for conversion.
