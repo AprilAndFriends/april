@@ -211,6 +211,12 @@
 		B4046B411ECDCB8A00F85550 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */; };
 		B4046B421ECDCB8A00F85550 /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B321ECDCA3C00F85550 /* egl.cpp */; };
 		B4046B431ECDCB8A00F85550 /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */; };
+		B40778C520C95064001E1999 /* SetWindowResolutionCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B40778C320C95063001E1999 /* SetWindowResolutionCommand.cpp */; };
+		B40778C620C95064001E1999 /* SetWindowResolutionCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = B40778C420C95064001E1999 /* SetWindowResolutionCommand.h */; };
+		B40778C720C95070001E1999 /* SetWindowResolutionCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = B40778C420C95064001E1999 /* SetWindowResolutionCommand.h */; };
+		B40778C820C95073001E1999 /* SetWindowResolutionCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B40778C320C95063001E1999 /* SetWindowResolutionCommand.cpp */; };
+		B40778C920C95073001E1999 /* SetWindowResolutionCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B40778C320C95063001E1999 /* SetWindowResolutionCommand.cpp */; };
+		B40778CA20C95074001E1999 /* SetWindowResolutionCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B40778C320C95063001E1999 /* SetWindowResolutionCommand.cpp */; };
 		B436D2DF1D05AE8800DA2C15 /* RenderHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B436D2DD1D05AE8800DA2C15 /* RenderHelper.cpp */; };
 		B436D2E01D05AE8800DA2C15 /* RenderHelperLayered2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B436D2DE1D05AE8800DA2C15 /* RenderHelperLayered2D.cpp */; };
 		B436D2E11D05AE9100DA2C15 /* RenderHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B436D2DD1D05AE8800DA2C15 /* RenderHelper.cpp */; };
@@ -599,6 +605,8 @@
 		B4046B331ECDCA3C00F85550 /* egl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = egl.h; path = src/util/egl.h; sourceTree = "<group>"; };
 		B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zlibUtil.cpp; path = src/util/zlibUtil.cpp; sourceTree = "<group>"; };
 		B4046B351ECDCA3C00F85550 /* zlibUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zlibUtil.h; path = src/util/zlibUtil.h; sourceTree = "<group>"; };
+		B40778C320C95063001E1999 /* SetWindowResolutionCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SetWindowResolutionCommand.cpp; path = src/async/SetWindowResolutionCommand.cpp; sourceTree = "<group>"; };
+		B40778C420C95064001E1999 /* SetWindowResolutionCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetWindowResolutionCommand.h; path = src/async/SetWindowResolutionCommand.h; sourceTree = "<group>"; };
 		B436D2DD1D05AE8800DA2C15 /* RenderHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderHelper.cpp; path = src/RenderHelper.cpp; sourceTree = "<group>"; };
 		B436D2DE1D05AE8800DA2C15 /* RenderHelperLayered2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderHelperLayered2D.cpp; path = src/RenderHelperLayered2D.cpp; sourceTree = "<group>"; };
 		B436D2ED1D05AEB000DA2C15 /* RenderHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderHelper.h; path = src/RenderHelper.h; sourceTree = "<group>"; };
@@ -906,6 +914,8 @@
 		7F42F79F11EB177B00B1C1DF /* src */ = {
 			isa = PBXGroup;
 			children = (
+				B40778C320C95063001E1999 /* SetWindowResolutionCommand.cpp */,
+				B40778C420C95064001E1999 /* SetWindowResolutionCommand.h */,
 				8432098A1FF4EEFF003A0539 /* Application.cpp */,
 				C9E6097C150518B400EB077F /* april.cpp */,
 				D14BF96915875F3300D31573 /* aprilUtil.cpp */,
@@ -1490,6 +1500,7 @@
 				843209A41FF4EF2C003A0539 /* ControllerEvent.h in Headers */,
 				D1E7203916D37B2700B9C9AD /* EventDelegate.h in Headers */,
 				D1E7203A16D37B2700B9C9AD /* Image.h in Headers */,
+				B40778C720C95070001E1999 /* SetWindowResolutionCommand.h in Headers */,
 				8432095E1FF4EEAB003A0539 /* DestroyCommand.h in Headers */,
 				B455016E1BD7A86200E75E43 /* OpenGL_RenderSystem.h in Headers */,
 				D1E7203B16D37B2700B9C9AD /* InputDelegate.h in Headers */,
@@ -1576,6 +1587,7 @@
 				8404CC1B1F951AEB00272BF4 /* MotionDelegate.h in Headers */,
 				D1B486B719337389004674EB /* Mac_LoadingOverlay.h in Headers */,
 				B436D2EF1D05AEB000DA2C15 /* RenderHelper.h in Headers */,
+				B40778C620C95064001E1999 /* SetWindowResolutionCommand.h in Headers */,
 				843209231FF4EE5A003A0539 /* DestroyTextureCommand.h in Headers */,
 				843209251FF4EE5A003A0539 /* DestroyWindowCommand.h in Headers */,
 				8432099D1FF4EF27003A0539 /* KeyDelegate.h in Headers */,
@@ -1750,6 +1762,7 @@
 				843209841FF4EEC3003A0539 /* RenderCommand.cpp in Sources */,
 				843209BD1FF4EF7A003A0539 /* KeyEvent.cpp in Sources */,
 				B45501681BD7A86200E75E43 /* OpenGL_RenderSystem.cpp in Sources */,
+				B40778C820C95073001E1999 /* SetWindowResolutionCommand.cpp in Sources */,
 				D14BF81A158737A000D31573 /* Platform.cpp in Sources */,
 				B455013E1BD7A7DE00E75E43 /* OpenGLES2_Texture.cpp in Sources */,
 				B4046B421ECDCB8A00F85550 /* egl.cpp in Sources */,
@@ -1896,6 +1909,7 @@
 				B44FBDBD1BE0E44A00DD8995 /* iOS_Window.mm in Sources */,
 				843209521FF4EE72003A0539 /* SuspendCommand.cpp in Sources */,
 				B44FBDBE1BE0E44A00DD8995 /* main_base.cpp in Sources */,
+				B40778CA20C95074001E1999 /* SetWindowResolutionCommand.cpp in Sources */,
 				B44FBDBF1BE0E44A00DD8995 /* OpenGLES2_VertexShader.cpp in Sources */,
 				B44FBDC01BE0E44A00DD8995 /* ControllerDelegate.cpp in Sources */,
 			);
@@ -1987,6 +2001,7 @@
 				D1B4873A19337479004674EB /* Mac_Platform.mm in Sources */,
 				D1FED15A192A3B5F00BE6A6D /* Cursor.cpp in Sources */,
 				B45501471BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,
+				B40778C920C95073001E1999 /* SetWindowResolutionCommand.cpp in Sources */,
 				D1B486AD19337389004674EB /* Mac_CocoaWindow.mm in Sources */,
 				B45501531BD7A80400E75E43 /* OpenGLES_RenderSystem.cpp in Sources */,
 			);
@@ -2078,6 +2093,7 @@
 				D1B4873819337479004674EB /* Mac_Platform.mm in Sources */,
 				D1B486AC19337389004674EB /* Mac_CocoaWindow.mm in Sources */,
 				B45501451BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp in Sources */,
+				B40778C520C95064001E1999 /* SetWindowResolutionCommand.cpp in Sources */,
 				D1AF66BD170B1E5900A43743 /* ControllerDelegate.cpp in Sources */,
 				B45501511BD7A80400E75E43 /* OpenGLES_RenderSystem.cpp in Sources */,
 			);
