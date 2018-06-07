@@ -311,7 +311,7 @@ class KeyDelegate : public april::KeyDelegate
 {
 	void onKeyUp(april::Key keyCode)
 	{
-		if (keyCode == april::Key::Key::F4)
+		if (keyCode == april::Key::F4)
 		{
 			april::window->setFullscreen(!april::window->isFullscreen());
 		}
