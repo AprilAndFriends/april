@@ -189,7 +189,8 @@ namespace april
 		this->_resetTouches();
 		if (april::window != NULL)
 		{
-			april::window->setResolution((int)width, (int)height, ApplicationView::GetForCurrentView()->IsFullScreenMode);
+			// TODOa - is this ok?
+			april::window->_systemSetResolution((int)width, (int)height, ApplicationView::GetForCurrentView()->IsFullScreenMode);
 		}
 	}
 

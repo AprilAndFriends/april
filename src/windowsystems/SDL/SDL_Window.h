@@ -42,7 +42,6 @@ namespace april
 		int getHeight() const;
 		gvec2f getCursorPosition() const;
 		void* getBackendId() const;
-		void setResolution(int w, int h, bool fullscreen);
 
 		bool update(float timeDelta);
 		void checkEvents();
@@ -63,6 +62,8 @@ namespace april
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor();
 
+		void _systemSetResolution(int width, int height, bool fullscreen);
+		
 		void _presentFrame(bool systemEnabled);
 		
 		void _handleSDLKeyEvent(Window::KeyEventType type, SDL_Keycode keyCode, unsigned int unicode);

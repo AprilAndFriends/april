@@ -133,11 +133,12 @@ namespace april
 		return 0;
 	}
 
-	void WinUWP_Window::setResolution(int w, int h, bool fullscreen)
+	void WinUWP_Window::_systemSetResolution(int width, int height, bool fullscreen)
 	{
-		this->width = w;
-		this->height = h;
-		this->_setRenderSystemResolution(w, h, fullscreen);
+		this->width = width;
+		this->height = height;
+		this->fullscreen = this->fullscreen;
+		this->_setRenderSystemResolution(this->width, this->height, this->fullscreen);
 	}
 
 	bool WinUWP_Window::update(float timeDelta)

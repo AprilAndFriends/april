@@ -43,7 +43,6 @@ namespace april
 		bool update(float timeDelta);
 
 		void setSystemWindowSize(int width, int height);
-		void setResolution(int width, int height, bool fullscreen);
 		void setFullscreenFlag(bool value);
 
 		void OnAppGainedFocus();
@@ -75,6 +74,8 @@ namespace april
 		Cursor* _createCursor(bool fromResource);
 		void _systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options);
 		void _systemDestroy();
+		
+		void _systemSetResolution(int width, int height, bool fullscreen);
 		
 		void _presentFrame(bool systemEnabled);
 		

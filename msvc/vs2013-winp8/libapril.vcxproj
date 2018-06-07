@@ -186,6 +186,7 @@
     <ClCompile Include="..\..\src\async\PresentFrameCommand.cpp" />
     <ClCompile Include="..\..\src\async\RenderCommand.cpp" />
     <ClCompile Include="..\..\src\async\ResetCommand.cpp" />
+    <ClCompile Include="..\..\src\async\SetWindowResolutionCommand.cpp" />
     <ClCompile Include="..\..\src\async\StateUpdateCommand.cpp" />
     <ClCompile Include="..\..\src\async\SuspendCommand.cpp" />
     <ClCompile Include="..\..\src\async\UnassignWindowCommand.cpp" />
@@ -313,6 +314,7 @@
     <ClInclude Include="..\..\src\async\PresentFrameCommand.h" />
     <ClInclude Include="..\..\src\async\RenderCommand.h" />
     <ClInclude Include="..\..\src\async\ResetCommand.h" />
+    <ClInclude Include="..\..\src\async\SetWindowResolutionCommand.h" />
     <ClInclude Include="..\..\src\async\StateUpdateCommand.h" />
     <ClInclude Include="..\..\src\async\SuspendCommand.h" />
     <ClInclude Include="..\..\src\async\UnassignWindowCommand.h" />

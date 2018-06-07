@@ -127,12 +127,17 @@ namespace april
 		return 0;
 	}
 
-	void WinRT_Window::setResolution(int width, int height, bool fullscreen)
+	void WinRT_Window::_systemSetResolution(int width, int height, bool fullscreen)
 	{
+		this->width = width;
+		this->height = height;
+		this->fullscreen = this->fullscreen;
+		this->_setRenderSystemResolution(this->width, this->height, this->fullscreen);
 	}
 
 	void WinRT_Window::changeSize(float width, float height)
 	{
+		// TODOa - is this still ok here?
 		hlog::write(logTag, "april::getSystemInfo() in WinRT_Window::changeSize()");
 		april::getSystemInfo(); // so the displayResolution value gets updated
 		float dpiRatio = WinRT::getDpiRatio();

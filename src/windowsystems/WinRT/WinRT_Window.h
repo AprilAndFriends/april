@@ -46,7 +46,6 @@ namespace april
 		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId() const;
 
-		void setResolution(int width, int height, bool fullscreen);
 		hstr findCursorFile(chstr filename) const;
 		
 		void showVirtualKeyboard();
@@ -65,6 +64,8 @@ namespace april
 		Cursor* _createCursor(bool fromResource);
 		void _refreshCursor();
 
+		void _systemSetResolution(int width, int height, bool fullscreen);
+		
 	};
 	
 }

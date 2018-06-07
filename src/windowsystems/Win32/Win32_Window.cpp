@@ -233,12 +233,23 @@ namespace april
 		return (this->cursor != NULL ? ((Win32_Cursor*)this->cursor)->getCursor() : this->defaultCursor);
 	}
 
-	void Win32_Window::setResolution(int width, int height, bool fullscreen)
+	bool Win32_Window::update(float timeDelta)
 	{
-		if (this->fullscreen == fullscreen && this->getWidth() == width && this->getHeight() == height)
+		if (this->inputMode == InputMode::Mouse)
 		{
-			return;
+			this->_updateCursorPosition();
 		}
+		// rendering
+		bool result = Window::update(timeDelta);
+		if (this->fpsCounter)
+		{
+			this->setTitle(this->title); // has to come after Window::updateOneFrame(), otherwise FPS value in title would be late one frame
+		}
+		return result;
+	}
+
+	void Win32_Window::_systemSetResolution(int width, int height, bool fullscreen)
+	{
 		// do NOT change the order the following function calls or else dragons
 		// setting the necessary styles
 		DWORD style = 0;
@@ -282,28 +293,18 @@ namespace april
 		{
 			this->_adjustWindowSizeForClient(x, y, width, height, style, exstyle);
 		}
-		this->fullscreen = fullscreen; // needs to be set here already, because some calls below already call system event callbacks
-		this->width = width;
-		this->height = height;
+		// needs to be set here already, because some calls below may call system event callbacks
+		this->fullscreen = fullscreen;
 		SetWindowPos(this->hWnd, (fullscreen ? HWND_TOPMOST : HWND_NOTOPMOST), x, y, width, height, 0);
+		// the requested size might not match the one the OS is willing to actually allow
+		RECT clientRect;
+		GetClientRect(this->hWnd, &clientRect);
+		this->width = clientRect.right - clientRect.left;
+		this->height = clientRect.bottom - clientRect.top;
+		// tell render system to resize back buffers and finish things up
+		this->_setRenderSystemResolution(this->width, this->height, this->fullscreen);
 		ShowWindow(this->hWnd, SW_SHOW);
 		UpdateWindow(this->hWnd);
-		this->handleSizeChange(this->width, this->height, this->fullscreen);
-	}
-	
-	bool Win32_Window::update(float timeDelta)
-	{
-		if (this->inputMode == InputMode::Mouse)
-		{
-			this->_updateCursorPosition();
-		}
-		// rendering
-		bool result = Window::update(timeDelta);
-		if (this->fpsCounter)
-		{
-			this->setTitle(this->title); // has to come after Window::updateOneFrame(), otherwise FPS value in title would be late one frame
-		}
-		return result;
 	}
 	
 	void Win32_Window::_presentFrame(bool systemEnabled)
@@ -585,15 +586,6 @@ namespace april
 		height = rect.bottom - rect.top;
 	}
 
-	void Win32_Window::handleSizeChange(int width, int height, bool fullscreen)
-	{
-		RECT clientRect;
-		GetClientRect(this->hWnd, &clientRect);
-		this->width = clientRect.right - clientRect.left;
-		this->height = clientRect.bottom - clientRect.top;
-		Window::handleSizeChange(this->width, this->height, this->fullscreen);
-	}
-
 	void Win32_Window::queueControllerInput(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue)
 	{
 		if (type != ControllerEvent::Type::Connected && type != ControllerEvent::Type::Disconnected)
@@ -621,6 +613,7 @@ namespace april
 			_sizeChanging = false;
 			break;
 		case WM_SIZE:
+			// handle only windowed variants of rsolution change here
 			if (!april::window->isFullscreen() && (_sizeChanging || wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED && !_initialSize))
 			{
 				RECT clientRect;
@@ -667,8 +660,6 @@ namespace april
 		}
 		static float _wheelDelta = 0.0f;
 		static bool _altKeyDown = false;
-		static int lastWidth = april::window->getWidth();
-		static int lastHeight = april::window->getHeight();
 		static TOUCHINPUT touches[1000];
 		static POINT _systemCursorPosition;
 		switch (message)
@@ -731,7 +722,7 @@ namespace april
 				}
 				if (wParam == VK_RETURN)
 				{
-					april::window->toggleHotkeyFullscreen();
+					WIN32_WINDOW->_systemToggleHotkeyFullscreen(); // this comes from the main thread so it can directly call the needed function
 					return 0;
 				}
 			}
@@ -749,7 +740,6 @@ namespace april
 		case WM_CHAR:
 			april::window->queueKeyInput(KeyEvent::Type::Down, Key::None, wParam);
 			break;
-			// oh no, it's LMR!
 		case WM_LBUTTONDOWN:
 		case WM_MBUTTONDOWN:
 		case WM_RBUTTONDOWN:

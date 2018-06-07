@@ -347,6 +347,9 @@
     <ClCompile Include="..\..\src\images\ImagePvrz.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\async\SetWindowResolutionCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -606,6 +609,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\april\Standard_main.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\SetWindowResolutionCommand.h">
+      <Filter>Header Files\async</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

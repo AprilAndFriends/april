@@ -40,7 +40,7 @@ namespace april
 	static ColoredTexturedVertex static_ctv[VERTICES_BUFFER_COUNT];
 	static ColoredVertex static_cv[VERTICES_BUFFER_COUNT];
 
-	D3DPRIMITIVETYPE DirectX9_RenderSystem::_dx9RenderOperations[]=
+	D3DPRIMITIVETYPE DirectX9_RenderSystem::_dx9RenderOperations[] =
 	{
 		D3DPT_TRIANGLELIST,
 		D3DPT_TRIANGLESTRIP,

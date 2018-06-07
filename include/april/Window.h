@@ -38,6 +38,7 @@ namespace april
 	class MotionDelegate;
 	class MouseDelegate;
 	class RenderSystem;
+	class SetWindowResolutionCommand;
 	class SystemDelegate;
 	class TouchDelegate;
 	class UnassignWindowCommand;
@@ -52,6 +53,7 @@ namespace april
 		friend class CreateWindowCommand;
 		friend class DestroyWindowCommand;
 		friend class RenderSystem;
+		friend class SetWindowResolutionCommand;
 		friend class UnassignWindowCommand;
 
 		/// @brief Defines options for creation of the window.
@@ -74,6 +76,7 @@ namespace april
 			bool mac_displayLinkIgnoreSystemRedraw; // TODOa - probably should be refactored or removed
 			/// @brief toggle to enable/disable touch input on platforms that support it, enabled by default
 			bool enableTouchInput;
+
 			/// @brief Basic constructor.
 			Options();
 			/// @brief Destructor.
@@ -202,7 +205,7 @@ namespace april
 		/// @brief Toggles fullscreen/window mode.
 		/// @note Remembers the last windowed size and returns to it. Useful when using directly with a fullscreen hotkey.
 		/// @see setFullscreen
-		virtual void toggleHotkeyFullscreen();
+		virtual void toggleFullscreen();
 
 		/// @brief Gets the Window's rendering area width.
 		/// @return The Window's rendering area width.
@@ -501,10 +504,8 @@ namespace april
 		/// @param[in] fullscreen Whether the window should be created in fullscreen or not.
 		/// @param[in] title The title to be displayed on the window title bar.
 		/// @param[in] options The Options object.
-		/// @return True if successful.
 		virtual void _systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options);
 		/// @brief Destroys the Window.
-		/// @return True if successful.
 		virtual void _systemDestroy();
 		/// @brief Unassigns the Window from a RenderSystem.
 		/// @note This is usually used only internally and is needed for some internal call ordering purposes.
@@ -519,6 +520,11 @@ namespace april
 		/// @return The created Cursor object or NULL if failed.
 		Cursor* _createCursorFromSource(bool fromResource, chstr filename);
 
+		/// @brief Sets a new fullscreen and resolution state for the Window.
+		/// @param[in] width Width of the window's rendering area.
+		/// @param[in] height Height of the window's rendering area.
+		/// @param[in] fullscreen Whether the window should be created in fullscreen or not.
+		virtual void _systemSetResolution(int width, int height, bool fullscreen);
 		/// @brief Calls _setRenderSystemResolution() with the current Window parameters.
 		/// @see _setRenderSystemResolution(int w, int h, bool fullscreen)
 		void _setRenderSystemResolution();
@@ -527,6 +533,23 @@ namespace april
 		/// @param[in] height New height of the resolutin.
 		/// @param[in] fullscreen Whether the display is now fullscreen or windowed.
 		virtual void _setRenderSystemResolution(int width, int height, bool fullscreen);
+		/// @brief Toggles fullscreen/window mode.
+		/// @note Remembers the last windowed size and returns to it. Useful when using directly with a fullscreen hotkey.
+		/// @note This is used internally only.
+		/// @see setFullscreen
+		virtual void _systemToggleHotkeyFullscreen();
+		/// @brief Toggles fullscreen/window mode.
+		/// @param[out] width The new width of the window.
+		/// @param[out] height The new height of the window.
+		/// @return True if allowed.
+		/// @note Remembers the last windowed size and returns to it. Useful when using directly with a fullscreen hotkey.
+		/// @see setFullscreen
+		void _getToggleHotkeyFullscreenSize(int& width, int& height);
+		/// @brief Gets the window size that a fullscreen toggle should switch to.
+		/// @return The window size that a fullscreen toggle should switch to.
+		/// @note This is used internally only.
+		/// @see setFullscreen
+		gvec2i _getToggleHotkeyFullscreenSize();
 
 		/// @brief Creates the actual system Cursor.
 		/// @param[in] fromResource Whether the Cursor is created from a resource file or a normal file.

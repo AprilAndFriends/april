@@ -308,11 +308,11 @@ namespace april
 		}
 	}
 	
-	void Mac_Window::setResolution(int width, int height, bool fullscreen)
+	void Mac_Window::_systemSetResolution(int width, int height, bool fullscreen)
 	{
 		if (fullscreen != [april::macCocoaWindow isFullScreen])
 		{
-			[april::macCocoaWindow  platformToggleFullScreen];
+			[april::macCocoaWindow platformToggleFullScreen];
 		}
 	}
 	

@@ -25,6 +25,7 @@
 #include "MouseDelegate.h"
 #include "Platform.h"
 #include "RenderSystem.h"
+#include "SetWindowResolutionCommand.h"
 #include "SystemDelegate.h"
 #include "TextureAsync.h"
 #include "TouchDelegate.h"
@@ -276,17 +277,20 @@ namespace april
 
 	void Window::setFullscreen(bool value)
 	{
-		SystemInfo info = april::getSystemInfo();
-		int width = hround(info.displayResolution.x);
-		int height = hround(info.displayResolution.y);
-		if (!value)
+		int width = this->getWidth();
+		int height = this->getHeight();
+		if (value)
 		{
-			float factor = this->getOptions().defaultWindowModeResolutionFactor;
-			width = (int)(width * factor);
-			height = (int)(height * factor);
+			SystemInfo info = april::getSystemInfo();
+			width = hround(info.displayResolution.x);
+			height = hround(info.displayResolution.y);
+		}
+		else
+		{
+			width = hround(width * this->options.defaultWindowModeResolutionFactor);
+			height = hround(height * this->options.defaultWindowModeResolutionFactor);
 		}
 		this->setResolution(width, height, value);
-		this->fullscreen = value;
 	}
 
 	void Window::setResolution(int width, int height)
@@ -296,28 +300,48 @@ namespace april
 
 	void Window::setResolution(int width, int height, bool fullscreen)
 	{
-		hlog::warnf(logTag, "setResolution() is not available in '%s'.", this->name.cStr());
+		if (this->getWidth() != width || this->getHeight() != height || this->fullscreen != fullscreen)
+		{
+			april::rendersys->_addAsyncCommand(new SetWindowResolutionCommand(width, height, fullscreen));
+		}
 	}
 
-	void Window::toggleHotkeyFullscreen()
+	void Window::toggleFullscreen()
+	{
+		gvec2i newSize = this->_getToggleHotkeyFullscreenSize();
+		this->setResolution(newSize.x, newSize.y, !this->fullscreen);
+	}
+
+	void Window::_systemToggleHotkeyFullscreen()
 	{
 		if (this->options.hotkeyFullscreen)
 		{
-			SystemInfo info = april::getSystemInfo();
-			int width = hround(info.displayResolution.x);
-			int height = hround(info.displayResolution.y);
-			if (!this->fullscreen)
-			{
-				this->lastWidth = this->getWidth();
-				this->lastHeight = this->getHeight();
-			}
-			else
-			{
-				width = this->lastWidth;
-				height = this->lastHeight;
-			}
-			this->setResolution(width, height, !this->fullscreen);
+			gvec2i newSize = this->_getToggleHotkeyFullscreenSize();
+			this->_systemSetResolution(newSize.x, newSize.y, !this->fullscreen);
+			this->queueSizeChange(this->getWidth(), this->getHeight(), this->fullscreen);
 		}
+	}
+
+	gvec2i Window::_getToggleHotkeyFullscreenSize()
+	{
+		gvec2i result;
+		if (!this->fullscreen)
+		{
+			SystemInfo info = april::getSystemInfo();
+			result.set(hround(info.displayResolution.x), hround(info.displayResolution.y));
+			this->lastWidth = this->getWidth();
+			this->lastHeight = this->getHeight();
+		}
+		else
+		{
+			result.set(this->lastWidth, this->lastHeight);
+		}
+		return result;
+	}
+
+	void Window::_systemSetResolution(int width, int height, bool fullscreen)
+	{
+		hlog::warnf(logTag, "Changing the resolution is not available in '%s'.", this->name.cStr());
 	}
 
 	void Window::_setRenderSystemResolution()

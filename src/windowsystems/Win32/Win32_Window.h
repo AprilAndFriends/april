@@ -45,13 +45,11 @@ namespace april
 		HL_DEFINE_GET(int, width, Width);
 		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId() const;
-		void setResolution(int width, int height, bool fullscreen);
 		HCURSOR getCursorHandle() const;
 
 		bool update(float timeDelta);
 		void checkEvents();
 
-		void handleSizeChange(int width, int height, bool fullscreen);
 		void queueControllerInput(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue);
 
 		static LRESULT CALLBACK childProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -81,6 +79,8 @@ namespace april
 		void _refreshCursor();
 		void _updateCursorPosition();
 		
+		void _systemSetResolution(int width, int height, bool fullscreen);
+
 		void _presentFrame(bool systemEnabled);
 
 		static LRESULT CALLBACK _mainProcessCallback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

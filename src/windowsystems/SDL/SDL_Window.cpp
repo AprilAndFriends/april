@@ -200,12 +200,8 @@ namespace april
 		return NULL;
 	}
 	
-	void SDL_Window::setResolution(int w, int h, bool fullscreen)
+	void SDL_Window::_systemSetResolution(int width, int height, bool fullscreen)
 	{
-		if (this->fullscreen == fullscreen && this->getWidth() == w && this->getHeight() == h)
-		{
-			return;
-		}
 		SDL_SetWindowFullscreen(this->window, fullscreen ? 1 : 0);
 	}
 	
@@ -295,7 +291,7 @@ namespace april
 #elif defined(_WIN32)
 				if (SDL_GetModState() & KMOD_ALT && sdlEvent.key.keysym.sym == SDLK_KP_ENTER)
 				{
-					this->toggleHotkeyFullscreen();
+					this->_systemToggleHotkeyFullscreen();
 				}
 				else
 #endif

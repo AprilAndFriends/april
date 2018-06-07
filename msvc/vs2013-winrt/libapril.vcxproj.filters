@@ -344,6 +344,9 @@
     <ClCompile Include="..\..\src\async\UnloadTextureCommand.cpp">
       <Filter>Source Files\async</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\async\SetWindowResolutionCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -596,6 +599,9 @@
       <Filter>Header Files\async</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\async\UnloadTextureCommand.h">
+      <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\SetWindowResolutionCommand.h">
       <Filter>Header Files\async</Filter>
     </ClInclude>
   </ItemGroup>
