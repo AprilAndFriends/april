@@ -28,9 +28,9 @@ namespace april
 	{
 		this->viewport.set(0, 0, 1, 1);
 		this->viewportChanged = true;
+		this->modelviewMatrix.setIdentity();
 		this->modelviewMatrixChanged = true;
 		this->projectionMatrix.setIdentity();
-		this->modelviewMatrix.setIdentity();
 		this->projectionMatrixChanged = true;
 		this->depthBuffer = false;
 		this->depthBufferWrite = false;

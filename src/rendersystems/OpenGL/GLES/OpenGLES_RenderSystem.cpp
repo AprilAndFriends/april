@@ -104,12 +104,19 @@ namespace april
 		if (linked == 0)
 		{
 			int messageSize = 0;
-			int written = 0;
-			GL_SAFE_CALL(glGetProgramiv, (this->glShaderProgram, GL_INFO_LOG_LENGTH, &messageSize));
-			char* message = new char[messageSize];
-			GL_SAFE_CALL(glGetProgramInfoLog, (this->glShaderProgram, messageSize, &written, message));
-			hlog::error(logTag, "Shader Program could not be linked! Error:\n" + hstr(message));
-			delete[] message;
+			glGetProgramiv(this->glShaderProgram, GL_INFO_LOG_LENGTH, &messageSize);
+			if (messageSize > 0)
+			{
+				int written = 0;
+				char* message = new char[messageSize];
+				glGetProgramInfoLog(this->glShaderProgram, messageSize, &written, message);
+				hlog::error(logTag, "Shader Program could not be linked! Error:\n" + hstr(message));
+				delete[] message;
+			}
+			else
+			{
+				hlog::error(logTag, "Shader Program could not be linked! Error message could not be obtained!");
+			}
 			glDeleteProgram(this->glShaderProgram);
 			this->glShaderProgram = 0;
 			return false;
@@ -263,7 +270,7 @@ namespace april
 #endif
 		this->caps.npotTextures = (extensions.contains("OES_texture_npot") || extensions.contains("ARB_texture_non_power_of_two"));
 		// TODO - is there a way to make this work on Win32?
-#ifndef _WIN32
+#if !defined(_WIN32) || defined(_WINRT)
 		this->blendSeparationSupported = (extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate"));
 		hlog::write(logTag, "Blend-separate supported: " + hstr(this->blendSeparationSupported ? "yes" : "no"));
 #endif
@@ -456,7 +463,7 @@ namespace april
 
 	void OpenGLES_RenderSystem::_setDeviceBlendMode(const BlendMode& blendMode)
 	{
-#ifndef _WIN32
+#if !defined(_WIN32) || defined(_WINRT)
 		if (this->blendSeparationSupported)
 		{
 			// blending for the new generations

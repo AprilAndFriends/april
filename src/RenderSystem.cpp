@@ -156,6 +156,7 @@ namespace april
 		this->_updateLastIntermediateRenderTexture = true;
 		this->_intermediateState = new RenderState();
 		// setting up the RenderState and other data for intermediate render texture
+		this->_intermediateState->blendMode = april::BlendMode::Overwrite;
 		this->_intermediateState->useTexture = true;
 		april::TexturedVertex* v = this->_intermediateRenderVertices;
 		v[0].x = -1.0f;	v[0].y = -1.0f;	v[0].z = 0.0f;	v[0].u = 0.0f;	v[0].v = 0.0f;
@@ -1665,7 +1666,6 @@ namespace april
 			this->_intermediateState->viewport.setSize(width, height);
 			this->_intermediateState->projectionMatrix.setOrthoProjection(grectf(1.0f - 2.0f * this->pixelOffset / width, 1.0f - 2.0f * this->pixelOffset / height, 2.0f, 2.0f));
 			this->_intermediateState->texture = this->_lastIntermediateRenderTexture;
-			RenderState deviceState(*this->deviceState);
 			this->_updateDeviceState(this->_intermediateState, true);
 			this->_deviceClear(false);
 			this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT);
@@ -1674,7 +1674,6 @@ namespace april
 				this->_intermediateRenderTextureIndex = (this->_intermediateRenderTextureIndex + 1) % this->_intermediateRenderTextures.size();
 				this->_currentIntermediateRenderTexture = this->_intermediateRenderTextures[this->_intermediateRenderTextureIndex];
 			}
-			this->_updateDeviceState(&deviceState, true);
 			// don't restore state with _updateDeviceState() here, calling functions must handle that
 		}
 	}

@@ -258,6 +258,10 @@ namespace april
 		{
 			GL_SAFE_CALL(glBlendFunc, (GL_SRC_ALPHA, GL_ONE));
 		}
+		else if (blendMode == BlendMode::Overwrite)
+		{
+			GL_SAFE_CALL(glBlendFunc, (GL_ONE, GL_ZERO));
+		}
 		else
 		{
 			GL_SAFE_CALL(glBlendFunc, (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
