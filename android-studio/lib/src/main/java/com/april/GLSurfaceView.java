@@ -265,6 +265,18 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		final int source = event.getSource();
 		if ((source & InputDevice.SOURCE_CLASS_POINTER) == InputDevice.SOURCE_CLASS_POINTER && event.getAction() == MotionEvent.ACTION_SCROLL)
 		{
+			// TODO - switch to new code and test
+			/*
+			final float x = -event.getAxisValue(MotionEvent.AXIS_HSCROLL);
+			final float y = -event.getAxisValue(MotionEvent.AXIS_VSCROLL);
+			this.queueEvent(new Runnable()
+			{
+				public void run()
+				{
+					NativeInterface.onScroll(x, y);
+				}
+			});
+			*/
 			NativeInterface.onScroll(-event.getAxisValue(MotionEvent.AXIS_HSCROLL), -event.getAxisValue(MotionEvent.AXIS_VSCROLL));
 			return true;
 		}
@@ -378,6 +390,14 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	public boolean onCheckIsTextEditor() // required for creation of soft keyboard
 	{
 		return true;
+	}
+	
+	public void destroy()
+	{
+		// this special hack is required, because it seems that along the way somewhere Android "forgets" that the view was paused
+		// and won't properly destroy the GLThread
+		this.onResume();
+		this.onPause();
 	}
 	
 }

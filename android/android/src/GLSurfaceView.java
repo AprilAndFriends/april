@@ -392,13 +392,13 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		return true;
 	}
 	
-    public void destroy()
+	public void destroy()
 	{
 		// this special hack is required, because it seems that along the way somewhere Android "forgets" that the view was paused
 		// and won't properly destroy the GLThread
 		this.onResume();
 		this.onPause();
-    }
+	}
 	
 }
 

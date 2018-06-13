@@ -6,6 +6,8 @@ import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
@@ -17,7 +19,9 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import com.april.DialogFactory;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -28,6 +32,7 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	
 	protected boolean useHardExit = true; // set this to false to prevent application from fully exiting
 	private boolean enabledNavigationBarHiding = true;
+	protected boolean waiting = false;
 	
 	protected SystemSettingsObserver systemSettingsObserver = null;
 	protected SensorEventListener sensorEventListener = new SensorEventListener();
@@ -421,8 +426,24 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		{
 			this.callbacksOnDestroy.get(i).execute();
 		}
-		NativeInterface.activityOnDestroy();
+		this.waiting = true;
+		// native call is queued into render thread
+		this.glView.queueEvent(new Runnable()
+		{
+			public void run()
+			{
+				NativeInterface.activityOnDestroy();
+				waiting = false;
+			}
+		});
+		while (this.waiting)
+		{
+		}
+		// do not change the order of these!
 		NativeInterface.destroy();
+		this.glView.destroy();
+		this.glView = null;
+		System.gc();
 		NativeInterface.reset();
 		super.onDestroy();
 		if (this.useHardExit)

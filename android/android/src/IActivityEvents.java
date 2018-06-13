@@ -8,16 +8,16 @@ import android.os.Bundle;
 
 public interface IActivityEvents
 {
-	public void registerOnCreate(Callback1<Void, Bundle> callback);
-	public void registerOnStart(Callback<Void> callback);
-	public void registerOnResume(Callback<Void> callback);
-	public void registerOnPause(Callback<Void> callback);
-	public void registerOnStop(Callback<Void> callback);
-	public void registerOnDestroy(Callback<Void> callback);
-	public void registerOnRestart(Callback<Void> callback);
-	public void registerOnActivityResult(Callback3<Boolean, Integer, Integer, Intent> callback);
-	public void registerOnNewIntent(Callback1<Void, Intent> callback);
-	public void registerOnBackPressed(Callback<Boolean> callback);
-	public void registerOnConfigurationChanged(Callback1<Void, Configuration> callback);
+	public void registerOnCreate(ICallback1<Void, Bundle> callback);
+	public void registerOnStart(ICallback<Void> ICallback);
+	public void registerOnResume(ICallback<Void> ICallback);
+	public void registerOnPause(ICallback<Void> ICallback);
+	public void registerOnStop(ICallback<Void> ICallback);
+	public void registerOnDestroy(ICallback<Void> ICallback);
+	public void registerOnRestart(ICallback<Void> ICallback);
+	public void registerOnActivityResult(ICallback3<Boolean, Integer, Integer, Intent> callback);
+	public void registerOnNewIntent(ICallback1<Void, Intent> callback);
+	public void registerOnBackPressed(ICallback<Boolean> ICallback);
+	public void registerOnConfigurationChanged(ICallback1<Void, Configuration> callback);
 	
 }
