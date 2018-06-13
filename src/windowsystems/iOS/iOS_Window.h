@@ -28,8 +28,8 @@ namespace april
 		
 		void setCursorVisible(bool value);
 		bool isCursorVisible() const;
-		int getWidth() const;
-		int getHeight() const;
+		HL_DEFINE_GET(int, width, Width);
+		HL_DEFINE_GET(int, height, Height);
 		void setTitle(chstr value);
 		void* getBackendId() const;
 		bool isVirtualKeyboardVisible() const;
@@ -66,6 +66,8 @@ namespace april
 		float _getTouchScale() const;
 		
 	protected:
+		int width;
+		int height;
 		int keyboardRequest;
 		bool firstFrameDrawn;
 		bool inputEventsMutex;

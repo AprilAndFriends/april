@@ -60,6 +60,8 @@ namespace april
 	iOS_Window::iOS_Window() : Window()
 	{
 		this->name = april::WindowType::iOS.getName();
+		this->width = 0;
+		this->height = 0;
 		this->exitFunction = NULL;
 	}
 	
@@ -79,6 +81,15 @@ namespace april
 		[UIApplication sharedApplication].statusBarHidden = fullscreen ? YES : NO;		
 		this->fullscreen = true; // iOS apps are always fullscreen
 		this->firstFrameDrawn = false; // show window after drawing first frame
+		float scale = 1.0f;
+		CAEAGLLayer* caeagllayer = ((CAEAGLLayer*)glview.layer);
+		if ([caeagllayer respondsToSelector:@selector(contentsScale)])
+		{
+			scale = caeagllayer.contentsScale;
+		}
+		CGRect bounds = uiwindow.bounds;
+		this->width = bounds.size.width * scale;
+		this->height = bounds.size.height * scale;
 	}
 	
 	iOS_Window::~iOS_Window()
@@ -102,6 +113,15 @@ namespace april
 			}
 			this->keyboardRequest = 0;
 		}
+		float scale = 1.0f;
+		CAEAGLLayer* caeagllayer = ((CAEAGLLayer*)glview.layer);
+		if ([caeagllayer respondsToSelector:@selector(contentsScale)])
+		{
+			scale = caeagllayer.contentsScale;
+		}
+		CGRect bounds = uiwindow.bounds;
+		this->width = bounds.size.width * scale;
+		this->height = bounds.size.height * scale;
 		Window::checkEvents();
 	}
 
@@ -129,30 +149,6 @@ namespace april
 	bool iOS_Window::isCursorVisible() const
 	{
 		return false; // iOS never shows system cursor
-	}
-	
-	int iOS_Window::getWidth() const
-	{
-		float scale = 1;
-		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
-		if ([caeagllayer respondsToSelector:@selector(contentsScale)])
-		{
-			scale = caeagllayer.contentsScale;
-		}
-		CGRect bounds = uiwindow.bounds;
-		return bounds.size.width * scale;
-	}
-
-	int iOS_Window::getHeight() const
-	{
-		float scale = 1;
-		CAEAGLLayer *caeagllayer = ((CAEAGLLayer*)glview.layer);
-		if ([caeagllayer respondsToSelector:@selector(contentsScale)])
-		{
-			scale = caeagllayer.contentsScale;
-		}
-		CGRect bounds = uiwindow.bounds;
-		return bounds.size.height * scale;
 	}
 
 	void iOS_Window::setTitle(chstr value)
