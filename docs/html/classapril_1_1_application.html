@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Awesome Portable Rendering Interface Library: april::Application Class Reference</title>
+<title>C++ Geometry Types: april::Application Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,9 +18,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Awesome Portable Rendering Interface Library
+   <div id="projectname">C++ Geometry Types
    </div>
-   <div id="projectbrief">This library provides a universal rendering API and does not require to write code that is used in only one API (e.g. OpenGL, DirectX, SDL, ...)</div>
+   <div id="projectbrief">This library provides commonly used geometry types and methods for easier and better coding.</div>
   </td>
  </tr>
  </tbody>
@@ -43,7 +43,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
@@ -61,14 +60,11 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="_application_8h_source.html">Application.h</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application_1_1_state.html">State</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines application states.  <a href="classapril_1_1_application_1_1_state.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a939cabf437af27c17ce037b147100df8"><td class="memItemLeft" align="right" valign="top"><a id="a939cabf437af27c17ce037b147100df8"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>HL_ENUM_CLASS_PREFIX_DECLARE</b> (aprilExport, <a class="el" href="class_state.html">State</a>,(HL_ENUM_DECLARE(<a class="el" href="class_state.html">State</a>, Idle);HL_ENUM_DECLARE(<a class="el" href="class_state.html">State</a>, Starting);HL_ENUM_DECLARE(<a class="el" href="class_state.html">State</a>, StartedWaiting);HL_ENUM_DECLARE(<a class="el" href="class_state.html">State</a>, Running);HL_ENUM_DECLARE(<a class="el" href="class_state.html">State</a>, Stopping);HL_ENUM_DECLARE(<a class="el" href="class_state.html">State</a>, Stopped);))</td></tr>
+<tr class="separator:a939cabf437af27c17ce037b147100df8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5e4d0f839ef6925a425c20c1a77694e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#aa5e4d0f839ef6925a425c20c1a77694e">Application</a> (void(*<a class="el" href="classapril_1_1_application.html#a82b7560a44f7a03e9b236b7106b395fe">aprilApplicationInit</a>)(), void(*<a class="el" href="classapril_1_1_application.html#af1ee6abe9e0f96f4288c51338dd02471">aprilApplicationDestroy</a>)())</td></tr>
 <tr class="memdesc:aa5e4d0f839ef6925a425c20c1a77694e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic constructor.  <a href="#aa5e4d0f839ef6925a425c20c1a77694e">More...</a><br /></td></tr>
 <tr class="separator:aa5e4d0f839ef6925a425c20c1a77694e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -81,7 +77,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a3745e00d17669941eb8e5dfe57fea419"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get/Set launch arguments. <br /></td></tr>
 <tr class="separator:a3745e00d17669941eb8e5dfe57fea419"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e41f2963b97b273a44ca43c3aef1e48"><td class="memItemLeft" align="right" valign="top"><a id="a8e41f2963b97b273a44ca43c3aef1e48"></a>
-<a class="el" href="classapril_1_1_application_1_1_state.html">State</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a8e41f2963b97b273a44ca43c3aef1e48">getState</a> ()</td></tr>
+<a class="el" href="class_state.html">State</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a8e41f2963b97b273a44ca43c3aef1e48">getState</a> ()</td></tr>
 <tr class="memdesc:a8e41f2963b97b273a44ca43c3aef1e48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get running flag. <br /></td></tr>
 <tr class="separator:a8e41f2963b97b273a44ca43c3aef1e48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43e2345cba700175947da95abf490982"><td class="memItemLeft" align="right" valign="top"><a id="a43e2345cba700175947da95abf490982"></a>
@@ -153,18 +149,18 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a4b622a5b5c8e6008d8a0645e143cb0d2"><td class="memItemLeft" align="right" valign="top"><a id="a4b622a5b5c8e6008d8a0645e143cb0d2"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>messageBoxCallback</b> (const <a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a> &amp;button)</td></tr>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>messageBoxCallback</b> (const <a class="el" href="class_message_box_button.html">MessageBoxButton</a> &amp;button)</td></tr>
 <tr class="separator:a4b622a5b5c8e6008d8a0645e143cb0d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a0efb3c5a19f6ebed3634414eace4b904"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a0efb3c5a19f6ebed3634414eace4b904">_setState</a> (const <a class="el" href="classapril_1_1_application_1_1_state.html">State</a> &amp;value)</td></tr>
-<tr class="memdesc:a0efb3c5a19f6ebed3634414eace4b904"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="classapril_1_1_application_1_1_state.html" title="Defines application states. ">State</a>.  <a href="#a0efb3c5a19f6ebed3634414eace4b904">More...</a><br /></td></tr>
+<tr class="memitem:a0efb3c5a19f6ebed3634414eace4b904"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a0efb3c5a19f6ebed3634414eace4b904">_setState</a> (const <a class="el" href="class_state.html">State</a> &amp;value)</td></tr>
+<tr class="memdesc:a0efb3c5a19f6ebed3634414eace4b904"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set <a class="el" href="class_state.html" title="Defines application states. ">State</a>.  <a href="#a0efb3c5a19f6ebed3634414eace4b904">More...</a><br /></td></tr>
 <tr class="separator:a0efb3c5a19f6ebed3634414eace4b904"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7a60208dfe080f933735ec454a7a13f"><td class="memItemLeft" align="right" valign="top"><a id="ae7a60208dfe080f933735ec454a7a13f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#ae7a60208dfe080f933735ec454a7a13f">_updateSystem</a> ()</td></tr>
-<tr class="memdesc:ae7a60208dfe080f933735ec454a7a13f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs the update of one frame, but without any timer. <br /></td></tr>
-<tr class="separator:ae7a60208dfe080f933735ec454a7a13f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e0bd1f2531364f3954fce7756fe1707"><td class="memItemLeft" align="right" valign="top"><a id="a3e0bd1f2531364f3954fce7756fe1707"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a3e0bd1f2531364f3954fce7756fe1707">_updateSystem</a> ()</td></tr>
+<tr class="memdesc:a3e0bd1f2531364f3954fce7756fe1707"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs the update of one frame, but without any timer. <br /></td></tr>
+<tr class="separator:a3e0bd1f2531364f3954fce7756fe1707"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6ca5e56b796b7f289819f7d21710ba06"><td class="memItemLeft" align="right" valign="top"><a id="a6ca5e56b796b7f289819f7d21710ba06"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a6ca5e56b796b7f289819f7d21710ba06">_updateMessageBoxQueue</a> ()</td></tr>
 <tr class="memdesc:a6ca5e56b796b7f289819f7d21710ba06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes message box displays. <br /></td></tr>
@@ -195,7 +191,7 @@ void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 <tr class="memdesc:af1ee6abe9e0f96f4288c51338dd02471"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destruction callback. <br /></td></tr>
 <tr class="separator:af1ee6abe9e0f96f4288c51338dd02471"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af05c82b2079daa1a83b73e01f24abbec"><td class="memItemLeft" align="right" valign="top"><a id="af05c82b2079daa1a83b73e01f24abbec"></a>
-<a class="el" href="classapril_1_1_application_1_1_state.html">State</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#af05c82b2079daa1a83b73e01f24abbec">state</a></td></tr>
+<a class="el" href="class_state.html">State</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#af05c82b2079daa1a83b73e01f24abbec">state</a></td></tr>
 <tr class="memdesc:af05c82b2079daa1a83b73e01f24abbec"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current application state. <br /></td></tr>
 <tr class="separator:af05c82b2079daa1a83b73e01f24abbec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9bcc76c282fee27b29d87fcc6799e1e"><td class="memItemLeft" align="right" valign="top"><a id="ab9bcc76c282fee27b29d87fcc6799e1e"></a>
@@ -359,7 +355,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::Application::_setState </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_application_1_1_state.html">State</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_state.html">State</a> &amp;&#160;</td>
           <td class="paramname"><em>value</em></td><td>)</td>
           <td></td>
         </tr>
@@ -371,10 +367,10 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Set <a class="el" href="classapril_1_1_application_1_1_state.html" title="Defines application states. ">State</a>. </p>
+<p>Set <a class="el" href="class_state.html" title="Defines application states. ">State</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>New <a class="el" href="classapril_1_1_application_1_1_state.html" title="Defines application states. ">State</a>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>New <a class="el" href="class_state.html" title="Defines application states. ">State</a>. </td></tr>
   </table>
   </dd>
 </dl>

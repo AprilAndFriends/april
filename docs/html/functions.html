@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Awesome Portable Rendering Interface Library: Class Members</title>
+<title>C++ Geometry Types: Class Members</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,9 +18,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Awesome Portable Rendering Interface Library
+   <div id="projectname">C++ Geometry Types
    </div>
-   <div id="projectbrief">This library provides a universal rendering API and does not require to write code that is used in only one API (e.g. OpenGL, DirectX, SDL, ...)</div>
+   <div id="projectbrief">This library provides commonly used geometry types and methods for easier and better coding.</div>
   </td>
  </tr>
  </tbody>
@@ -102,6 +102,9 @@ $(function() {
 </li>
 <li>_createVertexShaderFromSource()
 : <a class="el" href="classapril_1_1_render_system.html#a7c1131f8b5953897b4476926882cb977">april::RenderSystem</a>
+</li>
+<li>_currentIntermediateRenderTexture
+: <a class="el" href="classapril_1_1_render_system.html#a08327c0d6f2aa705f8cc5f32098e41c5">april::RenderSystem</a>
 </li>
 <li>_decodeFromAsyncStream()
 : <a class="el" href="classapril_1_1_texture.html#aa59e2e8cd88eabb6993affd8ccae6468">april::Texture</a>
@@ -198,7 +201,10 @@ $(function() {
 : <a class="el" href="classapril_1_1_texture.html#ac03ed71b6a1c8168f1e4a3e0ada135a8">april::Texture</a>
 </li>
 <li>_getInternalName()
-: <a class="el" href="classapril_1_1_texture.html#a89ac861fedfde6912ac6f061685f9741">april::Texture</a>
+: <a class="el" href="classapril_1_1_texture.html#ac1ca0b99715d6eba93cd90aacae3f0fa">april::Texture</a>
+</li>
+<li>_getToggleHotkeyFullscreenSize()
+: <a class="el" href="classapril_1_1_window.html#ab96b08e1088ad7bc5b933d4fd7b90065">april::Window</a>
 </li>
 <li>_hideKeyboard()
 : <a class="el" href="classapril_1_1_virtual_keyboard.html#ae2f0cc4a56d541068afd0aed29263ff2">april::VirtualKeyboard</a>
@@ -206,11 +212,17 @@ $(function() {
 <li>_increaseStats()
 : <a class="el" href="classapril_1_1_render_system.html#aa4d1436cc053a605f7c4a6352106e2ef">april::RenderSystem</a>
 </li>
-<li>_intermediateRenderTexture
-: <a class="el" href="classapril_1_1_render_system.html#a6224aa3ea0b62f8549c16e5c145a127f">april::RenderSystem</a>
+<li>_intermediateRenderTextureCount
+: <a class="el" href="classapril_1_1_render_system.html#a92d0bd80bdc376b60d47a74f97293a8f">april::RenderSystem</a>
+</li>
+<li>_intermediateRenderTextureIndex
+: <a class="el" href="classapril_1_1_render_system.html#a7f53e4cceb6e73a16819569093c03159">april::RenderSystem</a>
+</li>
+<li>_intermediateRenderTextures
+: <a class="el" href="classapril_1_1_render_system.html#a761969e1c6333ef01c3f11a279217584">april::RenderSystem</a>
 </li>
 <li>_intermediateRenderVertices
-: <a class="el" href="classapril_1_1_render_system.html#ac6f1d5d72f8b573e38741cb92943d39b">april::RenderSystem</a>
+: <a class="el" href="classapril_1_1_render_system.html#abbefea718e209e559f643fcb71036e3a">april::RenderSystem</a>
 </li>
 <li>_intermediateState
 : <a class="el" href="classapril_1_1_render_system.html#a43e5a562c528f0b864e22b7d78091e33">april::RenderSystem</a>
@@ -226,6 +238,9 @@ $(function() {
 </li>
 <li>_isWritable()
 : <a class="el" href="classapril_1_1_texture.html#af223db5c8dbb87454a6ebcdd807c1d21">april::Texture</a>
+</li>
+<li>_lastIntermediateRenderTexture
+: <a class="el" href="classapril_1_1_render_system.html#a0bb081948be69c55f8a463d26cd5eaa2">april::RenderSystem</a>
 </li>
 <li>_limitVertices()
 : <a class="el" href="classapril_1_1_render_system.html#aa0eeddb8795152fbe6f9066d26af11bf">april::RenderSystem</a>
@@ -252,7 +267,7 @@ $(function() {
 : <a class="el" href="classapril_1_1_image.html#a4ae68598d80c1024ea2b55bbe832607e">april::Image</a>
 </li>
 <li>_loadPvrz()
-: <a class="el" href="classapril_1_1_image.html#a1a3866f10a7a98cd56e29d2c544fb312">april::Image</a>
+: <a class="el" href="classapril_1_1_image.html#a5683df180b119c028a207a132a72e5a4">april::Image</a>
 </li>
 <li>_numPrimitives()
 : <a class="el" href="classapril_1_1_render_system.html#a3a010ad3c46b9afd8c4efb5f98ba008d">april::RenderSystem</a>
@@ -288,16 +303,16 @@ $(function() {
 : <a class="el" href="classapril_1_1_texture.html#af134d90fe3ffad90f7f96a4e6edb5d6e">april::Texture</a>
 </li>
 <li>_readMetaDataEtcx()
-: <a class="el" href="classapril_1_1_image.html#a186e2b5065afa4726381d5b5118ae0bb">april::Image</a>
+: <a class="el" href="classapril_1_1_image.html#a811b8942aef653c32269c3c9fed32d5c">april::Image</a>
 </li>
 <li>_readMetaDataJpg()
-: <a class="el" href="classapril_1_1_image.html#a86c94acc7c10436af35d57255c7722f0">april::Image</a>
+: <a class="el" href="classapril_1_1_image.html#ac7f5e6bf0b72f5091085f787ecf06a87">april::Image</a>
 </li>
 <li>_readMetaDataJpt()
 : <a class="el" href="classapril_1_1_image.html#abae2a3bdf8175f2886f0c7a33fef225a">april::Image</a>
 </li>
 <li>_readMetaDataPng()
-: <a class="el" href="classapril_1_1_image.html#af6324c93ccf93b4bad7875db59164aa9">april::Image</a>
+: <a class="el" href="classapril_1_1_image.html#a7f8a42c2866461e6c1bebf8a09a2d89b">april::Image</a>
 </li>
 <li>_readMetaDataPvr()
 : <a class="el" href="classapril_1_1_image.html#a6e37d6d2eb8b0981293c938545bc85b5">april::Image</a>
@@ -312,7 +327,7 @@ $(function() {
 : <a class="el" href="classapril_1_1_render_system.html#abc7f673a42ae3197e4ca8f45d3611d27">april::RenderSystem</a>
 </li>
 <li>_renderInternal()
-: <a class="el" href="classapril_1_1_render_system.html#aea39fa7f009d62f206ba5323168b13d5">april::RenderSystem</a>
+: <a class="el" href="classapril_1_1_render_system.html#aee7fbec49099522306d05afd008d87b5">april::RenderSystem</a>
 </li>
 <li>_savePng()
 : <a class="el" href="classapril_1_1_image.html#a2f2edc2799a65ada4ae8e73b1032018f">april::Image</a>
@@ -345,10 +360,10 @@ $(function() {
 : <a class="el" href="classapril_1_1_render_system.html#a3838169816fa330ed28ae4984e835518">april::RenderSystem</a>
 </li>
 <li>_setDeviceViewport()
-: <a class="el" href="classapril_1_1_render_system.html#ae998f0481b1ad2520b62f0868b17fe95">april::RenderSystem</a>
+: <a class="el" href="classapril_1_1_render_system.html#ade9889680eb5c18a2036b9e8edacfb03">april::RenderSystem</a>
 </li>
 <li>_setRenderSystemResolution()
-: <a class="el" href="classapril_1_1_window.html#a4bc083228869bf58976c6079d7ded18d">april::Window</a>
+: <a class="el" href="classapril_1_1_window.html#a6d6863c950b9ac97b125861a02dae831">april::Window</a>
 </li>
 <li>_setState()
 : <a class="el" href="classapril_1_1_application.html#a0efb3c5a19f6ebed3634414eace4b904">april::Application</a>
@@ -370,14 +385,23 @@ $(function() {
 : <a class="el" href="classapril_1_1_render_system.html#a3c2c0c1359f402b994ea0aa7be6ab3d2">april::RenderSystem</a>
 , <a class="el" href="classapril_1_1_window.html#a0d3f4c8b7167194b3cd9d00b0c9d429c">april::Window</a>
 </li>
+<li>_systemSetResolution()
+: <a class="el" href="classapril_1_1_window.html#a5077fe28e76841d3ca0065f38476a431">april::Window</a>
+</li>
+<li>_systemToggleHotkeyFullscreen()
+: <a class="el" href="classapril_1_1_window.html#ac4384c55552a65d7a9ece1ce7f11c0c1">april::Window</a>
+</li>
 <li>_systemUnassign()
 : <a class="el" href="classapril_1_1_window.html#aa46a573b1054e9012752e35451ca52f0">april::Window</a>
 </li>
 <li>_tryAsyncFinalUpload()
 : <a class="el" href="classapril_1_1_texture.html#a9abd35c2402d924305882de3ff0da340">april::Texture</a>
 </li>
-<li>_tryCreateIntermediateRenderTexture()
-: <a class="el" href="classapril_1_1_render_system.html#a33bb778367695dffe7ff610d72dee467">april::RenderSystem</a>
+<li>_tryCreateIntermediateRenderTextures()
+: <a class="el" href="classapril_1_1_render_system.html#acdbbc5a4d918353cab5a116dde8ebfce">april::RenderSystem</a>
+</li>
+<li>_tryDestroyIntermediateRenderTextures()
+: <a class="el" href="classapril_1_1_render_system.html#a3ed910bbf076a3db4c0c90c85eeac4ae">april::RenderSystem</a>
 </li>
 <li>_tryLockSystem()
 : <a class="el" href="classapril_1_1_texture.html#a00d34e8cfdf7456d17aea9885175cc6d">april::Texture</a>
@@ -397,14 +421,17 @@ $(function() {
 <li>_updateFps()
 : <a class="el" href="classapril_1_1_application.html#aa701fe3b89e3b09bc39c5219aa79786f">april::Application</a>
 </li>
-<li>_updateIntermediateRenderTexture()
-: <a class="el" href="classapril_1_1_render_system.html#a1dbcbab571e1a8b3f690e8dd493e79aa">april::RenderSystem</a>
+<li>_updateIntermediateRenderTextures()
+: <a class="el" href="classapril_1_1_render_system.html#a2f10f50f20fe91b88f55c37650e95103">april::RenderSystem</a>
+</li>
+<li>_updateLastIntermediateRenderTexture
+: <a class="el" href="classapril_1_1_render_system.html#a6df4ab376ba81b76b19e2ace09dc4a1a">april::RenderSystem</a>
 </li>
 <li>_updateMessageBoxQueue()
 : <a class="el" href="classapril_1_1_application.html#a6ca5e56b796b7f289819f7d21710ba06">april::Application</a>
 </li>
 <li>_updateSystem()
-: <a class="el" href="classapril_1_1_application.html#ae7a60208dfe080f933735ec454a7a13f">april::Application</a>
+: <a class="el" href="classapril_1_1_application.html#a3e0bd1f2531364f3954fce7756fe1707">april::Application</a>
 </li>
 <li>_upload()
 : <a class="el" href="classapril_1_1_texture.html#adedd14d3fbf4e3d92e8c8827f8f6fa93">april::Texture</a>

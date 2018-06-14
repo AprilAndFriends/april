@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Awesome Portable Rendering Interface Library: april::RenderSystem Class Reference</title>
+<title>C++ Geometry Types: april::RenderSystem Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,9 +18,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Awesome Portable Rendering Interface Library
+   <div id="projectname">C++ Geometry Types
    </div>
-   <div id="projectbrief">This library provides a universal rendering API and does not require to write code that is used in only one API (e.g. OpenGL, DirectX, SDL, ...)</div>
+   <div id="projectbrief">This library provides commonly used geometry types and methods for easier and better coding.</div>
   </td>
  </tr>
  </tbody>
@@ -70,12 +70,12 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structapril_1_1_render_system_1_1_options.html">Options</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines options for render system creation.  <a href="structapril_1_1_render_system_1_1_options.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system_1_1_render_mode.html">RenderMode</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines possible rendering methods.  <a href="classapril_1_1_render_system_1_1_render_mode.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a36d519f490dd3f1011e6ff4f3cd569c8"><td class="memItemLeft" align="right" valign="top"><a id="a36d519f490dd3f1011e6ff4f3cd569c8"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>HL_ENUM_CLASS_PREFIX_DECLARE</b> (aprilExport, <a class="el" href="class_render_mode.html">RenderMode</a>,(HL_ENUM_DECLARE(<a class="el" href="class_render_mode.html">RenderMode</a>, Normal);HL_ENUM_DECLARE(<a class="el" href="class_render_mode.html">RenderMode</a>, Layered2D);))</td></tr>
+<tr class="separator:a36d519f490dd3f1011e6ff4f3cd569c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4139447f7b6bc922ec09cf97677b1305"><td class="memItemLeft" align="right" valign="top"><a id="a4139447f7b6bc922ec09cf97677b1305"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a4139447f7b6bc922ec09cf97677b1305">RenderSystem</a> ()</td></tr>
 <tr class="memdesc:a4139447f7b6bc922ec09cf97677b1305"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic constructor. <br /></td></tr>
@@ -116,8 +116,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:ae9f8ada6b77560c8bf5aea58284fc60f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the capabilities of the <a class="el" href="classapril_1_1_render_system.html" title="Defines a generic render system. ">RenderSystem</a>. <br /></td></tr>
 <tr class="separator:ae9f8ada6b77560c8bf5aea58284fc60f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7098e1f6bab8b67801a58e61a845096"><td class="memItemLeft" align="right" valign="top"><a id="ae7098e1f6bab8b67801a58e61a845096"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ae7098e1f6bab8b67801a58e61a845096">HL_DEFINE_GET</a> (<a class="el" href="classapril_1_1_render_system_1_1_render_mode.html">RenderMode</a>, <a class="el" href="classapril_1_1_render_system.html#a18f7e7e8f1ac5d159846bb249a4f85fc">renderMode</a>, <a class="el" href="classapril_1_1_render_system_1_1_render_mode.html">RenderMode</a>)</td></tr>
-<tr class="memdesc:ae7098e1f6bab8b67801a58e61a845096"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current <a class="el" href="classapril_1_1_render_system_1_1_render_mode.html" title="Defines possible rendering methods. ">RenderMode</a>. <br /></td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ae7098e1f6bab8b67801a58e61a845096">HL_DEFINE_GET</a> (<a class="el" href="class_render_mode.html">RenderMode</a>, <a class="el" href="classapril_1_1_render_system.html#a18f7e7e8f1ac5d159846bb249a4f85fc">renderMode</a>, <a class="el" href="class_render_mode.html">RenderMode</a>)</td></tr>
+<tr class="memdesc:ae7098e1f6bab8b67801a58e61a845096"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current <a class="el" href="class_render_mode.html" title="Defines possible rendering methods. ">RenderMode</a>. <br /></td></tr>
 <tr class="separator:ae7098e1f6bab8b67801a58e61a845096"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1169c7f27b07a0a8308b41fdc6d86a62"><td class="memItemLeft" align="right" valign="top"><a id="a1169c7f27b07a0a8308b41fdc6d86a62"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a1169c7f27b07a0a8308b41fdc6d86a62">HL_DEFINE_GET</a> (int, <a class="el" href="classapril_1_1_render_system.html#aaf232af7dec2cc4c8a05d8ff2389580c">frameAdvanceUpdates</a>, FrameAdvanceUpdates)</td></tr>
@@ -194,12 +194,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 <tr class="memitem:aea333b36ba2bb0f1bc6f65beb3217ac6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#aea333b36ba2bb0f1bc6f65beb3217ac6">hasTexturesReadyForUpload</a> () const</td></tr>
 <tr class="memdesc:aea333b36ba2bb0f1bc6f65beb3217ac6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if there are any textures ready to be uploaded.  <a href="#aea333b36ba2bb0f1bc6f65beb3217ac6">More...</a><br /></td></tr>
 <tr class="separator:aea333b36ba2bb0f1bc6f65beb3217ac6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6be94e32325cef98504cd4edd582c0e6"><td class="memItemLeft" align="right" valign="top">grectf&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a6be94e32325cef98504cd4edd582c0e6">getViewport</a> () const</td></tr>
-<tr class="memdesc:a6be94e32325cef98504cd4edd582c0e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the render viewport.  <a href="#a6be94e32325cef98504cd4edd582c0e6">More...</a><br /></td></tr>
-<tr class="separator:a6be94e32325cef98504cd4edd582c0e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af957bfa862e52cabd572c02700370696"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#af957bfa862e52cabd572c02700370696">setViewport</a> (cgrectf value)</td></tr>
-<tr class="memdesc:af957bfa862e52cabd572c02700370696"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the render viewport.  <a href="#af957bfa862e52cabd572c02700370696">More...</a><br /></td></tr>
-<tr class="separator:af957bfa862e52cabd572c02700370696"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9920f15dbe6336b19dd2c05540062fde"><td class="memItemLeft" align="right" valign="top">grecti&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a9920f15dbe6336b19dd2c05540062fde">getViewport</a> () const</td></tr>
+<tr class="memdesc:a9920f15dbe6336b19dd2c05540062fde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the render viewport.  <a href="#a9920f15dbe6336b19dd2c05540062fde">More...</a><br /></td></tr>
+<tr class="separator:a9920f15dbe6336b19dd2c05540062fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8245a0d4e9ef52621eebf2bce7b99828"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a8245a0d4e9ef52621eebf2bce7b99828">setViewport</a> (cgrecti value)</td></tr>
+<tr class="memdesc:a8245a0d4e9ef52621eebf2bce7b99828"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the render viewport.  <a href="#a8245a0d4e9ef52621eebf2bce7b99828">More...</a><br /></td></tr>
+<tr class="separator:a8245a0d4e9ef52621eebf2bce7b99828"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a212e8c52061d5ee3278f7dda916460be"><td class="memItemLeft" align="right" valign="top">gmat4&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a212e8c52061d5ee3278f7dda916460be">getModelviewMatrix</a> () const</td></tr>
 <tr class="memdesc:a212e8c52061d5ee3278f7dda916460be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current modelview matrix.  <a href="#a212e8c52061d5ee3278f7dda916460be">More...</a><br /></td></tr>
 <tr class="separator:a212e8c52061d5ee3278f7dda916460be"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -222,25 +222,25 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 <tr class="memdesc:ad71960383c11c9404de236906124161b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for the currently async commands to be executed.  <a href="#ad71960383c11c9404de236906124161b">More...</a><br /></td></tr>
 <tr class="separator:ad71960383c11c9404de236906124161b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a622cdbbd9b94ac49ac3ad64aa7b065"><td class="memItemLeft" align="right" valign="top"><a id="a0a622cdbbd9b94ac49ac3ad64aa7b065"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a0a622cdbbd9b94ac49ac3ad64aa7b065">setRenderMode</a> (<a class="el" href="classapril_1_1_render_system_1_1_render_mode.html">RenderMode</a> <a class="el" href="classapril_1_1_render_system.html#a18f7e7e8f1ac5d159846bb249a4f85fc">renderMode</a>, const hmap&lt; hstr, hstr &gt; &amp;<a class="el" href="classapril_1_1_render_system.html#ad29fb1f6aa2b0595c365506633f20c3a">options</a>=hmap&lt; hstr, hstr &gt;())</td></tr>
-<tr class="memdesc:a0a622cdbbd9b94ac49ac3ad64aa7b065"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current <a class="el" href="classapril_1_1_render_system_1_1_render_mode.html" title="Defines possible rendering methods. ">RenderMode</a>. <br /></td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a0a622cdbbd9b94ac49ac3ad64aa7b065">setRenderMode</a> (<a class="el" href="class_render_mode.html">RenderMode</a> <a class="el" href="classapril_1_1_render_system.html#a18f7e7e8f1ac5d159846bb249a4f85fc">renderMode</a>, const hmap&lt; hstr, hstr &gt; &amp;<a class="el" href="classapril_1_1_render_system.html#ad29fb1f6aa2b0595c365506633f20c3a">options</a>=hmap&lt; hstr, hstr &gt;())</td></tr>
+<tr class="memdesc:a0a622cdbbd9b94ac49ac3ad64aa7b065"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current <a class="el" href="class_render_mode.html" title="Defines possible rendering methods. ">RenderMode</a>. <br /></td></tr>
 <tr class="separator:a0a622cdbbd9b94ac49ac3ad64aa7b065"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac68c520a91a5f5046d242649eaac625c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ac68c520a91a5f5046d242649eaac625c">createTextureFromResource</a> (chstr filename, <a class="el" href="classapril_1_1_texture_1_1_type.html">Texture::Type</a> type=<a class="el" href="classapril_1_1_texture_1_1_type.html#abb180c632de44c88f6ff848d4b1b811e">Texture::Type::Immutable</a>, <a class="el" href="classapril_1_1_texture_1_1_load_mode.html">Texture::LoadMode</a> loadMode=<a class="el" href="classapril_1_1_texture_1_1_load_mode.html#a4d4eb6dddba80539338cccb353404b2b">Texture::LoadMode::Async</a>)</td></tr>
+<tr class="memitem:ac68c520a91a5f5046d242649eaac625c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ac68c520a91a5f5046d242649eaac625c">createTextureFromResource</a> (chstr filename, Texture::Type type=Texture::Type::Immutable, Texture::LoadMode loadMode=Texture::LoadMode::Async)</td></tr>
 <tr class="memdesc:ac68c520a91a5f5046d242649eaac625c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classapril_1_1_texture.html" title="Defines a generic texture. ">Texture</a> object from a resource file.  <a href="#ac68c520a91a5f5046d242649eaac625c">More...</a><br /></td></tr>
 <tr class="separator:ac68c520a91a5f5046d242649eaac625c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae13e53c468fe1064083fa94232bb35fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ae13e53c468fe1064083fa94232bb35fe">createTextureFromResource</a> (chstr filename, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> format, <a class="el" href="classapril_1_1_texture_1_1_type.html">Texture::Type</a> type=<a class="el" href="classapril_1_1_texture_1_1_type.html#aae10f154aa1d310185bf13f54886256f">Texture::Type::Managed</a>, <a class="el" href="classapril_1_1_texture_1_1_load_mode.html">Texture::LoadMode</a> loadMode=<a class="el" href="classapril_1_1_texture_1_1_load_mode.html#a4d4eb6dddba80539338cccb353404b2b">Texture::LoadMode::Async</a>)</td></tr>
+<tr class="memitem:ae13e53c468fe1064083fa94232bb35fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ae13e53c468fe1064083fa94232bb35fe">createTextureFromResource</a> (chstr filename, Image::Format format, Texture::Type type=Texture::Type::Managed, Texture::LoadMode loadMode=Texture::LoadMode::Async)</td></tr>
 <tr class="memdesc:ae13e53c468fe1064083fa94232bb35fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classapril_1_1_texture.html" title="Defines a generic texture. ">Texture</a> object from a resource file.  <a href="#ae13e53c468fe1064083fa94232bb35fe">More...</a><br /></td></tr>
 <tr class="separator:ae13e53c468fe1064083fa94232bb35fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f2bd8035ea2ce08666e213ee3839039"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a2f2bd8035ea2ce08666e213ee3839039">createTextureFromFile</a> (chstr filename, <a class="el" href="classapril_1_1_texture_1_1_type.html">Texture::Type</a> type=<a class="el" href="classapril_1_1_texture_1_1_type.html#abb180c632de44c88f6ff848d4b1b811e">Texture::Type::Immutable</a>, <a class="el" href="classapril_1_1_texture_1_1_load_mode.html">Texture::LoadMode</a> loadMode=<a class="el" href="classapril_1_1_texture_1_1_load_mode.html#a4d4eb6dddba80539338cccb353404b2b">Texture::LoadMode::Async</a>)</td></tr>
+<tr class="memitem:a2f2bd8035ea2ce08666e213ee3839039"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a2f2bd8035ea2ce08666e213ee3839039">createTextureFromFile</a> (chstr filename, Texture::Type type=Texture::Type::Immutable, Texture::LoadMode loadMode=Texture::LoadMode::Async)</td></tr>
 <tr class="memdesc:a2f2bd8035ea2ce08666e213ee3839039"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classapril_1_1_texture.html" title="Defines a generic texture. ">Texture</a> object from a file.  <a href="#a2f2bd8035ea2ce08666e213ee3839039">More...</a><br /></td></tr>
 <tr class="separator:a2f2bd8035ea2ce08666e213ee3839039"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a794b1e376552369b360c042a9b81d570"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a794b1e376552369b360c042a9b81d570">createTextureFromFile</a> (chstr filename, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> format, <a class="el" href="classapril_1_1_texture_1_1_type.html">Texture::Type</a> type=<a class="el" href="classapril_1_1_texture_1_1_type.html#aae10f154aa1d310185bf13f54886256f">Texture::Type::Managed</a>, <a class="el" href="classapril_1_1_texture_1_1_load_mode.html">Texture::LoadMode</a> loadMode=<a class="el" href="classapril_1_1_texture_1_1_load_mode.html#a4d4eb6dddba80539338cccb353404b2b">Texture::LoadMode::Async</a>)</td></tr>
+<tr class="memitem:a794b1e376552369b360c042a9b81d570"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a794b1e376552369b360c042a9b81d570">createTextureFromFile</a> (chstr filename, Image::Format format, Texture::Type type=Texture::Type::Managed, Texture::LoadMode loadMode=Texture::LoadMode::Async)</td></tr>
 <tr class="memdesc:a794b1e376552369b360c042a9b81d570"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classapril_1_1_texture.html" title="Defines a generic texture. ">Texture</a> object from a file.  <a href="#a794b1e376552369b360c042a9b81d570">More...</a><br /></td></tr>
 <tr class="separator:a794b1e376552369b360c042a9b81d570"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf3b378958ae692349c6c850dd40f5fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#acf3b378958ae692349c6c850dd40f5fc">createTexture</a> (int w, int h, unsigned char *data, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> format)</td></tr>
+<tr class="memitem:acf3b378958ae692349c6c850dd40f5fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#acf3b378958ae692349c6c850dd40f5fc">createTexture</a> (int w, int h, unsigned char *data, Image::Format format)</td></tr>
 <tr class="memdesc:acf3b378958ae692349c6c850dd40f5fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classapril_1_1_texture.html" title="Defines a generic texture. ">Texture</a> object from raw data.  <a href="#acf3b378958ae692349c6c850dd40f5fc">More...</a><br /></td></tr>
 <tr class="separator:acf3b378958ae692349c6c850dd40f5fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72761ef7e87ea0391938a1d78990a35f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a72761ef7e87ea0391938a1d78990a35f">createTexture</a> (int w, int h, <a class="el" href="classapril_1_1_color.html">Color</a> color, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> format)</td></tr>
+<tr class="memitem:a72761ef7e87ea0391938a1d78990a35f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a72761ef7e87ea0391938a1d78990a35f">createTexture</a> (int w, int h, <a class="el" href="classapril_1_1_color.html">Color</a> color, Image::Format format)</td></tr>
 <tr class="memdesc:a72761ef7e87ea0391938a1d78990a35f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <a class="el" href="classapril_1_1_texture.html" title="Defines a generic texture. ">Texture</a> object completely filled with a specific color.  <a href="#a72761ef7e87ea0391938a1d78990a35f">More...</a><br /></td></tr>
 <tr class="separator:a72761ef7e87ea0391938a1d78990a35f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a739faa2d55c748610aca43dce005ed9a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a739faa2d55c748610aca43dce005ed9a">destroyTexture</a> (<a class="el" href="classapril_1_1_texture.html">Texture</a> *texture)</td></tr>
@@ -291,10 +291,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:acc4c5d12dd707f0dd0d131fd749650b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#acc4c5d12dd707f0dd0d131fd749650b0">setTexture</a> (<a class="el" href="classapril_1_1_texture.html">Texture</a> *texture)</td></tr>
 <tr class="memdesc:acc4c5d12dd707f0dd0d131fd749650b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current <a class="el" href="classapril_1_1_texture.html" title="Defines a generic texture. ">Texture</a> for rendering.  <a href="#acc4c5d12dd707f0dd0d131fd749650b0">More...</a><br /></td></tr>
 <tr class="separator:acc4c5d12dd707f0dd0d131fd749650b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5fcea55648839f8d66463c926ac6fe3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ae5fcea55648839f8d66463c926ac6fe3">setBlendMode</a> (const <a class="el" href="classapril_1_1_blend_mode.html">BlendMode</a> &amp;blendMode)</td></tr>
+<tr class="memitem:ae5fcea55648839f8d66463c926ac6fe3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ae5fcea55648839f8d66463c926ac6fe3">setBlendMode</a> (const <a class="el" href="class_blend_mode.html">BlendMode</a> &amp;blendMode)</td></tr>
 <tr class="memdesc:ae5fcea55648839f8d66463c926ac6fe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current blending mode for rendering.  <a href="#ae5fcea55648839f8d66463c926ac6fe3">More...</a><br /></td></tr>
 <tr class="separator:ae5fcea55648839f8d66463c926ac6fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac324e8bb56918d87a3b2f5019f2d0ba9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ac324e8bb56918d87a3b2f5019f2d0ba9">setColorMode</a> (const <a class="el" href="classapril_1_1_color_mode.html">ColorMode</a> &amp;colorMode, float colorModeFactor=1.0f)</td></tr>
+<tr class="memitem:ac324e8bb56918d87a3b2f5019f2d0ba9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ac324e8bb56918d87a3b2f5019f2d0ba9">setColorMode</a> (const <a class="el" href="class_color_mode.html">ColorMode</a> &amp;colorMode, float colorModeFactor=1.0f)</td></tr>
 <tr class="memdesc:ac324e8bb56918d87a3b2f5019f2d0ba9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current color mode for rendering.  <a href="#ac324e8bb56918d87a3b2f5019f2d0ba9">More...</a><br /></td></tr>
 <tr class="separator:ac324e8bb56918d87a3b2f5019f2d0ba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5223ce254a96538b86211184db4f64e2"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a5223ce254a96538b86211184db4f64e2">getRenderTarget</a> ()</td></tr>
@@ -359,22 +359,22 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#aa7bb84d0bac82b6cadcd1809d4a1a094">clearDepth</a> ()</td></tr>
 <tr class="memdesc:aa7bb84d0bac82b6cadcd1809d4a1a094"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the depth-buffer. <br /></td></tr>
 <tr class="separator:aa7bb84d0bac82b6cadcd1809d4a1a094"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad22f8e16faa525eb1be85bab417d598e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ad22f8e16faa525eb1be85bab417d598e">render</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_plain_vertex.html">PlainVertex</a> *vertices, int count)</td></tr>
+<tr class="memitem:ad22f8e16faa525eb1be85bab417d598e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ad22f8e16faa525eb1be85bab417d598e">render</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_plain_vertex.html">PlainVertex</a> *vertices, int count)</td></tr>
 <tr class="memdesc:ad22f8e16faa525eb1be85bab417d598e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders an array of vertices to the backbuffer.  <a href="#ad22f8e16faa525eb1be85bab417d598e">More...</a><br /></td></tr>
 <tr class="separator:ad22f8e16faa525eb1be85bab417d598e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afd79ead6739816afbcfabe0b955ab591"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#afd79ead6739816afbcfabe0b955ab591">render</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_plain_vertex.html">PlainVertex</a> *vertices, int count, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
+<tr class="memitem:afd79ead6739816afbcfabe0b955ab591"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#afd79ead6739816afbcfabe0b955ab591">render</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_plain_vertex.html">PlainVertex</a> *vertices, int count, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
 <tr class="memdesc:afd79ead6739816afbcfabe0b955ab591"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders an array of vertices to the backbuffer.  <a href="#afd79ead6739816afbcfabe0b955ab591">More...</a><br /></td></tr>
 <tr class="separator:afd79ead6739816afbcfabe0b955ab591"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9ef722530f2bbd1b89f525e95f4c37b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ad9ef722530f2bbd1b89f525e95f4c37b">render</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_textured_vertex.html">TexturedVertex</a> *vertices, int count)</td></tr>
+<tr class="memitem:ad9ef722530f2bbd1b89f525e95f4c37b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ad9ef722530f2bbd1b89f525e95f4c37b">render</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_textured_vertex.html">TexturedVertex</a> *vertices, int count)</td></tr>
 <tr class="memdesc:ad9ef722530f2bbd1b89f525e95f4c37b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders an array of vertices to the backbuffer.  <a href="#ad9ef722530f2bbd1b89f525e95f4c37b">More...</a><br /></td></tr>
 <tr class="separator:ad9ef722530f2bbd1b89f525e95f4c37b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab0e90a02984643a954ab2e9617116459"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ab0e90a02984643a954ab2e9617116459">render</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_textured_vertex.html">TexturedVertex</a> *vertices, int count, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
+<tr class="memitem:ab0e90a02984643a954ab2e9617116459"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ab0e90a02984643a954ab2e9617116459">render</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_textured_vertex.html">TexturedVertex</a> *vertices, int count, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
 <tr class="memdesc:ab0e90a02984643a954ab2e9617116459"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders an array of vertices to the backbuffer.  <a href="#ab0e90a02984643a954ab2e9617116459">More...</a><br /></td></tr>
 <tr class="separator:ab0e90a02984643a954ab2e9617116459"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00365b7ddfa1a7545ed608e78b3f4e45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a00365b7ddfa1a7545ed608e78b3f4e45">render</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_colored_vertex.html">ColoredVertex</a> *vertices, int count)</td></tr>
+<tr class="memitem:a00365b7ddfa1a7545ed608e78b3f4e45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a00365b7ddfa1a7545ed608e78b3f4e45">render</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_colored_vertex.html">ColoredVertex</a> *vertices, int count)</td></tr>
 <tr class="memdesc:a00365b7ddfa1a7545ed608e78b3f4e45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders an array of vertices to the backbuffer.  <a href="#a00365b7ddfa1a7545ed608e78b3f4e45">More...</a><br /></td></tr>
 <tr class="separator:a00365b7ddfa1a7545ed608e78b3f4e45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a641d6654af7326b7988c38fb103dfe48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a641d6654af7326b7988c38fb103dfe48">render</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_colored_textured_vertex.html">ColoredTexturedVertex</a> *vertices, int count)</td></tr>
+<tr class="memitem:a641d6654af7326b7988c38fb103dfe48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a641d6654af7326b7988c38fb103dfe48">render</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_colored_textured_vertex.html">ColoredTexturedVertex</a> *vertices, int count)</td></tr>
 <tr class="memdesc:a641d6654af7326b7988c38fb103dfe48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders an array of vertices to the backbuffer.  <a href="#a641d6654af7326b7988c38fb103dfe48">More...</a><br /></td></tr>
 <tr class="separator:a641d6654af7326b7988c38fb103dfe48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42890047334da054b5b867636a1d6efd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a42890047334da054b5b867636a1d6efd">drawRect</a> (cgrectf rect, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
@@ -401,13 +401,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a37a75d05eba644bfb8637ad6a24d6fe2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a37a75d05eba644bfb8637ad6a24d6fe2">waitForAsyncTextures</a> (float timeout=0.0f) const</td></tr>
 <tr class="memdesc:a37a75d05eba644bfb8637ad6a24d6fe2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for all currently queued textures to load asynchronously.  <a href="#a37a75d05eba644bfb8637ad6a24d6fe2">More...</a><br /></td></tr>
 <tr class="separator:a37a75d05eba644bfb8637ad6a24d6fe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a687a34a5f6ef18c878ee83e8c90d4369"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a687a34a5f6ef18c878ee83e8c90d4369">getNativeTextureFormat</a> (<a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> format) const =0</td></tr>
+<tr class="memitem:a687a34a5f6ef18c878ee83e8c90d4369"><td class="memItemLeft" align="right" valign="top">virtual Image::Format&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a687a34a5f6ef18c878ee83e8c90d4369">getNativeTextureFormat</a> (Image::Format format) const =0</td></tr>
 <tr class="memdesc:a687a34a5f6ef18c878ee83e8c90d4369"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a pixel format into the system native pixel format while keeping the number of colors intact.  <a href="#a687a34a5f6ef18c878ee83e8c90d4369">More...</a><br /></td></tr>
 <tr class="separator:a687a34a5f6ef18c878ee83e8c90d4369"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a380a76dd03c34a47c00ba3f88a775d04"><td class="memItemLeft" align="right" valign="top">virtual unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a380a76dd03c34a47c00ba3f88a775d04">getNativeColorUInt</a> (const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color) const =0</td></tr>
 <tr class="memdesc:a380a76dd03c34a47c00ba3f88a775d04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a <a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> into a system native unsigned int value used for colors internally.  <a href="#a380a76dd03c34a47c00ba3f88a775d04">More...</a><br /></td></tr>
 <tr class="separator:a380a76dd03c34a47c00ba3f88a775d04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb763146da6a91a74aaa7cf8ed9d33cb"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classapril_1_1_image.html">Image</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#abb763146da6a91a74aaa7cf8ed9d33cb">takeScreenshot</a> (<a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> format)</td></tr>
+<tr class="memitem:abb763146da6a91a74aaa7cf8ed9d33cb"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classapril_1_1_image.html">Image</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#abb763146da6a91a74aaa7cf8ed9d33cb">takeScreenshot</a> (Image::Format format)</td></tr>
 <tr class="memdesc:abb763146da6a91a74aaa7cf8ed9d33cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes a screenshot aka captures the image data of the backbuffer.  <a href="#abb763146da6a91a74aaa7cf8ed9d33cb">More...</a><br /></td></tr>
 <tr class="separator:abb763146da6a91a74aaa7cf8ed9d33cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76bb6093013ff2fad282a771a4985cb2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a76bb6093013ff2fad282a771a4985cb2">flushFrame</a> (bool updateStats=false)</td></tr>
@@ -424,7 +424,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:abc7f673a42ae3197e4ca8f45d3611d27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a365248d5a151e9fdd8ada0aa2493040a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a365248d5a151e9fdd8ada0aa2493040a">_unregisterTexture</a> (<a class="el" href="classapril_1_1_texture.html">Texture</a> *texture)</td></tr>
 <tr class="separator:a365248d5a151e9fdd8ada0aa2493040a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a707ca7fedf96a3c67744e8621554a2e2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a707ca7fedf96a3c67744e8621554a2e2">_createTextureFromSource</a> (bool fromResource, chstr filename, <a class="el" href="classapril_1_1_texture_1_1_type.html">Texture::Type</a> type, <a class="el" href="classapril_1_1_texture_1_1_load_mode.html">Texture::LoadMode</a> loadMode, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> format=<a class="el" href="classapril_1_1_image_1_1_format.html#af72c136986f0d81a55ee4724e3421d2b">Image::Format::Invalid</a>)</td></tr>
+<tr class="memitem:a707ca7fedf96a3c67744e8621554a2e2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a707ca7fedf96a3c67744e8621554a2e2">_createTextureFromSource</a> (bool fromResource, chstr filename, Texture::Type type, Texture::LoadMode loadMode, Image::Format format=Image::Format::Invalid)</td></tr>
 <tr class="memdesc:a707ca7fedf96a3c67744e8621554a2e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internally safe method for creating a <a class="el" href="classapril_1_1_texture.html" title="Defines a generic texture. ">Texture</a> object.  <a href="#a707ca7fedf96a3c67744e8621554a2e2">More...</a><br /></td></tr>
 <tr class="separator:a707ca7fedf96a3c67744e8621554a2e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa3aa7e51bd0bd15c1110d9b035853d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classapril_1_1_pixel_shader.html">PixelShader</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#afa3aa7e51bd0bd15c1110d9b035853d8">_createPixelShaderFromSource</a> (bool fromResource, chstr filename)</td></tr>
@@ -502,9 +502,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a5aa4a7fe20e991c3d7df4396646e8356"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a5aa4a7fe20e991c3d7df4396646e8356">_deviceChangeResolution</a> (int w, int h, bool fullscreen)</td></tr>
 <tr class="memdesc:a5aa4a7fe20e991c3d7df4396646e8356"><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes the device backbuffer resolution and fullscreen mode.  <a href="#a5aa4a7fe20e991c3d7df4396646e8356">More...</a><br /></td></tr>
 <tr class="separator:a5aa4a7fe20e991c3d7df4396646e8356"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae998f0481b1ad2520b62f0868b17fe95"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ae998f0481b1ad2520b62f0868b17fe95">_setDeviceViewport</a> (cgrectf rect)=0</td></tr>
-<tr class="memdesc:ae998f0481b1ad2520b62f0868b17fe95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the device viewport.  <a href="#ae998f0481b1ad2520b62f0868b17fe95">More...</a><br /></td></tr>
-<tr class="separator:ae998f0481b1ad2520b62f0868b17fe95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade9889680eb5c18a2036b9e8edacfb03"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ade9889680eb5c18a2036b9e8edacfb03">_setDeviceViewport</a> (cgrecti rect)=0</td></tr>
+<tr class="memdesc:ade9889680eb5c18a2036b9e8edacfb03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the device viewport.  <a href="#ade9889680eb5c18a2036b9e8edacfb03">More...</a><br /></td></tr>
+<tr class="separator:ade9889680eb5c18a2036b9e8edacfb03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5208e932cf0ffa5c4c13d216995fa3e3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a5208e932cf0ffa5c4c13d216995fa3e3">_setDeviceModelviewMatrix</a> (const gmat4 &amp;matrix)=0</td></tr>
 <tr class="memdesc:a5208e932cf0ffa5c4c13d216995fa3e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the device modelview matrix.  <a href="#a5208e932cf0ffa5c4c13d216995fa3e3">More...</a><br /></td></tr>
 <tr class="separator:a5208e932cf0ffa5c4c13d216995fa3e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -520,34 +520,34 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a30b54039d8a465d7b340dd1d6dbc4ef8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a30b54039d8a465d7b340dd1d6dbc4ef8">_setDeviceTexture</a> (<a class="el" href="classapril_1_1_texture.html">Texture</a> *texture)=0</td></tr>
 <tr class="memdesc:a30b54039d8a465d7b340dd1d6dbc4ef8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the device <a class="el" href="classapril_1_1_texture.html" title="Defines a generic texture. ">Texture</a>.  <a href="#a30b54039d8a465d7b340dd1d6dbc4ef8">More...</a><br /></td></tr>
 <tr class="separator:a30b54039d8a465d7b340dd1d6dbc4ef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3838169816fa330ed28ae4984e835518"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a3838169816fa330ed28ae4984e835518">_setDeviceTextureFilter</a> (const <a class="el" href="classapril_1_1_texture_1_1_filter.html">Texture::Filter</a> &amp;textureFilter)=0</td></tr>
+<tr class="memitem:a3838169816fa330ed28ae4984e835518"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a3838169816fa330ed28ae4984e835518">_setDeviceTextureFilter</a> (const Texture::Filter &amp;textureFilter)=0</td></tr>
 <tr class="memdesc:a3838169816fa330ed28ae4984e835518"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current <a class="el" href="classapril_1_1_texture.html" title="Defines a generic texture. ">Texture</a>'s filter.  <a href="#a3838169816fa330ed28ae4984e835518">More...</a><br /></td></tr>
 <tr class="separator:a3838169816fa330ed28ae4984e835518"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33561b54d55461d53fc419e97645e30e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a33561b54d55461d53fc419e97645e30e">_setDeviceTextureAddressMode</a> (const <a class="el" href="classapril_1_1_texture_1_1_address_mode.html">Texture::AddressMode</a> &amp;textureAddressMode)=0</td></tr>
+<tr class="memitem:a33561b54d55461d53fc419e97645e30e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a33561b54d55461d53fc419e97645e30e">_setDeviceTextureAddressMode</a> (const Texture::AddressMode &amp;textureAddressMode)=0</td></tr>
 <tr class="memdesc:a33561b54d55461d53fc419e97645e30e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current <a class="el" href="classapril_1_1_texture.html" title="Defines a generic texture. ">Texture</a>'s address mode.  <a href="#a33561b54d55461d53fc419e97645e30e">More...</a><br /></td></tr>
 <tr class="separator:a33561b54d55461d53fc419e97645e30e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e5e7645d0c9b0d2d4c9aceddbe21919"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a1e5e7645d0c9b0d2d4c9aceddbe21919">_setDeviceBlendMode</a> (const <a class="el" href="classapril_1_1_blend_mode.html">BlendMode</a> &amp;blendMode)=0</td></tr>
+<tr class="memitem:a1e5e7645d0c9b0d2d4c9aceddbe21919"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a1e5e7645d0c9b0d2d4c9aceddbe21919">_setDeviceBlendMode</a> (const <a class="el" href="class_blend_mode.html">BlendMode</a> &amp;blendMode)=0</td></tr>
 <tr class="memdesc:a1e5e7645d0c9b0d2d4c9aceddbe21919"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the device blending mode for rendering.  <a href="#a1e5e7645d0c9b0d2d4c9aceddbe21919">More...</a><br /></td></tr>
 <tr class="separator:a1e5e7645d0c9b0d2d4c9aceddbe21919"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a4c873241cc6a95d96e1f1f1c1444cf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a3a4c873241cc6a95d96e1f1f1c1444cf">_setDeviceColorMode</a> (const <a class="el" href="classapril_1_1_color_mode.html">ColorMode</a> &amp;colorMode, float colorModeFactor, bool useTexture, bool useColor, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;systemColor)=0</td></tr>
+<tr class="memitem:a3a4c873241cc6a95d96e1f1f1c1444cf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a3a4c873241cc6a95d96e1f1f1c1444cf">_setDeviceColorMode</a> (const <a class="el" href="class_color_mode.html">ColorMode</a> &amp;colorMode, float colorModeFactor, bool useTexture, bool useColor, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;systemColor)=0</td></tr>
 <tr class="memdesc:a3a4c873241cc6a95d96e1f1f1c1444cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the device color mode for rendering.  <a href="#a3a4c873241cc6a95d96e1f1f1c1444cf">More...</a><br /></td></tr>
 <tr class="separator:a3a4c873241cc6a95d96e1f1f1c1444cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee7fbec49099522306d05afd008d87b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#aee7fbec49099522306d05afd008d87b5">_renderInternal</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_plain_vertex.html">PlainVertex</a> *vertices, int count)</td></tr>
+<tr class="memitem:aee7fbec49099522306d05afd008d87b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#aee7fbec49099522306d05afd008d87b5">_renderInternal</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_plain_vertex.html">PlainVertex</a> *vertices, int count)</td></tr>
 <tr class="memdesc:aee7fbec49099522306d05afd008d87b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders an array of vertices to the backbuffer.  <a href="#aee7fbec49099522306d05afd008d87b5">More...</a><br /></td></tr>
 <tr class="separator:aee7fbec49099522306d05afd008d87b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9c6df42e1c1714418f0eb6331a1233ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a9c6df42e1c1714418f0eb6331a1233ff">_renderInternal</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_plain_vertex.html">PlainVertex</a> *vertices, int count, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
+<tr class="memitem:a9c6df42e1c1714418f0eb6331a1233ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a9c6df42e1c1714418f0eb6331a1233ff">_renderInternal</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_plain_vertex.html">PlainVertex</a> *vertices, int count, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
 <tr class="memdesc:a9c6df42e1c1714418f0eb6331a1233ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders an array of vertices to the backbuffer.  <a href="#a9c6df42e1c1714418f0eb6331a1233ff">More...</a><br /></td></tr>
 <tr class="separator:a9c6df42e1c1714418f0eb6331a1233ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea39fa7f009d62f206ba5323168b13d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#aea39fa7f009d62f206ba5323168b13d5">_renderInternal</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_textured_vertex.html">TexturedVertex</a> *vertices, int count)</td></tr>
+<tr class="memitem:aea39fa7f009d62f206ba5323168b13d5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#aea39fa7f009d62f206ba5323168b13d5">_renderInternal</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_textured_vertex.html">TexturedVertex</a> *vertices, int count)</td></tr>
 <tr class="memdesc:aea39fa7f009d62f206ba5323168b13d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders an array of vertices to the backbuffer.  <a href="#aea39fa7f009d62f206ba5323168b13d5">More...</a><br /></td></tr>
 <tr class="separator:aea39fa7f009d62f206ba5323168b13d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c12a0132c2dd48cb5e3dd34366f4650"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a2c12a0132c2dd48cb5e3dd34366f4650">_renderInternal</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_textured_vertex.html">TexturedVertex</a> *vertices, int count, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
+<tr class="memitem:a2c12a0132c2dd48cb5e3dd34366f4650"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a2c12a0132c2dd48cb5e3dd34366f4650">_renderInternal</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_textured_vertex.html">TexturedVertex</a> *vertices, int count, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
 <tr class="memdesc:a2c12a0132c2dd48cb5e3dd34366f4650"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders an array of vertices to the backbuffer.  <a href="#a2c12a0132c2dd48cb5e3dd34366f4650">More...</a><br /></td></tr>
 <tr class="separator:a2c12a0132c2dd48cb5e3dd34366f4650"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a2a524bfc81b10cc227674edec96e55"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a8a2a524bfc81b10cc227674edec96e55">_renderInternal</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_colored_vertex.html">ColoredVertex</a> *vertices, int count)</td></tr>
+<tr class="memitem:a8a2a524bfc81b10cc227674edec96e55"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a8a2a524bfc81b10cc227674edec96e55">_renderInternal</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_colored_vertex.html">ColoredVertex</a> *vertices, int count)</td></tr>
 <tr class="memdesc:a8a2a524bfc81b10cc227674edec96e55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders an array of vertices to the backbuffer.  <a href="#a8a2a524bfc81b10cc227674edec96e55">More...</a><br /></td></tr>
 <tr class="separator:a8a2a524bfc81b10cc227674edec96e55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acec364e42e7e769ae1ce7440a59a7158"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#acec364e42e7e769ae1ce7440a59a7158">_renderInternal</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_colored_textured_vertex.html">ColoredTexturedVertex</a> *vertices, int count)</td></tr>
+<tr class="memitem:acec364e42e7e769ae1ce7440a59a7158"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#acec364e42e7e769ae1ce7440a59a7158">_renderInternal</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_colored_textured_vertex.html">ColoredTexturedVertex</a> *vertices, int count)</td></tr>
 <tr class="memdesc:acec364e42e7e769ae1ce7440a59a7158"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders an array of vertices to the backbuffer.  <a href="#acec364e42e7e769ae1ce7440a59a7158">More...</a><br /></td></tr>
 <tr class="separator:acec364e42e7e769ae1ce7440a59a7158"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a033ac00f667d2abca9e2fdf38ba40b6e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a033ac00f667d2abca9e2fdf38ba40b6e">_drawRectInternal</a> (cgrectf rect, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
@@ -562,7 +562,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:ab5468bd1a1d01768672531b29785d839"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ab5468bd1a1d01768672531b29785d839">_drawTexturedRectInternal</a> (cgrectf rect, cgrectf src, const <a class="el" href="classapril_1_1_color.html">Color</a> &amp;color)</td></tr>
 <tr class="memdesc:ab5468bd1a1d01768672531b29785d839"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders a textured rectangle.  <a href="#ab5468bd1a1d01768672531b29785d839">More...</a><br /></td></tr>
 <tr class="separator:ab5468bd1a1d01768672531b29785d839"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4d1436cc053a605f7c4a6352106e2ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#aa4d1436cc053a605f7c4a6352106e2ef">_increaseStats</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, int count)</td></tr>
+<tr class="memitem:aa4d1436cc053a605f7c4a6352106e2ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#aa4d1436cc053a605f7c4a6352106e2ef">_increaseStats</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, int count)</td></tr>
 <tr class="memdesc:aa4d1436cc053a605f7c4a6352106e2ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increases all relevant rendering stats.  <a href="#aa4d1436cc053a605f7c4a6352106e2ef">More...</a><br /></td></tr>
 <tr class="separator:aa4d1436cc053a605f7c4a6352106e2ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6def773c4e1b144475a540a23dc1a4f9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a6def773c4e1b144475a540a23dc1a4f9">_deviceClear</a> (bool depth)=0</td></tr>
@@ -575,16 +575,16 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a673e52e7ebfc52e0d7dcbac09936676a">_deviceClearDepth</a> ()=0</td></tr>
 <tr class="memdesc:a673e52e7ebfc52e0d7dcbac09936676a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the device depth-buffer. <br /></td></tr>
 <tr class="separator:a673e52e7ebfc52e0d7dcbac09936676a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4ed3da25187cadd1de44d15d58fd2a5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ae4ed3da25187cadd1de44d15d58fd2a5">_deviceRender</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_plain_vertex.html">PlainVertex</a> *vertices, int count)=0</td></tr>
+<tr class="memitem:ae4ed3da25187cadd1de44d15d58fd2a5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ae4ed3da25187cadd1de44d15d58fd2a5">_deviceRender</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_plain_vertex.html">PlainVertex</a> *vertices, int count)=0</td></tr>
 <tr class="memdesc:ae4ed3da25187cadd1de44d15d58fd2a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the final renders call for a vertex array.  <a href="#ae4ed3da25187cadd1de44d15d58fd2a5">More...</a><br /></td></tr>
 <tr class="separator:ae4ed3da25187cadd1de44d15d58fd2a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f8284c351152d3c8e93e03acd91b30d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a2f8284c351152d3c8e93e03acd91b30d">_deviceRender</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_textured_vertex.html">TexturedVertex</a> *vertices, int count)=0</td></tr>
+<tr class="memitem:a2f8284c351152d3c8e93e03acd91b30d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a2f8284c351152d3c8e93e03acd91b30d">_deviceRender</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_textured_vertex.html">TexturedVertex</a> *vertices, int count)=0</td></tr>
 <tr class="memdesc:a2f8284c351152d3c8e93e03acd91b30d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the final renders call for a vertex array.  <a href="#a2f8284c351152d3c8e93e03acd91b30d">More...</a><br /></td></tr>
 <tr class="separator:a2f8284c351152d3c8e93e03acd91b30d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc8c9a4f56a7aa03b7a480acb2f3ca3d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#abc8c9a4f56a7aa03b7a480acb2f3ca3d">_deviceRender</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_colored_vertex.html">ColoredVertex</a> *vertices, int count)=0</td></tr>
+<tr class="memitem:abc8c9a4f56a7aa03b7a480acb2f3ca3d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#abc8c9a4f56a7aa03b7a480acb2f3ca3d">_deviceRender</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_colored_vertex.html">ColoredVertex</a> *vertices, int count)=0</td></tr>
 <tr class="memdesc:abc8c9a4f56a7aa03b7a480acb2f3ca3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the final renders call for a vertex array.  <a href="#abc8c9a4f56a7aa03b7a480acb2f3ca3d">More...</a><br /></td></tr>
 <tr class="separator:abc8c9a4f56a7aa03b7a480acb2f3ca3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8be1ab90980e8b52c62b2bcc678c9463"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a8be1ab90980e8b52c62b2bcc678c9463">_deviceRender</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_colored_textured_vertex.html">ColoredTexturedVertex</a> *vertices, int count)=0</td></tr>
+<tr class="memitem:a8be1ab90980e8b52c62b2bcc678c9463"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a8be1ab90980e8b52c62b2bcc678c9463">_deviceRender</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, const <a class="el" href="classapril_1_1_colored_textured_vertex.html">ColoredTexturedVertex</a> *vertices, int count)=0</td></tr>
 <tr class="memdesc:a8be1ab90980e8b52c62b2bcc678c9463"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the final renders call for a vertex array.  <a href="#a8be1ab90980e8b52c62b2bcc678c9463">More...</a><br /></td></tr>
 <tr class="separator:a8be1ab90980e8b52c62b2bcc678c9463"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e57967205e0d7fd7f6e8c386732ab81"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a9e57967205e0d7fd7f6e8c386732ab81">_devicePresentFrame</a> (bool systemEnabled)</td></tr>
@@ -596,13 +596,16 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:ab1e7808423ad233ea4681796cd527a33"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ab1e7808423ad233ea4681796cd527a33">_deviceCopyRenderTargetData</a> (<a class="el" href="classapril_1_1_texture.html">Texture</a> *source, <a class="el" href="classapril_1_1_texture.html">Texture</a> *destination)</td></tr>
 <tr class="memdesc:ab1e7808423ad233ea4681796cd527a33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies RenderTarget data from one texture to another.  <a href="#ab1e7808423ad233ea4681796cd527a33">More...</a><br /></td></tr>
 <tr class="separator:ab1e7808423ad233ea4681796cd527a33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dbcbab571e1a8b3f690e8dd493e79aa"><td class="memItemLeft" align="right" valign="top"><a id="a1dbcbab571e1a8b3f690e8dd493e79aa"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a1dbcbab571e1a8b3f690e8dd493e79aa">_updateIntermediateRenderTexture</a> ()</td></tr>
-<tr class="memdesc:a1dbcbab571e1a8b3f690e8dd493e79aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the intermediate render texture. <br /></td></tr>
-<tr class="separator:a1dbcbab571e1a8b3f690e8dd493e79aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33bb778367695dffe7ff610d72dee467"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a33bb778367695dffe7ff610d72dee467">_tryCreateIntermediateRenderTexture</a> (int width, int height)</td></tr>
-<tr class="memdesc:a33bb778367695dffe7ff610d72dee467"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the intermediate render texture.  <a href="#a33bb778367695dffe7ff610d72dee467">More...</a><br /></td></tr>
-<tr class="separator:a33bb778367695dffe7ff610d72dee467"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f10f50f20fe91b88f55c37650e95103"><td class="memItemLeft" align="right" valign="top"><a id="a2f10f50f20fe91b88f55c37650e95103"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a2f10f50f20fe91b88f55c37650e95103">_updateIntermediateRenderTextures</a> ()</td></tr>
+<tr class="memdesc:a2f10f50f20fe91b88f55c37650e95103"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the intermediate render textures. <br /></td></tr>
+<tr class="separator:a2f10f50f20fe91b88f55c37650e95103"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdbbc5a4d918353cab5a116dde8ebfce"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#acdbbc5a4d918353cab5a116dde8ebfce">_tryCreateIntermediateRenderTextures</a> (int width, int height)</td></tr>
+<tr class="memdesc:acdbbc5a4d918353cab5a116dde8ebfce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the intermediate render textures.  <a href="#acdbbc5a4d918353cab5a116dde8ebfce">More...</a><br /></td></tr>
+<tr class="separator:acdbbc5a4d918353cab5a116dde8ebfce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ed910bbf076a3db4c0c90c85eeac4ae"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a3ed910bbf076a3db4c0c90c85eeac4ae">_tryDestroyIntermediateRenderTextures</a> ()</td></tr>
+<tr class="memdesc:a3ed910bbf076a3db4c0c90c85eeac4ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroys the intermediate render texture.  <a href="#a3ed910bbf076a3db4c0c90c85eeac4ae">More...</a><br /></td></tr>
+<tr class="separator:a3ed910bbf076a3db4c0c90c85eeac4ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaaa2d91efe3faf8908eb4dd868c0d151"><td class="memItemLeft" align="right" valign="top"><a id="aaaa2d91efe3faf8908eb4dd868c0d151"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#aaaa2d91efe3faf8908eb4dd868c0d151">_presentIntermediateRenderTexture</a> ()</td></tr>
 <tr class="memdesc:aaaa2d91efe3faf8908eb4dd868c0d151"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders the actual intermediate render texture. <br /></td></tr>
@@ -610,11 +613,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a27639f378164ecdfec6d3789a16bde64"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a27639f378164ecdfec6d3789a16bde64">_deviceUnloadTextures</a> ()</td></tr>
 <tr class="memdesc:a27639f378164ecdfec6d3789a16bde64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unloads all textures. Used internally only.  <a href="#a27639f378164ecdfec6d3789a16bde64">More...</a><br /></td></tr>
 <tr class="separator:a27639f378164ecdfec6d3789a16bde64"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a010ad3c46b9afd8c4efb5f98ba008d"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a3a010ad3c46b9afd8c4efb5f98ba008d">_numPrimitives</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, int count) const</td></tr>
+<tr class="memitem:a3a010ad3c46b9afd8c4efb5f98ba008d"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a3a010ad3c46b9afd8c4efb5f98ba008d">_numPrimitives</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, int count) const</td></tr>
 <tr class="memdesc:a3a010ad3c46b9afd8c4efb5f98ba008d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the number of primitives based on the number of vertices.  <a href="#a3a010ad3c46b9afd8c4efb5f98ba008d">More...</a><br /></td></tr>
 <tr class="separator:a3a010ad3c46b9afd8c4efb5f98ba008d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0eeddb8795152fbe6f9066d26af11bf"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#aa0eeddb8795152fbe6f9066d26af11bf">_limitVertices</a> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;renderOperation, int count) const</td></tr>
-<tr class="memdesc:aa0eeddb8795152fbe6f9066d26af11bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Corrects the number of vertices allowed to be used in the given <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> to avoid glitches and crashes.  <a href="#aa0eeddb8795152fbe6f9066d26af11bf">More...</a><br /></td></tr>
+<tr class="memitem:aa0eeddb8795152fbe6f9066d26af11bf"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#aa0eeddb8795152fbe6f9066d26af11bf">_limitVertices</a> (const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;renderOperation, int count) const</td></tr>
+<tr class="memdesc:aa0eeddb8795152fbe6f9066d26af11bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Corrects the number of vertices allowed to be used in the given <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> to avoid glitches and crashes.  <a href="#aa0eeddb8795152fbe6f9066d26af11bf">More...</a><br /></td></tr>
 <tr class="separator:aa0eeddb8795152fbe6f9066d26af11bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
@@ -636,8 +639,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:a331eb7b81570da0624e5e83c5da2aaee"><td class="mdescLeft">&#160;</td><td class="mdescRight">The capabilities of the <a class="el" href="classapril_1_1_render_system.html" title="Defines a generic render system. ">RenderSystem</a>. <br /></td></tr>
 <tr class="separator:a331eb7b81570da0624e5e83c5da2aaee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18f7e7e8f1ac5d159846bb249a4f85fc"><td class="memItemLeft" align="right" valign="top"><a id="a18f7e7e8f1ac5d159846bb249a4f85fc"></a>
-<a class="el" href="classapril_1_1_render_system_1_1_render_mode.html">RenderMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a18f7e7e8f1ac5d159846bb249a4f85fc">renderMode</a></td></tr>
-<tr class="memdesc:a18f7e7e8f1ac5d159846bb249a4f85fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current <a class="el" href="classapril_1_1_render_system_1_1_render_mode.html" title="Defines possible rendering methods. ">RenderMode</a>. <br /></td></tr>
+<a class="el" href="class_render_mode.html">RenderMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a18f7e7e8f1ac5d159846bb249a4f85fc">renderMode</a></td></tr>
+<tr class="memdesc:a18f7e7e8f1ac5d159846bb249a4f85fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current <a class="el" href="class_render_mode.html" title="Defines possible rendering methods. ">RenderMode</a>. <br /></td></tr>
 <tr class="separator:a18f7e7e8f1ac5d159846bb249a4f85fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e74812eac7596b5ef832b115ab4aca2"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a7e74812eac7596b5ef832b115ab4aca2">pixelOffset</a></td></tr>
 <tr class="memdesc:a7e74812eac7596b5ef832b115ab4aca2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The pixel offset when rendering.  <a href="#a7e74812eac7596b5ef832b115ab4aca2">More...</a><br /></td></tr>
@@ -690,18 +693,38 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a59c010b62544287c643bca643b8f4042">frameDuplicates</a></td></tr>
 <tr class="memdesc:a59c010b62544287c643bca643b8f4042"><td class="mdescLeft">&#160;</td><td class="mdescRight">How many times a frame should be duplicated during rendering. <br /></td></tr>
 <tr class="separator:a59c010b62544287c643bca643b8f4042"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6224aa3ea0b62f8549c16e5c145a127f"><td class="memItemLeft" align="right" valign="top"><a id="a6224aa3ea0b62f8549c16e5c145a127f"></a>
-<a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a6224aa3ea0b62f8549c16e5c145a127f">_intermediateRenderTexture</a></td></tr>
-<tr class="memdesc:a6224aa3ea0b62f8549c16e5c145a127f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Special texture used as utility for rendering. <br /></td></tr>
-<tr class="separator:a6224aa3ea0b62f8549c16e5c145a127f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08327c0d6f2aa705f8cc5f32098e41c5"><td class="memItemLeft" align="right" valign="top"><a id="a08327c0d6f2aa705f8cc5f32098e41c5"></a>
+<a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a08327c0d6f2aa705f8cc5f32098e41c5">_currentIntermediateRenderTexture</a></td></tr>
+<tr class="memdesc:a08327c0d6f2aa705f8cc5f32098e41c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current special texture used as utility for rendering. <br /></td></tr>
+<tr class="separator:a08327c0d6f2aa705f8cc5f32098e41c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bb081948be69c55f8a463d26cd5eaa2"><td class="memItemLeft" align="right" valign="top"><a id="a0bb081948be69c55f8a463d26cd5eaa2"></a>
+<a class="el" href="classapril_1_1_texture.html">Texture</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a0bb081948be69c55f8a463d26cd5eaa2">_lastIntermediateRenderTexture</a></td></tr>
+<tr class="memdesc:a0bb081948be69c55f8a463d26cd5eaa2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last special texture used as utility for rendering. <br /></td></tr>
+<tr class="separator:a0bb081948be69c55f8a463d26cd5eaa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a761969e1c6333ef01c3f11a279217584"><td class="memItemLeft" align="right" valign="top"><a id="a761969e1c6333ef01c3f11a279217584"></a>
+harray&lt; <a class="el" href="classapril_1_1_texture.html">Texture</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a761969e1c6333ef01c3f11a279217584">_intermediateRenderTextures</a></td></tr>
+<tr class="memdesc:a761969e1c6333ef01c3f11a279217584"><td class="mdescLeft">&#160;</td><td class="mdescRight">Special textures used as utility for rendering. <br /></td></tr>
+<tr class="separator:a761969e1c6333ef01c3f11a279217584"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92d0bd80bdc376b60d47a74f97293a8f"><td class="memItemLeft" align="right" valign="top"><a id="a92d0bd80bdc376b60d47a74f97293a8f"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a92d0bd80bdc376b60d47a74f97293a8f">_intermediateRenderTextureCount</a></td></tr>
+<tr class="memdesc:a92d0bd80bdc376b60d47a74f97293a8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of current special textures used as utility for rendering. <br /></td></tr>
+<tr class="separator:a92d0bd80bdc376b60d47a74f97293a8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f53e4cceb6e73a16819569093c03159"><td class="memItemLeft" align="right" valign="top"><a id="a7f53e4cceb6e73a16819569093c03159"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a7f53e4cceb6e73a16819569093c03159">_intermediateRenderTextureIndex</a></td></tr>
+<tr class="memdesc:a7f53e4cceb6e73a16819569093c03159"><td class="mdescLeft">&#160;</td><td class="mdescRight">Index of current special textures used as utility for rendering. <br /></td></tr>
+<tr class="separator:a7f53e4cceb6e73a16819569093c03159"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6df4ab376ba81b76b19e2ace09dc4a1a"><td class="memItemLeft" align="right" valign="top"><a id="a6df4ab376ba81b76b19e2ace09dc4a1a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a6df4ab376ba81b76b19e2ace09dc4a1a">_updateLastIntermediateRenderTexture</a></td></tr>
+<tr class="memdesc:a6df4ab376ba81b76b19e2ace09dc4a1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether an update of the last intermediate render textures should occur after rendering. <br /></td></tr>
+<tr class="separator:a6df4ab376ba81b76b19e2ace09dc4a1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43e5a562c528f0b864e22b7d78091e33"><td class="memItemLeft" align="right" valign="top"><a id="a43e5a562c528f0b864e22b7d78091e33"></a>
 <a class="el" href="classapril_1_1_render_state.html">RenderState</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#a43e5a562c528f0b864e22b7d78091e33">_intermediateState</a></td></tr>
 <tr class="memdesc:a43e5a562c528f0b864e22b7d78091e33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fixed <a class="el" href="classapril_1_1_render_state.html" title="Defines a rendersystem state. ">RenderState</a> for rendering the intermediate render texture. <br /></td></tr>
 <tr class="separator:a43e5a562c528f0b864e22b7d78091e33"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6f1d5d72f8b573e38741cb92943d39b"><td class="memItemLeft" align="right" valign="top"><a id="ac6f1d5d72f8b573e38741cb92943d39b"></a>
-<a class="el" href="classapril_1_1_textured_vertex.html">april::TexturedVertex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ac6f1d5d72f8b573e38741cb92943d39b">_intermediateRenderVertices</a> [6]</td></tr>
-<tr class="memdesc:ac6f1d5d72f8b573e38741cb92943d39b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fixed vertices for rendering the intermediate render texture. <br /></td></tr>
-<tr class="separator:ac6f1d5d72f8b573e38741cb92943d39b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbefea718e209e559f643fcb71036e3a"><td class="memItemLeft" align="right" valign="top"><a id="abbefea718e209e559f643fcb71036e3a"></a>
+<a class="el" href="classapril_1_1_textured_vertex.html">april::TexturedVertex</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#abbefea718e209e559f643fcb71036e3a">_intermediateRenderVertices</a> [APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT]</td></tr>
+<tr class="memdesc:abbefea718e209e559f643fcb71036e3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fixed vertices for rendering the intermediate render texture. <br /></td></tr>
+<tr class="separator:abbefea718e209e559f643fcb71036e3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab1eec2d11c5ba510f4fdee87fff8bca6"><td class="memItemLeft" align="right" valign="top"><a id="ab1eec2d11c5ba510f4fdee87fff8bca6"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system.html#ab1eec2d11c5ba510f4fdee87fff8bca6">statCurrentFrameRenderCalls</a></td></tr>
 <tr class="memdesc:ab1eec2d11c5ba510f4fdee87fff8bca6"><td class="mdescLeft">&#160;</td><td class="mdescRight">How many times a render call was called during this frame. <br /></td></tr>
@@ -939,20 +962,20 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_texture_1_1_type.html">Texture::Type</a>&#160;</td>
+          <td class="paramtype">Texture::Type&#160;</td>
           <td class="paramname"><em>type</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_texture_1_1_load_mode.html">Texture::LoadMode</a>&#160;</td>
+          <td class="paramtype">Texture::LoadMode&#160;</td>
           <td class="paramname"><em>loadMode</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a>&#160;</td>
-          <td class="paramname"><em>format</em> = <code><a class="el" href="classapril_1_1_image_1_1_format.html#af72c136986f0d81a55ee4724e3421d2b">Image::Format::Invalid</a></code>&#160;</td>
+          <td class="paramtype">Image::Format&#160;</td>
+          <td class="paramname"><em>format</em> = <code>Image::Format::Invalid</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1399,7 +1422,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">virtual void april::RenderSystem::_deviceRender </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -1430,7 +1453,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Executes the final renders call for a vertex array. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
   </table>
@@ -1451,7 +1474,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">virtual void april::RenderSystem::_deviceRender </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -1482,7 +1505,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Executes the final renders call for a vertex array. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
   </table>
@@ -1503,7 +1526,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">virtual void april::RenderSystem::_deviceRender </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -1534,7 +1557,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Executes the final renders call for a vertex array. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
   </table>
@@ -1555,7 +1578,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">virtual void april::RenderSystem::_deviceRender </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -1586,7 +1609,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Executes the final renders call for a vertex array. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
   </table>
@@ -1869,7 +1892,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::_increaseStats </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -1894,7 +1917,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Increases all relevant rendering stats. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices will be rendered. </td></tr>
   </table>
   </dd>
@@ -1915,7 +1938,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">unsigned int april::RenderSystem::_limitVertices </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -1937,15 +1960,15 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Corrects the number of vertices allowed to be used in the given <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> to avoid glitches and crashes. </p>
+<p>Corrects the number of vertices allowed to be used in the given <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> to avoid glitches and crashes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that is used for rendering </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that is used for rendering </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices are expected to be rendered. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>How many vertices are allowed to be used in the given <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>How many vertices are allowed to be used in the given <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a>. </dd></dl>
 
 </div>
 </div>
@@ -1961,7 +1984,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">unsigned int april::RenderSystem::_numPrimitives </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -1986,7 +2009,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Calculates the number of primitives based on the number of vertices. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that is used for rendering </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that is used for rendering </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices are expected to be rendered. </td></tr>
   </table>
   </dd>
@@ -2041,7 +2064,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::_renderInternal </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -2072,7 +2095,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Renders an array of vertices to the backbuffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
   </table>
@@ -2095,7 +2118,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::_renderInternal </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -2132,7 +2155,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Renders an array of vertices to the backbuffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">color</td><td><a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> to apply globally on all vertices. </td></tr>
@@ -2156,7 +2179,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::_renderInternal </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -2187,7 +2210,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Renders an array of vertices to the backbuffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
   </table>
@@ -2209,7 +2232,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::_renderInternal </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -2246,7 +2269,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Renders an array of vertices to the backbuffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">color</td><td><a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> to apply globally on all vertices. </td></tr>
@@ -2269,7 +2292,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::_renderInternal </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -2300,7 +2323,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Renders an array of vertices to the backbuffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
   </table>
@@ -2323,7 +2346,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::_renderInternal </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -2354,7 +2377,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Renders an array of vertices to the backbuffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
   </table>
@@ -2376,7 +2399,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">virtual void april::RenderSystem::_setDeviceBlendMode </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_blend_mode.html">BlendMode</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_blend_mode.html">BlendMode</a> &amp;&#160;</td>
           <td class="paramname"><em>blendMode</em></td><td>)</td>
           <td></td>
         </tr>
@@ -2410,7 +2433,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">virtual void april::RenderSystem::_setDeviceColorMode </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_color_mode.html">ColorMode</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_color_mode.html">ColorMode</a> &amp;&#160;</td>
           <td class="paramname"><em>colorMode</em>, </td>
         </tr>
         <tr>
@@ -2668,7 +2691,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">virtual void april::RenderSystem::_setDeviceTextureAddressMode </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_texture_1_1_address_mode.html">Texture::AddressMode</a> &amp;&#160;</td>
+          <td class="paramtype">const Texture::AddressMode &amp;&#160;</td>
           <td class="paramname"><em>textureAddressMode</em></td><td>)</td>
           <td></td>
         </tr>
@@ -2702,7 +2725,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">virtual void april::RenderSystem::_setDeviceTextureFilter </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_texture_1_1_filter.html">Texture::Filter</a> &amp;&#160;</td>
+          <td class="paramtype">const Texture::Filter &amp;&#160;</td>
           <td class="paramname"><em>textureFilter</em></td><td>)</td>
           <td></td>
         </tr>
@@ -2724,8 +2747,8 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 
 </div>
 </div>
-<a id="ae998f0481b1ad2520b62f0868b17fe95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae998f0481b1ad2520b62f0868b17fe95">&#9670;&nbsp;</a></span>_setDeviceViewport()</h2>
+<a id="ade9889680eb5c18a2036b9e8edacfb03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade9889680eb5c18a2036b9e8edacfb03">&#9670;&nbsp;</a></span>_setDeviceViewport()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2736,7 +2759,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">virtual void april::RenderSystem::_setDeviceViewport </td>
           <td>(</td>
-          <td class="paramtype">cgrectf&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>rect</em></td><td>)</td>
           <td></td>
         </tr>
@@ -2826,8 +2849,8 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 
 </div>
 </div>
-<a id="a33bb778367695dffe7ff610d72dee467"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a33bb778367695dffe7ff610d72dee467">&#9670;&nbsp;</a></span>_tryCreateIntermediateRenderTexture()</h2>
+<a id="acdbbc5a4d918353cab5a116dde8ebfce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acdbbc5a4d918353cab5a116dde8ebfce">&#9670;&nbsp;</a></span>_tryCreateIntermediateRenderTextures()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2836,7 +2859,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool april::RenderSystem::_tryCreateIntermediateRenderTexture </td>
+          <td class="memname">bool april::RenderSystem::_tryCreateIntermediateRenderTextures </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>width</em>, </td>
@@ -2860,7 +2883,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Creates the intermediate render texture. </p>
+<p>Creates the intermediate render textures. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">width</td><td>The texture width. </td></tr>
@@ -2868,6 +2891,34 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>True if successful. </dd></dl>
+
+</div>
+</div>
+<a id="a3ed910bbf076a3db4c0c90c85eeac4ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ed910bbf076a3db4c0c90c85eeac4ae">&#9670;&nbsp;</a></span>_tryDestroyIntermediateRenderTextures()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool april::RenderSystem::_tryDestroyIntermediateRenderTextures </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Destroys the intermediate render texture. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if successful. </dd></dl>
 
 </div>
@@ -3168,7 +3219,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a>&#160;</td>
+          <td class="paramtype">Image::Format&#160;</td>
           <td class="paramname"><em>format</em>&#160;</td>
         </tr>
         <tr>
@@ -3221,7 +3272,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a>&#160;</td>
+          <td class="paramtype">Image::Format&#160;</td>
           <td class="paramname"><em>format</em>&#160;</td>
         </tr>
         <tr>
@@ -3262,14 +3313,14 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_texture_1_1_type.html">Texture::Type</a>&#160;</td>
-          <td class="paramname"><em>type</em> = <code><a class="el" href="classapril_1_1_texture_1_1_type.html#abb180c632de44c88f6ff848d4b1b811e">Texture::Type::Immutable</a></code>, </td>
+          <td class="paramtype">Texture::Type&#160;</td>
+          <td class="paramname"><em>type</em> = <code>Texture::Type::Immutable</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_texture_1_1_load_mode.html">Texture::LoadMode</a>&#160;</td>
-          <td class="paramname"><em>loadMode</em> = <code><a class="el" href="classapril_1_1_texture_1_1_load_mode.html#a4d4eb6dddba80539338cccb353404b2b">Texture::LoadMode::Async</a></code>&#160;</td>
+          <td class="paramtype">Texture::LoadMode&#160;</td>
+          <td class="paramname"><em>loadMode</em> = <code>Texture::LoadMode::Async</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3307,20 +3358,20 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a>&#160;</td>
+          <td class="paramtype">Image::Format&#160;</td>
           <td class="paramname"><em>format</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_texture_1_1_type.html">Texture::Type</a>&#160;</td>
-          <td class="paramname"><em>type</em> = <code><a class="el" href="classapril_1_1_texture_1_1_type.html#aae10f154aa1d310185bf13f54886256f">Texture::Type::Managed</a></code>, </td>
+          <td class="paramtype">Texture::Type&#160;</td>
+          <td class="paramname"><em>type</em> = <code>Texture::Type::Managed</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_texture_1_1_load_mode.html">Texture::LoadMode</a>&#160;</td>
-          <td class="paramname"><em>loadMode</em> = <code><a class="el" href="classapril_1_1_texture_1_1_load_mode.html#a4d4eb6dddba80539338cccb353404b2b">Texture::LoadMode::Async</a></code>&#160;</td>
+          <td class="paramtype">Texture::LoadMode&#160;</td>
+          <td class="paramname"><em>loadMode</em> = <code>Texture::LoadMode::Async</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3360,14 +3411,14 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_texture_1_1_type.html">Texture::Type</a>&#160;</td>
-          <td class="paramname"><em>type</em> = <code><a class="el" href="classapril_1_1_texture_1_1_type.html#abb180c632de44c88f6ff848d4b1b811e">Texture::Type::Immutable</a></code>, </td>
+          <td class="paramtype">Texture::Type&#160;</td>
+          <td class="paramname"><em>type</em> = <code>Texture::Type::Immutable</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_texture_1_1_load_mode.html">Texture::LoadMode</a>&#160;</td>
-          <td class="paramname"><em>loadMode</em> = <code><a class="el" href="classapril_1_1_texture_1_1_load_mode.html#a4d4eb6dddba80539338cccb353404b2b">Texture::LoadMode::Async</a></code>&#160;</td>
+          <td class="paramtype">Texture::LoadMode&#160;</td>
+          <td class="paramname"><em>loadMode</em> = <code>Texture::LoadMode::Async</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3405,20 +3456,20 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a>&#160;</td>
+          <td class="paramtype">Image::Format&#160;</td>
           <td class="paramname"><em>format</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_texture_1_1_type.html">Texture::Type</a>&#160;</td>
-          <td class="paramname"><em>type</em> = <code><a class="el" href="classapril_1_1_texture_1_1_type.html#aae10f154aa1d310185bf13f54886256f">Texture::Type::Managed</a></code>, </td>
+          <td class="paramtype">Texture::Type&#160;</td>
+          <td class="paramname"><em>type</em> = <code>Texture::Type::Managed</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_texture_1_1_load_mode.html">Texture::LoadMode</a>&#160;</td>
-          <td class="paramname"><em>loadMode</em> = <code><a class="el" href="classapril_1_1_texture_1_1_load_mode.html#a4d4eb6dddba80539338cccb353404b2b">Texture::LoadMode::Async</a></code>&#160;</td>
+          <td class="paramtype">Texture::LoadMode&#160;</td>
+          <td class="paramname"><em>loadMode</em> = <code>Texture::LoadMode::Async</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -3988,9 +4039,9 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> april::RenderSystem::getNativeTextureFormat </td>
+          <td class="memname">virtual Image::Format april::RenderSystem::getNativeTextureFormat </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a>&#160;</td>
+          <td class="paramtype">Image::Format&#160;</td>
           <td class="paramname"><em>format</em></td><td>)</td>
           <td> const</td>
         </tr>
@@ -4123,14 +4174,14 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 
 </div>
 </div>
-<a id="a6be94e32325cef98504cd4edd582c0e6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6be94e32325cef98504cd4edd582c0e6">&#9670;&nbsp;</a></span>getViewport()</h2>
+<a id="a9920f15dbe6336b19dd2c05540062fde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9920f15dbe6336b19dd2c05540062fde">&#9670;&nbsp;</a></span>getViewport()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">grectf april::RenderSystem::getViewport </td>
+          <td class="memname">grecti april::RenderSystem::getViewport </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -4305,7 +4356,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::render </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -4331,7 +4382,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Renders an array of vertices to the backbuffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
   </table>
@@ -4350,7 +4401,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::render </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -4382,7 +4433,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Renders an array of vertices to the backbuffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">color</td><td><a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> to apply globally on all vertices. </td></tr>
@@ -4402,7 +4453,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::render </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -4428,7 +4479,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Renders an array of vertices to the backbuffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
   </table>
@@ -4446,7 +4497,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::render </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -4478,7 +4529,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Renders an array of vertices to the backbuffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">color</td><td><a class="el" href="classapril_1_1_color.html" title="Defines a color object. ">Color</a> to apply globally on all vertices. </td></tr>
@@ -4497,7 +4548,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::render </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -4523,7 +4574,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Renders an array of vertices to the backbuffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
   </table>
@@ -4542,7 +4593,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::render </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_render_operation.html">RenderOperation</a> &amp;&#160;</td>
           <td class="paramname"><em>renderOperation</em>, </td>
         </tr>
         <tr>
@@ -4568,7 +4619,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 <p>Renders an array of vertices to the backbuffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">renderOperation</td><td>The <a class="el" href="class_render_operation.html" title="Defines possible rendering methods. ">RenderOperation</a> that should be used to render the vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">vertices</td><td>An array of vertices. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">count</td><td>How many vertices from the array should be rendered. </td></tr>
   </table>
@@ -4844,7 +4895,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::setBlendMode </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_blend_mode.html">BlendMode</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_blend_mode.html">BlendMode</a> &amp;&#160;</td>
           <td class="paramname"><em>blendMode</em></td><td>)</td>
           <td></td>
         </tr>
@@ -4870,7 +4921,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::setColorMode </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classapril_1_1_color_mode.html">ColorMode</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_color_mode.html">ColorMode</a> &amp;&#160;</td>
           <td class="paramname"><em>colorMode</em>, </td>
         </tr>
         <tr>
@@ -5309,8 +5360,8 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 
 </div>
 </div>
-<a id="af957bfa862e52cabd572c02700370696"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af957bfa862e52cabd572c02700370696">&#9670;&nbsp;</a></span>setViewport()</h2>
+<a id="a8245a0d4e9ef52621eebf2bce7b99828"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8245a0d4e9ef52621eebf2bce7b99828">&#9670;&nbsp;</a></span>setViewport()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -5318,7 +5369,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">void april::RenderSystem::setViewport </td>
           <td>(</td>
-          <td class="paramtype">cgrectf&#160;</td>
+          <td class="paramtype">cgrecti&#160;</td>
           <td class="paramname"><em>value</em></td><td>)</td>
           <td></td>
         </tr>
@@ -5367,7 +5418,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
         <tr>
           <td class="memname">virtual <a class="el" href="classapril_1_1_image.html">Image</a>* april::RenderSystem::takeScreenshot </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a>&#160;</td>
+          <td class="paramtype">Image::Format&#160;</td>
           <td class="paramname"><em>format</em></td><td>)</td>
           <td></td>
         </tr>

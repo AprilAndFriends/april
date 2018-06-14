@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Awesome Portable Rendering Interface Library: april::Texture::Lock Struct Reference</title>
+<title>C++ Geometry Types: april::Texture::Lock Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,9 +18,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Awesome Portable Rendering Interface Library
+   <div id="projectname">C++ Geometry Types
    </div>
-   <div id="projectbrief">This library provides a universal rendering API and does not require to write code that is used in only one API (e.g. OpenGL, DirectX, SDL, ...)</div>
+   <div id="projectbrief">This library provides commonly used geometry types and methods for easier and better coding.</div>
   </td>
  </tr>
  </tbody>
@@ -71,7 +71,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="stru
 <tr class="memdesc:a458bf0809705deb339cc818834040864"><td class="mdescLeft">&#160;</td><td class="mdescRight">Marks the lock as failed. <br /></td></tr>
 <tr class="separator:a458bf0809705deb339cc818834040864"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbe7c52bf67b79fcbdc335629cef68ac"><td class="memItemLeft" align="right" valign="top"><a id="afbe7c52bf67b79fcbdc335629cef68ac"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structapril_1_1_texture_1_1_lock.html#afbe7c52bf67b79fcbdc335629cef68ac">activateLock</a> (int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a86ed01215b86a907161ae6cf04713fbd">x</a>, int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a470950bc4bf7fc44d53d80052cb74606">y</a>, int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a7532110f3d8fd309b8376a7660929ed0">w</a>, int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a14c0f0445fb45c455c804f2785c8c838">h</a>, int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a73f75a53ce248e7d57e8f37e8113ce80">dx</a>, int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a0f3645ae267fd91b14d7cfbe2abe2c0b">dy</a>, unsigned char *<a class="el" href="structapril_1_1_texture_1_1_lock.html#ac14e14a4df3ca729749e47d4777d44f5">data</a>, int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a3b8e62feb196d914ffd61b098e07c18d">dataWidth</a>, int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a48a3aef2746463017051d729c5ee3771">dataHeight</a>, <a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a> <a class="el" href="structapril_1_1_texture_1_1_lock.html#a7f3b98a086b4fe6f73c46ababd6f012b">format</a>)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structapril_1_1_texture_1_1_lock.html#afbe7c52bf67b79fcbdc335629cef68ac">activateLock</a> (int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a86ed01215b86a907161ae6cf04713fbd">x</a>, int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a470950bc4bf7fc44d53d80052cb74606">y</a>, int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a7532110f3d8fd309b8376a7660929ed0">w</a>, int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a14c0f0445fb45c455c804f2785c8c838">h</a>, int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a73f75a53ce248e7d57e8f37e8113ce80">dx</a>, int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a0f3645ae267fd91b14d7cfbe2abe2c0b">dy</a>, unsigned char *<a class="el" href="structapril_1_1_texture_1_1_lock.html#ac14e14a4df3ca729749e47d4777d44f5">data</a>, int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a3b8e62feb196d914ffd61b098e07c18d">dataWidth</a>, int <a class="el" href="structapril_1_1_texture_1_1_lock.html#a48a3aef2746463017051d729c5ee3771">dataHeight</a>, Image::Format <a class="el" href="structapril_1_1_texture_1_1_lock.html#a7f3b98a086b4fe6f73c46ababd6f012b">format</a>)</td></tr>
 <tr class="memdesc:afbe7c52bf67b79fcbdc335629cef68ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Marks the lock as successful and stores the lock data. This has to be called on non-render targets. <br /></td></tr>
 <tr class="separator:afbe7c52bf67b79fcbdc335629cef68ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -117,8 +117,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struc
 <tr class="memdesc:a48a3aef2746463017051d729c5ee3771"><td class="mdescLeft">&#160;</td><td class="mdescRight">Height of the locked image data. <br /></td></tr>
 <tr class="separator:a48a3aef2746463017051d729c5ee3771"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f3b98a086b4fe6f73c46ababd6f012b"><td class="memItemLeft" align="right" valign="top"><a id="a7f3b98a086b4fe6f73c46ababd6f012b"></a>
-<a class="el" href="classapril_1_1_image_1_1_format.html">Image::Format</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structapril_1_1_texture_1_1_lock.html#a7f3b98a086b4fe6f73c46ababd6f012b">format</a></td></tr>
-<tr class="memdesc:a7f3b98a086b4fe6f73c46ababd6f012b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Format of the locked image data. <br /></td></tr>
+Image::Format&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structapril_1_1_texture_1_1_lock.html#a7f3b98a086b4fe6f73c46ababd6f012b">format</a></td></tr>
+<tr class="memdesc:a7f3b98a086b4fe6f73c46ababd6f012b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_format.html" title="Defines the pixel format of image data. ">Format</a> of the locked image data. <br /></td></tr>
 <tr class="separator:a7f3b98a086b4fe6f73c46ababd6f012b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2734bf2120260529eb3fe5a6144852b"><td class="memItemLeft" align="right" valign="top"><a id="ac2734bf2120260529eb3fe5a6144852b"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structapril_1_1_texture_1_1_lock.html#ac2734bf2120260529eb3fe5a6144852b">locked</a></td></tr>

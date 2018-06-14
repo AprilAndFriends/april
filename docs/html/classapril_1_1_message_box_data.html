@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Awesome Portable Rendering Interface Library: april::MessageBoxData Class Reference</title>
+<title>C++ Geometry Types: april::MessageBoxData Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,9 +18,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Awesome Portable Rendering Interface Library
+   <div id="projectname">C++ Geometry Types
    </div>
-   <div id="projectbrief">This library provides a universal rendering API and does not require to write code that is used in only one API (e.g. OpenGL, DirectX, SDL, ...)</div>
+   <div id="projectbrief">This library provides commonly used geometry types and methods for easier and better coding.</div>
   </td>
  </tr>
  </tbody>
@@ -58,7 +58,7 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7cfe611f23279dac76d3fecd8107b3ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_message_box_data.html#a7cfe611f23279dac76d3fecd8107b3ef">MessageBoxData</a> (chstr <a class="el" href="classapril_1_1_message_box_data.html#a2a3382069525cc044d4130e9c2e18091">title</a>, chstr <a class="el" href="classapril_1_1_message_box_data.html#a611f856a12ffc0da3f7e72b79ef77cc8">text</a>, <a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a> <a class="el" href="classapril_1_1_message_box_data.html#aa8d89ff6c57bf9b65c2e65159e88f017">buttons</a>, <a class="el" href="classapril_1_1_message_box_style.html">MessageBoxStyle</a> <a class="el" href="classapril_1_1_message_box_data.html#a4fdf472e70c6776c414454a09ed3bd9c">style</a>, hmap&lt; <a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a>, hstr &gt; <a class="el" href="classapril_1_1_message_box_data.html#a2bd4e17dbb4672ede71e9d61d00d1518">customButtonTitles</a>, void(*<a class="el" href="classapril_1_1_message_box_data.html#a1c975fc29e7a62a6e19e4da14127aaee">callback</a>)(const <a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a> &amp;), bool <a class="el" href="classapril_1_1_message_box_data.html#ae7011b7e8b9ca713e8ac31b21410fba5">modal</a>, bool <a class="el" href="classapril_1_1_message_box_data.html#aa67786ea741263edbb88cdbb09fbceea">applicationFinishAfterDisplay</a>)</td></tr>
+<tr class="memitem:a7cfe611f23279dac76d3fecd8107b3ef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_message_box_data.html#a7cfe611f23279dac76d3fecd8107b3ef">MessageBoxData</a> (chstr <a class="el" href="classapril_1_1_message_box_data.html#a2a3382069525cc044d4130e9c2e18091">title</a>, chstr <a class="el" href="classapril_1_1_message_box_data.html#a611f856a12ffc0da3f7e72b79ef77cc8">text</a>, <a class="el" href="class_message_box_button.html">MessageBoxButton</a> <a class="el" href="classapril_1_1_message_box_data.html#aa8d89ff6c57bf9b65c2e65159e88f017">buttons</a>, <a class="el" href="class_message_box_style.html">MessageBoxStyle</a> <a class="el" href="classapril_1_1_message_box_data.html#a4fdf472e70c6776c414454a09ed3bd9c">style</a>, hmap&lt; <a class="el" href="class_message_box_button.html">MessageBoxButton</a>, hstr &gt; <a class="el" href="classapril_1_1_message_box_data.html#a2bd4e17dbb4672ede71e9d61d00d1518">customButtonTitles</a>, void(*<a class="el" href="classapril_1_1_message_box_data.html#a1c975fc29e7a62a6e19e4da14127aaee">callback</a>)(const <a class="el" href="class_message_box_button.html">MessageBoxButton</a> &amp;), bool <a class="el" href="classapril_1_1_message_box_data.html#ae7011b7e8b9ca713e8ac31b21410fba5">modal</a>, bool <a class="el" href="classapril_1_1_message_box_data.html#aa67786ea741263edbb88cdbb09fbceea">applicationFinishAfterDisplay</a>)</td></tr>
 <tr class="separator:a7cfe611f23279dac76d3fecd8107b3ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -72,19 +72,19 @@ hstr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memdesc:a611f856a12ffc0da3f7e72b79ef77cc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">text Text displayed within the message box. <br /></td></tr>
 <tr class="separator:a611f856a12ffc0da3f7e72b79ef77cc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8d89ff6c57bf9b65c2e65159e88f017"><td class="memItemLeft" align="right" valign="top"><a id="aa8d89ff6c57bf9b65c2e65159e88f017"></a>
-<a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_message_box_data.html#aa8d89ff6c57bf9b65c2e65159e88f017">buttons</a></td></tr>
+<a class="el" href="class_message_box_button.html">MessageBoxButton</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_message_box_data.html#aa8d89ff6c57bf9b65c2e65159e88f017">buttons</a></td></tr>
 <tr class="memdesc:aa8d89ff6c57bf9b65c2e65159e88f017"><td class="mdescLeft">&#160;</td><td class="mdescRight">buttons Buttons which should be displayed. <br /></td></tr>
 <tr class="separator:aa8d89ff6c57bf9b65c2e65159e88f017"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fdf472e70c6776c414454a09ed3bd9c"><td class="memItemLeft" align="right" valign="top"><a id="a4fdf472e70c6776c414454a09ed3bd9c"></a>
-<a class="el" href="classapril_1_1_message_box_style.html">MessageBoxStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_message_box_data.html#a4fdf472e70c6776c414454a09ed3bd9c">style</a></td></tr>
+<a class="el" href="class_message_box_style.html">MessageBoxStyle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_message_box_data.html#a4fdf472e70c6776c414454a09ed3bd9c">style</a></td></tr>
 <tr class="memdesc:a4fdf472e70c6776c414454a09ed3bd9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">style Style of the message box. <br /></td></tr>
 <tr class="separator:a4fdf472e70c6776c414454a09ed3bd9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bd4e17dbb4672ede71e9d61d00d1518"><td class="memItemLeft" align="right" valign="top"><a id="a2bd4e17dbb4672ede71e9d61d00d1518"></a>
-hmap&lt; <a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a>, hstr &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_message_box_data.html#a2bd4e17dbb4672ede71e9d61d00d1518">customButtonTitles</a></td></tr>
+hmap&lt; <a class="el" href="class_message_box_button.html">MessageBoxButton</a>, hstr &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_message_box_data.html#a2bd4e17dbb4672ede71e9d61d00d1518">customButtonTitles</a></td></tr>
 <tr class="memdesc:a2bd4e17dbb4672ede71e9d61d00d1518"><td class="mdescLeft">&#160;</td><td class="mdescRight">customButtonTitles Custom texts for the buttons. <br /></td></tr>
 <tr class="separator:a2bd4e17dbb4672ede71e9d61d00d1518"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c975fc29e7a62a6e19e4da14127aaee"><td class="memItemLeft" align="right" valign="top"><a id="a1c975fc29e7a62a6e19e4da14127aaee"></a>
-void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_message_box_data.html#a1c975fc29e7a62a6e19e4da14127aaee">callback</a> )(const <a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a> &amp;)</td></tr>
+void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_message_box_data.html#a1c975fc29e7a62a6e19e4da14127aaee">callback</a> )(const <a class="el" href="class_message_box_button.html">MessageBoxButton</a> &amp;)</td></tr>
 <tr class="memdesc:a1c975fc29e7a62a6e19e4da14127aaee"><td class="mdescLeft">&#160;</td><td class="mdescRight">callback Callback function to call once the message box was dismissed. Can be NULL if not needed. <br /></td></tr>
 <tr class="separator:a1c975fc29e7a62a6e19e4da14127aaee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7011b7e8b9ca713e8ac31b21410fba5"><td class="memItemLeft" align="right" valign="top"><a id="ae7011b7e8b9ca713e8ac31b21410fba5"></a>
@@ -120,25 +120,25 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="class_message_box_button.html">MessageBoxButton</a>&#160;</td>
           <td class="paramname"><em>buttons</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classapril_1_1_message_box_style.html">MessageBoxStyle</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="class_message_box_style.html">MessageBoxStyle</a>&#160;</td>
           <td class="paramname"><em>style</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">hmap&lt; <a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a>, hstr &gt;&#160;</td>
+          <td class="paramtype">hmap&lt; <a class="el" href="class_message_box_button.html">MessageBoxButton</a>, hstr &gt;&#160;</td>
           <td class="paramname"><em>customButtonTitles</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">void(*)(const <a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a> &amp;)&#160;</td>
+          <td class="paramtype">void(*)(const <a class="el" href="class_message_box_button.html">MessageBoxButton</a> &amp;)&#160;</td>
           <td class="paramname"><em>callback</em>, </td>
         </tr>
         <tr>

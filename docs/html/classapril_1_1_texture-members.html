@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Awesome Portable Rendering Interface Library: Member List</title>
+<title>C++ Geometry Types: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,9 +18,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">Awesome Portable Rendering Interface Library
+   <div id="projectname">C++ Geometry Types
    </div>
-   <div id="projectbrief">This library provides a universal rendering API and does not require to write code that is used in only one API (e.g. OpenGL, DirectX, SDL, ...)</div>
+   <div id="projectbrief">This library provides commonly used geometry types and methods for easier and better coding.</div>
   </td>
  </tr>
  </tbody>
@@ -64,7 +64,7 @@ $(function() {
   <tr class="even"><td class="entry"><a class="el" href="classapril_1_1_texture.html#a0b74a8987e037663b998fb2507491868">_ensureAsyncCompleted</a>()</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr><td class="entry"><a class="el" href="classapril_1_1_texture.html#a5029ee799cd15f5b7d22b88802e69844">_ensureUploaded</a>()</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classapril_1_1_texture.html#ac03ed71b6a1c8168f1e4a3e0ada135a8">_getByteSize</a>() const</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
-  <tr><td class="entry"><a class="el" href="classapril_1_1_texture.html#a89ac861fedfde6912ac6f061685f9741">_getInternalName</a>() const</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classapril_1_1_texture.html#ac1ca0b99715d6eba93cd90aacae3f0fa">_getInternalName</a>() const</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classapril_1_1_texture.html#ae7d8e82cd3d1db4c51e3c75013af99ff">_isAlterable</a>() const</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
   <tr><td class="entry"><a class="el" href="classapril_1_1_texture.html#a8f905e7d5f01343c1803f0f9a1375680">_isAsyncUploadQueued</a>()</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classapril_1_1_texture.html#aeb2237ec7a6779b326110e1ff576a9dd">_isReadable</a>() const</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">virtual</span></td></tr>
@@ -148,6 +148,10 @@ $(function() {
   <tr class="even"><td class="entry"><a class="el" href="classapril_1_1_texture.html#acfe3b0bfdc09776af26dd00689af5991">HL_DEFINE_IS</a>(locked, Locked)</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classapril_1_1_texture.html#aa7fb2dc7202a69bd78766c96c05e2236">HL_DEFINE_IS</a>(dirty, Dirty)</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classapril_1_1_texture.html#a1fc77c86fe0560469d8650303a06b5ff">HL_DEFINE_IS</a>(fromResource, FromResource)</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>HL_ENUM_CLASS_PREFIX_DECLARE</b>(aprilExport, Type,(HL_ENUM_DECLARE(Type, Immutable);HL_ENUM_DECLARE(Type, Managed);HL_ENUM_DECLARE(Type, RenderTarget);)) (defined in <a class="el" href="classapril_1_1_texture.html">april::Texture</a>)</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>HL_ENUM_CLASS_PREFIX_DECLARE</b>(aprilExport, Filter,(HL_ENUM_DECLARE(Filter, Nearest);HL_ENUM_DECLARE(Filter, Linear);)) (defined in <a class="el" href="classapril_1_1_texture.html">april::Texture</a>)</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0"><td class="entry"><b>HL_ENUM_CLASS_PREFIX_DECLARE</b>(aprilExport, AddressMode,(HL_ENUM_DECLARE(AddressMode, Wrap);HL_ENUM_DECLARE(AddressMode, Clamp);)) (defined in <a class="el" href="classapril_1_1_texture.html">april::Texture</a>)</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"></td></tr>
+  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>HL_ENUM_CLASS_PREFIX_DECLARE</b>(aprilExport, LoadMode,(HL_ENUM_DECLARE(LoadMode, Async);HL_ENUM_DECLARE(LoadMode, AsyncDeferredUpload);HL_ENUM_DECLARE(LoadMode, OnDemand);)) (defined in <a class="el" href="classapril_1_1_texture.html">april::Texture</a>)</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classapril_1_1_texture.html#a22dc126f8070ab9326c112578d206597">insertAlphaMap</a>(unsigned char *srcData, Image::Format srcFormat, unsigned char median, int ambiguity)</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classapril_1_1_texture.html#a3f1010ab55a2038b823351aa0966605c">insertAlphaMap</a>(Texture *texture, unsigned char median, int ambiguity)</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="classapril_1_1_texture.html#abf4fe83f3079f01c264ce8a7f98a7287">insertAlphaMap</a>(Image *image, unsigned char median, int ambiguity)</td><td class="entry"><a class="el" href="classapril_1_1_texture.html">april::Texture</a></td><td class="entry"></td></tr>
