@@ -3,7 +3,7 @@
 		package="com.april.demoMotion">
 		
 	<application android:label="Demo Motion"
-			android:icon="@drawable/icon"
+			android:icon="@mipmap/icon"
 			android:theme="@style/AprilSplashScreen">
 		<activity android:name=".Main"
 				android:label="Demo Motion"

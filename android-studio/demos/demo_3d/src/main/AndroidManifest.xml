@@ -3,7 +3,7 @@
 		package="com.april.demo3d">
 		
 	<application android:label="Demo 3D"
-			android:icon="@drawable/icon"
+			android:icon="@mipmap/icon"
 			android:theme="@style/AprilSplashScreen">
 		<activity android:name=".Main"
 				android:label="Demo 3D"

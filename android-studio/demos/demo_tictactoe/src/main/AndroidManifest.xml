@@ -3,7 +3,7 @@
 		package="com.april.demoTictactoe">
 		
 	<application android:label="Demo Tic Tac Toe"
-			android:icon="@drawable/icon"
+			android:icon="@mipmap/icon"
 			android:theme="@style/AprilSplashScreen">
 		<activity android:name=".Main"
 				android:label="Demo Tic Tac Toe"
