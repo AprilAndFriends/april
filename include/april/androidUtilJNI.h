@@ -11,7 +11,7 @@
 /// Defines some methods and special macros used with April's AndroidJNI system.
 /// This is mainly meant to be used as a utility to simplify JNI calls when a static native interface class is present in a sublibrary.
 
-#ifdef _ANDROID
+#ifdef __ANDROID__
 #ifndef APRIL_ANDROID_UTIL_JNI_H
 #define APRIL_ANDROID_UTIL_JNI_H
 

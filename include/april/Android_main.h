@@ -10,7 +10,7 @@
 /// 
 /// Defines main for Android.
 
-#ifdef _ANDROID
+#ifdef __ANDROID__
 #ifndef APRIL_ANDROID_MAIN_H
 #define APRIL_ANDROID_MAIN_H
 

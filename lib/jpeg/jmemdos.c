@@ -31,7 +31,7 @@
  * definitions or overriding them from the Makefile (eg, -DEMS_SUPPORTED=0).
  */
 
-#ifndef _ANDROID
+#ifndef __ANDROID__
 #ifndef XMS_SUPPORTED
 #define XMS_SUPPORTED  1
 #endif

@@ -41,7 +41,7 @@
 #include "OpenGLES2_RenderSystem.h"
 #endif
 #include "Window.h"
-#ifdef _ANDROID
+#ifdef __ANDROID__
 #include "AndroidJNI_Window.h"
 #endif
 #ifdef _IOS
@@ -102,7 +102,7 @@
 #elif defined(_UNIX)
 	#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGL1
 	#define WS_INTERNAL_DEFAULT WindowType::SDL
-#elif defined(_ANDROID)
+#elif defined(__ANDROID__)
 	#ifdef _OPENGLES2
 		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES2
 	#endif
@@ -128,7 +128,7 @@
 	#else
 		#define APRIL_PLATFORM_NAME "WinP8"
 	#endif
-#elif defined(_ANDROID)
+#elif defined(__ANDROID__)
 	#define APRIL_PLATFORM_NAME "Android"
 #elif defined(__APPLE__)
 	#ifdef _IOS
@@ -171,7 +171,7 @@ namespace april
 
 	static harray<hstr> extensions;
 	static int maxAsyncTextureUploadsPerFrame = 0;
-#if defined(_ANDROID) || defined(_IOS) || defined(_WINRT) && defined(_WINP8)
+#if defined(__ANDROID__) || defined(_IOS) || defined(_WINRT) && defined(_WINP8)
 	static int maxWaitingAsyncTextures = 8; // to limit RAM consumption
 #else
 	static int maxWaitingAsyncTextures = 0;
@@ -217,7 +217,7 @@ namespace april
 			extensions += ".pvrz";
 			extensions += ".pvr";
 #endif
-#ifdef _ANDROID
+#ifdef __ANDROID__
 			extensions += ".etcx";
 #endif
 		}

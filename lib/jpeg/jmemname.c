@@ -12,7 +12,7 @@
  * is shoved onto the user.
  */
 
-#ifndef _ANDROID
+#ifndef __ANDROID__
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"

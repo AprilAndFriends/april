@@ -49,7 +49,7 @@
  * Dan Gildor (gyld@in-touch.com).
  */
 
-#ifndef _ANDROID
+#ifndef __ANDROID__
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"

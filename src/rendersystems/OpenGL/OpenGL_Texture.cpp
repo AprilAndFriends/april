@@ -61,7 +61,7 @@ namespace april
 		}
 		else if (this->format == Image::Format::BGRA || this->format == Image::Format::BGRX)
 		{
-#if !defined(_ANDROID) && !defined(_WIN32)
+#if !defined(__ANDROID__) && !defined(_WIN32)
 #ifndef __APPLE__
 			this->glFormat = GL_BGRA; // for optimizations
 #else
@@ -78,7 +78,7 @@ namespace april
 		}
 		else if (this->format == Image::Format::BGR)
 		{
-#if !defined(_ANDROID) && !defined(_WIN32)
+#if !defined(__ANDROID__) && !defined(_WIN32)
 #ifndef __APPLE__
 			this->glFormat = GL_BGR; // for optimizations
 #else

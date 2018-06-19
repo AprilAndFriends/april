@@ -6,7 +6,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#if defined(_UNIX) || defined(_ANDROID)
+#if defined(_UNIX) || defined(__ANDROID__)
 #include <sys/time.h>
 #include <time.h>
 
@@ -17,16 +17,16 @@
 #include "Timer.h"
 
 #ifdef _IOS
-#import <Foundation/Foundation.h>
-#include <mach/mach_time.h>
+	#import <Foundation/Foundation.h>
+	#include <mach/mach_time.h>
 #endif
 #ifdef _MAC
-#include <sys/sysctl.h>
-#import <AppKit/NSWindow.h>
-#import <Foundation/NSString.h>
+	#include <sys/sysctl.h>
+	#import <AppKit/NSWindow.h>
+	#import <Foundation/NSString.h>
 #endif
-#ifdef _ANDROID
-#include <sys/sysinfo.h>
+#ifdef __ANDROID__
+	#include <sys/sysinfo.h>
 #endif
 
 namespace april

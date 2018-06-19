@@ -30,7 +30,7 @@ namespace april
 
 	protected:
 		unsigned int framebufferId;
-#ifdef _ANDROID
+#ifdef __ANDROID__
 		unsigned int alphaTextureId;
 #endif
 

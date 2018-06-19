@@ -6,16 +6,16 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#ifndef _ANDROID
-#ifndef _WINRT
-#define RESOURCE_PATH "../../demos/media/"
-#else
-#define RESOURCE_PATH "media/"
-#endif
+#ifndef __ANDROID__
+	#ifndef _WINRT
+		#define RESOURCE_PATH "../../demos/media/"
+	#else
+		#define RESOURCE_PATH "media/"
+	#endif
 #elif defined(__APPLE__)
-#define RESOURCE_PATH "media/"
+	#define RESOURCE_PATH "media/"
 #else
-#define RESOURCE_PATH "./"
+	#define RESOURCE_PATH "./"
 #endif
 
 #include <stdlib.h>
@@ -44,7 +44,7 @@ april::TexturedVertex v[36];
 gvec2f cameraPosition(90.0f, 60.0f);
 gvec2f clickPosition;
 
-#if !defined(_ANDROID) && !defined(_IOS) && !defined(_WINP8)
+#if !defined(__ANDROID__) && !defined(_IOS) && !defined(_WINP8)
 grectf drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 #else
 grectf drawRect(0.0f, 0.0f, 480.0f, 320.0f);
@@ -181,7 +181,7 @@ void __aprilApplicationInit()
 	updateDelegate = new UpdateDelegate();
 	systemDelegate = new SystemDelegate();
 	mouseDelegate = new MouseDelegate();
-#if defined(_ANDROID) || defined(_IOS)
+#if defined(__ANDROID__) || defined(_IOS)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
 	april::init(april::RenderSystemType::Default, april::WindowType::Default);

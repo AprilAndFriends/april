@@ -26,7 +26,7 @@
 		#include <OpenGLES/ES2/gl.h>
 		#include <OpenGLES/ES2/glext.h>
 	#endif
-#elif defined(_ANDROID)
+#elif defined(__ANDROID__)
 	#ifdef _OPENGLES2
 		#include <GLES2/gl2.h>
 		#define GL_GLEXT_PROTOTYPES
@@ -49,7 +49,7 @@
 	#endif
 #endif
 
-#ifdef _ANDROID
+#ifdef __ANDROID__
 #define GL_ETCX_RGBA8_OES_HACK (GL_ETC1_RGB8_OES | (1u << 31))
 #endif
 

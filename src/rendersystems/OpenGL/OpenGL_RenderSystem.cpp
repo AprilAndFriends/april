@@ -37,7 +37,7 @@
 #endif
 
 #define MAX_VERTEX_COUNT 65535
-#ifdef _ANDROID
+#ifdef __ANDROID__
 #define _SEGMENTED_RENDERING
 #endif
 
@@ -422,7 +422,7 @@ namespace april
 		}
 		if (format == Image::Format::BGRA)
 		{
-#if !defined(_ANDROID) && !defined(_WIN32)
+#if !defined(__ANDROID__) && !defined(_WIN32)
 #ifndef __APPLE__
 			return Image::Format::BGRA; // for optimizations
 #else
@@ -438,7 +438,7 @@ namespace april
 		}
 		if (format == Image::Format::BGR)
 		{
-#if !defined(_ANDROID) && !defined(_WIN32)
+#if !defined(__ANDROID__) && !defined(_WIN32)
 #ifndef __APPLE__
 			return Image::Format::BGR; // for optimizations
 #else

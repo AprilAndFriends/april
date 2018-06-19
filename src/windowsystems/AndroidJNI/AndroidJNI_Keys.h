@@ -9,7 +9,7 @@
 /// @section DESCRIPTION
 /// 
 
-#ifdef _ANDROID
+#ifdef __ANDROID__
 #ifndef APRIL_ANDROIDJNI_KEYS_H
 #define APRIL_ANDROIDJNI_KEYS_H
 

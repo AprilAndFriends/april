@@ -9,7 +9,7 @@
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
-#ifdef _ANDROID
+#ifdef __ANDROID__
 #include "androidUtilJNI.h"
 #endif
 #include "april.h"
@@ -23,7 +23,7 @@
 
 namespace april
 {
-#ifdef _ANDROID
+#ifdef __ANDROID__
 	extern void* javaVM;
 #endif
 
@@ -81,7 +81,7 @@ namespace april
 			result = this->_updateSystem();
 			if (singleUpdateOnly)
 			{
-#ifdef _ANDROID
+#ifdef __ANDROID__
 				if (april::rendersys != NULL && !result)
 				{
 					april::rendersys->_deviceRepeatLastFrame(false);
@@ -225,7 +225,7 @@ namespace april
 
 	void Application::_asyncUpdate(hthread* thread)
 	{
-#ifdef _ANDROID
+#ifdef __ANDROID__
 		// attaching the Java thread is neccessary so C++-to-Java calls can be made
 		JNIEnv* env = NULL;
 		if (((JavaVM*)april::javaVM)->AttachCurrentThread(&env, NULL) != JNI_OK)
@@ -298,7 +298,7 @@ namespace april
 			}
 		}
 		(*april::application->aprilApplicationDestroy)();
-#ifdef _ANDROID
+#ifdef __ANDROID__
 		if (env != NULL)
 		{
 			((JavaVM*)april::javaVM)->DetachCurrentThread();
@@ -312,7 +312,7 @@ namespace april
 		{
 			// TODO - is this still needed?
 			/*
-#ifndef _ANDROID
+#ifndef __ANDROID__
 			april::rendersys->_flushAsyncCommands(); // this is here for safe-guard on non-Android platforms
 #endif
 			*/

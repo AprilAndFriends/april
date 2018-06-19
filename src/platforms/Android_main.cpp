@@ -6,7 +6,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#ifdef _ANDROID
+#ifdef __ANDROID__
 #include <jni.h>
 
 #include <hltypes/harray.h>
@@ -209,7 +209,7 @@ namespace april
 
 	void JNICALL _JNI_onWindowFocusChanged(JNIEnv* env, jclass classe, jboolean jFocused)
 	{
-#if defined(_ANDROID) && defined(_ANDROIDJNI_WINDOW)
+#if defined(__ANDROID__) && defined(_ANDROIDJNI_WINDOW)
 		if (april::window != NULL && april::window->getName() == WindowType::AndroidJNI.getName())
 		{
 			bool focused = (jFocused != JNI_FALSE);
@@ -221,7 +221,7 @@ namespace april
 
 	void JNICALL _JNI_onVirtualKeyboardChanged(JNIEnv* env, jclass classe, jboolean jVisible, jfloat jHeightRatio)
 	{
-#ifdef _ANDROID
+#ifdef __ANDROID__
 		if (april::window != NULL)
 		{
 			bool visible = (jVisible != JNI_FALSE);
