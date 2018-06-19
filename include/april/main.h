@@ -20,7 +20,7 @@
 /// - Windows with console: _WIN32 _CONSOLE
 /// - WinUWP: _WINUWP
 /// - WinRT: _WINRT
-/// - Android: _ANDROID
+/// - Android: __ANDROID__
 /// - Mac: __APPLE__
 /// - iOS: __APPLE__
 /// - Linux: _UNIX
@@ -40,7 +40,7 @@
 #include "main_base.h"
 #include "aprilExport.h"
 
-#ifdef _ANDROID
+#ifdef __ANDROID__
 	#include "Android_main.h"
 #elif defined(_WINUWP)
 	#include "WinUWP_main.h"

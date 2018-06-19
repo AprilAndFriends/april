@@ -13,7 +13,7 @@
 #ifndef APRIL_MAIN_BASE_H
 #define APRIL_MAIN_BASE_H
 
-#ifdef _ANDROID
+#ifdef __ANDROID__
 #include <jni.h>
 #include <string.h>
 #endif
@@ -54,7 +54,7 @@ namespace april
 	/// @brief Unlocks the single-instance mutex.
 	/// @note This is used internally only.
 	aprilFnExport void __unlockSingleInstanceMutex();
-#ifdef _ANDROID
+#ifdef __ANDROID__
 	/// @brief This function is called when the .so file is loaded.
 	/// @param[in] aprilApplicationInit A pointer to __aprilApplicationInit().
 	/// @param[in] aprilApplicationDestroy A pointer to __aprilApplicationDestroy().
