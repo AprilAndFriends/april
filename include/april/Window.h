@@ -541,7 +541,6 @@ namespace april
 		/// @brief Toggles fullscreen/window mode.
 		/// @param[out] width The new width of the window.
 		/// @param[out] height The new height of the window.
-		/// @return True if allowed.
 		/// @note Remembers the last windowed size and returns to it. Useful when using directly with a fullscreen hotkey.
 		/// @see setFullscreen
 		void _getToggleHotkeyFullscreenSize(int& width, int& height);

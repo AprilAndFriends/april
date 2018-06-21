@@ -328,7 +328,6 @@ namespace april
 		/// @param[in] h Height of the image data.
 		/// @param[in] data The raw image data.
 		/// @param[in] format The format of the provided image data.
-		/// @param[in] type The Texture type that should be created.
 		/// @return The created Texture object or NULL if failed.
 		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format);
 		/// @brief Creates a Texture object completely filled with a specific color.
@@ -336,7 +335,6 @@ namespace april
 		/// @param[in] h Height of the image data.
 		/// @param[in] color The color used for filling the texture.
 		/// @param[in] format The format of the provided image data.
-		/// @param[in] type The Texture type that should be created.
 		/// @return The created Texture object or NULL if failed.
 		Texture* createTexture(int w, int h, Color color, Image::Format format);
 		/// @brief Destroys a Texture object.
