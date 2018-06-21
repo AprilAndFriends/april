@@ -20,7 +20,9 @@
 
 namespace april
 {
-	DirectX9_VertexShader::DirectX9_VertexShader() : VertexShader(), dx9Shader(NULL)
+	DirectX9_VertexShader::DirectX9_VertexShader() :
+		VertexShader(),
+		dx9Shader(NULL)
 	{
 	}
 

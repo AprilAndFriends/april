@@ -11,7 +11,9 @@
 
 namespace april
 {
-	DestroyTextureCommand::DestroyTextureCommand(Texture* texture) : UnloadTextureCommand(texture), executed(false)
+	DestroyTextureCommand::DestroyTextureCommand(Texture* texture) :
+		UnloadTextureCommand(texture),
+		executed(false)
 	{
 	}
 

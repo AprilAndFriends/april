@@ -19,7 +19,8 @@
 
 namespace april
 {
-	Mac_Cursor::Mac_Cursor(bool fromResource) : Cursor(fromResource)
+	Mac_Cursor::Mac_Cursor(bool fromResource) :
+		Cursor(fromResource)
 	{
 		systemCursor = NULL;
 	}

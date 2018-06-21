@@ -57,7 +57,8 @@ namespace april
 		return coordinates;
 	}
 
-	iOS_Window::iOS_Window() : Window()
+	iOS_Window::iOS_Window() :
+		Window()
 	{
 		this->name = april::WindowType::iOS.getName();
 		this->width = 0;

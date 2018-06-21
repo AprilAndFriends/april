@@ -11,7 +11,8 @@
 
 namespace april
 {
-	CreateCommand::CreateCommand(const RenderSystem::Options& options) : AsyncCommand()
+	CreateCommand::CreateCommand(const RenderSystem::Options& options) :
+		AsyncCommand()
 	{
 		this->options = options;
 	}

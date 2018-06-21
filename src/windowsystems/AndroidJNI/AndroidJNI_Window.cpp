@@ -31,7 +31,11 @@ namespace april
 {
 	extern void* javaVM;
 
-	AndroidJNI_Window::AndroidJNI_Window() : Window(), width(0), height(0), forcedFocus(false)
+	AndroidJNI_Window::AndroidJNI_Window() :
+		Window(),
+		width(0),
+		height(0),
+		forcedFocus(false)
 	{
 		this->name = april::WindowType::AndroidJNI.getName();
 		initAndroidKeyMap();

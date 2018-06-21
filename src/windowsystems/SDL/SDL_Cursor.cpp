@@ -16,7 +16,9 @@
 
 namespace april
 {
-	SDL_Cursor::SDL_Cursor(bool fromResource) : Cursor(fromResource), cursor(NULL)
+	SDL_Cursor::SDL_Cursor(bool fromResource) :
+		Cursor(fromResource),
+		cursor(NULL)
 	{
 	}
 

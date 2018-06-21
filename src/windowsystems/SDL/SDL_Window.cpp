@@ -54,7 +54,8 @@ namespace april
 	bool platform_CursorIsVisible();
 #endif
 	
-	SDL_Window::SDL_Window() : Window()
+	SDL_Window::SDL_Window() :
+		Window()
 	{
 		this->name = april::WindowType::SDL.getName();
 		// TODO - is this still needed in SDL 2?

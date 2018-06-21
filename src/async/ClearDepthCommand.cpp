@@ -11,7 +11,8 @@
 
 namespace april
 {
-	ClearDepthCommand::ClearDepthCommand(const RenderState& state) : RenderCommand(state)
+	ClearDepthCommand::ClearDepthCommand(const RenderState& state) :
+		RenderCommand(state)
 	{
 	}
 	

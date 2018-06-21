@@ -10,7 +10,8 @@
 
 namespace april
 {
-	RenderHelper::RenderHelper(const hmap<hstr, hstr>& options) : created(false)
+	RenderHelper::RenderHelper(const hmap<hstr, hstr>& options) :
+		created(false)
 	{
 	}
 	

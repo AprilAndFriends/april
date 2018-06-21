@@ -50,7 +50,14 @@ namespace april
 		D3DPT_TRIANGLEFAN,
 	};
 
-	DirectX9_RenderSystem::DirectX9_RenderSystem() : DirectX_RenderSystem(), d3d(NULL), d3dDevice(NULL), d3dpp(NULL), backBuffer(NULL), childHWnd(0), renderTarget(NULL)
+	DirectX9_RenderSystem::DirectX9_RenderSystem() :
+		DirectX_RenderSystem(),
+		d3d(NULL),
+		d3dDevice(NULL),
+		d3dpp(NULL),
+		backBuffer(NULL),
+		childHWnd(0),
+		renderTarget(NULL)
 	{
 		this->name = april::RenderSystemType::DirectX9.getName();
 		this->pixelOffset = 0.5f;

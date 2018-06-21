@@ -12,7 +12,8 @@
 
 namespace april
 {
-	DirectX_RenderSystem::DirectX_RenderSystem() : RenderSystem()
+	DirectX_RenderSystem::DirectX_RenderSystem() :
+		RenderSystem()
 	{
 	}
 

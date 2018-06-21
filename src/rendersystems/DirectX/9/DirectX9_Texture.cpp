@@ -22,7 +22,11 @@
 
 namespace april
 {
-	DirectX9_Texture::DirectX9_Texture(bool fromResource) : DirectX_Texture(fromResource), d3dTexture(NULL), d3dSurface(NULL), d3dFormat(D3DFMT_UNKNOWN)
+	DirectX9_Texture::DirectX9_Texture(bool fromResource) :
+		DirectX_Texture(fromResource),
+		d3dTexture(NULL),
+		d3dSurface(NULL),
+		d3dFormat(D3DFMT_UNKNOWN)
 	{
 	}
 

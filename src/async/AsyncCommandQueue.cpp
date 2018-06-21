@@ -14,7 +14,8 @@
 
 namespace april
 {
-	AsyncCommandQueue::AsyncCommandQueue() : repeatCount(0)
+	AsyncCommandQueue::AsyncCommandQueue() :
+		repeatCount(0)
 	{
 	}
 	

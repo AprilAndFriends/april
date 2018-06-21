@@ -126,7 +126,9 @@ namespace april
 		return options.joined(',');
 	}
 	
-	RenderSystem::RenderSystem() : renderMode(RenderMode::Normal), renderHelper(NULL)
+	RenderSystem::RenderSystem() :
+		renderMode(RenderMode::Normal),
+		renderHelper(NULL)
 	{
 		this->name = "Generic";
 		this->created = false;

@@ -11,7 +11,8 @@
 
 namespace april
 {
-	DestroyWindowCommand::DestroyWindowCommand() : AsyncCommand()
+	DestroyWindowCommand::DestroyWindowCommand() :
+		AsyncCommand()
 	{
 	}
 

@@ -13,7 +13,8 @@
 
 namespace april
 {
-	SuspendCommand::SuspendCommand() : AsyncCommand()
+	SuspendCommand::SuspendCommand() :
+		AsyncCommand()
 	{
 	}
 	

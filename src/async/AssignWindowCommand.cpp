@@ -11,7 +11,8 @@
 
 namespace april
 {
-	AssignWindowCommand::AssignWindowCommand(Window* window) : AsyncCommand()
+	AssignWindowCommand::AssignWindowCommand(Window* window) :
+		AsyncCommand()
 	{
 		this->window = window;
 	}

@@ -10,7 +10,10 @@
 
 namespace april
 {
-	EventDelegate::EventDelegate() : InputDelegate(), UpdateDelegate(), SystemDelegate()
+	EventDelegate::EventDelegate() :
+		InputDelegate(),
+		UpdateDelegate(),
+		SystemDelegate()
 	{
 	}
 

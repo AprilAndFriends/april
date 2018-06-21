@@ -11,7 +11,8 @@
 
 namespace april
 {
-	DirectX_Texture::DirectX_Texture(bool fromResource) : Texture(fromResource)
+	DirectX_Texture::DirectX_Texture(bool fromResource) :
+		Texture(fromResource)
 	{
 	}
 

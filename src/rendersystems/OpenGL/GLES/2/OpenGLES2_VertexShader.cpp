@@ -13,7 +13,8 @@
 
 namespace april
 {
-	OpenGLES2_VertexShader::OpenGLES2_VertexShader() : OpenGLES_VertexShader()
+	OpenGLES2_VertexShader::OpenGLES2_VertexShader() :
+		OpenGLES_VertexShader()
 	{
 	}
 

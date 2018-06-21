@@ -38,8 +38,17 @@ namespace april
 
 	Application* application = NULL;
 	
-	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) : state(State::Idle), suspended(false), timeDelta(0.0f), fps(0), fpsCount(0),
-		fpsTimer(0.0f), fpsResolution(0.5f), timeDeltaMaxLimit(0.1f), displayingMessageBox(false), updateThread(&_asyncUpdate, "APRIL Async Update")
+	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) :
+		state(State::Idle),
+		suspended(false),
+		timeDelta(0.0f),
+		fps(0),
+		fpsCount(0),
+		fpsTimer(0.0f),
+		fpsResolution(0.5f),
+		timeDeltaMaxLimit(0.1f),
+		displayingMessageBox(false),
+		updateThread(&_asyncUpdate, "APRIL Async Update")
 	{
 		this->aprilApplicationInit = aprilApplicationInit;
 		this->aprilApplicationDestroy = aprilApplicationDestroy;

@@ -11,7 +11,8 @@
 
 namespace april
 {
-	CreateWindowCommand::CreateWindowCommand(int width, int height, bool fullscreen, chstr title, Window::Options options) : AsyncCommand()
+	CreateWindowCommand::CreateWindowCommand(int width, int height, bool fullscreen, chstr title, Window::Options options) :
+		AsyncCommand()
 	{
 		this->width = width;
 		this->height = height;

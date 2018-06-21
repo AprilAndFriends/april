@@ -21,7 +21,9 @@
 
 namespace april
 {
-	DirectX9_PixelShader::DirectX9_PixelShader() : PixelShader(), dx9Shader(NULL)
+	DirectX9_PixelShader::DirectX9_PixelShader() :
+		PixelShader(),
+		dx9Shader(NULL)
 	{
 	}
 

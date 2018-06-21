@@ -11,7 +11,8 @@
 
 namespace april
 {
-	UnloadTextureCommand::UnloadTextureCommand(Texture* texture) : AsyncCommand()
+	UnloadTextureCommand::UnloadTextureCommand(Texture* texture) :
+		AsyncCommand()
 	{
 		this->texture = texture;
 	}

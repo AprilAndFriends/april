@@ -17,7 +17,9 @@
 
 namespace april
 {
-	Win32_Cursor::Win32_Cursor(bool fromResource) : Cursor(fromResource), cursor(NULL)
+	Win32_Cursor::Win32_Cursor(bool fromResource) :
+		Cursor(fromResource),
+		cursor(NULL)
 	{
 	}
 	

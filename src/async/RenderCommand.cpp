@@ -11,7 +11,8 @@
 
 namespace april
 {
-	RenderCommand::RenderCommand(const RenderState& state) : AsyncCommand()
+	RenderCommand::RenderCommand(const RenderState& state) :
+		AsyncCommand()
 	{
 		this->state = state;
 	}

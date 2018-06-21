@@ -22,7 +22,12 @@ namespace april
 	static const grectf screenRect(-1.0f, -1.0f, 2.0f, 2.0f);
 
 	RenderHelperLayered2D::RenderCall::RenderCall(const RenderOperation& renderOperation, const PlainVertex* vertices, int count, Color color) :
-		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(false)
+		state(*april::rendersys->state),
+		plainVertices(NULL),
+		texturedVertices(NULL),
+		coloredVertices(NULL),
+		coloredTexturedVertices(NULL),
+		useTexture(false)
 	{
 		this->renderOperation = renderOperation;
 		this->plainVertices = new PlainVertex[count];
@@ -32,7 +37,12 @@ namespace april
 	}
 
 	RenderHelperLayered2D::RenderCall::RenderCall(const RenderOperation& renderOperation, const TexturedVertex* vertices, int count, Color color) :
-		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(true)
+		state(*april::rendersys->state),
+		plainVertices(NULL),
+		texturedVertices(NULL),
+		coloredVertices(NULL),
+		coloredTexturedVertices(NULL),
+		useTexture(true)
 	{
 		this->renderOperation = renderOperation;
 		this->texturedVertices = new TexturedVertex[count];
@@ -42,7 +52,12 @@ namespace april
 	}
 
 	RenderHelperLayered2D::RenderCall::RenderCall(const RenderOperation& renderOperation, const ColoredVertex* vertices, int count) :
-		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(false)
+		state(*april::rendersys->state),
+		plainVertices(NULL),
+		texturedVertices(NULL),
+		coloredVertices(NULL),
+		coloredTexturedVertices(NULL),
+		useTexture(false)
 	{
 		this->renderOperation = renderOperation;
 		this->coloredVertices = new ColoredVertex[count];
@@ -51,7 +66,12 @@ namespace april
 	}
 
 	RenderHelperLayered2D::RenderCall::RenderCall(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count) :
-		state(*april::rendersys->state), plainVertices(NULL), texturedVertices(NULL), coloredVertices(NULL), coloredTexturedVertices(NULL), useTexture(true)
+		state(*april::rendersys->state),
+		plainVertices(NULL),
+		texturedVertices(NULL),
+		coloredVertices(NULL),
+		coloredTexturedVertices(NULL),
+		useTexture(true)
 	{
 		this->renderOperation = renderOperation;
 		this->coloredTexturedVertices = new ColoredTexturedVertex[count];
@@ -101,9 +121,17 @@ namespace april
 	{
 	}
 
-	RenderHelperLayered2D::RenderHelperLayered2D(const hmap<hstr, hstr>& options) : RenderHelper(options), layeringThread(&_threadUpdate, "APRIL layered 2D renderer"),
-		_coloredVertices(NULL), _coloredVerticesCount(0), _coloredVerticesCapacity(0), _coloredTexturedVertices(NULL), _coloredTexturedVerticesCount(0),
-		_coloredTexturedVerticesCapacity(0), _nativeColor(0), _potCount(0)
+	RenderHelperLayered2D::RenderHelperLayered2D(const hmap<hstr, hstr>& options) :
+		RenderHelper(options),
+		layeringThread(&_threadUpdate, "APRIL layered 2D renderer"),
+		_coloredVertices(NULL),
+		_coloredVerticesCount(0),
+		_coloredVerticesCapacity(0),
+		_coloredTexturedVertices(NULL),
+		_coloredTexturedVerticesCount(0),
+		_coloredTexturedVerticesCapacity(0),
+		_nativeColor(0),
+		_potCount(0)
 	{
 		this->maxLayers = (int)options.tryGet("max_layers", 0);
 		this->layerPullUpMerge = (bool)options.tryGet("layer_pull_up_merge", true);

@@ -14,7 +14,8 @@
 
 namespace april
 {
-	ClearColorCommand::ClearColorCommand(const RenderState& state, const april::Color& color, bool useDepth) : RenderCommand(state)
+	ClearColorCommand::ClearColorCommand(const RenderState& state, const april::Color& color, bool useDepth) :
+		RenderCommand(state)
 	{
 		this->color = color;
 		this->useDepth = useDepth;

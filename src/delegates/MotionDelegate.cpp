@@ -14,8 +14,12 @@
 
 namespace april
 {
-	MotionDelegate::MotionDelegate() : accelerometerEnabled(false), linearAccelerometerEnabled(false), gravityEnabled(false),
-		rotationEnabled(false), gyroscopeEnabled(false)
+	MotionDelegate::MotionDelegate() :
+		accelerometerEnabled(false),
+		linearAccelerometerEnabled(false),
+		gravityEnabled(false),
+		rotationEnabled(false),
+		gyroscopeEnabled(false)
 	{
 	}
 

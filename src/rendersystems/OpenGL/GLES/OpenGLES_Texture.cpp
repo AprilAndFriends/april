@@ -19,7 +19,9 @@
 
 namespace april
 {
-	OpenGLES_Texture::OpenGLES_Texture(bool fromResource) : OpenGL_Texture(fromResource), framebufferId(0)
+	OpenGLES_Texture::OpenGLES_Texture(bool fromResource) :
+		OpenGL_Texture(fromResource),
+		framebufferId(0)
 	{
 #ifdef __ANDROID__
 		this->alphaTextureId = 0;

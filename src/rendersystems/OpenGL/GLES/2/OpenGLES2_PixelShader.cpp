@@ -13,7 +13,8 @@
 
 namespace april
 {
-	OpenGLES2_PixelShader::OpenGLES2_PixelShader() : OpenGLES_PixelShader()
+	OpenGLES2_PixelShader::OpenGLES2_PixelShader() :
+		OpenGLES_PixelShader()
 	{
 	}
 

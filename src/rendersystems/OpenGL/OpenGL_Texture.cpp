@@ -25,7 +25,11 @@ namespace april
 {
 	bool OpenGL_Texture::_preventRecursion = false;
 
-	OpenGL_Texture::OpenGL_Texture(bool fromResource) : Texture(fromResource), textureId(0), glFormat(0), internalFormat(0)
+	OpenGL_Texture::OpenGL_Texture(bool fromResource) :
+		Texture(fromResource),
+		textureId(0),
+		glFormat(0),
+		internalFormat(0)
 	{
 	}
 

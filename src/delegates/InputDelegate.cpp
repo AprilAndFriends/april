@@ -10,7 +10,12 @@
 
 namespace april
 {
-	InputDelegate::InputDelegate() : KeyDelegate(), MouseDelegate(), TouchDelegate(), ControllerDelegate(), MotionDelegate()
+	InputDelegate::InputDelegate() :
+		KeyDelegate(),
+		MouseDelegate(),
+		TouchDelegate(),
+		ControllerDelegate(),
+		MotionDelegate()
 	{
 	}
 

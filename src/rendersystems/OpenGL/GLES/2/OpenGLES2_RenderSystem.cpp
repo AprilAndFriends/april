@@ -20,7 +20,8 @@
 
 namespace april
 {
-	OpenGLES2_RenderSystem::OpenGLES2_RenderSystem() : OpenGLES_RenderSystem()
+	OpenGLES2_RenderSystem::OpenGLES2_RenderSystem() :
+		OpenGLES_RenderSystem()
 	{
 		this->name = april::RenderSystemType::OpenGLES2.getName();
 	}

@@ -54,7 +54,8 @@ namespace april
 		return (april::macGlView != NULL && april::macGlView->mDisplayLink != nil);
 	}
 	
-	Mac_Window::Mac_Window() : Window()
+	Mac_Window::Mac_Window() :
+		Window()
 	{
 		this->ignoreUpdate = false;
 		this->name = april::WindowType::Mac.getName();

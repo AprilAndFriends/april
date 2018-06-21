@@ -11,7 +11,8 @@
 
 namespace april
 {
-	UnassignWindowCommand::UnassignWindowCommand() : AsyncCommand()
+	UnassignWindowCommand::UnassignWindowCommand() :
+		AsyncCommand()
 	{
 	}
 

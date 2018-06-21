@@ -13,7 +13,8 @@
 
 namespace april
 {
-	ClearCommand::ClearCommand(const RenderState& state, bool useDepth) : RenderCommand(state)
+	ClearCommand::ClearCommand(const RenderState& state, bool useDepth) :
+		RenderCommand(state)
 	{
 		this->useDepth = useDepth;
 	}

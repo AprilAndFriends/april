@@ -10,7 +10,8 @@
 
 namespace april
 {
-	VirtualKeyboard::VirtualKeyboard() : visible(false)
+	VirtualKeyboard::VirtualKeyboard() :
+		visible(false)
 	{
 	}
 

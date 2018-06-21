@@ -54,8 +54,14 @@ namespace april
 		GL_TRIANGLE_FAN,	// RO_TRIANGLE_FAN
 	};
 
-	OpenGL_RenderSystem::OpenGL_RenderSystem() : RenderSystem(), blendSeparationSupported(false), deviceState_vertexStride(0),
-		deviceState_vertexPointer(NULL), deviceState_textureStride(0), deviceState_texturePointer(NULL), deviceState_colorStride(0),
+	OpenGL_RenderSystem::OpenGL_RenderSystem() :
+		RenderSystem(),
+		blendSeparationSupported(false),
+		deviceState_vertexStride(0),
+		deviceState_vertexPointer(NULL),
+		deviceState_textureStride(0),
+		deviceState_texturePointer(NULL),
+		deviceState_colorStride(0),
 		deviceState_colorPointer(NULL)
 	{
 		// because GL has to defy screen logic and has (0,0) in the bottom left corner

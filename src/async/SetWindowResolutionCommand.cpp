@@ -11,7 +11,8 @@
 
 namespace april
 {
-	SetWindowResolutionCommand::SetWindowResolutionCommand(int width, int height, bool fullscreen) : AsyncCommand()
+	SetWindowResolutionCommand::SetWindowResolutionCommand(int width, int height, bool fullscreen) :
+		AsyncCommand()
 	{
 		this->width = width;
 		this->height = height;

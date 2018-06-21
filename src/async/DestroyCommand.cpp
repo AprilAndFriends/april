@@ -11,7 +11,8 @@
 
 namespace april
 {
-	DestroyCommand::DestroyCommand() : AsyncCommand()
+	DestroyCommand::DestroyCommand() :
+		AsyncCommand()
 	{
 	}
 	

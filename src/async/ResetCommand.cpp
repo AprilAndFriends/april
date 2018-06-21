@@ -15,7 +15,8 @@
 
 namespace april
 {
-	ResetCommand::ResetCommand(const RenderState& state, cgvec2i windowSize) : StateUpdateCommand(state)
+	ResetCommand::ResetCommand(const RenderState& state, cgvec2i windowSize) :
+		StateUpdateCommand(state)
 	{
 		this->windowSize = windowSize;
 	}

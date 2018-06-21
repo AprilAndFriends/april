@@ -23,7 +23,9 @@
 
 namespace april
 {
-	OpenGL1_RenderSystem::OpenGL1_RenderSystem() : OpenGL_RenderSystem(), deviceState_matrixMode(0)
+	OpenGL1_RenderSystem::OpenGL1_RenderSystem() :
+		OpenGL_RenderSystem(),
+		deviceState_matrixMode(0)
 	{
 		this->name = april::RenderSystemType::OpenGL1.getName();
 #if defined(_WIN32) && !defined(_WINRT)

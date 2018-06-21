@@ -13,7 +13,8 @@
 
 namespace april
 {
-	PresentFrameCommand::PresentFrameCommand(const RenderState& state, bool systemEnabled) : RenderCommand(state)
+	PresentFrameCommand::PresentFrameCommand(const RenderState& state, bool systemEnabled) :
+		RenderCommand(state)
 	{
 		this->systemEnabled = systemEnabled;
 	}
