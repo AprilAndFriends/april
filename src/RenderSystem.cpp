@@ -80,6 +80,11 @@ namespace april
 		this->vSync = true;
 		this->tripleBuffering = false;
 		this->clearOnSuspend = false;
+#ifndef _ANDROID
+		this->intermediateRenderTexture = false;
+#else // this is required for Android JNI
+		this->intermediateRenderTexture = true;
+#endif
 		this->debugInfo = false;
 	}
 
@@ -114,6 +119,10 @@ namespace april
 		if (this->clearOnSuspend)
 		{
 			options += "Clear-On-Suspend";
+		}
+		if (this->intermediateRenderTexture)
+		{
+			options += "Intermediate-Render-Texture";
 		}
 		if (this->debugInfo)
 		{
@@ -206,7 +215,12 @@ namespace april
 		this->options = options;
 		this->state->reset();
 		this->deviceState->reset();
-		if (!this->caps.renderTarget)
+		if (!this->caps.renderTarget && this->options.intermediateRenderTexture)
+		{
+			hlog::warn(logTag, "Attempting to use option 'intermediateRenderTexture', but render targets are not supported in: " + this->name);
+			this->options.intermediateRenderTexture = false;
+		}
+		if (!this->options.intermediateRenderTexture)
 		{
 			this->lastAsyncCommandQueue = new AsyncCommandQueue();
 		}
@@ -502,7 +516,7 @@ namespace april
 		{
 			previousRepeatCount = this->lastAsyncCommandQueue->getRepeatCount();
 		}
-		if (this->frameDuplicates > 0 && this->caps.renderTarget && this->_currentIntermediateRenderTexture != NULL && this->_renderTargetDuplicatesCount > 0)
+		if (this->frameDuplicates > 0 && this->options.intermediateRenderTexture && this->_currentIntermediateRenderTexture != NULL && this->_renderTargetDuplicatesCount > 0)
 		{
 			lock.release();
 			RenderState deviceState(*this->deviceState);
@@ -561,7 +575,7 @@ namespace april
 			lock.acquire(&this->asyncMutex);
 			this->processingAsync = false;
 			lock.release();
-			if (this->caps.renderTarget)
+			if (this->options.intermediateRenderTexture)
 			{
 				if (this->frameDuplicates > 0)
 				{
@@ -1532,7 +1546,7 @@ namespace april
 	void RenderSystem::_updateIntermediateRenderTextures()
 	{
 		// texture update
-		if (this->created && april::window != NULL && this->caps.renderTarget)
+		if (this->created && april::window != NULL && this->options.intermediateRenderTexture)
 		{
 			int width = april::window->getWidth();
 			int height = april::window->getHeight();
@@ -1591,7 +1605,7 @@ namespace april
 
 	bool RenderSystem::_tryCreateIntermediateRenderTextures(int width, int height)
 	{
-		if (!this->caps.renderTarget)
+		if (!this->options.intermediateRenderTexture)
 		{
 			return false;
 		}
@@ -1634,7 +1648,7 @@ namespace april
 
 	bool RenderSystem::_tryDestroyIntermediateRenderTextures()
 	{
-		if (this->caps.renderTarget && this->_currentIntermediateRenderTexture != NULL)
+		if (this->options.intermediateRenderTexture && this->_currentIntermediateRenderTexture != NULL)
 		{
 			foreach (Texture*, it, this->_intermediateRenderTextures)
 			{

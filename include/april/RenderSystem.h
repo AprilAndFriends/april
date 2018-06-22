@@ -137,6 +137,8 @@ namespace april
 			bool tripleBuffering;
 			/// @brief Whether to clear backbuffer on suspend.
 			bool clearOnSuspend;
+			/// @brief Whether to use intermediate render texture.
+			bool intermediateRenderTexture;
 			/// @brief Special debug info.
 			bool debugInfo;
 

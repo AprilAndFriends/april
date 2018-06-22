@@ -235,6 +235,12 @@ namespace april
 	void OpenGLES_RenderSystem::_deviceAssignWindow(Window* window)
 	{
 		OpenGL_RenderSystem::_deviceAssignWindow(window);
+#ifdef _ANDROID
+		if (window->getName() == WindowType::AndroidJNI.getName() && !this->options.intermediateRenderTexture)
+		{
+			hlog::errorf(logTag, "The render system option 'intermediate render texture' must be enabled when using window type '%s' on Android! Otherwise rendering issues WILL happen!", window->getName().cStr());
+		}
+#endif
 		this->renderTarget = NULL;
 	}
 
