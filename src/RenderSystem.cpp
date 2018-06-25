@@ -1020,15 +1020,10 @@ namespace april
 				++this->statCurrentFrameTextureSwitches;
 				state->texture->_ensureAsyncCompleted();
 				state->texture->_ensureUploaded();
-#ifdef _IOS // filtering and address mode applied before loading texture data, iOS OpenGLES guidelines suggest it
-				this->_setDeviceTextureFilter(state->texture->getFilter());
-				this->_setDeviceTextureAddressMode(state->texture->getAddressMode());
-#endif
+				// do not change this order, it can cause heavy issues with render targets
 				this->_setDeviceTexture(state->texture);
-#ifndef _IOS // other systems like Android require these parameters to be set afterwards or else really weird stuff starts to happen
 				this->_setDeviceTextureFilter(state->texture->getFilter());
 				this->_setDeviceTextureAddressMode(state->texture->getAddressMode());
-#endif
 			}
 			else
 			{
