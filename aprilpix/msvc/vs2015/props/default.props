@@ -5,7 +5,6 @@
       <PreprocessorDefinitions>APRILPIX_EXPORTS;_WEBP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../../include/aprilpix;../../../include/april;../../../../hltypes/include;../../../../gtypes/include;;../../../lib/webp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
-      <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
   </ItemDefinitionGroup>
 </Project>
