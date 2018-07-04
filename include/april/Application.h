@@ -82,7 +82,6 @@ namespace april
 		bool isAnyMessageBoxQueued();
 
 		/// @brief Calls the initialization procedure defined by the user.
-		/// @param[in] args Launch arguments.
 		void init();
 		/// @brief Calls the destruction procedure defined by the user.
 		void destroy();
