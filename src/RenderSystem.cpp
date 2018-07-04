@@ -122,7 +122,7 @@ namespace april
 		}
 		if (this->intermediateRenderTexture)
 		{
-			options += "Intermediate-Render-Texture";
+			options += "Intermediate Render Texture";
 		}
 		if (this->debugInfo)
 		{

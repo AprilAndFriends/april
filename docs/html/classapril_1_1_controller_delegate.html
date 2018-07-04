@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>C++ Geometry Types: april::ControllerDelegate Class Reference</title>
+<title>Awesome Portable Rendering Interface Library: april::ControllerDelegate Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,9 +18,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">C++ Geometry Types
+   <div id="projectname">Awesome Portable Rendering Interface Library
    </div>
-   <div id="projectbrief">This library provides commonly used geometry types and methods for easier and better coding.</div>
+   <div id="projectbrief">This library provides a universal rendering API and does not require to write code that is used in only one API (e.g. OpenGL, DirectX, SDL, ...)</div>
   </td>
  </tr>
  </tbody>
@@ -75,13 +75,13 @@ Public Member Functions</h2></td></tr>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_controller_delegate.html#a6212a06c048eeb9f93bd8cac6f41da2b">~ControllerDelegate</a> ()</td></tr>
 <tr class="memdesc:a6212a06c048eeb9f93bd8cac6f41da2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor. <br /></td></tr>
 <tr class="separator:a6212a06c048eeb9f93bd8cac6f41da2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2de113074dff8642f317b2d09febca1e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_controller_delegate.html#a2de113074dff8642f317b2d09febca1e">onButtonDown</a> (int controllerIndex, april::Button buttonCode)</td></tr>
+<tr class="memitem:a2de113074dff8642f317b2d09febca1e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_controller_delegate.html#a2de113074dff8642f317b2d09febca1e">onButtonDown</a> (int controllerIndex, <a class="el" href="classapril_1_1_button.html">april::Button</a> buttonCode)</td></tr>
 <tr class="memdesc:a2de113074dff8642f317b2d09febca1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when a button is pressed.  <a href="#a2de113074dff8642f317b2d09febca1e">More...</a><br /></td></tr>
 <tr class="separator:a2de113074dff8642f317b2d09febca1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a688552cb6bd07d33e0bf754ebd6da0e0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_controller_delegate.html#a688552cb6bd07d33e0bf754ebd6da0e0">onButtonUp</a> (int controllerIndex, april::Button buttonCode)</td></tr>
+<tr class="memitem:a688552cb6bd07d33e0bf754ebd6da0e0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_controller_delegate.html#a688552cb6bd07d33e0bf754ebd6da0e0">onButtonUp</a> (int controllerIndex, <a class="el" href="classapril_1_1_button.html">april::Button</a> buttonCode)</td></tr>
 <tr class="memdesc:a688552cb6bd07d33e0bf754ebd6da0e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when a button is released.  <a href="#a688552cb6bd07d33e0bf754ebd6da0e0">More...</a><br /></td></tr>
 <tr class="separator:a688552cb6bd07d33e0bf754ebd6da0e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac328da3b38aabf3b0641dba39f27b3b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_controller_delegate.html#aac328da3b38aabf3b0641dba39f27b3b">onControllerAxisChange</a> (int controllerIndex, april::Button buttonCode, float axisValue)</td></tr>
+<tr class="memitem:aac328da3b38aabf3b0641dba39f27b3b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_controller_delegate.html#aac328da3b38aabf3b0641dba39f27b3b">onControllerAxisChange</a> (int controllerIndex, <a class="el" href="classapril_1_1_button.html">april::Button</a> buttonCode, float axisValue)</td></tr>
 <tr class="memdesc:aac328da3b38aabf3b0641dba39f27b3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when an axis' value changes.  <a href="#aac328da3b38aabf3b0641dba39f27b3b">More...</a><br /></td></tr>
 <tr class="separator:aac328da3b38aabf3b0641dba39f27b3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0be1a972688c27d59124d418839ad63"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_controller_delegate.html#ad0be1a972688c27d59124d418839ad63">onControllerConnectionChanged</a> (int controllerIndex, bool connected)</td></tr>
@@ -109,7 +109,7 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">april::Button&#160;</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_button.html">april::Button</a>&#160;</td>
           <td class="paramname"><em>buttonCode</em>&#160;</td>
         </tr>
         <tr>
@@ -154,7 +154,7 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">april::Button&#160;</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_button.html">april::Button</a>&#160;</td>
           <td class="paramname"><em>buttonCode</em>&#160;</td>
         </tr>
         <tr>
@@ -199,7 +199,7 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">april::Button&#160;</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_button.html">april::Button</a>&#160;</td>
           <td class="paramname"><em>buttonCode</em>, </td>
         </tr>
         <tr>

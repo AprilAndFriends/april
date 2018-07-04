@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>C++ Geometry Types: include/april/april.h File Reference</title>
+<title>Awesome Portable Rendering Interface Library: include/april/april.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,9 +18,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">C++ Geometry Types
+   <div id="projectname">Awesome Portable Rendering Interface Library
    </div>
-   <div id="projectbrief">This library provides commonly used geometry types and methods for easier and better coding.</div>
+   <div id="projectbrief">This library provides a universal rendering API and does not require to write code that is used in only one API (e.g. OpenGL, DirectX, SDL, ...)</div>
   </td>
  </tr>
  </tbody>
@@ -43,6 +43,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -57,33 +58,36 @@ $(function() {
 </div>
 <p><a href="april_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_system_type.html">april::RenderSystemType</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines render system types.  <a href="classapril_1_1_render_system_type.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window_type.html">april::WindowType</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines window system types.  <a href="classapril_1_1_window_type.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af846abdf70950c76edf9217879b50d7e"><td class="memItemLeft" align="right" valign="top"><a id="af846abdf70950c76edf9217879b50d7e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>april::HL_ENUM_CLASS_PREFIX_DECLARE</b> (aprilExport, <a class="el" href="class_render_system_type.html">RenderSystemType</a>,(HL_ENUM_DECLARE(<a class="el" href="class_render_system_type.html">RenderSystemType</a>, Default);HL_ENUM_DECLARE(<a class="el" href="class_render_system_type.html">RenderSystemType</a>, DirectX9);HL_ENUM_DECLARE(<a class="el" href="class_render_system_type.html">RenderSystemType</a>, DirectX11);HL_ENUM_DECLARE(<a class="el" href="class_render_system_type.html">RenderSystemType</a>, DirectX12);HL_ENUM_DECLARE(<a class="el" href="class_render_system_type.html">RenderSystemType</a>, OpenGL1);HL_ENUM_DECLARE(<a class="el" href="class_render_system_type.html">RenderSystemType</a>, OpenGLES2);))</td></tr>
-<tr class="separator:af846abdf70950c76edf9217879b50d7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8d2e2f9d0bfeee90e0fd4f694ee3e8e"><td class="memItemLeft" align="right" valign="top"><a id="ad8d2e2f9d0bfeee90e0fd4f694ee3e8e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>april::HL_ENUM_CLASS_PREFIX_DECLARE</b> (aprilExport, <a class="el" href="class_window_type.html">WindowType</a>,(HL_ENUM_DECLARE(<a class="el" href="class_window_type.html">WindowType</a>, Default);HL_ENUM_DECLARE(<a class="el" href="class_window_type.html">WindowType</a>, Win32);HL_ENUM_DECLARE(<a class="el" href="class_window_type.html">WindowType</a>, WinRT);HL_ENUM_DECLARE(<a class="el" href="class_window_type.html">WindowType</a>, WinUWP);HL_ENUM_DECLARE(<a class="el" href="class_window_type.html">WindowType</a>, SDL);HL_ENUM_DECLARE(<a class="el" href="class_window_type.html">WindowType</a>, Mac);HL_ENUM_DECLARE(<a class="el" href="class_window_type.html">WindowType</a>, iOS);HL_ENUM_DECLARE(<a class="el" href="class_window_type.html">WindowType</a>, AndroidJNI);HL_ENUM_DECLARE(<a class="el" href="class_window_type.html">WindowType</a>, OpenKODE);))</td></tr>
-<tr class="separator:ad8d2e2f9d0bfeee90e0fd4f694ee3e8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed2ad5c5bcb764f5b9331031776998b7"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#aed2ad5c5bcb764f5b9331031776998b7">april::init</a> (<a class="el" href="class_render_system_type.html">RenderSystemType</a> renderSystemType, <a class="el" href="class_window_type.html">WindowType</a> windowType)</td></tr>
+<tr class="memitem:aed2ad5c5bcb764f5b9331031776998b7"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#aed2ad5c5bcb764f5b9331031776998b7">april::init</a> (RenderSystemType renderSystemType, WindowType windowType)</td></tr>
 <tr class="memdesc:aed2ad5c5bcb764f5b9331031776998b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes APRIL.  <a href="april_8h.html#aed2ad5c5bcb764f5b9331031776998b7">More...</a><br /></td></tr>
 <tr class="separator:aed2ad5c5bcb764f5b9331031776998b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea46e21ccbddd42a052e18b41bf9c59c"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#aea46e21ccbddd42a052e18b41bf9c59c">april::init</a> (RenderSystem *customRenderSystem, <a class="el" href="class_window_type.html">WindowType</a> windowType)</td></tr>
+<tr class="memitem:aea46e21ccbddd42a052e18b41bf9c59c"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#aea46e21ccbddd42a052e18b41bf9c59c">april::init</a> (RenderSystem *customRenderSystem, WindowType windowType)</td></tr>
 <tr class="memdesc:aea46e21ccbddd42a052e18b41bf9c59c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes APRIL.  <a href="april_8h.html#aea46e21ccbddd42a052e18b41bf9c59c">More...</a><br /></td></tr>
 <tr class="separator:aea46e21ccbddd42a052e18b41bf9c59c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a789e0c178c6d6503d906ee778db2bde8"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#a789e0c178c6d6503d906ee778db2bde8">april::init</a> (<a class="el" href="class_render_system_type.html">RenderSystemType</a> renderSystemType, Window *customWindow)</td></tr>
+<tr class="memitem:a789e0c178c6d6503d906ee778db2bde8"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#a789e0c178c6d6503d906ee778db2bde8">april::init</a> (RenderSystemType renderSystemType, Window *customWindow)</td></tr>
 <tr class="memdesc:a789e0c178c6d6503d906ee778db2bde8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes APRIL.  <a href="april_8h.html#a789e0c178c6d6503d906ee778db2bde8">More...</a><br /></td></tr>
 <tr class="separator:a789e0c178c6d6503d906ee778db2bde8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd6bc563c50348f9087569d0d130ab80"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#acd6bc563c50348f9087569d0d130ab80">april::init</a> (RenderSystem *customRenderSystem, Window *customWindow)</td></tr>
 <tr class="memdesc:acd6bc563c50348f9087569d0d130ab80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes APRIL.  <a href="april_8h.html#acd6bc563c50348f9087569d0d130ab80">More...</a><br /></td></tr>
 <tr class="separator:acd6bc563c50348f9087569d0d130ab80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaed72fc8f971dc74d6d2aaa7fd29655b"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#aaed72fc8f971dc74d6d2aaa7fd29655b">april::init</a> (<a class="el" href="class_render_system_type.html">RenderSystemType</a> renderSystemType, <a class="el" href="class_window_type.html">WindowType</a> windowType, RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions)</td></tr>
+<tr class="memitem:aaed72fc8f971dc74d6d2aaa7fd29655b"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#aaed72fc8f971dc74d6d2aaa7fd29655b">april::init</a> (RenderSystemType renderSystemType, WindowType windowType, RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions)</td></tr>
 <tr class="memdesc:aaed72fc8f971dc74d6d2aaa7fd29655b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes APRIL.  <a href="april_8h.html#aaed72fc8f971dc74d6d2aaa7fd29655b">More...</a><br /></td></tr>
 <tr class="separator:aaed72fc8f971dc74d6d2aaa7fd29655b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0f37a11cd623c4adf2f2f3fb3da839b"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#ac0f37a11cd623c4adf2f2f3fb3da839b">april::init</a> (RenderSystem *customRenderSystem, <a class="el" href="class_window_type.html">WindowType</a> windowType, RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions)</td></tr>
+<tr class="memitem:ac0f37a11cd623c4adf2f2f3fb3da839b"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#ac0f37a11cd623c4adf2f2f3fb3da839b">april::init</a> (RenderSystem *customRenderSystem, WindowType windowType, RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions)</td></tr>
 <tr class="memdesc:ac0f37a11cd623c4adf2f2f3fb3da839b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes APRIL.  <a href="april_8h.html#ac0f37a11cd623c4adf2f2f3fb3da839b">More...</a><br /></td></tr>
 <tr class="separator:ac0f37a11cd623c4adf2f2f3fb3da839b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11d0d9344d11b8e0f344a7dd477dcc94"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#a11d0d9344d11b8e0f344a7dd477dcc94">april::init</a> (<a class="el" href="class_render_system_type.html">RenderSystemType</a> renderSystemType, Window *customWindow, RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions)</td></tr>
+<tr class="memitem:a11d0d9344d11b8e0f344a7dd477dcc94"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#a11d0d9344d11b8e0f344a7dd477dcc94">april::init</a> (RenderSystemType renderSystemType, Window *customWindow, RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions)</td></tr>
 <tr class="memdesc:a11d0d9344d11b8e0f344a7dd477dcc94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes APRIL.  <a href="april_8h.html#a11d0d9344d11b8e0f344a7dd477dcc94">More...</a><br /></td></tr>
 <tr class="separator:a11d0d9344d11b8e0f344a7dd477dcc94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4775d6d3fe7baf88cd295b67999ccd24"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_8h.html#a4775d6d3fe7baf88cd295b67999ccd24">april::init</a> (RenderSystem *customRenderSystem, Window *customWindow, RenderSystem::Options renderSystemOptions, int w, int h, bool fullscreen, chstr title, Window::Options windowOptions)</td></tr>
@@ -459,13 +463,13 @@ This should be called after <a class="el" href="april_8h.html#aa1b2a943c5860fdd2
         <tr>
           <td class="memname">aprilFnExport void april::init </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_render_system_type.html">RenderSystemType</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_render_system_type.html">RenderSystemType</a>&#160;</td>
           <td class="paramname"><em>renderSystemType</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="class_window_type.html">WindowType</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_window_type.html">WindowType</a>&#160;</td>
           <td class="paramname"><em>windowType</em>&#160;</td>
         </tr>
         <tr>
@@ -506,7 +510,7 @@ createWindow </dd></dl>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="class_window_type.html">WindowType</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_window_type.html">WindowType</a>&#160;</td>
           <td class="paramname"><em>windowType</em>&#160;</td>
         </tr>
         <tr>
@@ -541,7 +545,7 @@ createWindow </dd></dl>
         <tr>
           <td class="memname">aprilFnExport void april::init </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_render_system_type.html">RenderSystemType</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_render_system_type.html">RenderSystemType</a>&#160;</td>
           <td class="paramname"><em>renderSystemType</em>, </td>
         </tr>
         <tr>
@@ -623,13 +627,13 @@ createWindow </dd></dl>
         <tr>
           <td class="memname">aprilFnExport void april::init </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_render_system_type.html">RenderSystemType</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_render_system_type.html">RenderSystemType</a>&#160;</td>
           <td class="paramname"><em>renderSystemType</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="class_window_type.html">WindowType</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_window_type.html">WindowType</a>&#160;</td>
           <td class="paramname"><em>windowType</em>, </td>
         </tr>
         <tr>
@@ -712,7 +716,7 @@ createWindow </dd></dl>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="class_window_type.html">WindowType</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_window_type.html">WindowType</a>&#160;</td>
           <td class="paramname"><em>windowType</em>, </td>
         </tr>
         <tr>
@@ -789,7 +793,7 @@ createWindow </dd></dl>
         <tr>
           <td class="memname">aprilFnExport void april::init </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_render_system_type.html">RenderSystemType</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_render_system_type.html">RenderSystemType</a>&#160;</td>
           <td class="paramname"><em>renderSystemType</em>, </td>
         </tr>
         <tr>

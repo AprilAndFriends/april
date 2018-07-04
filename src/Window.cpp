@@ -53,6 +53,7 @@ namespace april
 		this->resizable = false;
 		this->fpsCounter = false;
 		this->hotkeyFullscreen = false;
+		this->minimized = false;
 		this->suspendUpdateThread = true;
 		this->keyPause = april::Key::None;
 		this->mac_displayLinkIgnoreSystemRedraw = false;
@@ -74,6 +75,10 @@ namespace april
 		if (this->hotkeyFullscreen)
 		{
 			options += "Fullscreen Hotkey";
+		}
+		if (this->minimized)
+		{
+			options += "Minimized";
 		}
 		if (!this->suspendUpdateThread)
 		{

@@ -66,6 +66,8 @@ namespace april
 			bool fpsCounter;
 			/// @brief Whether the fullscreen hotkey should be allowed.
 			bool hotkeyFullscreen;
+			/// @brief Whether the the window should start minimized.
+			bool minimized;
 			/// @brief Whether the update thread should be suspended with a mutex lock.
 			bool suspendUpdateThread;
 			/// @brief Whether the fullscreen hotkey should be allowed.

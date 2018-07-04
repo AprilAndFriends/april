@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>C++ Geometry Types: include/april/aprilUtil.h File Reference</title>
+<title>Awesome Portable Rendering Interface Library: include/april/aprilUtil.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -18,9 +18,9 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">C++ Geometry Types
+   <div id="projectname">Awesome Portable Rendering Interface Library
    </div>
-   <div id="projectbrief">This library provides commonly used geometry types and methods for easier and better coding.</div>
+   <div id="projectbrief">This library provides a universal rendering API and does not require to write code that is used in only one API (e.g. OpenGL, DirectX, SDL, ...)</div>
   </td>
  </tr>
  </tbody>
@@ -61,6 +61,15 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_render_operation.html">april::RenderOperation</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if this is a triangle-based <a class="el" href="classapril_1_1_render_operation.html" title="Checks if this is a triangle-based RenderOperation. ">RenderOperation</a>.  <a href="classapril_1_1_render_operation.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_blend_mode.html">april::BlendMode</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines blending modes.  <a href="classapril_1_1_blend_mode.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_color_mode.html">april::ColorMode</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines color modes.  <a href="classapril_1_1_color_mode.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_plain_vertex.html">april::PlainVertex</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a plain vertex.  <a href="classapril_1_1_plain_vertex.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -83,15 +92,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:abe850ece14406e3cc4f9c0fc54d02c4a"><td class="memItemLeft" align="right" valign="top"><a id="abe850ece14406e3cc4f9c0fc54d02c4a"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>april::HL_ENUM_CLASS_PREFIX_DECLARE</b> (aprilExport, <a class="el" href="class_render_operation.html">RenderOperation</a>,(HL_ENUM_DECLARE(<a class="el" href="class_render_operation.html">RenderOperation</a>, TriangleList);HL_ENUM_DECLARE(<a class="el" href="class_render_operation.html">RenderOperation</a>, TriangleStrip);HL_ENUM_DECLARE(<a class="el" href="class_render_operation.html">RenderOperation</a>, LineList);HL_ENUM_DECLARE(<a class="el" href="class_render_operation.html">RenderOperation</a>, LineStrip);HL_ENUM_DECLARE(<a class="el" href="class_render_operation.html">RenderOperation</a>, PointList);bool isTriangle() const ;bool isLine() const ;bool isPoint() const ;HL_ENUM_DECLARE(<a class="el" href="class_render_operation.html">RenderOperation</a>, TriangleFan);))</td></tr>
-<tr class="separator:abe850ece14406e3cc4f9c0fc54d02c4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1b9ad4c3a122c7e2d4eea160531b1fa"><td class="memItemLeft" align="right" valign="top"><a id="ab1b9ad4c3a122c7e2d4eea160531b1fa"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>april::HL_ENUM_CLASS_PREFIX_DECLARE</b> (aprilExport, <a class="el" href="class_blend_mode.html">BlendMode</a>,(HL_ENUM_DECLARE(<a class="el" href="class_blend_mode.html">BlendMode</a>, Alpha);HL_ENUM_DECLARE(<a class="el" href="class_blend_mode.html">BlendMode</a>, Add);HL_ENUM_DECLARE(<a class="el" href="class_blend_mode.html">BlendMode</a>, Subtract);HL_ENUM_DECLARE(<a class="el" href="class_blend_mode.html">BlendMode</a>, Overwrite);))</td></tr>
-<tr class="separator:ab1b9ad4c3a122c7e2d4eea160531b1fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a9fc6ae311f55bc331f0f9307dc284a"><td class="memItemLeft" align="right" valign="top"><a id="a9a9fc6ae311f55bc331f0f9307dc284a"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>april::HL_ENUM_CLASS_PREFIX_DECLARE</b> (aprilExport, <a class="el" href="class_color_mode.html">ColorMode</a>,(HL_ENUM_DECLARE(<a class="el" href="class_color_mode.html">ColorMode</a>, Multiply);HL_ENUM_DECLARE(<a class="el" href="class_color_mode.html">ColorMode</a>, AlphaMap);HL_ENUM_DECLARE(<a class="el" href="class_color_mode.html">ColorMode</a>, Lerp);HL_ENUM_DECLARE(<a class="el" href="class_color_mode.html">ColorMode</a>, Desaturate);HL_ENUM_DECLARE(<a class="el" href="class_color_mode.html">ColorMode</a>, Sepia);))</td></tr>
-<tr class="separator:a9a9fc6ae311f55bc331f0f9307dc284a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c984a257d8355bddfeabee8ec60368e"><td class="memItemLeft" align="right" valign="top">aprilFnExport void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="april_util_8h.html#a1c984a257d8355bddfeabee8ec60368e">april::rgbToHsl</a> (unsigned char r, unsigned char g, unsigned char b, float *h, float *s, float *l)</td></tr>
 <tr class="memdesc:a1c984a257d8355bddfeabee8ec60368e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an RGB value to an HSL value.  <a href="april_util_8h.html#a1c984a257d8355bddfeabee8ec60368e">More...</a><br /></td></tr>
 <tr class="separator:a1c984a257d8355bddfeabee8ec60368e"><td class="memSeparator" colspan="2">&#160;</td></tr>
