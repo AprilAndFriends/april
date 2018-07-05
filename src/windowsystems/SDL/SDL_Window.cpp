@@ -97,6 +97,10 @@ namespace april
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
+		else if (this->options.minimized)
+		{
+			flags = (flags & ~SDL_WINDOW_SHOWN) | SDL_WINDOW_MINIMIZED;
+		}
 		if (this->options.resizable)
 		{
 			flags |= SDL_WINDOW_RESIZABLE;

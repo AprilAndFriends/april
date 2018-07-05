@@ -120,7 +120,6 @@ namespace april
 		}
 		// create window
 		this->hWnd = CreateWindowExW(exstyle, APRIL_WIN32_WINDOW_CLASS, this->title.wStr().c_str(), style, x, y, width, height, NULL, NULL, hinst, NULL);
-		
 		if (options.enableTouchInput)
 		{
 			// this workaround is required to properly support everything before Win7
@@ -148,7 +147,7 @@ namespace april
 		this->width = clientRect.right - clientRect.left;
 		this->height = clientRect.bottom - clientRect.top;
 		// display the window on the screen
-		ShowWindow(this->hWnd, SW_SHOWNORMAL);
+		ShowWindow(this->hWnd, !this->options.minimized ? SW_SHOWNORMAL : SW_SHOWMINIMIZED);
 		UpdateWindow(this->hWnd);
 		SetCursor(wc.hCursor);
 		this->setCursorVisible(true);
