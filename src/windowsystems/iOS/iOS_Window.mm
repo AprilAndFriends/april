@@ -68,6 +68,11 @@ namespace april
 	
 	void iOS_Window::_systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options)
 	{
+		if (options.minimized)
+		{
+			options.minimized = false;
+			hlog::warn(logTag, "Option 'minimized' is not supported on window system: " + this->name);
+		}
 		Window::_systemCreate(width, height, fullscreen, title, options);
 		this->firstFrameDrawn = false; // show window after drawing first frame
 		this->keyboardRequest = 0;

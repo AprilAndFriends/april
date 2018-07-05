@@ -41,6 +41,11 @@ namespace april
 
 	void WinRT_Window::_systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options)
 	{
+		if (options.minimized)
+		{
+			options.minimized = false;
+			hlog::warn(logTag, "Option 'minimized' is not supported on window system: " + this->name);
+		}
 		// WinRT window forces its own size
 		float dpiRatio = WinRT::getDpiRatio();
 		CoreWindow^ window = CoreWindow::GetForCurrentThread();

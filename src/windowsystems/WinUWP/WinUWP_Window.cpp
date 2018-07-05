@@ -46,6 +46,11 @@ namespace april
 
 	bool WinUWP_Window::_systemCreate(int w, int h, bool fullscreen, chstr title, Window::Options options)
 	{
+		if (options.minimized)
+		{
+			options.minimized = false;
+			hlog::warn(logTag, "Option 'minimized' is not supported on window system: " + this->name);
+		}
 		Rect rect = CoreWindow::GetForCurrentThread()->Bounds;
 		w = (int)rect.Width;
 		h = (int)rect.Height;
