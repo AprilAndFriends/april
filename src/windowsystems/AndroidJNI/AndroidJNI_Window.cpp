@@ -48,6 +48,11 @@ namespace april
 
 	void AndroidJNI_Window::_systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options)
 	{
+		if (options.minimized)
+		{
+			options.minimized = false;
+			hlog::warn(logTag, "Option 'minimized' is not supported on window system: " + this->name);
+		}
 		Window::_systemCreate(width, height, true, title, options);
 		this->width = width;
 		this->height = height;
