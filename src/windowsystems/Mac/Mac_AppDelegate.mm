@@ -78,6 +78,7 @@ bool g_WindowFocusedBeforeSleep = false;
 	{
 		hmutex::ScopeLock lock(&MAC_WINDOW->renderThreadSyncMutex);
 	}
+	april::application->finish();
 	april::application->updateFinishing();
 	april::application->destroy();
 }
