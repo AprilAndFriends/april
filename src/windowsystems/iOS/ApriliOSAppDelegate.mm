@@ -217,9 +217,12 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 		[viewController release];
 		viewController = nil;
 	}
-	uiwnd = nil;
+	if (uiwnd != nil)
+	{
+		[uiwnd release];
+		uiwnd = nil;
+	}
 	self.window = nil;
-	[uiwnd release];
 	[super dealloc];
 }
 

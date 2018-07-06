@@ -963,7 +963,7 @@ namespace april
 			}
 			else
 			{
-				color = april::Color::Black; // just in case
+				color = april::Color::Clear; // just in case
 			}
 		}
 		return color;
@@ -1321,11 +1321,12 @@ namespace april
 				return false;
 			}
 			// changed size of data, needs to readjust
-			// sx, sy, srcHeight is currently not used in the following code
-			//sx = 0;
-			//sy = 0;
-			//srcHeight = sh;
+#ifndef __clang_analyzer__
+			sx = 0;
+			sy = 0;
+			srcHeight = sh;
 			srcWidth = sw;
+#endif
 		}
 		bool result = false;
 		if (bpp == 1)
