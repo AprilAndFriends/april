@@ -402,7 +402,6 @@
 	if (self.displayLink != nil)
 	{
 		[self.displayLink invalidate];
-		[self.displayLink release];
 		self.displayLink = nil;
 	}
 	if ([EAGLContext currentContext] == context)

@@ -84,22 +84,33 @@ namespace april
 	
 	void Application::updateInitializing(bool singleUpdateOnly)
 	{
+#ifdef __ANDROID__
 		bool result = false;
 		while (this->getState() == State::Starting)
 		{
 			result = this->_updateSystem();
 			if (singleUpdateOnly)
 			{
-#ifdef __ANDROID__
 				if (april::rendersys != NULL && !result)
 				{
 					april::rendersys->_deviceRepeatLastFrame(false);
 				}
-#endif
 				return;
 			}
 			hthread::sleep(0.001f);
 		}
+
+#else
+		while (this->getState() == State::Starting)
+		{
+			this->_updateSystem();
+			if (singleUpdateOnly)
+			{
+				return;
+			}
+			hthread::sleep(0.001f);
+		}
+#endif
 	}
 
 	void Application::destroy()
