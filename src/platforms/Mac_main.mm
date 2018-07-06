@@ -160,12 +160,14 @@ static void CustomApplicationMain()
 		}
 	}
 #endif
-	[NSApp setMainMenu:[[NSMenu alloc] init]];
+	NSMenu* menu = [[NSMenu alloc] init];
+	[NSApp setMainMenu:menu];
 	setApplicationMenu();
 	appDelegate = [[AprilAppDelegate alloc] init];
 	[NSApplication sharedApplication].delegate = appDelegate;
 	[NSApp activateIgnoringOtherApps:YES];
 	[NSApp run];
+	[menu release];
 	[appDelegate release];
 	[pool release];
 }

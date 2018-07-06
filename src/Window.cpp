@@ -698,7 +698,7 @@ namespace april
 				if (button == Button::AxisLX || button == Button::AxisLY || button == Button::AxisRX || button == Button::AxisRY)
 				{
 					this->handleControllerInput(ControllerEvent::Type::Axis, 0, button, (type == KeyEvent::Type::Down ? -1.0f : 0.0f));
-					processed = true;
+//					processed = true; -- commenting out since value is not used further in this function
 				}
 			}
 		}

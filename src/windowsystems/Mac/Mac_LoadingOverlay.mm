@@ -64,6 +64,7 @@ void createLoadingOverlay(NSWindow* parent)
 		[gOverlayWindow.contentView addSubview: gImageView];
 		[parent addChildWindow:gOverlayWindow ordered:NSWindowAbove];
 		[gOverlayWindow makeKeyWindow];
+		[image release];
 	}
 }
 

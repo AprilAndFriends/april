@@ -44,8 +44,8 @@ namespace april
 		{
 			return false;
 		}
-		NSPoint hotSpot;
-		NSImage* image;
+		NSPoint hotSpot = {0.0f, 0.0f};
+		NSImage* image = NULL;
 		hstr path;
 		
 		if (filename.endsWith(".plist"))
@@ -106,11 +106,12 @@ namespace april
 		}
 		image = [[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:path.cStr()]];
 
-		if (!image)
+		if (image == NULL)
 		{
 			hlog::write(logTag, "Error: Unable to load cursor image, plist found, but '" + path + "' not found.");
 			return false;
 		}
+		
 		systemCursor = [[NSCursor alloc] initWithImage:image hotSpot:hotSpot];
 		[image release];
 		return true;

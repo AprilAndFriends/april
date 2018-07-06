@@ -953,11 +953,18 @@ namespace april
 		unsigned char* rgba = NULL;
 		if (Image::checkRect(x, y, srcWidth, srcHeight) && Image::convertToFormat(1, 1, &srcData[(x + y * srcWidth) * srcFormat.getBpp()], srcFormat, (unsigned char**)&rgba, Image::Format::RGBA, false))
 		{
-			color.r = rgba[0];
-			color.g = rgba[1];
-			color.b = rgba[2];
-			color.a = rgba[3];
-			delete[] rgba;
+			if (rgba != NULL)
+			{
+				color.r = rgba[0];
+				color.g = rgba[1];
+				color.b = rgba[2];
+				color.a = rgba[3];
+				delete[] rgba;
+			}
+			else
+			{
+				color = april::Color::Black; // just in case
+			}
 		}
 		return color;
 	}
@@ -1047,8 +1054,11 @@ namespace april
 			{
 				return false;
 			}
-			memcpy(&destData[i], rgba, destBpp);
-			delete[] rgba;
+			if (rgba != NULL)
+			{
+				memcpy(&destData[i], rgba, destBpp);
+				delete[] rgba;
+			}
 		}
 		else
 		{
@@ -1311,10 +1321,11 @@ namespace april
 				return false;
 			}
 			// changed size of data, needs to readjust
-			sx = 0;
-			sy = 0;
+			// sx, sy, srcHeight is currently not used in the following code
+			//sx = 0;
+			//sy = 0;
+			//srcHeight = sh;
 			srcWidth = sw;
-			srcHeight = sh;
 		}
 		bool result = false;
 		if (bpp == 1)
@@ -1916,6 +1927,10 @@ namespace april
 
 	bool Image::dilate(unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char* destData, int destWidth, int destHeight, Image::Format destFormat)
 	{
+		if (destData == NULL || destWidth * destHeight == 0)
+		{
+			return false;
+		}
 		// both images must be single-channel 8-bit images, currently other formats are not supported
 		if ((srcFormat != Format::Alpha && srcFormat != Format::Greyscale) || (destFormat != Format::Alpha && destFormat != Format::Greyscale))
 		{
@@ -1927,6 +1942,11 @@ namespace april
 		}
 		Image* original = Image::create(destWidth, destHeight, destData, destFormat);
 		unsigned char* originalData = original->data;
+		if (originalData == NULL)
+		{
+			delete original;
+			return false;
+		}
 		memset(destData, 0, destWidth * destHeight * destFormat.getBpp());
 		int i = 0;
 		int j = 0;

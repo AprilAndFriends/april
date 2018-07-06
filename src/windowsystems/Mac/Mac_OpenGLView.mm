@@ -76,6 +76,7 @@ static CVReturn AprilDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVT
 
 -(id) initWithFrame:(NSRect)frameRect withPixels:(NSOpenGLPixelFormat*)pixelFormat
 {
+	self = [super initWithFrame:frameRect pixelFormat:pixelFormat];
 	april::macGlView = self;
 	mDisplayLink = nil;
 	mFrameRect = frameRect;

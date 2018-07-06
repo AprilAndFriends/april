@@ -149,7 +149,7 @@
 		[textField addTarget:self
 					  action:@selector(textFieldFinished:)
 			forControlEvents:UIControlEventEditingDidEndOnExit];
-		self.sensorManager = [[CMMotionManager alloc] init];
+		self.sensorManager = [[[CMMotionManager alloc] init] autorelease];
 		// 60 FPS
 		self.sensorManager.deviceMotionUpdateInterval = 0.016666667f;
 		self.sensorManager.accelerometerUpdateInterval = 0.016666667f;

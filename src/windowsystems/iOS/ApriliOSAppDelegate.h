@@ -24,5 +24,4 @@
 
 @property (nonatomic, retain) UIWindow *uiwnd;
 @property (nonatomic, retain) AprilViewController *viewController;
-@property (nonatomic, retain) NSDictionary *appLaunchOptions;
 @end

@@ -444,7 +444,7 @@ NSString* translateInputForKeyDown(NSEvent* event)
 	}
 	if (realLength > 0)
 	{
-		result= (NSString *)CFStringCreateWithCharacters(kCFAllocatorDefault, unicodeString, realLength);
+		result = (NSString*)CFStringCreateWithCharacters(kCFAllocatorDefault, unicodeString, realLength);
 	}
 	if (result == nil)
 	{
@@ -461,11 +461,13 @@ NSString* translateInputForKeyDown(NSEvent* event)
 		NSString* s = [event charactersIgnoringModifiers];
 		if ([s isEqualTo:@"f"]) // fullscreen toggle
 		{
+			[realString release];
 			[self platformToggleFullScreen];
 			return;
 		}
 	}
 	[self onKeyDown:[self processKeyCode:event] unicode:realString];
+	[realString release];
 }
 
 - (void) keyUp:(NSEvent*) event

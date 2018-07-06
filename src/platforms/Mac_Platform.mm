@@ -118,6 +118,8 @@ namespace april
 			}
 			info.locale = info.locale.lowered();
 			info.localeVariant = info.localeVariant.uppered();
+			CFRelease(lang);
+			CFRelease(locs);
 		}
 	}
 	
