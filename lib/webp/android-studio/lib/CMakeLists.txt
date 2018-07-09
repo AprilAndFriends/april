@@ -75,8 +75,6 @@ file(
 
 add_library(webp STATIC ${CppSrc})
 
-include_directories(AFTER "../../src")
-
 add_definitions(
 	-DWEBP_USE_THREAD
 	-mfloat-abi=softfp

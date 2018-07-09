@@ -13,8 +13,6 @@ file(
 
 add_library(jpeg STATIC ${CppSrc})
 
-include_directories(AFTER "../..")
-
 target_link_libraries(
 	jpeg
 )

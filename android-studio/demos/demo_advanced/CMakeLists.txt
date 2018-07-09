@@ -12,7 +12,6 @@ file(
 
 add_library(demo_advanced SHARED ${CppSrc})
 
-include_directories(AFTER "../../../include")
 include_directories(AFTER "../../../../hltypes/include")
 include_directories(AFTER "../../../../gtypes/include")
 

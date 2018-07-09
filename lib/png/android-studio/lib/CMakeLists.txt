@@ -27,7 +27,6 @@ file(
 
 add_library(png STATIC ${CppSrc})
 
-include_directories(AFTER "../..")
 include_directories(AFTER "../../../hltypes/lib/zlib")
 
 target_link_libraries(

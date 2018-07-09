@@ -13,7 +13,6 @@ file(
 add_library(demo_pix SHARED ${CppSrc})
 
 include_directories(AFTER "../../../aprilpix/include")
-include_directories(AFTER "../../../include")
 include_directories(AFTER "../../../../hltypes/include")
 include_directories(AFTER "../../../../gtypes/include")
 
