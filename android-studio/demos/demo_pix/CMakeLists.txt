@@ -33,10 +33,5 @@ target_link_libraries(
 	jpeg
 	png
 	webp
-	${liblog}
-	${libz}
-	${libc}
-	${libdl}
-	${libandroid}
-	${libGLESv2}
+	${SYSTEM_LIBS}
 )
