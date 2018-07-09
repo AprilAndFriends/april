@@ -154,6 +154,7 @@
 		self.sensorManager.deviceMotionUpdateInterval = 0.016666667f;
 		self.sensorManager.accelerometerUpdateInterval = 0.016666667f;
 		self.sensorManager.gyroUpdateInterval = 0.016666667f;
+		[self.sensorManager retain];
 	}
 	return self;
 }
