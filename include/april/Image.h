@@ -947,7 +947,7 @@ namespace april
 		/// @brief Custom image format meta data loaders.
 		static hmap<hstr, Image* (*)(hsbase&)> customMetaDataLoaders;
 		/// @brief Custom image format savers.
-		static hmap<hstr, bool (*)(hsbase&, Image*, hmap<hstr, hstr>&)> customSavers;
+		static hmap<hstr, bool (*)(hsbase&, Image*, SaveParameters)> customSavers;
 		/// @brief Custom image format saver default parameters.
 		static hmap<hstr, SaveParameters (*)()> customSaverDefaultParameters;
 
