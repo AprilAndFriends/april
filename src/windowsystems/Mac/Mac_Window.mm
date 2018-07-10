@@ -346,7 +346,7 @@ namespace april
 	
 	void Mac_Window::OnAppGainedFocus()
 	{
-		if (![april::macCocoaWindow  isMiniaturized])
+		if (![april::macCocoaWindow isMiniaturized])
 		{
 			this->onFocusChanged(true);
 		}
@@ -366,9 +366,14 @@ namespace april
 	
 	void Mac_Window::checkEvents()
 	{
-		if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)])
+		NSScreen* mainScreen = april::macCocoaWindow.screen;
+		if (mainScreen == nil)
 		{
-			float scalingFactor = [NSScreen mainScreen].backingScaleFactor;
+			mainScreen = [NSScreen mainScreen];
+		}
+		if ([mainScreen respondsToSelector:@selector(backingScaleFactor)])
+		{
+			float scalingFactor = mainScreen.backingScaleFactor;
 			if (scalingFactor != this->scalingFactor)
 			{
 				this->scalingFactor = scalingFactor;

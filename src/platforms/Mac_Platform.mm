@@ -59,7 +59,11 @@ namespace april
 	void _setupSystemInfo_platform(SystemInfo& info)
 	{
 		static NSScreen* prevScreen = NULL;
-		NSScreen* mainScreen = [NSScreen mainScreen];
+		NSScreen* mainScreen = april::macCocoaWindow.screen;
+		if (mainScreen == nil)
+		{
+			mainScreen = [NSScreen mainScreen];
+		}
 		if (prevScreen != mainScreen)
 		{
 			prevScreen = mainScreen;
@@ -72,7 +76,7 @@ namespace april
 			float scalingFactor = 1.0f;
 			if ([mainScreen respondsToSelector:@selector(backingScaleFactor)])
 			{
-				scalingFactor = [NSScreen mainScreen].backingScaleFactor;
+				scalingFactor = mainScreen.backingScaleFactor;
 			}
 			int mib [] = { CTL_HW, HW_MEMSIZE };
 			int64_t value = 0;
