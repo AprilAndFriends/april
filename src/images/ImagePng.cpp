@@ -122,7 +122,7 @@ namespace april
 		return Image::_loadPng(stream, (int)stream.size());
 	}
 
-	bool Image::_savePng(hsbase& stream, Image* image)
+	bool Image::_savePng(hsbase& stream, Image* image, SaveParameters& parameters)
 	{
 		bool result = false;
 		png_structp pngPtr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -148,9 +148,8 @@ namespace april
 						format = PNG_COLOR_TYPE_RGBA;
 					}
 					png_set_write_fn(pngPtr, &stream, &_pngWrite, &_pngFlush);
-					png_set_IHDR(pngPtr, infoPtr, image->w, image->h,
-						8, format, PNG_INTERLACE_NONE,
-						PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+					png_set_IHDR(pngPtr, infoPtr, image->w, image->h, 8, format, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_BASE);
+					png_set_compression_level(pngPtr, hclamp((int)parameters.tryGet(APRIL_PNG_SAVE_COMPRESSION_LEVEL, APRIL_PNG_SAVE_COMPRESSION_LEVEL_DEFAULT), 0, 9));
 					png_write_info(pngPtr, infoPtr);
 					for_iter (j, 0, image->h)
 					{

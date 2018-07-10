@@ -239,12 +239,37 @@ namespace april
 	HL_ENUM_CLASS_DEFINE(Image::FileFormat,
 	(
 		HL_ENUM_DEFINE(Image::FileFormat, Png);
+		HL_ENUM_DEFINE(Image::FileFormat, Jpeg);
 		HL_ENUM_DEFINE(Image::FileFormat, Custom);
+
+		Image::SaveParameters Image::FileFormat::getDefaultParameters(chstr customExtension) const
+		{
+			SaveParameters result;
+			if (*this == FileFormat::Png)
+			{
+				result[APRIL_PNG_SAVE_COMPRESSION_LEVEL] = APRIL_PNG_SAVE_COMPRESSION_LEVEL_DEFAULT;
+			}
+			else if (*this == FileFormat::Jpeg)
+			{
+				result[APRIL_JPEG_SAVE_QUALITY] = APRIL_JPEG_SAVE_QUALITY_DEFAULT;
+			}
+			else if (*this == FileFormat::Custom && Image::customSaverDefaultParameters.hasKey(customExtension))
+			{
+				SaveParameters (*function)() = Image::customSaverDefaultParameters.tryGet(customExtension, NULL);
+				if (function != NULL)
+				{
+					result = (*function)();
+				}
+			}
+			return result;
+		}
+
 	));
 
 	hmap<hstr, Image* (*)(hsbase&)> Image::customLoaders;
 	hmap<hstr, Image* (*)(hsbase&)> Image::customMetaDataLoaders;
-	hmap<hstr, bool (*)(hsbase&, Image*)> Image::customSavers;
+	hmap<hstr, bool (*)(hsbase&, Image*, Image::SaveParameters&)> Image::customSavers;
+	hmap<hstr, Image::SaveParameters (*)()> Image::customSaverDefaultParameters;
 
 	Image::Image()
 	{
@@ -791,19 +816,25 @@ namespace april
 		return image;
 	}
 
-	bool Image::save(Image* image, chstr filename, Image::FileFormat format, chstr customExtension)
+	bool Image::save(Image* image, chstr filename, Image::FileFormat format, hmap<hstr, hstr>& parameters, chstr customExtension)
 	{
 		if (format == FileFormat::Png)
 		{
 			hfile file;
 			file.open(filename, hfaccess::Write);
-			return Image::_savePng(file, image);
+			return Image::_savePng(file, image, parameters);
+		}
+		if (format == FileFormat::Jpeg)
+		{
+			hfile file;
+			file.open(filename, hfaccess::Write);
+			return Image::_saveJpeg(file, image, parameters);
 		}
 		if (format == FileFormat::Custom && Image::customSavers.hasKey(customExtension))
 		{
 			hfile file;
 			file.open(filename, hfaccess::Write);
-			return (*Image::customSavers[customExtension])(file, image);
+			return (*Image::customSavers[customExtension])(file, image, parameters);
 		}
 		return false;
 	}
@@ -2519,9 +2550,13 @@ namespace april
 		Image::customMetaDataLoaders[extension] = metaDataLoadfunction;
 	}
 
-	void Image::registerCustomSaver(chstr extension, bool (*saveFunction)(hsbase&, Image*))
+	void Image::registerCustomSaver(chstr extension, bool (*saveFunction)(hsbase&, Image*, SaveParameters&), Image::SaveParameters (*defaultParametersFunction)())
 	{
 		Image::customSavers[extension] = saveFunction;
+		if (defaultParametersFunction != NULL)
+		{
+			Image::customSaverDefaultParameters[extension] = defaultParametersFunction;
+		}
 	}
 
 }

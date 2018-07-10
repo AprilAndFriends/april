@@ -57,7 +57,7 @@ namespace april
 			jpeg_destroy_decompress(&cInfo);
 			return NULL;
 		}
-		unsigned char* imageData = new unsigned char[cInfo.output_width * cInfo.output_height * 3]; // JPEG is always RGB
+		unsigned char* imageData = new unsigned char[cInfo.output_width * cInfo.output_height * 3]; // JPEG is always RGB, 3 BPP
 		unsigned char* ptr = NULL;
 		for_itert (unsigned int, i, 0, cInfo.output_height)
 		{
@@ -85,6 +85,51 @@ namespace april
 	Image* Image::_loadJpg(hsbase& stream)
 	{
 		return Image::_loadJpg(stream, (int)stream.size());
+	}
+
+	bool Image::_saveJpeg(hsbase& stream, Image* image, SaveParameters& parameters)
+	{
+		hasError = false;
+		bool result = false;
+		int bpp = image->getBpp();
+		if (bpp == 3) // only RGB, 3 BPP is allowed
+		{
+			struct jpeg_compress_struct cInfo;
+			struct jpeg_error_mgr jErr;
+			cInfo.err = jpeg_std_error(&jErr);
+			cInfo.err->error_exit = &_onError;
+			jpeg_create_compress(&cInfo);
+			int stride = image->w * bpp;
+			unsigned long size = image->h * stride + 1000; // should be enough data
+			unsigned char* fileData = new unsigned char[size];
+			jpeg_mem_dest(&cInfo, &fileData, &size);
+			cInfo.image_width = image->w;
+			cInfo.image_height = image->h;
+			cInfo.input_components = bpp;
+			cInfo.in_color_space = JCS_RGB;
+			jpeg_set_defaults(&cInfo);
+			jpeg_set_quality(&cInfo, hclamp((int)parameters.tryGet(APRIL_JPEG_SAVE_QUALITY, APRIL_JPEG_SAVE_QUALITY_DEFAULT), 0, 100), 0);
+			jpeg_start_compress(&cInfo, 1);
+			if (!hasError)
+			{
+				JSAMPROW currentRow = NULL;
+				unsigned int height = (unsigned int)image->h;
+				while (cInfo.next_scanline < height)
+				{
+					currentRow = &image->data[cInfo.next_scanline * stride];
+					jpeg_write_scanlines(&cInfo, &currentRow, 1);
+				}
+				jpeg_finish_compress(&cInfo);
+				if (!hasError)
+				{
+					stream.writeRaw(fileData, (int)size);
+					result = true;
+				}
+			}
+			jpeg_destroy_compress(&cInfo);
+			delete[] fileData;
+		}
+		return result;
 	}
 
 	Image* Image::_readMetaDataJpg(hsbase& stream, int size)
