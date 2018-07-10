@@ -1,5 +1,5 @@
 /// @file
-/// @version 1.0
+/// @version 1.1
 /// 
 /// @section LICENSE
 /// 
@@ -28,6 +28,8 @@ namespace aprilpix
 
 		static april::Image* load(hsbase& stream);
 		static april::Image* loadMetaData(hsbase& stream);
+		static bool save(hsbase& stream, april::Image* image, april::Image::SaveParameters parameters);
+		static april::Image::SaveParameters makeDefaultSaveParameters();
 
 	protected:
 		ImageWebp();

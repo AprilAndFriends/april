@@ -1,5 +1,5 @@
 /// @file
-/// @version 1.0
+/// @version 1.1
 /// 
 /// @section LICENSE
 /// 
@@ -23,13 +23,14 @@
 namespace aprilpix
 {
 	hstr logTag = "aprilpix";
-	static hversion version(1, 0, 0);
+	static hversion version(1, 1, 0);
 
 	void init()
 	{
 		hlog::write(logTag, "Initializing AprilPIX: " + version.toString());
 #ifdef _WEBP
 		april::Image::registerCustomLoader(".webp", &ImageWebp::load, &ImageWebp::loadMetaData);
+		april::Image::registerCustomSaver(".webp", &ImageWebp::save, &ImageWebp::makeDefaultSaveParameters);
 #endif
 #ifdef _PVR
 		april::Image::registerCustomLoader(".pvr", &ImagePvr::load, &ImagePvr::loadMetaData);

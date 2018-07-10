@@ -128,6 +128,7 @@
     <ClInclude Include="..\..\include\webp\mux.h" />
     <ClInclude Include="..\..\include\webp\mux_types.h" />
     <ClInclude Include="..\..\include\webp\types.h" />
+    <ClInclude Include="..\..\src\cpu-features.h" />
     <ClInclude Include="..\..\src\dec\alphai.h" />
     <ClInclude Include="..\..\src\dec\common.h" />
     <ClInclude Include="..\..\src\dec\decode_vp8.h" />
@@ -141,6 +142,11 @@
     <ClInclude Include="..\..\src\dsp\msa_macro.h" />
     <ClInclude Include="..\..\src\dsp\neon.h" />
     <ClInclude Include="..\..\src\dsp\yuv.h" />
+    <ClInclude Include="..\..\src\enc\backward_references.h" />
+    <ClInclude Include="..\..\src\enc\cost.h" />
+    <ClInclude Include="..\..\src\enc\histogram.h" />
+    <ClInclude Include="..\..\src\enc\vp8enci.h" />
+    <ClInclude Include="..\..\src\enc\vp8li.h" />
     <ClInclude Include="..\..\src\utils\bit_reader.h" />
     <ClInclude Include="..\..\src\utils\bit_reader_inl.h" />
     <ClInclude Include="..\..\src\utils\bit_writer.h" />
@@ -148,14 +154,24 @@
     <ClInclude Include="..\..\src\utils\endian_inl.h" />
     <ClInclude Include="..\..\src\utils\filters.h" />
     <ClInclude Include="..\..\src\utils\huffman.h" />
+    <ClInclude Include="..\..\src\utils\huffman_encode.h" />
     <ClInclude Include="..\..\src\utils\quant_levels.h" />
     <ClInclude Include="..\..\src\utils\quant_levels_dec.h" />
     <ClInclude Include="..\..\src\utils\random.h" />
     <ClInclude Include="..\..\src\utils\rescaler.h" />
     <ClInclude Include="..\..\src\utils\thread.h" />
     <ClInclude Include="..\..\src\utils\utils.h" />
+    <ClInclude Include="..\..\src\webp\decode.h" />
+    <ClInclude Include="..\..\src\webp\demux.h" />
+    <ClInclude Include="..\..\src\webp\encode.h" />
+    <ClInclude Include="..\..\src\webp\extras.h" />
+    <ClInclude Include="..\..\src\webp\format_constants.h" />
+    <ClInclude Include="..\..\src\webp\mux.h" />
+    <ClInclude Include="..\..\src\webp\mux_types.h" />
+    <ClInclude Include="..\..\src\webp\types.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\cpu-features.c" />
     <ClCompile Include="..\..\src\dec\alpha.c" />
     <ClCompile Include="..\..\src\dec\buffer.c" />
     <ClCompile Include="..\..\src\dec\frame.c" />
@@ -188,10 +204,24 @@
     <ClCompile Include="..\..\src\dsp\dec_neon.c" />
     <ClCompile Include="..\..\src\dsp\dec_sse2.c" />
     <ClCompile Include="..\..\src\dsp\dec_sse41.c" />
+    <ClCompile Include="..\..\src\dsp\enc.c" />
+    <ClCompile Include="..\..\src\dsp\enc_avx2.c" />
+    <ClCompile Include="..\..\src\dsp\enc_mips32.c" />
+    <ClCompile Include="..\..\src\dsp\enc_mips_dsp_r2.c" />
+    <ClCompile Include="..\..\src\dsp\enc_neon.c" />
+    <ClCompile Include="..\..\src\dsp\enc_sse2.c" />
+    <ClCompile Include="..\..\src\dsp\enc_sse41.c" />
     <ClCompile Include="..\..\src\dsp\filters.c" />
     <ClCompile Include="..\..\src\dsp\filters_mips_dsp_r2.c" />
     <ClCompile Include="..\..\src\dsp\filters_sse2.c" />
     <ClCompile Include="..\..\src\dsp\lossless.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_enc.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_enc_mips32.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_enc_mips_dsp_r2.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_enc_neon.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_enc_sse2.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_enc_sse41.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_mips_dsp_r2.c" />
     <ClCompile Include="..\..\src\dsp\lossless_neon.c" />
     <ClCompile Include="..\..\src\dsp\lossless_sse2.c" />
     <ClCompile Include="..\..\src\dsp\rescaler.c" />
@@ -207,6 +237,69 @@
     <ClCompile Include="..\..\src\dsp\yuv_mips32.c" />
     <ClCompile Include="..\..\src\dsp\yuv_mips_dsp_r2.c" />
     <ClCompile Include="..\..\src\dsp\yuv_sse2.c" />
+    <ClCompile Include="..\..\src\enc\alpha.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\analysis.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\backward_references.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\config.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\cost.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\filter.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\frame.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\histogram.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\iterator.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\near_lossless.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\picture.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\picture_csp.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\picture_psnr.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\picture_rescale.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\picture_tools.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\quant.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\syntax.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\token.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\tree.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\vp8l.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\enc\webpenc.c">
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="..\..\src\utils\bit_reader.c">
       <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
@@ -220,6 +313,9 @@
       <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\huffman.c">
+      <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\src\utils\huffman_encode.c">
       <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\quant_levels.c">

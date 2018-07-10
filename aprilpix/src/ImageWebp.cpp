@@ -1,5 +1,5 @@
 /// @file
-/// @version 1.0
+/// @version 1.1
 /// 
 /// @section LICENSE
 /// 
@@ -8,12 +8,18 @@
 
 #ifdef _WEBP
 #include <webp/decode.h>
+#include <webp/encode.h>
 
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
 #include "aprilpix.h"
 #include "ImageWebp.h"
+
+#define SAVE_QUALITY "quality"
+#define SAVE_QUALITY_DEFAULT 95.0f
+#define SAVE_LOSSLESS "lossless"
+#define SAVE_LOSSLESS_DEFAULT true
 
 namespace aprilpix
 {
@@ -92,6 +98,63 @@ namespace aprilpix
 		image->h = features.height;
 		image->format = (features.has_alpha ? Format::RGBA : Format::RGB);
 		return image;
+	}
+
+	bool ImageWebp::save(hsbase& stream, april::Image* image, april::Image::SaveParameters parameters)
+	{
+		bool result = false;
+		if (image->format == april::Image::Format::RGB || image->format == april::Image::Format::RGBA ||
+			image->format == april::Image::Format::BGR || image->format == april::Image::Format::BGRA)
+		{
+			int bpp = image->getBpp();
+			int stride = image->w * bpp;
+			int size = 0;
+			unsigned char* fileData = NULL;
+			bool lossless = (bool)parameters.tryGet(SAVE_LOSSLESS, SAVE_LOSSLESS_DEFAULT);
+			if (lossless)
+			{
+				size_t(*function)(const uint8_t*, int, int, int, uint8_t**) = NULL;
+				if (image->format == april::Image::Format::RGB)			function = &WebPEncodeLosslessRGB;
+				else if (image->format == april::Image::Format::RGBA)	function = &WebPEncodeLosslessRGBA;
+				else if (image->format == april::Image::Format::BGR)	function = &WebPEncodeLosslessBGR;
+				else if (image->format == april::Image::Format::BGRA)	function = &WebPEncodeLosslessBGRA;
+				if (function != NULL)
+				{
+					size = (*function)((uint8_t*)image->data, image->w, image->h, stride, &fileData);
+				}
+			}
+			else
+			{
+				size_t (*function)(const uint8_t*, int, int, int, float, uint8_t**) = NULL;
+				if (image->format == april::Image::Format::RGB)			function = &WebPEncodeRGB;
+				else if (image->format == april::Image::Format::RGBA)	function = &WebPEncodeRGBA;
+				else if (image->format == april::Image::Format::BGR)	function = &WebPEncodeBGR;
+				else if (image->format == april::Image::Format::BGRA)	function = &WebPEncodeBGRA;
+				if (function != NULL)
+				{
+					float quality = hclamp((float)parameters.tryGet(SAVE_QUALITY, SAVE_QUALITY_DEFAULT), 0.0f, 100.0f);
+					size = (*function)((uint8_t*)image->data, image->w, image->h, stride, quality, &fileData);
+				}
+			}
+			if (fileData != NULL)
+			{
+				if (size > 0)
+				{
+					stream.writeRaw(fileData, size);
+					result = true;
+				}
+				WebPFree(fileData);
+			}
+		}
+		return result;
+	}
+
+	april::Image::SaveParameters ImageWebp::makeDefaultSaveParameters()
+	{
+		SaveParameters result;
+		result[SAVE_QUALITY] = SAVE_QUALITY_DEFAULT;
+		result[SAVE_LOSSLESS] = SAVE_LOSSLESS_DEFAULT;
+		return result;
 	}
 
 }
