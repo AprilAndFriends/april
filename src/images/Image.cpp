@@ -242,7 +242,7 @@ namespace april
 		HL_ENUM_DEFINE(Image::FileFormat, Jpeg);
 		HL_ENUM_DEFINE(Image::FileFormat, Custom);
 
-		Image::SaveParameters Image::FileFormat::getDefaultParameters(chstr customExtension) const
+		Image::SaveParameters Image::FileFormat::makeDefaultParameters(chstr customExtension) const
 		{
 			SaveParameters result;
 			if (*this == FileFormat::Png)

@@ -131,10 +131,10 @@ namespace april
 			/// @brief Defines a custom format.
 			HL_ENUM_DECLARE(FileFormat, Custom);
 
-			/// @brief Gets the default parameters for the given Format.
+			/// @brief Creates the default parameters for the given Format.
 			/// @param[in] customExtension Used when format is Custom to determine which custom format should be saved.
 			/// @Return The default parameters for the given Format.
-			SaveParameters getDefaultParameters(chstr customExtension = "") const;
+			SaveParameters makeDefaultParameters(chstr customExtension = "") const;
 
 		));
 
