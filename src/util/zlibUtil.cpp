@@ -11,7 +11,6 @@
 #include <hltypes/hstring.h>
 #include <zlib.h>
 
-#include "april.h"
 #include "zlibUtil.h"
 
 namespace april
@@ -27,7 +26,7 @@ namespace april
 		int result = inflateInit(&zlibStream);
 		if (result != Z_OK)
 		{
-			hlog::error(logTag, "zlib Error: " + hstr(result));
+			hlog::error("april-zlib", "zlib Error: " + hstr(result)); // don't change logTag
 			return NULL;
 		}
 		unsigned char* data = new unsigned char[streamSize];
