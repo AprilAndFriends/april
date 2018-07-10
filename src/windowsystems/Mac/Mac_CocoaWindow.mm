@@ -84,6 +84,10 @@ namespace april
 	mCustomFullscreenExitAnimation = false;
 	[self setBackgroundColor:[NSColor blackColor]];
 	[self setOpaque:YES];
+	if (april::window->getOptions().minimized)
+	{
+		[self miniaturize:(id)self];
+	}
 	[self setDelegate:self];
 	[self setAcceptsMouseMovedEvents:YES];
 	// setup screenshot listening to counter apple's bug..
@@ -189,7 +193,7 @@ namespace april
 
 - (NSApplicationPresentationOptions) window:(NSWindow*) window willUseFullScreenPresentationOptions:(NSApplicationPresentationOptions) proposedOptions
 {
-	return (proposedOptions| NSApplicationPresentationAutoHideToolbar | NSApplicationPresentationAutoHideMenuBar);
+	return (proposedOptions | NSApplicationPresentationAutoHideToolbar | NSApplicationPresentationAutoHideMenuBar);
 }
 
 - (void) windowWillEnterFullScreen:(NSNotification*) notification

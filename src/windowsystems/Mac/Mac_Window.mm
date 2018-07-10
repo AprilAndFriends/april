@@ -149,7 +149,10 @@ namespace april
 		{
 			[april::macCocoaWindow setCollectionBehavior:NSWindowCollectionBehaviorFullScreenPrimary];
 		}
-		[april::macCocoaWindow makeKeyAndOrderFront:april::macCocoaWindow];
+		if (!april::window->getOptions().minimized)
+		{
+			[april::macCocoaWindow makeKeyAndOrderFront:april::macCocoaWindow];
+		}
 		[april::macCocoaWindow setOpaque:YES];
 		[april::macCocoaWindow display];
 		NSRect bounds = [april::macCocoaWindow.contentView bounds];
