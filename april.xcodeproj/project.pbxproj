@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B21008420F4CC6500E93558 /* TakeScreenshotCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B21008220F4CC6400E93558 /* TakeScreenshotCommand.h */; };
+		1B21008520F4CC6500E93558 /* TakeScreenshotCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B21008320F4CC6400E93558 /* TakeScreenshotCommand.cpp */; };
+		1B21008620F4CDBC00E93558 /* TakeScreenshotCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B21008320F4CC6400E93558 /* TakeScreenshotCommand.cpp */; };
+		1B21008720F4CDC700E93558 /* TakeScreenshotCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B21008320F4CC6400E93558 /* TakeScreenshotCommand.cpp */; };
 		7F1B522A12E4710D00E958D8 /* aprilExport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B522712E4710D00E958D8 /* aprilExport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F1B522B12E4710D00E958D8 /* Color.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B522812E4710D00E958D8 /* Color.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F1B522C12E4710D00E958D8 /* Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = 7F1B522912E4710D00E958D8 /* Texture.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -523,6 +527,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1B21008220F4CC6400E93558 /* TakeScreenshotCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TakeScreenshotCommand.h; path = src/async/TakeScreenshotCommand.h; sourceTree = "<group>"; };
+		1B21008320F4CC6400E93558 /* TakeScreenshotCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TakeScreenshotCommand.cpp; path = src/async/TakeScreenshotCommand.cpp; sourceTree = "<group>"; };
 		7F1B522712E4710D00E958D8 /* aprilExport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = aprilExport.h; path = include/april/aprilExport.h; sourceTree = "<group>"; };
 		7F1B522812E4710D00E958D8 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Color.h; path = include/april/Color.h; sourceTree = "<group>"; };
 		7F1B522912E4710D00E958D8 /* Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Texture.h; path = include/april/Texture.h; sourceTree = "<group>"; };
@@ -1019,6 +1025,8 @@
 		843208EA1FF4EE23003A0539 /* async */ = {
 			isa = PBXGroup;
 			children = (
+				1B21008320F4CC6400E93558 /* TakeScreenshotCommand.cpp */,
+				1B21008220F4CC6400E93558 /* TakeScreenshotCommand.h */,
 				843208EB1FF4EE42003A0539 /* AssignWindowCommand.cpp */,
 				843208ED1FF4EE5A003A0539 /* AssignWindowCommand.h */,
 				843208EE1FF4EE5A003A0539 /* AsyncCommand.cpp */,
@@ -1630,6 +1638,7 @@
 				B45500FB1BD7A7BA00E75E43 /* OpenGL1_Texture.h in Headers */,
 				B455016D1BD7A86200E75E43 /* OpenGL_RenderSystem.h in Headers */,
 				D1AF66D5170B1E5900A43743 /* Color.h in Headers */,
+				1B21008420F4CC6500E93558 /* TakeScreenshotCommand.h in Headers */,
 				D1AF66D6170B1E5900A43743 /* Texture.h in Headers */,
 				8432092D1FF4EE5A003A0539 /* StateUpdateCommand.h in Headers */,
 			);
@@ -1827,6 +1836,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B21008720F4CDC700E93558 /* TakeScreenshotCommand.cpp in Sources */,
 				B44FBD8D1BE0E44A00DD8995 /* RenderState.cpp in Sources */,
 				843209491FF4EE72003A0539 /* CreateCommand.cpp in Sources */,
 				D11FB8F81E6866D0001A7E9A /* InputMode.cpp in Sources */,
@@ -1919,6 +1929,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B21008620F4CDBC00E93558 /* TakeScreenshotCommand.cpp in Sources */,
 				D1B486B119337389004674EB /* Mac_Cursor.mm in Sources */,
 				B455013F1BD7A7DE00E75E43 /* OpenGLES2_Texture.cpp in Sources */,
 				B455012F1BD7A7DE00E75E43 /* OpenGLES2_PixelShader.cpp in Sources */,
@@ -2025,6 +2036,7 @@
 				D1AF66A0170B1E5900A43743 /* Window.cpp in Sources */,
 				B4E4CE091E69A1CA00DB4C31 /* Keys.cpp in Sources */,
 				843209731FF4EEC2003A0539 /* RenderCommand.cpp in Sources */,
+				1B21008520F4CC6500E93558 /* TakeScreenshotCommand.cpp in Sources */,
 				D1AF66A3170B1E5900A43743 /* Color.cpp in Sources */,
 				D17F3E941D79D4F60045F39D /* VirtualKeyboard.cpp in Sources */,
 				B4046B361ECDCA3C00F85550 /* egl.cpp in Sources */,
