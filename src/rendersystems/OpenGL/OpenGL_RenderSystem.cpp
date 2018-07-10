@@ -416,6 +416,30 @@ namespace april
 		}
 	}
 
+	void OpenGL_RenderSystem::_deviceTakeScreenshot(Image::Format format)
+	{
+		int w = april::window->getWidth();
+		int h = april::window->getHeight();
+		unsigned char* temp = new unsigned char[w * (h + 1) * 4]; // 4 BPP and one extra row just in case some OpenGL implementations don't blit properly and cause a memory leak
+		GL_SAFE_CALL(glReadPixels, (0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, temp));
+		// GL returns all pixels flipped vertically so this needs to be corrected first
+		int stride = w * 4;
+		unsigned char* data = new unsigned char[stride * h];
+		for_iter (i, 0, h)
+		{
+			memcpy(&data[i * stride], &temp[(h - i - 1) * stride], stride);
+		}
+		delete[] temp;
+		temp = data;
+		data = NULL;
+		if (Image::convertToFormat(w, h, temp, Image::Format::RGBX, &data, format, false))
+		{
+			april::window->queueScreenshot(Image::create(w, h, data, format));
+			delete[] data;
+		}
+		delete[] temp;
+	}
+
 	Image::Format OpenGL_RenderSystem::getNativeTextureFormat(Image::Format format) const
 	{
 		if (format == Image::Format::ARGB || format == Image::Format::ABGR || format == Image::Format::RGBA)
@@ -464,26 +488,6 @@ namespace april
 	unsigned int OpenGL_RenderSystem::getNativeColorUInt(const april::Color& color) const
 	{
 		return ((color.a << 24) | (color.b << 16) | (color.g << 8) | color.r);
-	}
-
-	Image* OpenGL_RenderSystem::takeScreenshot(Image::Format format)
-	{
-#ifdef _DEBUG
-		hlog::write(logTag, "Taking screenshot...");
-#endif
-		int w = april::window->getWidth();
-		int h = april::window->getHeight();
-		unsigned char* temp = new unsigned char[w * (h + 1) * 4]; // 4 BPP and one extra row just in case some OpenGL implementations don't blit properly and cause a memory leak
-		GL_SAFE_CALL(glReadPixels, (0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, temp));
-		unsigned char* data = NULL;
-		Image* image = NULL;
-		if (Image::convertToFormat(w, h, temp, Image::Format::RGBA, &data, format, false))
-		{
-			image = Image::create(w, h, data, format);
-			delete[] data;
-		}
-		delete[] temp;
-		return image;
 	}
 
 }

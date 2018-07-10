@@ -755,52 +755,6 @@ namespace april
 		return D3DCOLOR_ARGB(color.a, color.r, color.g, color.b);
 	}
 
-	Image* DirectX9_RenderSystem::takeScreenshot(Image::Format format)
-	{
-#ifdef _DEBUG
-		hlog::write(logTag, "Taking screenshot...");
-#endif
-		D3DSURFACE_DESC desc;
-		this->backBuffer->GetDesc(&desc);
-		if (desc.Format != D3DFMT_X8R8G8B8)
-		{
-			hlog::error(logTag, "Failed to grab screenshot, backbuffer format not supported, expected X8R8G8B8, got: " + hstr(desc.Format));
-			return NULL;
-		}
-		IDirect3DSurface9* buffer;
-		HRESULT hr = this->d3dDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &buffer, NULL);
-		if (FAILED(hr))
-		{
-			hlog::error(logTag, "Failed to grab screenshot, CreateOffscreenPlainSurface() call failed.");
-			return NULL;
-		}
-		hr = this->d3dDevice->GetRenderTargetData(this->backBuffer, buffer);
-		if (FAILED(hr))
-		{
-			hlog::error(logTag, "Failed to grab screenshot, GetRenderTargetData() call failed.");
-			buffer->Release();
-			return NULL;
-		}		
-		D3DLOCKED_RECT rect;
-		hr = buffer->LockRect(&rect, NULL, D3DLOCK_DONOTWAIT);
-		if (FAILED(hr))
-		{
-			hlog::error(logTag, "Failed to grab screenshot, surface lock failed.");
-			buffer->Release();
-			return NULL;
-		}
-		unsigned char* data = NULL;
-		Image* image = NULL;
-		if (Image::convertToFormat(desc.Width, desc.Height, (unsigned char*)rect.pBits, Image::Format::BGRX, &data, format, false))
-		{
-			image = Image::create(desc.Width, desc.Height, data, format);
-			delete[] data;
-		}
-		buffer->UnlockRect();
-		buffer->Release();
-		return image;
-	}
-	
 	void DirectX9_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
 		if (this->_currentIntermediateRenderTexture != NULL)
@@ -915,6 +869,47 @@ namespace april
 			sourceLock.data, sourceLock.dataWidth, sourceLock.dataHeight, sourceLock.format, destinationLock.data, destinationLock.dataWidth, destinationLock.dataHeight, destinationLock.format);
 		dx9Source->_unlockSystem(sourceLock, false);
 		dx9Destination->_unlockSystem(destinationLock, true);
+	}
+
+	void DirectX9_RenderSystem::_deviceTakeScreenshot(Image::Format format)
+	{
+		D3DSURFACE_DESC desc;
+		this->backBuffer->GetDesc(&desc);
+		if (desc.Format != D3DFMT_X8R8G8B8)
+		{
+			hlog::error(logTag, "Failed to grab screenshot, backbuffer format not supported, expected X8R8G8B8, got: " + hstr(desc.Format));
+			return;
+		}
+		IDirect3DSurface9* buffer;
+		HRESULT hr = this->d3dDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &buffer, NULL);
+		if (FAILED(hr))
+		{
+			hlog::error(logTag, "Failed to grab screenshot, CreateOffscreenPlainSurface() call failed.");
+			return;
+		}
+		hr = this->d3dDevice->GetRenderTargetData(this->backBuffer, buffer);
+		if (FAILED(hr))
+		{
+			hlog::error(logTag, "Failed to grab screenshot, GetRenderTargetData() call failed.");
+			buffer->Release();
+			return;
+		}
+		D3DLOCKED_RECT rect;
+		hr = buffer->LockRect(&rect, NULL, D3DLOCK_DONOTWAIT);
+		if (FAILED(hr))
+		{
+			hlog::error(logTag, "Failed to grab screenshot, surface lock failed.");
+			buffer->Release();
+			return;
+		}
+		unsigned char* data = NULL;
+		if (Image::convertToFormat(desc.Width, desc.Height, (unsigned char*)rect.pBits, Image::Format::BGRX, &data, format, false))
+		{
+			april::window->queueScreenshot(Image::create(desc.Width, desc.Height, data, format));
+			delete[] data;
+		}
+		buffer->UnlockRect();
+		buffer->Release();
 	}
 
 	Texture* DirectX9_RenderSystem::getRenderTarget()

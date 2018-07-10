@@ -45,7 +45,6 @@ namespace april
 
 		Image::Format getNativeTextureFormat(Image::Format format) const;
 		unsigned int getNativeColorUInt(const april::Color& color) const;
-		Image* takeScreenshot(Image::Format format);
 
 		// TODOa - these need to be refactored
 		Texture* getRenderTarget();
@@ -100,6 +99,7 @@ namespace april
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
 		void _devicePresentFrame(bool systemEnabled);
 		void _deviceCopyRenderTargetData(Texture* source, Texture* destination);
+		void _deviceTakeScreenshot(Image::Format format);
 
 		static D3DPRIMITIVETYPE _dx9RenderOperations[];
 

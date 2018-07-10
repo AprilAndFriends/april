@@ -53,4 +53,10 @@ namespace april
 		hlog::debug(logTag, "Event onLowMemoryWarning() was not implemented.");
 	}
 
+	void SystemDelegate::onScreenshot(Image* image)
+	{
+		hlog::debug(logTag, "Event onScreenshot() was not implemented.");
+		delete image;
+	}
+
 }

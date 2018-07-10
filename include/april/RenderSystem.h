@@ -50,6 +50,7 @@ namespace april
 	class ResetCommand;
 	class StateUpdateCommand;
 	class SuspendCommand;
+	class TakeScreenshotCommand;
 	class Texture;
 	template <typename T> class VertexRenderCommand;
 	class VertexShader;
@@ -73,6 +74,7 @@ namespace april
 		friend class ResetCommand;
 		friend class StateUpdateCommand;
 		friend class SuspendCommand;
+		friend class TakeScreenshotCommand;
 		friend class Texture;
 		template <typename T> friend class VertexRenderCommand;
 		friend class Window;
@@ -576,14 +578,13 @@ namespace april
 		/// @param[in] color The Color to convert.
 		/// @return A system native unsigned int value used for colors internally.
 		virtual unsigned int getNativeColorUInt(const Color& color) const = 0;
-		/// @brief Takes a screenshot aka captures the image data of the backbuffer.
-		/// @param[in] format The format to convert in which the screenshot should be returned.
-		/// @return An Image that contains a capture of the screen.
-		virtual Image* takeScreenshot(Image::Format format);
 		/// @brief Flushes the currently rendered data.
 		/// @note Usually this doesn't need to be called manually. This is needed for some implemenations that don't call presentFrame() within C++ at all.
 		/// @see presentFrame
 		virtual void flushFrame(bool updateStats = false);
+		/// @brief Takes a screenshot a.k.a. captures the image data of the backbuffer.
+		/// @param[in] format The format to which the screenshot should be converted.
+		void takeScreenshot(Image::Format format);
 		/// @brief Flushes the currently rendered data to the backbuffer for display.
 		/// @note Usually this doesn't need to be called manually. Calls flushFrame().
 		/// @see flushFrame
@@ -903,6 +904,9 @@ namespace april
 		/// @brief Copies RenderTarget data from one texture to another.
 		/// @note Both textures must be render targets.
 		virtual void _deviceCopyRenderTargetData(Texture* source, Texture* destination);
+		/// @brief Takes a screenshot a.k.a. captures the image data of the backbuffer.
+		/// @param[in] format The format to which the screenshot should be converted.
+		virtual void _deviceTakeScreenshot(Image::Format format);
 		/// @brief Updates the intermediate render textures.
 		void _updateIntermediateRenderTextures();
 		/// @brief Creates the intermediate render textures.

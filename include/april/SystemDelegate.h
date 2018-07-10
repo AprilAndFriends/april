@@ -20,6 +20,8 @@
 
 namespace april
 {
+	class Image;
+
 	/// @brief Defines a delegate for special system callbacks.
 	class aprilExport SystemDelegate
 	{
@@ -50,6 +52,10 @@ namespace april
 		virtual void onVirtualKeyboardChanged(bool visible, float heightRatio);
 		/// @brief Called when the system is running low on RAM.
 		virtual void onLowMemoryWarning();
+		/// @brief Called when the requested screenshot image is ready.
+		/// @param[in] image The Image objet containing the screenshot bitmap data.
+		/// @note Make sure you delete the Image object!
+		virtual void onScreenshot(Image* image);
 
 	};
 

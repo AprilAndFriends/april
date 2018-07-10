@@ -429,6 +429,10 @@ namespace april
 			{
 				receivedMemoryWarning = true; // merging low memory warning events
 			}
+			else if (genericEvents[i].type == GenericEvent::Type::Screenshot)
+			{
+				this->handleScreenshot(genericEvents[i].image);
+			}
 		}
 		if (sizeEvent.intValue > 0 && sizeEvent.intValueOther > 0)
 		{
@@ -605,6 +609,14 @@ namespace april
 		{
 			this->systemDelegate->onLowMemoryWarning();
 			hlog::writef(logTag, "Low memory warning processed. Current RAM: %lld B; Current VRAM: %lld B", april::getRamConsumption(), april::rendersys->getVRamConsumption());
+		}
+	}
+
+	void Window::handleScreenshot(Image* image)
+	{
+		if (this->systemDelegate != NULL)
+		{
+			this->systemDelegate->onScreenshot(image);
 		}
 	}
 
@@ -821,6 +833,12 @@ namespace april
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		this->genericEvents += GenericEvent(GenericEvent::Type::LowMemoryWarning);
+	}
+
+	void Window::queueScreenshot(Image* image)
+	{
+		hmutex::ScopeLock lock(&this->eventMutex);
+		this->genericEvents += GenericEvent(GenericEvent::Type::Screenshot, image);
 	}
 
 	void Window::queueMouseInput(MouseEvent::Type type, cgvec2f position, Key keyCode)

@@ -8,7 +8,7 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a touch event.
+/// Defines a controller event.
 
 #ifndef APRIL_CONTROLLER_EVENT_H
 #define APRIL_CONTROLLER_EVENT_H

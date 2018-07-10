@@ -1482,12 +1482,6 @@ namespace april
 		}
 	}
 
-	april::Image* RenderSystem::takeScreenshot(Image::Format format)
-	{
-		hlog::warnf(logTag, "Screenshots are not implemented in render system '%s'!", this->name.cStr());
-		return NULL;
-	}
-
 	void RenderSystem::flushFrame(bool updateStats)
 	{
 		if (this->renderHelper != NULL)
@@ -1507,6 +1501,11 @@ namespace april
 			this->statLastFrameLineCount = this->statCurrentFrameLineCount;
 			this->statCurrentFrameLineCount = 0;
 		}
+	}
+
+	void RenderSystem::takeScreenshot(Image::Format format)
+	{
+		this->_addAsyncCommand(new TakeScreenshotCommand(format));
 	}
 
 	void RenderSystem::presentFrame()
@@ -1536,6 +1535,11 @@ namespace april
 	void RenderSystem::_deviceCopyRenderTargetData(Texture* source, Texture* destination)
 	{
 		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
+	}
+
+	void RenderSystem::_deviceTakeScreenshot(Image::Format format)
+	{
+		hlog::warnf(logTag, "Taking screenshots is not implemented in render system '%s'!", this->name.cStr());
 	}
 
 	void RenderSystem::_updateIntermediateRenderTextures()

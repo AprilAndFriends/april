@@ -20,7 +20,9 @@
 
 namespace april
 {
-	// TODOx - this class might benefit from using "union"
+	class Image;
+
+	// TODO - this class might benefit from using "union"
 	/// @brief Defines a generic event.
 	class aprilExport GenericEvent
 	{
@@ -51,6 +53,9 @@ namespace april
 			/// @var static const Type Type::LowMemoryWarning
 			/// @brief When OS is running out of memory.
 			HL_ENUM_DECLARE(Type, LowMemoryWarning);
+			/// @var static const Type Type::Screenshot
+			/// @brief When screenshot is ready.
+			HL_ENUM_DECLARE(Type, Screenshot);
 		));
 
 		/// @brief The event type.
@@ -65,6 +70,8 @@ namespace april
 		bool boolValue;
 		/// @brief A gvec2f value related to the event.
 		gvec2f gvec2fValue;
+		/// @brief An Image value related to the event.
+		Image* image;
 
 		/// @brief Constructor.
 		/// @param[in] type The event type.
@@ -92,6 +99,10 @@ namespace april
 		/// @param[in] type The event type.
 		/// @param[in] gvec2fValue A gvec2f value related to the event.
 		GenericEvent(Type type, cgvec2f gvec2fValue);
+		/// @brief Constructor.
+		/// @param[in] type The event type.
+		/// @param[in] image An Image value related to the event.
+		GenericEvent(Type type, Image* image);
 
 	};
 

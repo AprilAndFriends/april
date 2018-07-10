@@ -8,7 +8,7 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a touch event.
+/// Defines a key event.
 
 #ifndef APRIL_KEY_EVENT_H
 #define APRIL_KEY_EVENT_H

@@ -296,6 +296,9 @@ namespace april
 		virtual void handleVirtualKeyboardChange(bool visible, float heightRatio);
 		/// @brief Handles a low memory warning event and propagates it to the delegate.
 		virtual void handleLowMemoryWarning();
+		/// @brief Handles a screenshot event and propagates it to the delegate.
+		/// @param[in] image The Image objet containing the screenshot bitmap data.
+		virtual void handleScreenshot(Image* image);
 		/// @brief Handles a mouse event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] position The pointer position.
@@ -332,7 +335,7 @@ namespace april
 		/// @see handleKeyEvent
 		void handleCharOnlyInput(unsigned int charCode);
 
-		/// @brief Queues a quit event and propagates it to the delegate.
+		/// @brief Queues a quit event.
 		/// @param[in] canCancel Whether the window quitting can be canceled.
 		/// @return True if the system is allowed to actually close the window.
 		virtual bool queueQuitRequest(bool canCancel);
@@ -354,12 +357,15 @@ namespace april
 		/// @param[in] inputMode New input mode.
 		/// @note This is mostly used internally.
 		virtual void queueInputModeChange(const InputMode& inputMode);
-		/// @brief Queues a virtual-keyboard-change event and propagates it to the delegate.
+		/// @brief Queues a virtual-keyboard-change event.
 		/// @param[in] visible Whether the virtual keyboard is visible.
 		/// @param[in] heightRatio The ratio of the screen height that the keyboard takes up.
 		virtual void queueVirtualKeyboardChange(bool visible, float heightRatio);
-		/// @brief Queues a low memory warning event and propagates it to the delegate.
+		/// @brief Queues a low memory warning event.
 		virtual void queueLowMemoryWarning();
+		/// @brief Queues a screenshot event.
+		/// @param[in] image The Image objet containing the screenshot bitmap data.
+		virtual void queueScreenshot(Image* image);
 		/// @brief Queues a mouse event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] position The pointer position.

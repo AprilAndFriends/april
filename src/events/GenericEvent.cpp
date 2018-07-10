@@ -19,13 +19,15 @@ namespace april
 		HL_ENUM_DEFINE(GenericEvent::Type, InputModeChange);
 		HL_ENUM_DEFINE(GenericEvent::Type, VirtualKeyboardChange);
 		HL_ENUM_DEFINE(GenericEvent::Type, LowMemoryWarning);
+		HL_ENUM_DEFINE(GenericEvent::Type, Screenshot);
 	));
 
 	GenericEvent::GenericEvent(Type type) :
 		intValue(0),
 		intValueOther(0),
 		floatValue(0.0f),
-		boolValue(false)
+		boolValue(false),
+		image(NULL)
 	{
 		this->type = type;
 	}
@@ -34,7 +36,8 @@ namespace april
 		intValue(0),
 		intValueOther(0),
 		floatValue(0.0f),
-		boolValue(false)
+		boolValue(false),
+		image(NULL)
 	{
 		this->type = type;
 		this->intValue = intValue;
@@ -44,7 +47,8 @@ namespace april
 		intValue(0),
 		intValueOther(0),
 		floatValue(0.0f),
-		boolValue(false)
+		boolValue(false),
+		image(NULL)
 	{
 		this->type = type;
 		this->intValue = intValue;
@@ -56,7 +60,8 @@ namespace april
 		intValue(0),
 		intValueOther(0),
 		floatValue(0.0f),
-		boolValue(false)
+		boolValue(false),
+		image(NULL)
 	{
 		this->type = type;
 		this->boolValue = boolValue;
@@ -66,7 +71,8 @@ namespace april
 		intValue(0),
 		intValueOther(0),
 		floatValue(0.0f),
-		boolValue(false)
+		boolValue(false),
+		image(NULL)
 	{
 		this->type = type;
 		this->boolValue = boolValue;
@@ -77,10 +83,21 @@ namespace april
 		intValue(0),
 		intValueOther(0),
 		floatValue(0.0f),
-		boolValue(false)
+		boolValue(false),
+		image(NULL)
 	{
 		this->type = type;
 		this->gvec2fValue = gvec2fValue;
+	}
+
+	GenericEvent::GenericEvent(Type type, Image* image) :
+		intValue(0),
+		intValueOther(0),
+		floatValue(0.0f),
+		boolValue(false)
+	{
+		this->type = type;
+		this->image = image;
 	}
 
 }
