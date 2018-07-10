@@ -268,7 +268,7 @@ namespace april
 
 	hmap<hstr, Image* (*)(hsbase&)> Image::customLoaders;
 	hmap<hstr, Image* (*)(hsbase&)> Image::customMetaDataLoaders;
-	hmap<hstr, bool (*)(hsbase&, Image*, Image::SaveParameters&)> Image::customSavers;
+	hmap<hstr, bool (*)(hsbase&, Image*, Image::SaveParameters)> Image::customSavers;
 	hmap<hstr, Image::SaveParameters (*)()> Image::customSaverDefaultParameters;
 
 	Image::Image()
@@ -816,8 +816,9 @@ namespace april
 		return image;
 	}
 
-	bool Image::save(Image* image, chstr filename, Image::FileFormat format, hmap<hstr, hstr>& parameters, chstr customExtension)
+	bool Image::save(Image* image, chstr filename, Image::FileFormat format, Image::SaveParameters parameters, chstr customExtension)
 	{
+		parameters.insert(format.makeDefaultParameters(customExtension));
 		if (format == FileFormat::Png)
 		{
 			hfile file;
@@ -2550,7 +2551,7 @@ namespace april
 		Image::customMetaDataLoaders[extension] = metaDataLoadfunction;
 	}
 
-	void Image::registerCustomSaver(chstr extension, bool (*saveFunction)(hsbase&, Image*, SaveParameters&), Image::SaveParameters (*defaultParametersFunction)())
+	void Image::registerCustomSaver(chstr extension, bool (*saveFunction)(hsbase&, Image*, SaveParameters), Image::SaveParameters (*defaultParametersFunction)())
 	{
 		Image::customSavers[extension] = saveFunction;
 		if (defaultParametersFunction != NULL)

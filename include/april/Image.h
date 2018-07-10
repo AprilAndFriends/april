@@ -615,7 +615,7 @@ namespace april
 		/// @param[in] parameters Special parameters that can be adjusted in the saving Format.
 		/// @param[in] customExtension Used when format is Custom to determine which custom format should be saved.
 		/// @return True if successful.
-		static bool save(Image* image, chstr filename, FileFormat format, SaveParameters& parameters = SaveParameters(), chstr customExtension = "");
+		static bool save(Image* image, chstr filename, FileFormat format, SaveParameters parameters = SaveParameters(), chstr customExtension = "");
 		/// @brief Creates an Image without image data, but with meta-data from a resource file.
 		/// @param[in] filename The filename of the resource file.
 		/// @return The loaded Image object or NULL if failed.
@@ -933,7 +933,7 @@ namespace april
 		/// @param[in] defaultParametersFunction The function pointer to use for setting up the default save parameters.
 		/// @note The saving function will only be triggered if the extension is added with april::setTextureExtensions as well.
 		/// @see setTextureExtensions
-		static void registerCustomSaver(chstr extension, bool (*saveFunction)(hsbase&, Image*, SaveParameters&), SaveParameters (*defaultParametersFunction)() = NULL);
+		static void registerCustomSaver(chstr extension, bool (*saveFunction)(hsbase&, Image*, SaveParameters), SaveParameters (*defaultParametersFunction)() = NULL);
 
 	protected:
 		/// @brief Basic constructor.
@@ -1002,13 +1002,13 @@ namespace april
 		/// @param[in] image The Image object to save.
 		/// @param[in] parameters Special parameters that can be adjusted in the saving Format.
 		/// @return True if successful.
-		static bool _savePng(hsbase& stream, Image* image, SaveParameters& parameters);
+		static bool _savePng(hsbase& stream, Image* image, SaveParameters parameters);
 		/// @brief Saves image data into a stream encoded as JPEG file.
 		/// @param[in,out] stream The destination image data stream.
 		/// @param[in] image The Image object to save.
 		/// @param[in] parameters Special parameters that can be adjusted in the saving Format.
 		/// @return True if successful.
-		static bool _saveJpeg(hsbase& stream, Image* image, SaveParameters& parameters);
+		static bool _saveJpeg(hsbase& stream, Image* image, SaveParameters parameters);
 		/// @brief Loads and decodes meta data from PNG file data.
 		/// @param[in] stream The encoded image data stream.
 		/// @param[in] size The size within the data stream that actually belongs to this encoded file.

@@ -87,7 +87,7 @@ namespace april
 		return Image::_loadJpg(stream, (int)stream.size());
 	}
 
-	bool Image::_saveJpeg(hsbase& stream, Image* image, SaveParameters& parameters)
+	bool Image::_saveJpeg(hsbase& stream, Image* image, SaveParameters parameters)
 	{
 		hasError = false;
 		bool result = false;

@@ -122,7 +122,7 @@ namespace april
 		return Image::_loadPng(stream, (int)stream.size());
 	}
 
-	bool Image::_savePng(hsbase& stream, Image* image, SaveParameters& parameters)
+	bool Image::_savePng(hsbase& stream, Image* image, SaveParameters parameters)
 	{
 		bool result = false;
 		png_structp pngPtr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
