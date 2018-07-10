@@ -6,11 +6,13 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
+#ifdef BUILDING_APRIL
 #include <hltypes/hlog.h>
 #include <hltypes/hmutex.h>
 #include <hltypes/hstring.h>
 #include <zlib.h>
 
+#include "april.h"
 #include "zlibUtil.h"
 
 namespace april
@@ -26,7 +28,7 @@ namespace april
 		int result = inflateInit(&zlibStream);
 		if (result != Z_OK)
 		{
-			hlog::error("april-zlib", "zlib Error: " + hstr(result)); // don't change logTag
+			hlog::error(logTag, "zlib Error: " + hstr(result));
 			return NULL;
 		}
 		unsigned char* data = new unsigned char[streamSize];
@@ -48,3 +50,4 @@ namespace april
 	}
 
 }
+#endif
