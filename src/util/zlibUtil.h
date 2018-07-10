@@ -10,7 +10,6 @@
 /// 
 /// Defines utility functions for zlib usage.
 
-#ifdef BUILDING_APRIL
 #ifndef APRIL_ZLIB_UTIL_H
 #define APRIL_ZLIB_UTIL_H
 
@@ -21,5 +20,4 @@ namespace april
 	unsigned char* zlibDecompress(int streamSize, int compressedSize, hsbase& stream);
 
 }
-#endif
 #endif
