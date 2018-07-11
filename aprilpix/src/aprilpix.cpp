@@ -30,7 +30,9 @@ namespace aprilpix
 		hlog::write(logTag, "Initializing AprilPIX: " + version.toString());
 #ifdef _WEBP
 		april::Image::registerCustomLoader(".webp", &ImageWebp::load, &ImageWebp::loadMetaData);
+#ifndef _WEBP_NO_ENCODE
 		april::Image::registerCustomSaver(".webp", &ImageWebp::save, &ImageWebp::makeDefaultSaveParameters);
+#endif
 #endif
 #ifdef _PVR
 		april::Image::registerCustomLoader(".pvr", &ImagePvr::load, &ImagePvr::loadMetaData);

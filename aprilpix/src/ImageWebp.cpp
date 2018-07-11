@@ -8,7 +8,9 @@
 
 #ifdef _WEBP
 #include <webp/decode.h>
+#ifndef _WEBP_NO_ENCODE
 #include <webp/encode.h>
+#endif
 
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
@@ -100,6 +102,7 @@ namespace aprilpix
 		return image;
 	}
 
+#ifndef _WEBP_NO_ENCODE
 	bool ImageWebp::save(hsbase& stream, april::Image* image, april::Image::SaveParameters parameters)
 	{
 		bool result = false;
@@ -156,6 +159,7 @@ namespace aprilpix
 		result[SAVE_LOSSLESS] = SAVE_LOSSLESS_DEFAULT;
 		return result;
 	}
+#endif
 
 }
 #endif

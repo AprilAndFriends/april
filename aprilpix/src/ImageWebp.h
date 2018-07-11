@@ -28,8 +28,10 @@ namespace aprilpix
 
 		static april::Image* load(hsbase& stream);
 		static april::Image* loadMetaData(hsbase& stream);
+#ifndef _WEBP_NO_ENCODE
 		static bool save(hsbase& stream, april::Image* image, april::Image::SaveParameters parameters);
 		static april::Image::SaveParameters makeDefaultSaveParameters();
+#endif
 
 	protected:
 		ImageWebp();

@@ -21,6 +21,7 @@ include_directories(AFTER "../../../../gtypes/include")
 add_definitions(
 	-DAPRILPIX_EXPORTS
 	-D_WEBP
+	-D_WEBP_NO_ENCODE
 )
 
 target_link_libraries(
