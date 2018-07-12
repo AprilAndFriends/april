@@ -16,4 +16,12 @@
       <AdditionalDependencies>-lwebp;-lapril;-lhltypes;-lgtypes;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_NoEncode' or
+                                  '$(Configuration)'=='DebugS_NoEncode' or
+                                  '$(Configuration)'=='Release_NoEncode' or
+                                  '$(Configuration)'=='ReleaseS_NoEncode'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WEBP_NO_ENCODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
 </Project>
