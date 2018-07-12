@@ -193,7 +193,9 @@
     <ClCompile Include="..\..\src\dsp\enc_avx2.c" />
     <ClCompile Include="..\..\src\dsp\enc_mips32.c" />
     <ClCompile Include="..\..\src\dsp\enc_mips_dsp_r2.c" />
-    <ClCompile Include="..\..\src\dsp\enc_neon.c" />
+    <ClCompile Include="..\..\src\dsp\enc_neon.c">
+      <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
+    </ClCompile>
     <ClCompile Include="..\..\src\dsp\enc_sse2.c" />
     <ClCompile Include="..\..\src\dsp\enc_sse41.c" />
     <ClCompile Include="..\..\src\dsp\filters.c" />
@@ -203,7 +205,9 @@
     <ClCompile Include="..\..\src\dsp\lossless_enc.c" />
     <ClCompile Include="..\..\src\dsp\lossless_enc_mips32.c" />
     <ClCompile Include="..\..\src\dsp\lossless_enc_mips_dsp_r2.c" />
-    <ClCompile Include="..\..\src\dsp\lossless_enc_neon.c" />
+    <ClCompile Include="..\..\src\dsp\lossless_enc_neon.c">
+      <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
+    </ClCompile>
     <ClCompile Include="..\..\src\dsp\lossless_enc_sse2.c" />
     <ClCompile Include="..\..\src\dsp\lossless_enc_sse41.c" />
     <ClCompile Include="..\..\src\dsp\lossless_mips_dsp_r2.c" />
