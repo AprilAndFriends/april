@@ -111,11 +111,16 @@ file(
 
 add_library(webp STATIC ${CppSrc})
 
-add_definitions(
-	-DWEBP_USE_THREAD
-	-mfloat-abi=softfp
-	-mfpu=neon
-)
+if (${CMAKE_SYSTEM_PROCESSOR} MATCHES "arm")
+	string(REPLACE " -mfpu=vfpv3-d16" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+	string(REPLACE " -mfpu=vfpv3-d16" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+	string(REPLACE " -mfpu=vfpv3-d16" "" CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS}")
+	add_definitions(
+		-DWEBP_USE_THREAD
+		-mfloat-abi=softfp
+		-mfpu=neon
+	)
+endif()
 
 target_link_libraries(
 	webp
