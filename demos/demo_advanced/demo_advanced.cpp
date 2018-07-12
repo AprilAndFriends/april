@@ -69,6 +69,7 @@ april::TexturedVertex sw[SHAPE_POLYGONS*6];
 
 //quad vertices for demonstrating blend-modes
 april::ColoredTexturedVertex ctvQuad[4];
+april::TexturedVertex tvQuad[4];
 
 #define STAR_VERTICES 9
 april::TexturedVertex starStrip[10];
@@ -224,7 +225,7 @@ class UpdateDelegate : public april::UpdateDelegate
 			april::rendersys->translate(gvec2f(32, 32));
 			april::rendersys->setTexture(textures[2]);
 			april::rendersys->setColorMode(april::ColorMode::fromInt(i), 0.5f);
-			april::rendersys->render(april::RenderOperation::TriangleStrip, ctvQuad, 4);
+			april::rendersys->render(april::RenderOperation::TriangleStrip, tvQuad, 4);
 		}
 		april::rendersys->setColorMode(april::ColorMode::Multiply, 1.0f);
 		april::rendersys->setModelviewMatrix(modelviewMatrix);
@@ -397,33 +398,33 @@ void __aprilApplicationInit()
 	ctv[1].x = drawRect.w - 100.0f;	ctv[1].y = drawRect.h - 0.0f;	ctv[1].z = 0.0f;	ctv[1].u = 0.0f;	ctv[1].v = 1.0f;	ctv[1].color = april::rendersys->getNativeColorUInt(april::Color::Green);
 	ctv[2].x = drawRect.w;			ctv[2].y = drawRect.h - 0.0f;	ctv[2].z = 0.0f;	ctv[2].u = 1.0f;	ctv[2].v = 1.0f;	ctv[2].color = april::rendersys->getNativeColorUInt(april::Color::White);
 
-	//color-textured quad (for blending and color examples)
-	ctvQuad[0].x = 0;			
-	ctvQuad[0].y = 0;	
-	ctvQuad[0].z = 0.0f;	
-	ctvQuad[0].u = 0.0f;	
-	ctvQuad[0].v = 0.0f;	
+	// color-textured quad (for blending and color examples)
+	tvQuad[0].x = ctvQuad[0].x = 0.0f;
+	tvQuad[0].y = ctvQuad[0].y = 0.0f;
+	tvQuad[0].z = ctvQuad[0].z = 0.0f;
+	tvQuad[0].u = ctvQuad[0].u = 0.0f;
+	tvQuad[0].v = ctvQuad[0].v = 0.0f;
 	ctvQuad[0].color = april::rendersys->getNativeColorUInt(april::Color::White);
 
-	ctvQuad[1].x = 100;
-	ctvQuad[1].y = 0;
-	ctvQuad[1].z = 0.0f;
-	ctvQuad[1].u = 1.0f;
-	ctvQuad[1].v = 0.0f;
+	tvQuad[1].x = ctvQuad[1].x = 100.0f;
+	tvQuad[1].y = ctvQuad[1].y = 0.0f;
+	tvQuad[1].z = ctvQuad[1].z = 0.0f;
+	tvQuad[1].u = ctvQuad[1].u = 1.0f;
+	tvQuad[1].v = ctvQuad[1].v = 0.0f;
 	ctvQuad[1].color = april::rendersys->getNativeColorUInt(april::Color::White);
 
-	ctvQuad[2].x = 0;
-	ctvQuad[2].y = 100;
-	ctvQuad[2].z = 0.0f;
-	ctvQuad[2].u = 0.0f;
-	ctvQuad[2].v = 1.0f;
+	tvQuad[2].x = ctvQuad[2].x = 0.0f;
+	tvQuad[2].y = ctvQuad[2].y = 100.0f;
+	tvQuad[2].z = ctvQuad[2].z = 0.0f;
+	tvQuad[2].u = ctvQuad[2].u = 0.0f;
+	tvQuad[2].v = ctvQuad[2].v = 1.0f;
 	ctvQuad[2].color = april::rendersys->getNativeColorUInt(april::Color::White);
 
-	ctvQuad[3].x = 100.0f;	
-	ctvQuad[3].y = 100;	
-	ctvQuad[3].z = 0.0f;	
-	ctvQuad[3].u = 1.0f;	
-	ctvQuad[3].v = 1.0f;	
+	tvQuad[3].x = ctvQuad[3].x = 100.0f;
+	tvQuad[3].y = ctvQuad[3].y = 100.0f;
+	tvQuad[3].z = ctvQuad[3].z = 0.0f;
+	tvQuad[3].u = ctvQuad[3].u = 1.0f;
+	tvQuad[3].v = ctvQuad[3].v = 1.0f;
 	ctvQuad[3].color = april::rendersys->getNativeColorUInt(april::Color::White);
 
 	// set delegates
