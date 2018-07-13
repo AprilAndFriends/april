@@ -27,5 +27,5 @@ dependencies {
 	implementation project(":jpeg")
 	implementation project(":png")
 	implementation project(":april")
-	implementation fileTree(include: ["*.jar"], dir: "libs")
+	api fileTree(include: ["*.jar"], dir: "libs")
 }

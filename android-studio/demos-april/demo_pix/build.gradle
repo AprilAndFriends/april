@@ -29,5 +29,5 @@ dependencies {
 	implementation project(":webp")
 	implementation project(":april")
 	implementation project(":aprilpix")
-	implementation fileTree(include: ["*.jar"], dir: "libs")
+	api fileTree(include: ["*.jar"], dir: "libs")
 }

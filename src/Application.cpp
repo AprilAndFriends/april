@@ -251,6 +251,7 @@ namespace april
 		if (((JavaVM*)april::javaVM)->AttachCurrentThread(&env, NULL) != JNI_OK)
 		{
 			env = NULL;
+			hlog::error(logTag, "Could not attach Java thread! This will likely cause unexpected behavior and errors!");
 		}
 #endif
 		(*april::application->aprilApplicationInit)();
