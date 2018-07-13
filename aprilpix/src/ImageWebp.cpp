@@ -123,7 +123,7 @@ namespace aprilpix
 				else if (image->format == april::Image::Format::BGRA)	function = &WebPEncodeLosslessBGRA;
 				if (function != NULL)
 				{
-					size = (*function)((uint8_t*)image->data, image->w, image->h, stride, &fileData);
+					size = (int)(*function)((uint8_t*)image->data, image->w, image->h, stride, &fileData);
 				}
 			}
 			else
@@ -136,7 +136,7 @@ namespace aprilpix
 				if (function != NULL)
 				{
 					float quality = hclamp((float)parameters.tryGet(SAVE_QUALITY, SAVE_QUALITY_DEFAULT), 0.0f, 100.0f);
-					size = (*function)((uint8_t*)image->data, image->w, image->h, stride, quality, &fileData);
+					size = (int)(*function)((uint8_t*)image->data, image->w, image->h, stride, quality, &fileData);
 				}
 			}
 			if (fileData != NULL)
