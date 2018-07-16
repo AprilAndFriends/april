@@ -11,7 +11,8 @@
 
 void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 {
-	int w = info.displayResolution.x, h = info.displayResolution.y;
+	int w = info.displayResolution.x;
+	int h = info.displayResolution.y;
 	// for future reference, look here: http://www.everymac.com/ultimate-mac-lookup/?search_keywords=iPad3%2C4
 	// and here: http://www.paintcodeapp.com/news/ultimate-guide-to-iphone-resolutions
 	
