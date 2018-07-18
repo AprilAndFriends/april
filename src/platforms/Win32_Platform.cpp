@@ -86,7 +86,7 @@ namespace april
 			GlobalMemoryStatusEx(&status);
 			info.ram = (int)(status.ullTotalPhys / 1048576LL);
 			// display resolution
-			info.displayResolution.set((float)GetSystemMetrics(SM_CXSCREEN), (float)GetSystemMetrics(SM_CYSCREEN));
+			info.displayResolution.set(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 			// display DPI
 			info.displayDpi = 96.0f;
 			if (info.displayResolution.y >= 1536)
