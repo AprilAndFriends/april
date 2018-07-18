@@ -10,7 +10,7 @@
                                   '$(Configuration)'=='Release_DirectX12' or
                                   '$(Configuration)'=='ReleaseS_DirectX12'">
     <ClCompile>
-      <PreprocessorDefinitions>_DIRECTX;_DIRECTX12;_WINUWP_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DIRECTX;_DIRECTX12;_UWP_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>d3d12.lib;%(AdditionalDependencies)</AdditionalDependencies>

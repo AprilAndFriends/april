@@ -29,8 +29,8 @@
 #include "Platform.h"
 #include "RenderState.h"
 #include "Timer.h"
-#include "WinUWP.h"
-#include "WinUWP_Window.h"
+#include "UWP.h"
+#include "UWP_Window.h"
 
 #define SHADER_PATH "april/"
 #define VERTEX_BUFFER_COUNT 32768
@@ -124,7 +124,7 @@ namespace april
 		_HL_TRY_DELETE(this->pixelShaderTexturedMultiply);
 		_HL_TRY_DELETE(this->pixelShaderTexturedAlphaMap);
 		_HL_TRY_DELETE(this->pixelShaderTexturedLerp);
-		this->setViewport(grect(0.0f, 0.0f, april::getSystemInfo().displayResolution));
+		this->setViewport(grecti(0, 0, april::getSystemInfo().displayResolution));
 		return true;
 	}
 
@@ -210,7 +210,7 @@ namespace april
 		this->coreWindow = CoreWindow::GetForCurrentThread();
 		DisplayInformation^ displayInformation = DisplayInformation::GetForCurrentView();
 		this->nativeOrientation = displayInformation->NativeOrientation;
-		this->logicalSize = Windows::Foundation::Size((float)((WinUWP_Window*)window)->getWidth(), (float)((WinUWP_Window*)window)->getHeight());
+		this->logicalSize = Windows::Foundation::Size((float)((UWP_Window*)window)->getWidth(), (float)((UWP_Window*)window)->getHeight());
 		this->currentOrientation = displayInformation->CurrentOrientation;
 		this->dpi = displayInformation->LogicalDpi;
 		this->_configureDevice();
@@ -466,18 +466,20 @@ namespace april
 		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->deviceState_pipelineState.Get()), "Unable to reset command list!");
 		PIXBeginEvent(this->commandList.Get(), 0, L"");
 		this->_deviceClear(true);
-		this->setOrthoProjection(gvec2((float)window->getWidth(), (float)window->getHeight()));
-		this->setViewport(grect(0.0f, 0.0f, (float)window->getWidth(), (float)window->getHeight()));
+		grecti viewport(0, 0, window->getSize());
+		gvec2f windowSizeFloat((float)viewport.w, (float)viewport.h);
+		this->setOrthoProjection(windowSizeFloat);
+		this->setViewport(viewport);
 		this->presentFrame();
-		this->setOrthoProjection(gvec2((float)window->getWidth(), (float)window->getHeight()));
-		this->setViewport(grect(0.0f, 0.0f, (float)window->getWidth(), (float)window->getHeight()));
+		this->setOrthoProjection(windowSizeFloat);
+		this->setViewport(viewport);
 	}
 
 	void DirectX12_RenderSystem::_deviceReset()
 	{
 		DirectX_RenderSystem::_deviceReset();
 		// possible Microsoft bug, required for SwapChainPanel to update its layout 
-		//reinterpret_cast<IUnknown*>(WinUWP::App->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
+		//reinterpret_cast<IUnknown*>(UWP::App->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
 		//this->swapChainNative->SetSwapChain(this->swapChain.Get());
 	}
 
@@ -514,7 +516,7 @@ namespace april
 	void DirectX12_RenderSystem::_configureDevice()
 	{
 		// swap chain
-		float dpiRatio = WinUWP::getDpiRatio(this->dpi);
+		float dpiRatio = UWP::getDpiRatio(this->dpi);
 		Size outputSize((float)hmax(hround(this->logicalSize.Width * dpiRatio), 1), (float)hmax(hround(this->logicalSize.Height * dpiRatio), 1));
 		DXGI_MODE_ROTATION displayRotation = this->_getDxgiRotation();
 		if (displayRotation == DXGI_MODE_ROTATION_ROTATE90 || displayRotation == DXGI_MODE_ROTATION_ROTATE270)
@@ -975,33 +977,33 @@ namespace april
 		{
 			this->commandList->SetGraphicsRootDescriptorTable(1, ((DirectX12_Texture*)this->deviceState->texture)->srvHeap->GetGPUDescriptorHandleForHeapStart());
 		}
-		grect viewport = this->getViewport();
+		grecti viewport = this->getViewport();
 		// this used to be needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
-		// maybe it will be needed for WinUWP as well
+		// maybe it will be needed for UWP as well
 		/*
-		gvec2 resolution = april::getSystemInfo().displayResolution;
+		gvec2i resolution = april::getSystemInfo().displayResolution;
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();
-		if (viewport.x < 0.0f)
+		if (viewport.x < 0)
 		{
 			viewport.w += viewport.x;
-			viewport.x = 0.0f;
+			viewport.x = 0;
 		}
-		if (viewport.y < 0.0f)
+		if (viewport.y < 0)
 		{
 			viewport.h += viewport.y;
-			viewport.y = 0.0f;
+			viewport.y = 0;
 		}
-		viewport.w = hclamp(viewport.w, 0.0f, hmax(w - viewport.x, 0.0f));
-		viewport.h = hclamp(viewport.h, 0.0f, hmax(h - viewport.y, 0.0f));
-		if (viewport.w > 0.0f && viewport.h > 0.0f)
+		viewport.w = hclamp(viewport.w, 0, hmax(w - viewport.x, 0));
+		viewport.h = hclamp(viewport.h, 0, hmax(h - viewport.y, 0));
+		if (viewport.w > 0 && viewport.h > 0)
 		{
-			viewport.x = hclamp(viewport.x, 0.0f, (float)w);
-			viewport.y = hclamp(viewport.y, 0.0f, (float)h);
+			viewport.x = hclamp(viewport.x, 0, w);
+			viewport.y = hclamp(viewport.y, 0, h);
 		}
 		else
 		{
-			viewport.set((float)w, (float)h, 0.0f, 0.0f);
+			viewport.set(w, h, 0, 0);
 		}
 		*/
 		// setting the system viewport
@@ -1009,12 +1011,12 @@ namespace april
 		dx12Viewport.MinDepth = D3D12_MIN_DEPTH;
 		dx12Viewport.MaxDepth = D3D12_MAX_DEPTH;
 		// these double-casts are to ensure consistent behavior among rendering systems
-		dx12Viewport.TopLeftX = (float)(int)viewport.x;
-		dx12Viewport.TopLeftY = (float)(int)viewport.y;
-		dx12Viewport.Width = (float)(int)viewport.w;
-		dx12Viewport.Height = (float)(int)viewport.h;
+		dx12Viewport.TopLeftX = (float)viewport.x;
+		dx12Viewport.TopLeftY = (float)viewport.y;
+		dx12Viewport.Width = (float)viewport.w;
+		dx12Viewport.Height = (float)viewport.h;
 		this->commandList->RSSetViewports(1, &dx12Viewport);
-		D3D12_RECT scissorRect = { (LONG)dx12Viewport.TopLeftX, (LONG)dx12Viewport.TopLeftY, (LONG)dx12Viewport.Width, (LONG)dx12Viewport.Height };
+		D3D12_RECT scissorRect = { (LONG)viewport.x, (LONG)viewport.y, (LONG)viewport.w, (LONG)viewport.h };
 		this->commandList->RSSetScissorRects(1, &scissorRect);
 
 		D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = this->dsvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -1062,7 +1064,7 @@ namespace april
 		return NULL;
 	}
 	
-	void DirectX12_RenderSystem_devicePresentFrame(bool systemEnabled)
+	void DirectX12_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
 		RenderSystem::_devicePresentFrame(systemEnabled);
 		if (systemEnabled)

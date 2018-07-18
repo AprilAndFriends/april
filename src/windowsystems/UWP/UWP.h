@@ -8,38 +8,38 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines WinUWP utility and global stuff.
+/// Defines UWP utility and global stuff.
 
-#ifdef _WINUWP
-#ifndef APRIL_WINUWP_H
-#define APRIL_WINUWP_H
+#ifdef _UWP
+#ifndef APRIL_UWP_H
+#define APRIL_UWP_H
 
 #include <gtypes/Rectangle.h>
 #include <hltypes/harray.h>
 #include <hltypes/hstring.h>
 
-#include "WinUWP_App.h"
+#include "UWP_App.h"
 
 using namespace Windows::Graphics::Display;
 
 namespace april
 {
-	ref class WinUWP_App;
+	ref class UWP_App;
 
-	class WinUWP
+	class UWP
 	{
 	public:
-		~WinUWP() { }
+		~UWP() { }
 		
 		static void (*Init)(const harray<hstr>&);
 		static void (*Destroy)();
 		static harray<hstr> Args;
-		static WinUWP_App^ App;
+		static UWP_App^ App;
 		static float inline getDpiRatio() { return getDpiRatio(DisplayInformation::GetForCurrentView()->LogicalDpi); }
 		static float inline getDpiRatio(float dpi) { return (dpi / 96.0f); }
 
 	private:
-		WinUWP() { }
+		UWP() { }
 		
 	};
 	

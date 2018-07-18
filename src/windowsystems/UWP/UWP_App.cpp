@@ -6,7 +6,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#ifdef _WINUWP_WINDOW
+#ifdef _UWP_WINDOW
 #include "pch.h"
 
 #include <hltypes/hfile.h>
@@ -21,10 +21,10 @@
 #include "RenderSystem.h"
 #include "UpdateDelegate.h"
 #include "Window.h"
-#include "WinUWP.h"
-#include "WinUWP_Cursor.h"
-#include "WinUWP_Window.h"
-#include "WinUWP_App.h"
+#include "UWP.h"
+#include "UWP_Cursor.h"
+#include "UWP_Window.h"
+#include "UWP_App.h"
 
 using namespace concurrency;
 using namespace Windows::ApplicationModel;
@@ -36,7 +36,7 @@ using namespace Windows::UI::ViewManagement;
 
 namespace april
 {
-	WinUWP_App::WinUWP_App()
+	UWP_App::UWP_App()
 	{
 		this->running = true;
 #ifndef _WINP8
@@ -54,14 +54,14 @@ namespace april
 		this->currentButton = Key::None;
 	}
 
-	void WinUWP_App::Initialize(Core::CoreApplicationView^ applicationView)
+	void UWP_App::Initialize(Core::CoreApplicationView^ applicationView)
 	{
 		Windows::Globalization::ApplicationLanguages::PrimaryLanguageOverride = ref new Platform::String(L"");
 		// Register event handlers for app lifecycle. This example includes Activated, so that we
 		// can make the CoreWindow active and start rendering on the window.
-		applicationView->Activated += ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &WinUWP_App::OnActivated);
-		CoreApplication::Suspending += ref new EventHandler<SuspendingEventArgs^>(this, &WinUWP_App::OnSuspending);
-		CoreApplication::Resuming += ref new EventHandler<Platform::Object^>(this, &WinUWP_App::OnResuming);
+		applicationView->Activated += ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &UWP_App::OnActivated);
+		CoreApplication::Suspending += ref new EventHandler<SuspendingEventArgs^>(this, &UWP_App::OnSuspending);
+		CoreApplication::Resuming += ref new EventHandler<Platform::Object^>(this, &UWP_App::OnResuming);
 
 
 		/*
@@ -74,36 +74,38 @@ namespace april
 */
 	}
 
-	void WinUWP_App::SetWindow(CoreWindow^ window)
+	void UWP_App::SetWindow(CoreWindow^ window)
 	{
 		DisplayInformation::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
-		window->SizeChanged += ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(this, &WinUWP_App::OnWindowSizeChanged);
-		window->VisibilityChanged += ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(this, &WinUWP_App::OnVisibilityChanged);
-		window->Closed += ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(this, &WinUWP_App::OnWindowClosed);
-		window->PointerPressed += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &WinUWP_App::OnTouchDown);
-		window->PointerReleased += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &WinUWP_App::OnTouchUp);
-		window->PointerMoved += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &WinUWP_App::OnTouchMove);
-		window->PointerWheelChanged += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &WinUWP_App::OnMouseScroll);
-		window->KeyDown += ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(this, &WinUWP_App::OnKeyDown);
-		window->KeyUp += ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(this, &WinUWP_App::OnKeyUp);
-		window->CharacterReceived += ref new TypedEventHandler<CoreWindow^, CharacterReceivedEventArgs^>(this, &WinUWP_App::OnCharacterReceived);
+		window->SizeChanged += ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(this, &UWP_App::OnWindowSizeChanged);
+		window->VisibilityChanged += ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(this, &UWP_App::OnVisibilityChanged);
+		window->Closed += ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(this, &UWP_App::OnWindowClosed);
+		window->PointerPressed += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &UWP_App::OnTouchDown);
+		window->PointerReleased += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &UWP_App::OnTouchUp);
+		window->PointerMoved += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &UWP_App::OnTouchMove);
+		window->PointerWheelChanged += ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &UWP_App::OnMouseScroll);
+		window->KeyDown += ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(this, &UWP_App::OnKeyDown);
+		window->KeyUp += ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(this, &UWP_App::OnKeyUp);
+		window->CharacterReceived += ref new TypedEventHandler<CoreWindow^, CharacterReceivedEventArgs^>(this, &UWP_App::OnCharacterReceived);
 		DisplayInformation^ displayInformation = DisplayInformation::GetForCurrentView();
-		displayInformation->DpiChanged += ref new TypedEventHandler<DisplayInformation^, Object^>(this, &WinUWP_App::OnDpiChanged);
-		displayInformation->OrientationChanged += ref new TypedEventHandler<DisplayInformation^, Object^>(this, &WinUWP_App::OnOrientationChanged);
-		DisplayInformation::DisplayContentsInvalidated += ref new TypedEventHandler<DisplayInformation^, Object^>(this, &WinUWP_App::OnDisplayContentsInvalidated);
+		displayInformation->DpiChanged += ref new TypedEventHandler<DisplayInformation^, Object^>(this, &UWP_App::OnDpiChanged);
+		displayInformation->OrientationChanged += ref new TypedEventHandler<DisplayInformation^, Object^>(this, &UWP_App::OnOrientationChanged);
+		DisplayInformation::DisplayContentsInvalidated += ref new TypedEventHandler<DisplayInformation^, Object^>(this, &UWP_App::OnDisplayContentsInvalidated);
 	}
 
-	void WinUWP_App::Load(Platform::String^ entryPoint)
+	void UWP_App::Load(Platform::String^ entryPoint)
 	{
-		(*WinUWP::Init)(WinUWP::Args);
+		(*UWP::Init)(UWP::Args);
 	}
 
-	void WinUWP_App::Run()
+	void UWP_App::Run()
 	{
 		if (april::window != NULL)
 		{
-			april::window->enterMainLoop();
-			(*WinUWP::Destroy)();
+			// TODOuwp - probably needs something like:
+			//april::application->update();
+			//april::window->enterMainLoop();
+			(*UWP::Destroy)();
 		}
 		// On WinP8 there is a weird bug where this callback stops being called if it takes too long to process at some point so it
 		// is unregistered and registered again in the main thread. Oddly enough, normal WinRT has huge problems with this code.
@@ -115,48 +117,48 @@ namespace april
 #endif
 	}
 
-	void WinUWP_App::Uninitialize()
+	void UWP_App::Uninitialize()
 	{
 	}
 
 	// Application lifecycle events
-	void WinUWP_App::OnActivated(CoreApplicationView^ applicationView, IActivatedEventArgs^ args)
+	void UWP_App::OnActivated(CoreApplicationView^ applicationView, IActivatedEventArgs^ args)
 	{
 		CoreWindow::GetForCurrentThread()->Activate();
 	}
 
-	void WinUWP_App::OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ args)
+	void UWP_App::OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ args)
 	{
 		SuspendingDeferral^ deferral = args->SuspendingOperation->GetDeferral();
 		create_task([this, deferral]()
 		{
-			hlog::write(logTag, "WinUWP suspending...");
+			hlog::write(logTag, "UWP suspending...");
 			this->_handleFocusChange(false);
 			deferral->Complete();
 		});
 	}
 
-	void WinUWP_App::OnResuming(Platform::Object^ sender, Platform::Object^ args)
+	void UWP_App::OnResuming(Platform::Object^ sender, Platform::Object^ args)
 	{
-		hlog::write(logTag, "WinUWP resuming...");
+		hlog::write(logTag, "UWP resuming...");
 		this->_handleFocusChange(true);
 	}
 
 	// CoreWIndow events
-	void WinUWP_App::OnWindowSizeChanged(CoreWindow^ sender, WindowSizeChangedEventArgs^ args)
+	void UWP_App::OnWindowSizeChanged(CoreWindow^ sender, WindowSizeChangedEventArgs^ args)
 	{
 		args->Handled = true;
 		this->_updateWindowSize(sender->Bounds.Width, sender->Bounds.Height);
 	}
 
-	void WinUWP_App::OnVisibilityChanged(CoreWindow^ sender, VisibilityChangedEventArgs^ args)
+	void UWP_App::OnVisibilityChanged(CoreWindow^ sender, VisibilityChangedEventArgs^ args)
 	{
-		hlog::write(logTag, "WinUWP visibility change: " + hstr(args->Visible ? "true" : "false"));
+		hlog::write(logTag, "UWP visibility change: " + hstr(args->Visible ? "true" : "false"));
 		args->Handled = true;
 		this->_handleFocusChange(args->Visible);
 	}
 
-	void WinUWP_App::OnWindowClosed(CoreWindow^ sender, CoreWindowEventArgs^ args)
+	void UWP_App::OnWindowClosed(CoreWindow^ sender, CoreWindowEventArgs^ args)
 	{
 		args->Handled = true;
 		if (april::window != NULL)
@@ -166,35 +168,36 @@ namespace april
 	}
 
 	// DisplayInformation events
-	void WinUWP_App::OnDpiChanged(DisplayInformation^ sender, Platform::Object^ args)
+	void UWP_App::OnDpiChanged(DisplayInformation^ sender, Platform::Object^ args)
 	{
 		CoreWindow^ window = CoreWindow::GetForCurrentThread();
 		this->_updateWindowSize(window->Bounds.Width, window->Bounds.Height);
 	}
 
-	void WinUWP_App::OnOrientationChanged(DisplayInformation^ sender, Platform::Object^ args)
+	void UWP_App::OnOrientationChanged(DisplayInformation^ sender, Platform::Object^ args)
 	{
 		CoreWindow^ window = CoreWindow::GetForCurrentThread();
 		this->_updateWindowSize(window->Bounds.Width, window->Bounds.Height);
 	}
 
-	void WinUWP_App::OnDisplayContentsInvalidated(DisplayInformation^ sender, Platform::Object^ args)
+	void UWP_App::OnDisplayContentsInvalidated(DisplayInformation^ sender, Platform::Object^ args)
 	{
 		//GetDeviceResources()->ValidateDevice();
 	}
 
-	void WinUWP_App::_updateWindowSize(float width, float height)
+	void UWP_App::_updateWindowSize(float width, float height)
 	{
 		getSystemInfo(); // so the displayResolution value gets updated
 		this->_resetTouches();
 		if (april::window != NULL)
 		{
-			// TODOa - is this ok?
+			// TODOuwp - is this ok?
+			april::window->queueSizeChange((int)width, (int)height, ApplicationView::GetForCurrentView()->IsFullScreenMode);
 			april::window->_systemSetResolution((int)width, (int)height, ApplicationView::GetForCurrentView()->IsFullScreenMode);
 		}
 	}
 
-	void WinUWP_App::_handleFocusChange(bool focused)
+	void UWP_App::_handleFocusChange(bool focused)
 	{
 		this->_resetTouches();
 		if (april::window != NULL)
@@ -206,7 +209,7 @@ namespace april
 		}
 	}
 
-	void WinUWP_App::_resetTouches()
+	void UWP_App::_resetTouches()
 	{
 		for_iter_r (i, this->pointerIds.size(), 0)
 		{
@@ -215,7 +218,7 @@ namespace april
 		this->pointerIds.clear();
 	}
 
-	void WinUWP_App::refreshCursor()
+	void UWP_App::refreshCursor()
 	{
 		if (april::window != NULL)
 		{
@@ -225,7 +228,7 @@ namespace april
 				Cursor* windowCursor = april::window->getCursor();
 				if (windowCursor != NULL)
 				{
-					cursor = ((WinUWP_Cursor*)windowCursor)->getCursor();
+					cursor = ((UWP_Cursor*)windowCursor)->getCursor();
 				}
 				if (cursor == nullptr)
 				{
@@ -239,7 +242,7 @@ namespace april
 	}
 
 	/*
-	void WinUWP_App::OnLaunched(LaunchActivatedEventArgs^ args)
+	void UWP_App::OnLaunched(LaunchActivatedEventArgs^ args)
 	{
 		// don't repeat app initialization when already launched
 		if (!this->launched)
@@ -248,20 +251,20 @@ namespace april
 			CoreWindow^ window = Windows::UI::Core::CoreWindow::GetForCurrentThread();
 			InputPane::GetForCurrentView()->Showing +=
 				ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
-					this, &WinUWP_App::OnVirtualKeyboardShow);
+					this, &UWP_App::OnVirtualKeyboardShow);
 			InputPane::GetForCurrentView()->Hiding +=
 				ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(
-					this, &WinUWP_App::OnVirtualKeyboardHide);
+					this, &UWP_App::OnVirtualKeyboardHide);
 #ifdef _WINP8
 			HardwareButtons::BackPressed +=
 				ref new EventHandler<BackPressedEventArgs^>(
-					this, &WinUWP_App::OnBackButtonPressed);
+					this, &UWP_App::OnBackButtonPressed);
 			StatusBar::GetForCurrentView()->HideAsync();
 #endif
 			this->refreshCursor();
 			this->overlay = ref new WinRT_XamlOverlay();
 			Windows::UI::Xaml::Window::Current->Content = this->overlay;
-			Windows::UI::Xaml::Window::Current->Activated += ref new WindowActivatedEventHandler(this, &WinUWP_App::OnWindowActivationChanged);
+			Windows::UI::Xaml::Window::Current->Activated += ref new WindowActivatedEventHandler(this, &UWP_App::OnWindowActivationChanged);
 			Windows::UI::Input::PointerVisualizationSettings::GetForCurrentView()->IsContactFeedbackEnabled = false;
 			(*WinRT::Init)(getArgs());
 			if (rendersys != NULL && april::window != NULL)
@@ -277,7 +280,7 @@ namespace april
 		Windows::UI::Xaml::Window::Current->Activate();
 	}
 
-	void WinUWP_App::OnWindowActivationChanged(_In_ Object^ sender, _In_ WindowActivatedEventArgs^ args)
+	void UWP_App::OnWindowActivationChanged(_In_ Object^ sender, _In_ WindowActivatedEventArgs^ args)
 	{
 		args->Handled = true;
 		hstr state = "unknown";
@@ -297,7 +300,7 @@ namespace april
 		if (!this->activated)
 		{
 			this->activated = true;
-			this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &WinUWP_App::OnRender));
+			this->eventToken = CompositionTarget::Rendering::add(ref new EventHandler<Object^>(this, &UWP_App::OnRender));
 			if (rendersys != NULL)
 			{
 				bool rendered = false;
@@ -352,7 +355,7 @@ namespace april
 		}
 	}
 
-	void WinUWP_App::OnRender(_In_ Object^ sender, _In_ Object^ args)
+	void UWP_App::OnRender(_In_ Object^ sender, _In_ Object^ args)
 	{
 		if (!this->running || april::window == NULL)
 		{
@@ -384,7 +387,7 @@ namespace april
 #endif
 	}
 
-	void WinUWP_App::OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args)
+	void UWP_App::OnWindowClosed(_In_ CoreWindow^ sender, _In_ CoreWindowEventArgs^ args)
 	{
 		args->Handled = true;
 		if (april::window != NULL)
@@ -393,7 +396,7 @@ namespace april
 		}
 	}
 
-	void WinUWP_App::OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)
+	void UWP_App::OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)
 	{
 		if (april::window != NULL)
 		{
@@ -402,7 +405,7 @@ namespace april
 		this->_resetTouches();
 	}
 
-	void WinUWP_App::OnVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)
+	void UWP_App::OnVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)
 	{
 		if (april::window != NULL)
 		{
@@ -412,7 +415,7 @@ namespace april
 	}
 	*/
 
-	void WinUWP_App::OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	void UWP_App::OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
 		args->Handled = true;
 		if (april::window == NULL || !april::window->isFocused())
@@ -421,7 +424,7 @@ namespace april
 		}
 		unsigned int id;
 		int index;
-		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		gvec2f position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
 #ifndef _WINP8
 		this->currentButton = Key::MouseL;
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
@@ -456,7 +459,7 @@ namespace april
 #endif
 	}
 
-	void WinUWP_App::OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	void UWP_App::OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
 		args->Handled = true;
 		if (april::window == NULL || !april::window->isFocused())
@@ -465,7 +468,7 @@ namespace april
 		}
 		unsigned int id;
 		int index;
-		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		gvec2f position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
 #ifndef _WINP8
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
@@ -495,7 +498,7 @@ namespace april
 #endif
 	}
 
-	void WinUWP_App::OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	void UWP_App::OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
 		args->Handled = true;
 		if (april::window == NULL || !april::window->isFocused())
@@ -504,7 +507,7 @@ namespace april
 		}
 		unsigned int id;
 		int index;
-		gvec2 position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
+		gvec2f position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
 #ifndef _WINP8
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
@@ -529,7 +532,7 @@ namespace april
 #endif
 	}
 
-	void WinUWP_App::OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
+	void UWP_App::OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{
 		args->Handled = true;
 		if (april::window == NULL || !april::window->isFocused())
@@ -548,7 +551,7 @@ namespace april
 		}
 	}
 
-	void WinUWP_App::OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
+	void UWP_App::OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
 		args->Handled = true;
 		if (april::window == NULL || !april::window->isFocused())
@@ -563,7 +566,7 @@ namespace april
 		}
 	}
 
-	void WinUWP_App::OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
+	void UWP_App::OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args)
 	{
 		args->Handled = true;
 		if (april::window == NULL || !april::window->isFocused())
@@ -582,7 +585,7 @@ namespace april
 		}
 	}
 
-	void WinUWP_App::OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args)
+	void UWP_App::OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args)
 	{
 		args->Handled = true;
 		if (april::window == NULL || !april::window->isFocused())
@@ -592,14 +595,14 @@ namespace april
 		april::window->queueKeyEvent(Window::KeyInputEvent::Type::Down, Key::None, args->KeyCode);
 	}
 
-	gvec2 WinUWP_App::_transformPosition(float x, float y)
+	gvec2f UWP_App::_transformPosition(float x, float y)
 	{
-		// WinUWP is dumb
-		return (gvec2(x, y) * WinUWP::getDpiRatio());
+		// UWP is dumb
+		return (gvec2(x, y) * UWP::getDpiRatio());
 	}
 
 	/*
-	void WinUWP_App::_tryRenderSplashTexture(int count)
+	void UWP_App::_tryRenderSplashTexture(int count)
 	{
 		if (this->splashTexture == NULL)
 		{
@@ -610,8 +613,8 @@ namespace april
 		static grect drawRect(0.0f, 0.0f, 1.0f, 1.0f);
 		static grect viewport(0.0f, 0.0f, 1.0f, 1.0f);
 		static grect src(0.0f, 0.0f, 1.0f, 1.0f);
-		static gvec2 windowSize;
-		static gvec2 textureSize;
+		static gvec2f windowSize;
+		static gvec2f textureSize;
 		storedProjectionMatrix = rendersys->getProjectionMatrix();
 		storedModelviewMatrix = rendersys->getModelviewMatrix();
 		windowSize = april::window->getSize();
@@ -647,7 +650,7 @@ namespace april
 		april::rendersys->setModelviewMatrix(storedModelviewMatrix);
 	}
 
-	Texture* WinUWP_App::_tryLoadTexture(chstr nodeName, chstr attributeName)
+	Texture* UWP_App::_tryLoadTexture(chstr nodeName, chstr attributeName)
 	{
 		if (rendersys == NULL)
 		{
@@ -672,7 +675,7 @@ namespace april
 				harray<hstr> filenames;
 				index = logoFilename.rindexOf('.');
 				// adding those ".scale-x" things here, because my prayers went unanswered and Microsoft decided to change the format after all
-#ifdef _WINUWP
+#ifdef _UWP
 				filenames += logoFilename(0, index) + ".scale-" + hstr((int)DisplayInformation::GetForCurrentView()->ResolutionScale);
 				filenames += logoFilename(0, index) + ".scale-400";
 				filenames += logoFilename(0, index) + ".scale-200";
@@ -717,7 +720,7 @@ namespace april
 		return NULL;
 	}
 
-	void WinUWP_App::_tryLoadSplashTexture()
+	void UWP_App::_tryLoadSplashTexture()
 	{
 		if (this->splashTexture == NULL)
 		{
@@ -726,7 +729,7 @@ namespace april
 		this->_tryLoadBackgroundColor();
 	}
 
-	void WinUWP_App::_tryLoadBackgroundColor()
+	void UWP_App::_tryLoadBackgroundColor()
 	{
 		hstr data;
 		int index = 0;
@@ -758,7 +761,7 @@ namespace april
 		}
 	}
 
-	bool WinUWP_App::_findVisualElements(chstr nodeName, hstr& data, int& index)
+	bool UWP_App::_findVisualElements(chstr nodeName, hstr& data, int& index)
 	{
 		if (!hfile::exists(MANIFEST_FILENAME))
 		{
@@ -790,8 +793,8 @@ namespace april
 
 IFrameworkView^ FrameworkViewSource::CreateView()
 {
-	WinUWP::App = ref new WinUWP_App();
-	return WinUWP::App;
+	UWP::App = ref new UWP_App();
+	return UWP::App;
 }
 
 }

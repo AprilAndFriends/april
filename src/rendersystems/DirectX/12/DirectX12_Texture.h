@@ -38,9 +38,8 @@ namespace april
 		ComPtr<ID3D12Resource> d3dTexture;
 		ComPtr<ID3D12DescriptorHeap> srvHeap;
 		DXGI_FORMAT dxgiFormat;
-		Type internalType;
 
-		bool _deviceCreateTexture(unsigned char* data, int size, Type type);
+		bool _deviceCreateTexture(unsigned char* data, int size);
 		bool _deviceDestroyTexture();
 		void _assignFormat();
 
@@ -50,6 +49,5 @@ namespace april
 	};
 
 }
-
 #endif
 #endif

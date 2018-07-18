@@ -6,7 +6,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#ifdef _WINUWP
+#ifdef _UWP
 #include <hltypes/harray.h>
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
@@ -15,8 +15,8 @@
 #include "main_base.h"
 #include "RenderSystem.h"
 #include "Window.h"
-#include "WinUWP.h"
-#include "WinUWP_App.h"
+#include "UWP.h"
+#include "UWP_App.h"
 
 using namespace Windows::ApplicationModel::Core;
 
@@ -34,16 +34,16 @@ namespace april
 		}
 		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
 		april::application->setArgs(args);
-#ifdef _WINUWP_WINDOW
+#ifdef _UWP_WINDOW
 		IFrameworkViewSource^ frameworkViewSource = ref new april::FrameworkViewSource();
-		//april::WinUWP::App = ;
+		//april::UWP::App = ;
 		CoreApplication::Run(frameworkViewSource);
 		//return 0;
 		/*
 		Application::Start(ref new ApplicationInitializationCallback(
 			[](ApplicationInitializationCallbackParams^ p)
 			{
-				april::WinUWP::App = ref new april::WinUWP_App();
+				april::UWP::App = ref new april::UWP_App();
 			}
 		));
 		*/

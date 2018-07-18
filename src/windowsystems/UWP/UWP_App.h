@@ -8,11 +8,11 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines a WinUWP App.
+/// Defines a UWP App.
 
-#ifdef _WINUWP_WINDOW
-#ifndef APRIL_WINUWP_APP_H
-#define APRIL_WINUWP_APP_H
+#ifdef _UWP_WINDOW
+#ifndef APRIL_UWP_APP_H
+#define APRIL_UWP_APP_H
 
 //#include <gtypes/Matrix4.h>
 //#include <gtypes/Vector2.h>
@@ -42,10 +42,10 @@ namespace april
 {
 	class Texture;
 	
-	ref class WinUWP_App sealed : public Core::IFrameworkView
+	ref class UWP_App sealed : public Core::IFrameworkView
 	{
 	public:
-		WinUWP_App();
+		UWP_App();
 		//virtual void Connect(int connectionId, Object^ target);
 
 		// IFrameworkView methods.
@@ -105,7 +105,7 @@ namespace april
 		april::Key currentButton;
 
 		void _handleFocusChange(bool focused);
-		gvec2 _transformPosition(float x, float y);
+		gvec2f _transformPosition(float x, float y);
 		void _resetTouches();
 		/*
 		void _tryRenderSplashTexture(int count = 1);

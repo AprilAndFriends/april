@@ -360,8 +360,8 @@ namespace april
 
 	void RenderSystem::_deviceSetupDisplayModes()
 	{
-		gvec2f resolution = april::getSystemInfo().displayResolution;
-		this->displayModes += RenderSystem::DisplayMode((int)resolution.x, (int)resolution.y, 60);
+		gvec2i resolution = april::getSystemInfo().displayResolution;
+		this->displayModes += RenderSystem::DisplayMode(resolution.x, resolution.y, 60);
 	}
 
 	int RenderSystem::getFrameDuplicates()

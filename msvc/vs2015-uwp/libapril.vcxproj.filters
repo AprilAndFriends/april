@@ -66,10 +66,10 @@
     <Filter Include="Source Files\rendersystems\OpenGL\GLES\2">
       <UniqueIdentifier>{34ab2985-e17c-4c50-ad9d-0761eccf6fa5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\windowsystems\WinUWP">
+    <Filter Include="Source Files\windowsystems\UWP">
       <UniqueIdentifier>{e647382e-0091-47bf-ac9f-821f16340f38}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\windowsystems\WinUWP">
+    <Filter Include="Header Files\windowsystems\UWP">
       <UniqueIdentifier>{e56a9fcb-3b2a-4934-88e9-222a629e8139}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\rendersystems\DirectX\12">
@@ -239,8 +239,8 @@
     <ClCompile Include="..\..\src\Keys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\WinUWP\WinUWP_App.cpp">
-      <Filter>Source Files\windowsystems\WinUWP</Filter>
+    <ClCompile Include="..\..\src\windowsystems\UWP\UWP_App.cpp">
+      <Filter>Source Files\windowsystems\UWP</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\rendersystems\DirectX\12\DirectX12_PixelShader.cpp">
       <Filter>Source Files\rendersystems\DirectX\12</Filter>
@@ -254,19 +254,19 @@
     <ClCompile Include="..\..\src\rendersystems\DirectX\12\DirectX12_VertexShader.cpp">
       <Filter>Source Files\rendersystems\DirectX\12</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\WinUWP\WinUWP_Cursor.cpp">
-      <Filter>Source Files\windowsystems\WinUWP</Filter>
+    <ClCompile Include="..\..\src\windowsystems\UWP\UWP_Cursor.cpp">
+      <Filter>Source Files\windowsystems\UWP</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\WinUWP\WinUWP_Window.cpp">
-      <Filter>Source Files\windowsystems\WinUWP</Filter>
+    <ClCompile Include="..\..\src\windowsystems\UWP\UWP_Window.cpp">
+      <Filter>Source Files\windowsystems\UWP</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\windowsystems\WinUWP\WinUWP.cpp">
-      <Filter>Source Files\windowsystems\WinUWP</Filter>
+    <ClCompile Include="..\..\src\windowsystems\UWP\UWP.cpp">
+      <Filter>Source Files\windowsystems\UWP</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\platforms\WinUWP_main.cpp">
+    <ClCompile Include="..\..\src\platforms\UWP_main.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\platforms\WinUWP_Platform.cpp">
+    <ClCompile Include="..\..\src\platforms\UWP_Platform.cpp">
       <Filter>Source Files\platforms</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\async\AsyncCommand.cpp">
@@ -493,8 +493,8 @@
     <ClInclude Include="..\..\include\april\InputMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinUWP\WinUWP_App.h">
-      <Filter>Header Files\windowsystems\WinUWP</Filter>
+    <ClInclude Include="..\..\src\windowsystems\UWP\UWP_App.h">
+      <Filter>Header Files\windowsystems\UWP</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\rendersystems\DirectX\12\DirectX12_PixelShader.h">
       <Filter>Header Files\rendersystems\DirectX\12</Filter>
@@ -508,20 +508,20 @@
     <ClInclude Include="..\..\src\rendersystems\DirectX\12\DirectX12_VertexShader.h">
       <Filter>Header Files\rendersystems\DirectX\12</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinUWP\WinUWP.h">
-      <Filter>Header Files\windowsystems\WinUWP</Filter>
+    <ClInclude Include="..\..\src\windowsystems\UWP\UWP.h">
+      <Filter>Header Files\windowsystems\UWP</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinUWP\WinUWP_Cursor.h">
-      <Filter>Header Files\windowsystems\WinUWP</Filter>
+    <ClInclude Include="..\..\src\windowsystems\UWP\UWP_Cursor.h">
+      <Filter>Header Files\windowsystems\UWP</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinUWP\WinUWP_Window.h">
-      <Filter>Header Files\windowsystems\WinUWP</Filter>
+    <ClInclude Include="..\..\src\windowsystems\UWP\UWP_Window.h">
+      <Filter>Header Files\windowsystems\UWP</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\april\WinUWP_main.h">
+    <ClInclude Include="..\..\include\april\UWP_main.h">
       <Filter>Header Files\platforms</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\windowsystems\WinUWP\pch.h">
-      <Filter>Header Files\windowsystems\WinUWP</Filter>
+    <ClInclude Include="..\..\src\windowsystems\UWP\pch.h">
+      <Filter>Header Files\windowsystems\UWP</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\rendersystems\DirectX\12\d3dx12.h">
       <Filter>Header Files\rendersystems\DirectX\12</Filter>

@@ -59,8 +59,8 @@
 #ifdef _WINRT_WINDOW
 #include "WinRT_Window.h"
 #endif
-#ifdef _WINUWP_WINDOW
-#include "WinUWP_Window.h"
+#ifdef _UWP_WINDOW
+#include "UWP_Window.h"
 #endif
 #ifdef _EGL
 #include "egl.h"
@@ -80,8 +80,8 @@
 	#endif
 	#ifndef _WINRT
 		#define WS_INTERNAL_DEFAULT WindowType::Win32
-	#elif defined(_WINUWP)
-		#define WS_INTERNAL_DEFAULT WindowType::WinUWP
+	#elif defined(_UWP)
+		#define WS_INTERNAL_DEFAULT WindowType::UWP
 	#else
 		#define WS_INTERNAL_DEFAULT WindowType::WinRT
 	#endif
@@ -121,8 +121,8 @@
 #ifdef _WIN32
 	#ifndef _WINRT
 		#define APRIL_PLATFORM_NAME "Win32"
-	#elif defined(_WINUWP)
-		#define APRIL_PLATFORM_NAME "WinUWP"
+	#elif defined(_UWP)
+		#define APRIL_PLATFORM_NAME "UWP"
 	#elif !defined(_WINP8)
 		#define APRIL_PLATFORM_NAME "WinRT"
 	#else
@@ -193,7 +193,7 @@ namespace april
 		HL_ENUM_DEFINE(WindowType, Default);
 		HL_ENUM_DEFINE(WindowType, Win32);
 		HL_ENUM_DEFINE(WindowType, WinRT);
-		HL_ENUM_DEFINE(WindowType, WinUWP);
+		HL_ENUM_DEFINE(WindowType, UWP);
 		HL_ENUM_DEFINE(WindowType, SDL);
 		HL_ENUM_DEFINE(WindowType, Mac);
 		HL_ENUM_DEFINE(WindowType, iOS);
@@ -304,10 +304,10 @@ namespace april
 			april::window = new WinRT_Window();
 		}
 #endif
-#ifdef _WINUWP_WINDOW
-		if (april::window == NULL && window == WindowType::WinUWP)
+#ifdef _UWP_WINDOW
+		if (april::window == NULL && window == WindowType::UWP)
 		{
-			april::window = new WinUWP_Window();
+			april::window = new UWP_Window();
 		}
 #endif
 #ifdef _SDL_WINDOW
@@ -415,7 +415,7 @@ namespace april
 		april::window->create(w, h, fullscreen, title, options);
 		april::rendersys->assignWindow(april::window);
 		// one special hack for one special backend
-#ifdef _WINUWP
+#ifdef _UWP
 		april::rendersys->setViewport(grectf(0.0f, 0.0f, (float)w, (float)h));
 #endif
 		april::rendersys->getCaps(); // calling getCaps() here is required here so it's initialized on certain platforms

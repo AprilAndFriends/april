@@ -6,7 +6,7 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#ifdef _WINUWP
+#ifdef _UWP
 #define __HL_INCLUDE_PLATFORM_HEADERS
 #include <gtypes/Vector2.h>
 #include <hltypes/hdir.h>
@@ -22,8 +22,8 @@
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "Window.h"
-#include "WinUWP.h"
-#include "WinUWP_Window.h"
+#include "UWP.h"
+#include "UWP_Window.h"
 
 using namespace Windows::Foundation::Collections;
 using namespace Windows::Graphics::Display;
@@ -105,7 +105,7 @@ namespace april
 			}
 			displayDpiLogged = true;
 		}
-#ifdef _WINUWP_WINDOW
+#ifdef _UWP_WINDOW
 		// display resolution
 		float dpiRatio = UWP::getDpiRatio();
 		CoreWindow^ window = CoreWindow::GetForCurrentThread();
@@ -117,13 +117,13 @@ namespace april
 		{
 			hswap(width, height);
 		}
-		if (info.displayResolution.y == 0.0f)
+		if (info.displayResolution.y == 0)
 		{
-			info.displayResolution.set((float)width, (float)height);
+			info.displayResolution.set(width, height);
 		}
 		else
 		{
-			info.displayResolution.x = hmax((float)width, info.displayResolution.x);
+			info.displayResolution.x = hmax(width, info.displayResolution.x);
 		}
 #endif
 	}

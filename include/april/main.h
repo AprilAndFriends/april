@@ -18,7 +18,7 @@
 ///
 /// - Windows native: _WIN32
 /// - Windows with console: _WIN32 _CONSOLE
-/// - WinUWP: _WINUWP
+/// - UWP: _UWP
 /// - WinRT: _WINRT
 /// - Android: __ANDROID__
 /// - Mac: __APPLE__
@@ -42,8 +42,8 @@
 
 #ifdef __ANDROID__
 	#include "Android_main.h"
-#elif defined(_WINUWP)
-	#include "WinUWP_main.h"
+#elif defined(_UWP)
+	#include "UWP_main.h"
 #elif defined(_WINRT)
 	#include "WinRT_main.h"
 #elif defined(_WIN32) && !defined(_CONSOLE)

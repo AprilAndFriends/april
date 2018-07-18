@@ -10,8 +10,8 @@
 /// 
 /// Microsoft believes that forcing developers to have a pch.h file is a good idea.
 
-#ifndef APRIL_WINUWP_PCH_H
-#define APRIL_WINUWP_PCH_H
+#ifndef APRIL_UWP_PCH_H
+#define APRIL_UWP_PCH_H
 
 #include <hltypes/hstring.h> // because "ppltasks.h" messes with std::string so hltypes::String needs to be declared first
 #include <ppltasks.h>

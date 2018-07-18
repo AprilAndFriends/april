@@ -6,22 +6,22 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#ifdef _WINUWP_WINDOW
+#ifdef _UWP_WINDOW
 #include <hltypes/hfbase.h>
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
 
-#include "WinUWP_Cursor.h"
-#include "WinUWP_Window.h"
+#include "UWP_Cursor.h"
+#include "UWP_Window.h"
 
 namespace april
 {
-	WinUWP_Cursor::WinUWP_Cursor(bool fromResource) : Cursor(fromResource)
+	UWP_Cursor::UWP_Cursor(bool fromResource) : Cursor(fromResource)
 	{
 		this->cursor = nullptr;
 	}
 
-	WinUWP_Cursor::~WinUWP_Cursor()
+	UWP_Cursor::~UWP_Cursor()
 	{
 		if (this->cursor != nullptr)
 		{
@@ -29,11 +29,11 @@ namespace april
 		}
 	}
 
-	bool WinUWP_Cursor::_create(chstr filename)
+	bool UWP_Cursor::_create(chstr filename)
 	{
 #ifndef _WINP8
 		hmap<hstr, int> cursorMappings;
-		harray<hstr> lines = april::window->getParam(WINUWP_CURSOR_MAPPINGS).split('\n', -1, true);
+		harray<hstr> lines = april::window->getParam(UWP_CURSOR_MAPPINGS).split('\n', -1, true);
 		harray<hstr> data;
 		foreach (hstr, it, lines)
 		{

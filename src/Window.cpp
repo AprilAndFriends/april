@@ -287,8 +287,8 @@ namespace april
 		if (value)
 		{
 			SystemInfo info = april::getSystemInfo();
-			width = hround(info.displayResolution.x);
-			height = hround(info.displayResolution.y);
+			width = info.displayResolution.x;
+			height = info.displayResolution.y;
 		}
 		else
 		{
@@ -333,7 +333,7 @@ namespace april
 		if (!this->fullscreen)
 		{
 			SystemInfo info = april::getSystemInfo();
-			result.set(hround(info.displayResolution.x), hround(info.displayResolution.y));
+			result = info.displayResolution;
 			this->lastWidth = this->getWidth();
 			this->lastHeight = this->getHeight();
 		}

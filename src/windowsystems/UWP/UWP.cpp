@@ -6,21 +6,21 @@
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
-#ifdef _WINUWP
+#ifdef _UWP
 #include <gtypes/Rectangle.h>
 #include <hltypes/harray.h>
 #include <hltypes/hstring.h>
 
 #include "april.h"
 #include "Platform.h"
-#include "WinUWP.h"
+#include "UWP.h"
 
 namespace april
 {
-	void (*WinUWP::Init)(const harray<hstr>&) = NULL;
-	void (*WinUWP::Destroy)() = NULL;
-	harray<hstr> WinUWP::Args;
-	WinUWP_App^ WinUWP::App = nullptr;
+	void (*UWP::Init)(const harray<hstr>&) = NULL;
+	void (*UWP::Destroy)() = NULL;
+	harray<hstr> UWP::Args;
+	UWP_App^ UWP::App = nullptr;
 
 }
 #endif

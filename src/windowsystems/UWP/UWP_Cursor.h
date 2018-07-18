@@ -8,11 +8,11 @@
 /// 
 /// @section DESCRIPTION
 ///
-/// Defines a WinUWP cursor.
+/// Defines a UWP cursor.
 
-#ifdef _WINUWP_WINDOW
-#ifndef APRIL_WINUWP_CURSOR_H
-#define APRIL_WINUWP_CURSOR_H
+#ifdef _UWP_WINDOW
+#ifndef APRIL_UWP_CURSOR_H
+#define APRIL_UWP_CURSOR_H
 
 #include <hltypes/hplatform.h>
 #include <hltypes/hstring.h>
@@ -23,11 +23,11 @@ using namespace Windows::UI::Core;
 
 namespace april
 {
-	class WinUWP_Cursor : public Cursor
+	class UWP_Cursor : public Cursor
 	{
 	public:
-		WinUWP_Cursor(bool fromResource);
-		~WinUWP_Cursor();
+		UWP_Cursor(bool fromResource);
+		~UWP_Cursor();
 
 		HL_DEFINE_GET(CoreCursor^, cursor, Cursor);
 

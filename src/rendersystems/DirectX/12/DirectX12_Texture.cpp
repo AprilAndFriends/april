@@ -38,9 +38,8 @@ namespace april
 	{
 	}
 
-	bool DirectX12_Texture::_deviceCreateTexture(unsigned char* data, int size, Type type)
+	bool DirectX12_Texture::_deviceCreateTexture(unsigned char* data, int size)
 	{
-		this->internalType = type;
 		int bpp = this->format.getBpp();
 		D3D12_SUBRESOURCE_DATA textureData = {};
 		textureData.pData = data;

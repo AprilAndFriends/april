@@ -277,8 +277,8 @@
     <ClCompile Include="..\..\src\events\MotionEvent.cpp" />
     <ClCompile Include="..\..\src\events\MouseEvent.cpp" />
     <ClCompile Include="..\..\src\events\TouchEvent.cpp" />
-    <ClCompile Include="..\..\src\platforms\WinUWP_main.cpp" />
-    <ClCompile Include="..\..\src\platforms\WinUWP_Platform.cpp" />
+    <ClCompile Include="..\..\src\platforms\UWP_main.cpp" />
+    <ClCompile Include="..\..\src\platforms\UWP_Platform.cpp" />
     <ClCompile Include="..\..\src\RenderHelper.cpp" />
     <ClCompile Include="..\..\src\RenderHelperLayered2D.cpp" />
     <ClCompile Include="..\..\src\rendersystems\DirectX\12\DirectX12_PixelShader.cpp" />
@@ -332,10 +332,10 @@
     <ClCompile Include="..\..\src\util\zlibUtil.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_RenderSystem.cpp" />
     <ClCompile Include="..\..\src\rendersystems\OpenGL\OpenGL_Texture.cpp" />
-    <ClCompile Include="..\..\src\windowsystems\WinUWP\WinUWP.cpp" />
-    <ClCompile Include="..\..\src\windowsystems\WinUWP\WinUWP_App.cpp" />
-    <ClCompile Include="..\..\src\windowsystems\WinUWP\WinUWP_Cursor.cpp" />
-    <ClCompile Include="..\..\src\windowsystems\WinUWP\WinUWP_Window.cpp" />
+    <ClCompile Include="..\..\src\windowsystems\UWP\UWP.cpp" />
+    <ClCompile Include="..\..\src\windowsystems\UWP\UWP_App.cpp" />
+    <ClCompile Include="..\..\src\windowsystems\UWP\UWP_Cursor.cpp" />
+    <ClCompile Include="..\..\src\windowsystems\UWP\UWP_Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\Application.h" />
@@ -374,7 +374,7 @@
     <ClInclude Include="..\..\include\april\UpdateDelegate.h" />
     <ClInclude Include="..\..\include\april\VertexShader.h" />
     <ClInclude Include="..\..\include\april\VirtualKeyboard.h" />
-    <ClInclude Include="..\..\include\april\WinUWP_main.h" />
+    <ClInclude Include="..\..\include\april\UWP_main.h" />
     <ClInclude Include="..\..\include\april\Window.h" />
     <ClInclude Include="..\..\src\async\AssignWindowCommand.h" />
     <ClInclude Include="..\..\src\async\AsyncCommand.h" />
@@ -421,11 +421,11 @@
     <ClInclude Include="..\..\src\rendersystems\OpenGL\OpenGL_Texture.h" />
     <ClInclude Include="..\..\src\TextureAsync.h" />
     <ClInclude Include="..\..\src\util\zlibUtil.h" />
-    <ClInclude Include="..\..\src\windowsystems\WinUWP\pch.h" />
-    <ClInclude Include="..\..\src\windowsystems\WinUWP\WinUWP.h" />
-    <ClInclude Include="..\..\src\windowsystems\WinUWP\WinUWP_App.h" />
-    <ClInclude Include="..\..\src\windowsystems\WinUWP\WinUWP_Cursor.h" />
-    <ClInclude Include="..\..\src\windowsystems\WinUWP\WinUWP_Window.h" />
+    <ClInclude Include="..\..\src\windowsystems\UWP\pch.h" />
+    <ClInclude Include="..\..\src\windowsystems\UWP\UWP.h" />
+    <ClInclude Include="..\..\src\windowsystems\UWP\UWP_App.h" />
+    <ClInclude Include="..\..\src\windowsystems\UWP\UWP_Cursor.h" />
+    <ClInclude Include="..\..\src\windowsystems\UWP\UWP_Window.h" />
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)'=='Debug_DirectX12' or '$(Configuration)'=='DebugS_DirectX12' or '$(Configuration)'=='Release_DirectX12' or '$(Configuration)'=='ReleaseS_DirectX12'">
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_AlphaMap.hlsl">
