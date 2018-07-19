@@ -79,7 +79,7 @@ namespace april
 			{
 				nativeScale = scale;
 			}
-			
+			info.displayScaleFactor = scale;
 			
 			int w = mainScreen.bounds.size.width * scale;
 			int h = mainScreen.bounds.size.height * scale;
