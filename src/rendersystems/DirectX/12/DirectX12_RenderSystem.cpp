@@ -415,15 +415,17 @@ namespace april
 		state.DepthStencilState.BackFace = defaultStencilOperation;
 		// dynamic properties
 		int pixelIndex = -1;
+		// using half the shader size, because half the vertex shaders need to use one group of pixel shaders while the others need the other group
+		int pixelShaderSize = this->pixelShaders.size() / 2;
 		for_iter (i, 0, this->inputLayoutDescs.size())
 		{
 			state.InputLayout = this->inputLayoutDescs[i];
 			state.VS.pShaderBytecode = (unsigned char*)this->vertexShaders[i]->shaderData;
 			state.VS.BytecodeLength = (SIZE_T)this->vertexShaders[i]->shaderData.size();
-			for_iter (j, 0, pixelShaders.size() / 2)
+			for_iter (j, 0, pixelShaderSize)
 			{
-				pixelIndex = j + (i / (this->inputLayoutDescs.size() / 2)) * (this->pixelShaders.size() / 2);
-				state.pRootSignature = this->rootSignatures[pixelIndex / (pixelShaders.size() / 2)].Get();
+				pixelIndex = j + (i / (this->inputLayoutDescs.size() / 2)) * pixelShaderSize;
+				state.pRootSignature = this->rootSignatures[pixelIndex / pixelShaderSize].Get();
 				state.PS.pShaderBytecode = (unsigned char*)this->pixelShaders[pixelIndex]->shaderData;
 				state.PS.BytecodeLength = (SIZE_T)this->pixelShaders[pixelIndex]->shaderData.size();
 				for_iter (k, 0, this->blendStateRenderTargets.size())
@@ -534,9 +536,6 @@ namespace april
 		PIXBeginEvent(this->commandList.Get(), 0, L"");
 		grecti viewport(0, 0, window->getSize());
 		gvec2f windowSizeFloat((float)viewport.w, (float)viewport.h);
-		this->setOrthoProjection(windowSizeFloat);
-		this->setViewport(viewport);
-		this->_updateDeviceState(this->state, true);
 		//this->_deviceClear(true);
 		this->executeCurrentCommands();
 		_TRY_UNSAFE(this->swapChain->Present(1, 0), "Unable to present initial swap chain!");
@@ -552,6 +551,9 @@ namespace april
 		renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 		this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
 
+		this->setOrthoProjection(windowSizeFloat);
+		this->setViewport(viewport);
+		//this->_updateDeviceState(this->state, true);
 		//this->_devicePresentFrame(true);
 		//this->setOrthoProjection(windowSizeFloat);
 		//this->setViewport(viewport);
@@ -1035,6 +1037,10 @@ namespace april
 
 	void DirectX12_RenderSystem::prepareNewCommands()
 	{
+		if (this->deviceState->useTexture && this->deviceState->texture != NULL)
+		{
+			int a = 0;
+		}
 		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
 		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->deviceState_pipelineState.Get()), "Unable to reset command list!");
 		PIXBeginEvent(this->commandList.Get(), 0, L"");
@@ -1067,7 +1073,7 @@ namespace april
 		renderTargetView.ptr += this->currentFrame * this->rtvDescSize;
 		if (this->deviceState->useTexture && this->deviceState->texture != NULL)
 		{
-			//this->commandList->SetGraphicsRootDescriptorTable(1, ((DirectX12_Texture*)this->deviceState->texture)->srvHeap->GetGPUDescriptorHandleForHeapStart());
+			this->commandList->SetGraphicsRootDescriptorTable(1, ((DirectX12_Texture*)this->deviceState->texture)->srvHeap->GetGPUDescriptorHandleForHeapStart());
 		}
 		else
 		{

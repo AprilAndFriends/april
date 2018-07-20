@@ -118,8 +118,12 @@ namespace april
 		}
 	}
 
+	// Required for IFrameworkView.
+	// Terminate events do not cause Uninitialize to be called. It will be called if your IFrameworkView
+	// class is torn down while the app is in the foreground.
 	void UWP_App::Uninitialize()
 	{
+		// TODOuwp - probably needs changing
 		if (april::application != NULL)
 		{
 			april::application->updateFinishing();
