@@ -31,10 +31,13 @@
 namespace april
 {
 	class Texture;
+	ref class UWP_App;
 	
 	class UWP_Window : public Window
 	{
 	public:
+		friend ref class UWP_App;
+
 		UWP_Window();
 		~UWP_Window();
 		

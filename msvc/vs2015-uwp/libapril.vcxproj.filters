@@ -625,4 +625,47 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_AlphaMap.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Lerp.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Multiply.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedLerp.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedMultiply.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Colored.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_ColoredTextured.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Plain.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Textured.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Plain.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </None>
+    <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Textured.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </None>
+    <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </None>
+  </ItemGroup>
 </Project>

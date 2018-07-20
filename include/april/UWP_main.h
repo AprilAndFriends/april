@@ -8,11 +8,11 @@
 /// 
 /// @section DESCRIPTION
 /// 
-/// Defines main for WinUWP.
+/// Defines main for UWP.
 
-#if defined(_WIN32) && defined(_WINUWP)
-#ifndef APRIL_WINUWP_MAIN_H
-#define APRIL_WINUWP_MAIN_H
+#if defined(_WIN32) && defined(_UWP)
+#ifndef APRIL_UWP_MAIN_H
+#define APRIL_UWP_MAIN_H
 
 #include <locale.h>
 
@@ -23,7 +23,7 @@
 #include "main_base.h"
 #include "aprilExport.h"
 
-/// @brief Defines the main function in WinUWP.
+/// @brief Defines the main function in UWP.
 /// @param[in] args Arguments.
 /// @return Application result code.
 /// @note This is used internally only.
