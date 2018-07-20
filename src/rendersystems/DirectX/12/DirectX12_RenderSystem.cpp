@@ -540,7 +540,7 @@ namespace april
 		//this->_deviceClear(true);
 		this->executeCurrentCommands();
 		_TRY_UNSAFE(this->swapChain->Present(1, 0), "Unable to present initial swap chain!");
-		this->deviceState_rootSignature = (!this->state->useTexture ? this->rootSignatures[0] : this->rootSignatures[1]);
+		//this->deviceState_rootSignature = this->rootSignatures[0];
 		this->waitForCommands();
 		this->prepareNewCommands();
 		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
@@ -959,16 +959,16 @@ namespace april
 	{
 		int r = 0;
 		int i = 0;
-		int j = this->state->colorMode.value;
-		int k = this->state->blendMode.value;
+		int j = this->deviceState->colorMode.value;
+		int k = this->deviceState->blendMode.value;
 		int l = 0;
 		int m = 0;
-		if (this->state->useTexture)
+		if (this->deviceState->useTexture)
 		{
 			i += 2;
 			++r;
 		}
-		if (this->state->useColor)
+		if (this->deviceState->useColor)
 		{
 			++i;
 		}
@@ -980,7 +980,7 @@ namespace april
 		{
 			l += 2;
 		}
-		if (this->state->depthBuffer)
+		if (this->deviceState->depthBuffer)
 		{
 			++m;
 		}
@@ -1068,6 +1068,10 @@ namespace april
 		if (this->deviceState->useTexture && this->deviceState->texture != NULL)
 		{
 			//this->commandList->SetGraphicsRootDescriptorTable(1, ((DirectX12_Texture*)this->deviceState->texture)->srvHeap->GetGPUDescriptorHandleForHeapStart());
+		}
+		else
+		{
+			//this->commandList->SetGraphicsRootDescriptorTable(0, ((DirectX12_Texture*)this->deviceState->texture)->srvHeap->GetGPUDescriptorHandleForHeapStart());
 		}
 		grecti viewport = this->getViewport();
 		// this used to be needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
@@ -1173,10 +1177,11 @@ namespace april
 		{
 			// TODOuwp - handle this properly
 			//m_deviceRemoved = true;
+			//this->updateDeviceReset();
 			return;
 		}
 		_TRY_UNSAFE(hr, "Unable to present swap chain!");
-		this->deviceState_rootSignature = (!this->state->useTexture ? this->rootSignatures[0] : this->rootSignatures[1]);
+		this->deviceState_rootSignature = (!this->deviceState->useTexture ? this->rootSignatures[0] : this->rootSignatures[1]);
 		this->waitForCommands();
 		this->prepareNewCommands();
 		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
@@ -1201,7 +1206,7 @@ namespace april
 
 	void DirectX12_RenderSystem::updateDeviceReset()
 	{
-		// TODOuwp
+		// TODOuwp - remove this or use it in
 		/*
 		if (this->deviceRemoved)
 		{
