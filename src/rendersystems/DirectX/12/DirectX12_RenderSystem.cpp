@@ -8,7 +8,7 @@
 
 #ifdef _DIRECTX12
 #include <d3d12.h>
-#include <dxgi1_4.h>
+#include <dxgi1_5.h>
 #include <stdio.h>
 
 #include <gtypes/Rectangle.h>
@@ -34,6 +34,7 @@
 
 #define SHADER_PATH "april/"
 #define VERTEX_BUFFER_COUNT 32768
+#define MAX_D3D_FEATURE_LEVELS 4
 
 #define __EXPAND(x) x
 
@@ -142,24 +143,77 @@ namespace april
 			}
 			dxgiFactoryFlags = DXGI_CREATE_FACTORY_DEBUG;
 		}
-		_TRY_UNSAFE(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&this->dxgiFactory)), "Unable to create DXGI factor!");
+		_TRY_UNSAFE(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&this->dxgiFactory)), "Unable to create DXGI factory!");
+		if (!this->options.vSync)
+		{
+			// graphical debugging tools aren't available in 1.4 (at the time of writing) so they are upcast to 1.5 
+			ComPtr<IDXGIFactory5> dxgiFactory5;
+			if (SUCCEEDED(this->dxgiFactory.As(&dxgiFactory5)))
+			{
+				bool allowTearing = false;
+				if (SUCCEEDED(dxgiFactory5->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &allowTearing, sizeof(allowTearing))))
+				{
+					if (allowTearing)
+					{
+						dxgiFactoryFlags |= DXGI_FEATURE_PRESENT_ALLOW_TEARING;
+						ComPtr<IDXGIFactory4> newDxgiFactory;
+						if (SUCCEEDED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&newDxgiFactory))))
+						{
+							this->dxgiFactory = newDxgiFactory;
+						}
+						else
+						{
+							hlog::warn(logTag, "Cannot disable V-Sync, could not create new DXGI factory!");
+							this->options.vSync = true;
+						}
+					}
+					else
+					{
+						hlog::warn(logTag, "Cannot disable V-Sync, DXGI factory 5 says it's not supported!");
+						this->options.vSync = true;
+					}
+				}
+				else
+				{
+					hlog::warn(logTag, "Cannot disable V-Sync, DXGI factory 5 is unable to check for support!");
+					this->options.vSync = true;
+				}
+			}
+			else
+			{
+				hlog::warn(logTag, "Cannot disable V-Sync, DXGI factory 5 is not available!");
+				this->options.vSync = true;
+			}
+		}
 		// get DX12-capable hardware adapter
 		ComPtr<IDXGIAdapter1> adapter = nullptr;
 		DXGI_ADAPTER_DESC1 adapterDesc;
 		UINT adapterIndex = 0;
-		while (this->dxgiFactory->EnumAdapters1(adapterIndex, &adapter) != DXGI_ERROR_NOT_FOUND)
+		D3D_FEATURE_LEVEL availableFeatureLevels[MAX_D3D_FEATURE_LEVELS] = { D3D_FEATURE_LEVEL_12_1, D3D_FEATURE_LEVEL_12_0, D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0 };
+		D3D_FEATURE_LEVEL featureLevel = availableFeatureLevels[0];
+		for_iter (i, 0, MAX_D3D_FEATURE_LEVELS)
 		{
-			adapter->GetDesc1(&adapterDesc);
-			if ((adapterDesc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) == 0 && SUCCEEDED(D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), nullptr)))
+			adapterIndex = 0;
+			featureLevel = availableFeatureLevels[i];
+			while (this->dxgiFactory->EnumAdapters1(adapterIndex, &adapter) != DXGI_ERROR_NOT_FOUND)
+			{
+				adapter->GetDesc1(&adapterDesc);
+				if ((adapterDesc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) == 0 && SUCCEEDED(D3D12CreateDevice(adapter.Get(), featureLevel, _uuidof(ID3D12Device), nullptr)))
+				{
+					break;
+				}
+				adapter = nullptr;
+				++adapterIndex;
+			}
+			if (adapter != nullptr)
 			{
 				break;
 			}
-			++adapterIndex;
 		}
 		HRESULT hr;
 		if (adapter != nullptr)
 		{
-			hr = D3D12CreateDevice(adapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&this->d3dDevice));
+			hr = D3D12CreateDevice(adapter.Get(), featureLevel, IID_PPV_ARGS(&this->d3dDevice));
 			if (FAILED(hr))
 			{
 				hlog::write(logTag, "Hardware device not available. Falling back to WARP device.");
@@ -178,12 +232,23 @@ namespace april
 			hr = D3D12CreateDevice(warpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&this->d3dDevice));
 		}
 		_TRY_UNSAFE(hr, "Unable to create DX12 device!");
+#ifdef _DEBUG
+		ComPtr<ID3D12InfoQueue> pInfoQueue;
+		if (SUCCEEDED(this->d3dDevice.As(&pInfoQueue)))
+		{
+			pInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, TRUE);
+			pInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, TRUE);
+			pInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, TRUE);
+		}
+#endif
 		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+		queueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
 		queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 		queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+		queueDesc.NodeMask = 0;
 		_TRY_UNSAFE(this->d3dDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&this->commandQueue)), "Unable to create command queue!");
 		D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-		rtvHeapDesc.NumDescriptors = FRAME_COUNT;
+		rtvHeapDesc.NumDescriptors = BACK_BUFFER_COUNT;
 		rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&this->rtvHeap)), "Unable to create RTV heap!");
@@ -198,7 +263,7 @@ namespace april
 		dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 		dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&this->dsvHeap)), "Unable to create DSV heap!");
-		for_iter (i, 0, FRAME_COUNT)
+		for_iter (i, 0, BACK_BUFFER_COUNT)
 		{
 			_TRY_UNSAFE(this->d3dDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&this->commandAllocators[i])), hsprintf("Unable to create command allocator %d!", i));
 		}
@@ -210,11 +275,12 @@ namespace april
 		this->coreWindow = CoreWindow::GetForCurrentThread();
 		DisplayInformation^ displayInformation = DisplayInformation::GetForCurrentView();
 		this->nativeOrientation = displayInformation->NativeOrientation;
-		this->logicalSize = Windows::Foundation::Size((float)((UWP_Window*)window)->getWidth(), (float)((UWP_Window*)window)->getHeight());
+		this->logicalSize = Windows::Foundation::Size((float)window->getWidth(), (float)window->getHeight());
 		this->currentOrientation = displayInformation->CurrentOrientation;
 		this->dpi = displayInformation->LogicalDpi;
 		this->_configureDevice();
 		// default shaders
+		// TODOuwp - missing desaturate and sepia shaders
 		LOAD_SHADER(this->vertexShaderPlain, Vertex, Plain);
 		LOAD_SHADER(this->vertexShaderTextured, Vertex, Textured);
 		LOAD_SHADER(this->vertexShaderColored, Vertex, Colored);
@@ -288,6 +354,7 @@ namespace april
 		renderTargetOverwrite.DestBlend = D3D12_BLEND_ZERO;
 		const D3D12_DEPTH_STENCILOP_DESC defaultStencilOperation = { D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_COMPARISON_FUNC_ALWAYS };
 		// indexed data
+		// TODOuwp - missing desaturate and sepia shaders
 		this->inputLayoutDescs.clear();
 		this->inputLayoutDescs += { inputLayoutDescPlain, _countof(inputLayoutDescPlain) };
 		this->inputLayoutDescs += { inputLayoutDescColored, _countof(inputLayoutDescColored) };
@@ -416,13 +483,13 @@ namespace april
 				D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->vertexBufferUploads[i])), "Unable to create vertex buffer upload!");
 		}
 		D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-		heapDesc.NumDescriptors = FRAME_COUNT;
+		heapDesc.NumDescriptors = BACK_BUFFER_COUNT;
 		heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 		heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&this->cbvHeap)), "Unable to create constant buffer view!");
 		this->constantBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 		this->constantBufferDesc.Alignment = 0;
-		this->constantBufferDesc.Width = FRAME_COUNT * ALIGNED_CONSTANT_BUFFER_SIZE;
+		this->constantBufferDesc.Width = BACK_BUFFER_COUNT * ALIGNED_CONSTANT_BUFFER_SIZE;
 		this->constantBufferDesc.Height = 1;
 		this->constantBufferDesc.DepthOrArraySize = 1;
 		this->constantBufferDesc.MipLevels = 1;
@@ -443,7 +510,7 @@ namespace april
 		this->cbvDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		D3D12_CONSTANT_BUFFER_VIEW_DESC desc;
 		desc.SizeInBytes = ALIGNED_CONSTANT_BUFFER_SIZE;
-		for_iter (i, 0, FRAME_COUNT)
+		for_iter (i, 0, BACK_BUFFER_COUNT)
 		{
 			desc.BufferLocation = cbvGpuAddress;
 			d3dDevice->CreateConstantBufferView(&desc, cbvCpuHandle);
@@ -465,14 +532,29 @@ namespace april
 		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
 		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->deviceState_pipelineState.Get()), "Unable to reset command list!");
 		PIXBeginEvent(this->commandList.Get(), 0, L"");
-		this->_deviceClear(true);
 		grecti viewport(0, 0, window->getSize());
 		gvec2f windowSizeFloat((float)viewport.w, (float)viewport.h);
 		this->setOrthoProjection(windowSizeFloat);
 		this->setViewport(viewport);
-		this->_devicePresentFrame(true);
-		this->setOrthoProjection(windowSizeFloat);
-		this->setViewport(viewport);
+		this->_updateDeviceState(this->state, true);
+		//this->_deviceClear(true);
+		this->executeCurrentCommands();
+		_TRY_UNSAFE(this->swapChain->Present(1, 0), "Unable to present initial swap chain!");
+		this->deviceState_rootSignature = (!this->state->useTexture ? this->rootSignatures[0] : this->rootSignatures[1]);
+		this->waitForCommands();
+		this->prepareNewCommands();
+		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
+		renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		renderTargetResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
+		renderTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+		renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+		this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
+
+		//this->_devicePresentFrame(true);
+		//this->setOrthoProjection(windowSizeFloat);
+		//this->setViewport(viewport);
 	}
 
 	void DirectX12_RenderSystem::_deviceReset()
@@ -555,7 +637,7 @@ namespace april
 			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS);
 		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
 		_TRY_UNSAFE(this->d3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&this->rootSignatures[1])), "Unable to create root signature!");
-		// TODOuwp - create more than one sampler
+		// TODOuwp - create more than one sampler with the ABOVE code
 		/*
 		// texture samplers
 		D3D12_SAMPLER_DESC samplerDesc;
@@ -564,35 +646,35 @@ namespace april
 		samplerDesc.MipLODBias = 0.0f;
 		samplerDesc.MinLOD = 0;
 		samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
-		samplerDesc.ComparisonFunc = D3D12_COMPARISON_NEVER;
+		samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
 		samplerDesc.BorderColor[0] = 0.0f;
 		samplerDesc.BorderColor[1] = 0.0f;
 		samplerDesc.BorderColor[2] = 0.0f;
 		samplerDesc.BorderColor[3] = 0.0f;
 		// linear + wrap
 		samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_WRAP;
-		this->d3dDevice->CreateSamplerState(&samplerDesc, &this->samplerLinearWrap);
+		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+		this->d3dDevice->CreateSampler(&samplerDesc, &this->samplerLinearWrap);
 		// linear + clamp
 		samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_CLAMP;
-		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_CLAMP;
-		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_CLAMP;
-		this->d3dDevice->CreateSamplerState(&samplerDesc, &this->samplerLinearClamp);
+		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		this->d3dDevice->CreateSampler(&samplerDesc, &this->samplerLinearClamp);
 		// nearest neighbor + wrap
 		samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
-		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_WRAP;
-		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_WRAP;
-		this->d3dDevice->CreateSamplerState(&samplerDesc, &this->samplerNearestWrap);
+		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+		this->d3dDevice->CreateSampler(&samplerDesc, &this->samplerNearestWrap);
 		// nearest neighbor + clamp
 		samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
-		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_CLAMP;
-		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_CLAMP;
-		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_CLAMP;
-		this->d3dDevice->CreateSamplerState(&samplerDesc, &this->samplerNearestClamp);
+		samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+		this->d3dDevice->CreateSampler(&samplerDesc, &this->samplerNearestClamp);
 		*/
 		// other
 		//this->_deviceClear(true);
@@ -609,15 +691,21 @@ namespace april
 		swapChainDesc.SampleDesc.Count = 1;
 		swapChainDesc.SampleDesc.Quality = 0;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapChainDesc.BufferCount = FRAME_COUNT;
-		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; // UWP apps MUST use _FLIP_
+		swapChainDesc.BufferCount = BACK_BUFFER_COUNT;
+		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; // UWP apps MUST use a "_FLIP_" variant
 		swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 		swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
 		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
+		if (!this->options.vSync)
+		{
+			swapChainDesc.Flags |= DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
+		}
 		ComPtr<IDXGISwapChain1> swapChain;
 		_TRY_UNSAFE(this->dxgiFactory->CreateSwapChainForCoreWindow(this->commandQueue.Get(), reinterpret_cast<IUnknown*>(this->coreWindow.Get()),
 			&swapChainDesc, nullptr, &swapChain), "Unable to create swap chain!");
 		_TRY_UNSAFE(swapChain.As(&this->swapChain), "Unable to cast swap chain to non-COM object!");
+		DXGI_RGBA black = { 0.0f, 0.0f, 0.0f, 1.0f };
+		this->swapChain->SetBackgroundColor(&black);
 		this->_configureSwapChain(width, height);
 	}
 
@@ -626,7 +714,7 @@ namespace april
 		this->executeCurrentCommands();
 		this->waitForCommands();
 		this->_waitForGpu();
-		for_iter (i, 0, FRAME_COUNT)
+		for_iter (i, 0, BACK_BUFFER_COUNT)
 		{
 			this->renderTargets[i] = nullptr;
 			this->fenceValues[i] = this->fenceValues[this->currentFrame];
@@ -634,6 +722,7 @@ namespace april
 		HRESULT hr = this->swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
+			// TODOuwp - this needs to be tested and fixed or implemented
 			// If the device was removed for any reason, a new device and swap chain will need to be created.
 			//m_deviceRemoved = true;
 
@@ -650,7 +739,7 @@ namespace april
 		_TRY_UNSAFE(this->swapChain->SetRotation(this->_getDxgiRotation()), "Unable to set rotation on swap chain!");
 		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvDesc = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
-		for_iter (i, 0, FRAME_COUNT)
+		for_iter (i, 0, BACK_BUFFER_COUNT)
 		{
 			_TRY_UNSAFE(this->swapChain->GetBuffer(i, IID_PPV_ARGS(&this->renderTargets[i])), hsprintf("Unable to get buffer %d from swap chain!", i));
 			this->d3dDevice->CreateRenderTargetView(this->renderTargets[i].Get(), nullptr, rtvDesc);
@@ -783,7 +872,10 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		hlog::error(logTag, "Not implemented!");
+		if (enabled || writeEnabled)
+		{
+			hlog::error(logTag, "_setDeviceDepthBuffer() is not implemented in: " + this->name);
+		}
 	}
 
 	void DirectX12_RenderSystem::_setDeviceRenderMode(bool useTexture, bool useColor)
@@ -975,7 +1067,7 @@ namespace april
 		renderTargetView.ptr += this->currentFrame * this->rtvDescSize;
 		if (this->deviceState->useTexture && this->deviceState->texture != NULL)
 		{
-			this->commandList->SetGraphicsRootDescriptorTable(1, ((DirectX12_Texture*)this->deviceState->texture)->srvHeap->GetGPUDescriptorHandleForHeapStart());
+			//this->commandList->SetGraphicsRootDescriptorTable(1, ((DirectX12_Texture*)this->deviceState->texture)->srvHeap->GetGPUDescriptorHandleForHeapStart());
 		}
 		grecti viewport = this->getViewport();
 		// this used to be needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
@@ -1067,36 +1159,34 @@ namespace april
 	void DirectX12_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
 		RenderSystem::_devicePresentFrame(systemEnabled);
-		if (systemEnabled)
+		D3D12_RESOURCE_BARRIER presentResourceBarrier = {};
+		presentResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		presentResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		presentResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
+		presentResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		presentResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+		presentResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+		this->commandList->ResourceBarrier(1, &presentResourceBarrier);
+		this->executeCurrentCommands();
+		HRESULT hr = this->swapChain->Present(1, 0);
+		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
-			D3D12_RESOURCE_BARRIER presentResourceBarrier = {};
-			presentResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-			presentResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-			presentResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
-			presentResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-			presentResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-			presentResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-			this->commandList->ResourceBarrier(1, &presentResourceBarrier);
-			this->executeCurrentCommands();
-			HRESULT hr = this->swapChain->Present(1, 0);
-			if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
-			{
-				//m_deviceRemoved = true;
-				return;
-			}
-			_TRY_UNSAFE(hr, "Unable to present swap chain!");
-			this->deviceState_rootSignature = (!this->state->useTexture ? this->rootSignatures[0] : this->rootSignatures[1]);
-			this->waitForCommands();
-			this->prepareNewCommands();
-			D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
-			renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-			renderTargetResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-			renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
-			renderTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-			renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-			renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-			this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
+			// TODOuwp - handle this properly
+			//m_deviceRemoved = true;
+			return;
 		}
+		_TRY_UNSAFE(hr, "Unable to present swap chain!");
+		this->deviceState_rootSignature = (!this->state->useTexture ? this->rootSignatures[0] : this->rootSignatures[1]);
+		this->waitForCommands();
+		this->prepareNewCommands();
+		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
+		renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		renderTargetResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
+		renderTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+		renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+		this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
 	}
 
 	void DirectX12_RenderSystem::_deviceRepeatLastFrame()

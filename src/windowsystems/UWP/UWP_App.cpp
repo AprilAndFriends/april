@@ -54,7 +54,7 @@ namespace april
 		this->activated = false;
 		*/
 		this->scrollHorizontal = false;
-		this->startTime = (unsigned int)htickCount();
+		this->startTime = htickCount();
 		this->currentButton = Key::None;
 	}
 
@@ -109,26 +109,22 @@ namespace april
 	{
 		if (april::application != NULL)
 		{
-			// TODOuwp - probably needs something like:
-			april::application->update();
-			//april::window->enterMainLoop();
-			//(*UWP::Destroy)();
+			april::application->updateInitializing();
+			april::application->enterMainLoop();
 		}
-		// On WinP8 there is a weird bug where this callback stops being called if it takes too long to process at some point so it
-		// is unregistered and registered again in the main thread. Oddly enough, normal WinRT has huge problems with this code.
-#ifdef _WINP8
-		CoreWindow::GetForCurrentThread()->Dispatcher->RunAsync(CoreDispatcherPriority::Normal, ref new DispatchedHandler([this]()
+		else
 		{
-			this->_tryAddRenderToken();
-		}));
-#endif
+			hlog::error(logTag, "Cannot keep running, Application object is NULL! Finishing now...");
+		}
 	}
 
 	void UWP_App::Uninitialize()
 	{
-		// TODOuwp - is this correct?
-		//april::application->updateFinishing();
-		//april::application->destroy();
+		if (april::application != NULL)
+		{
+			april::application->updateFinishing();
+			april::application->destroy();
+		}
 	}
 
 	// Application lifecycle events
