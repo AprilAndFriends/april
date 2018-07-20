@@ -219,6 +219,10 @@
 		if (april::application->getState() != april::Application::State::Running)
 		{
 			april::application->finish();
+			// iOS does not have a concept of "exit" for apps so this hack is used to clean up and terminate the app here
+			april::application->updateFinishing();
+			april::application->destroy();
+			exit(0);
 		}
 	}
 	if (frameInterval != link.frameInterval)
@@ -229,6 +233,10 @@
 
 -(void)updateSensors
 {
+	if (april::window == NULL)
+	{
+		return;
+	}
 	april::MotionDelegate* motionDelegate = april::window->getMotionDelegate();
 	bool gravity = false;
 	bool linearAccelerometer = false;
