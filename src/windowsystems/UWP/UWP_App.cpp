@@ -15,6 +15,7 @@
 #include <hltypes/hstring.h>
 #include <hltypes/hthread.h>
 
+#include "Application.h"
 #include "april.h"
 #include "DirectX12_RenderSystem.h"
 #include "Platform.h"
@@ -37,6 +38,8 @@ using namespace Windows::UI::ViewManagement;
 
 namespace april
 {
+	extern void _updateSystemInfo();
+
 	UWP_App::UWP_App()
 	{
 		this->running = true;
@@ -96,17 +99,20 @@ namespace april
 
 	void UWP_App::Load(Platform::String^ entryPoint)
 	{
-		(*UWP::Init)(UWP::Args);
+		getSystemInfo(); // this call is required to setup the SystemInfo object from the proper thread
+		//april::application->setArgs(args);
+		april::application->init();
+		//(*UWP::Init)(UWP::Args);
 	}
 
 	void UWP_App::Run()
 	{
-		if (april::window != NULL)
+		if (april::application != NULL)
 		{
 			// TODOuwp - probably needs something like:
-			//april::application->update();
+			april::application->update();
 			//april::window->enterMainLoop();
-			(*UWP::Destroy)();
+			//(*UWP::Destroy)();
 		}
 		// On WinP8 there is a weird bug where this callback stops being called if it takes too long to process at some point so it
 		// is unregistered and registered again in the main thread. Oddly enough, normal WinRT has huge problems with this code.
@@ -120,6 +126,9 @@ namespace april
 
 	void UWP_App::Uninitialize()
 	{
+		// TODOuwp - is this correct?
+		//april::application->updateFinishing();
+		//april::application->destroy();
 	}
 
 	// Application lifecycle events
@@ -188,7 +197,7 @@ namespace april
 
 	void UWP_App::_updateWindowSize(float width, float height)
 	{
-		getSystemInfo(); // so the displayResolution value gets updated
+		_updateSystemInfo(); // internal platform method to update system information from the proper thread
 		this->_resetTouches();
 		if (april::window != NULL)
 		{
@@ -238,9 +247,8 @@ namespace april
 					cursor = this->defaultCursor;
 				}
 			}
-#ifndef _WINP8
-			CoreWindow::GetForCurrentThread()->PointerCursor = cursor;
-#endif
+			// TODOuwp - implement this, can't be called from secondary thread
+			//CoreWindow::GetForCurrentThread()->PointerCursor = cursor;
 		}
 	}
 

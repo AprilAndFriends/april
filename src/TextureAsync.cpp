@@ -33,8 +33,6 @@ namespace april
 
 	harray<hthread*> TextureAsync::decoderThreads;
 
-	static int cpus = 0; // needed, because certain calls are made when fetching SystemInfo that are not allowed to be made in secondary threads on some platforms
-
 	void TextureAsync::update()
 	{
 		if (april::rendersys == NULL)
@@ -73,10 +71,6 @@ namespace april
 
 	bool TextureAsync::queueLoad(Texture* texture)
 	{
-		if (cpus == 0)
-		{
-			cpus = info.cpuCores; // not calling getSystemInfo() due to threading issues on WinRT where device resolution needs to be updated, might need some redesign
-		}
 		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
 		if (TextureAsync::textures.has(texture))
 		{
@@ -132,6 +126,7 @@ namespace april
 		bool running = true;
 		hmutex::ScopeLock lock;
 		int maxWaitingCount = 0;
+		SystemInfo info = getSystemInfo();
 		while (running)
 		{
 			running = false;
@@ -183,7 +178,7 @@ namespace april
 			if (size > 0)
 			{
 				running = true;
-				size = hmin(size, cpus) - TextureAsync::decoderThreads.size();
+				size = hmin(size, info.cpuCores) - TextureAsync::decoderThreads.size();
 				for_iter (i, 0, size)
 				{
 					decoderThread = new hthread(&TextureAsync::_decode, "APRIL async decoder");

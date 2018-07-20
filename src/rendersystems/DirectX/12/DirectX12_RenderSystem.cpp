@@ -470,7 +470,7 @@ namespace april
 		gvec2f windowSizeFloat((float)viewport.w, (float)viewport.h);
 		this->setOrthoProjection(windowSizeFloat);
 		this->setViewport(viewport);
-		this->presentFrame();
+		this->_devicePresentFrame(true);
 		this->setOrthoProjection(windowSizeFloat);
 		this->setViewport(viewport);
 	}

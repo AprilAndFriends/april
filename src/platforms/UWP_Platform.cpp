@@ -34,6 +34,60 @@ using namespace Windows::UI::ViewManagement;
 
 namespace april
 {
+	// this handling and updating of SystemInfo is required to be called on the proper thread only
+	extern SystemInfo info;
+
+	void _updateSystemInfo(SystemInfo& info)
+	{
+		DisplayInformation^ displayInfo = DisplayInformation::GetForCurrentView();
+		// display DPI
+		info.displayDpi = displayInfo->RawDpiY;
+		if (info.displayDpi < 0.01f)
+		{
+			static bool displayDpiLogged = false;
+			if (!displayDpiLogged)
+			{
+				hlog::warn(logTag, "Cannot get raw display DPI, trying logical DPI.");
+			}
+			info.displayDpi = displayInfo->LogicalDpi;
+			if (info.displayDpi < 0.01f)
+			{
+				if (!displayDpiLogged)
+				{
+					hlog::warn(logTag, "Cannot get logical display DPI, defaulting to 96.");
+				}
+				info.displayDpi = 96.0f;
+			}
+			displayDpiLogged = true;
+		}
+#ifdef _UWP_WINDOW
+		// display resolution
+		float dpiRatio = UWP::getDpiRatio();
+		CoreWindow^ window = CoreWindow::GetForCurrentThread();
+		int width = hround(window->Bounds.Width * dpiRatio);
+		int height = hround(window->Bounds.Height * dpiRatio);
+		// these orientations are not supported in APRIL, but Windows allows them anyway even if the manifest says that they aren't supported
+		if (displayInfo->CurrentOrientation == DisplayOrientations::Portrait ||
+			displayInfo->CurrentOrientation == DisplayOrientations::PortraitFlipped)
+		{
+			hswap(width, height);
+		}
+		if (info.displayResolution.y == 0)
+		{
+			info.displayResolution.set(width, height);
+		}
+		else
+		{
+			info.displayResolution.x = hmax(width, info.displayResolution.x);
+		}
+#endif
+	}
+
+	void _updateSystemInfo()
+	{
+		_updateSystemInfo(info);
+	}
+
 	void _setupSystemInfo_platform(SystemInfo& info)
 	{
 		if (info.locale == "")
@@ -83,49 +137,8 @@ namespace april
 				info.localeVariant = info.localeVariant.uppered();
 			}
 			info.osVersion.set(10, 0);
+			_updateSystemInfo(info);
 		}
-		DisplayInformation^ displayInfo = DisplayInformation::GetForCurrentView();
-		// display DPI
-		info.displayDpi = displayInfo->RawDpiY;
-		if (info.displayDpi < 0.01f)
-		{
-			static bool displayDpiLogged = false;
-			if (!displayDpiLogged)
-			{
-				hlog::warn(logTag, "Cannot get raw display DPI, trying logical DPI.");
-			}
-			info.displayDpi = displayInfo->LogicalDpi;
-			if (info.displayDpi < 0.01f)
-			{
-				if (!displayDpiLogged)
-				{
-					hlog::warn(logTag, "Cannot get logical display DPI, defaulting to 96.");
-				}
-				info.displayDpi = 96.0f;
-			}
-			displayDpiLogged = true;
-		}
-#ifdef _UWP_WINDOW
-		// display resolution
-		float dpiRatio = UWP::getDpiRatio();
-		CoreWindow^ window = CoreWindow::GetForCurrentThread();
-		int width = hround(window->Bounds.Width * dpiRatio);
-		int height = hround(window->Bounds.Height * dpiRatio);
-		// these orientations are not supported in APRIL, but Windows allows them anyway even if the manifest says that they aren't supported
-		if (displayInfo->CurrentOrientation == DisplayOrientations::Portrait ||
-			displayInfo->CurrentOrientation == DisplayOrientations::PortraitFlipped)
-		{
-			hswap(width, height);
-		}
-		if (info.displayResolution.y == 0)
-		{
-			info.displayResolution.set(width, height);
-		}
-		else
-		{
-			info.displayResolution.x = hmax(width, info.displayResolution.x);
-		}
-#endif
 	}
 
 	hstr _getPackageName_platform()
