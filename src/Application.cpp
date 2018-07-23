@@ -41,6 +41,7 @@ namespace april
 	Application::Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)()) :
 		state(State::Idle),
 		suspended(false),
+		updateSuspendQueued(false),
 		timeDelta(0.0f),
 		fps(0),
 		fpsCount(0),
@@ -271,6 +272,10 @@ namespace april
 			lock.acquire(&april::application->updateMutex);
 			while (april::application->getState() == State::Running)
 			{
+				if (april::window->getOptions().suspendUpdateThread && april::application->updateSuspendQueued)
+				{
+					april::application->updateSuspendQueued = false;
+				}
 				lockTimeDelta.acquire(&april::application->timeDeltaMutex);
 				timeDelta = april::application->timeDelta;
 				april::application->timeDelta = 0.0f;
@@ -339,6 +344,11 @@ namespace april
 			*/
 			if (april::window->getOptions().suspendUpdateThread)
 			{
+				this->updateSuspendQueued = true;
+				while (this->updateSuspendQueued)
+				{
+					hthread::sleep(0.001f);
+				}
 				this->updateMutex.lock();
 			}
 			hlog::write(logTag, "Application suspend.");

@@ -258,23 +258,23 @@ namespace april
 	void JNICALL _JNI_activityOnResume(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onResume()");
-		PROTECTED_WINDOW_CALL(queueActivityChange(true));
 	}
 
 	void JNICALL _JNI_activityOnResumeNotify(JNIEnv* env, jclass classe)
 	{
 		PROTECTED_APPLICATION_CALL(resume());
+		PROTECTED_WINDOW_CALL(queueActivityChange(true));
 	}
 
 	void JNICALL _JNI_activityOnPause(JNIEnv* env, jclass classe)
 	{
 		hlog::write(logTag, "Android Activity::onPause()");
-		PROTECTED_WINDOW_CALL(queueActivityChange(false));
-		PROTECTED_RENDERSYS_CALL(suspend());
+		PROTECTED_RENDERSYS_CALL(suspend()); // must stay here due to threading requirement
 	}
 	
 	void JNICALL _JNI_activityOnPauseNotify(JNIEnv* env, jclass classe)
 	{
+		PROTECTED_WINDOW_CALL(queueActivityChange(false));
 		PROTECTED_APPLICATION_CALL(suspend());
 	}
 

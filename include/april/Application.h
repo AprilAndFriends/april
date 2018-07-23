@@ -137,6 +137,8 @@ namespace april
 		State state;
 		/// @brief Whether the application has been suspended. Required by some OSes.
 		bool suspended;
+		/// @brief Whether the update-thread is waiting to be suspended. Required by some OSes.
+		bool updateSuspendQueued;
 		/// @brief The Timer object used for general timing purposes.
 		Timer timer;
 		/// @brief The current time since the last frame.
