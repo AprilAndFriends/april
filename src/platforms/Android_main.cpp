@@ -52,8 +52,6 @@ namespace april
 	extern void (*dialogCallback)(MessageBoxButton);
 	extern jobject classLoader;
 
-	static bool _activityPaused = true; // special hack required for being able to stop rendering when onPause() happens
-	
 	void JNICALL _JNI_setVariables(JNIEnv* env, jclass classe, jstring jDataPath, jstring jForcedArchivePath)
 	{
 		hstr dataPath = _JSTR_TO_HSTR(jDataPath);
@@ -265,7 +263,6 @@ namespace april
 
 	void JNICALL _JNI_activityOnResumeNotify(JNIEnv* env, jclass classe)
 	{
-		_activityPaused = false;
 		PROTECTED_APPLICATION_CALL(resume());
 	}
 
@@ -278,7 +275,6 @@ namespace april
 	
 	void JNICALL _JNI_activityOnPauseNotify(JNIEnv* env, jclass classe)
 	{
-		_activityPaused = true;
 		PROTECTED_APPLICATION_CALL(suspend());
 	}
 

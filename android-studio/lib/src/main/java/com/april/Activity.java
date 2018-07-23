@@ -367,7 +367,7 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		{
 			this.registerSensorEventListener();
 		}
-		// native call is queued into render thread
+		// native call is queued into render thread, MUST NOT be called directly from this thread
 		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
@@ -391,7 +391,7 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		}
 		this.glView.onPause();
 		super.onPause();
-		// native call is queued into render thread
+		// native call is queued into render thread, MUST NOT be called directly from this thread
 		this.glView.queueEvent(new Runnable()
 		{
 			public void run()
