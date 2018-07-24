@@ -86,18 +86,18 @@ namespace april
 		Window::_systemCreate(width, height, fullscreen, title, options);
 		this->inputMode = InputMode::Mouse;
 		// Win32
-		WNDCLASSEXW wc;
-		memset(&wc, 0, sizeof(WNDCLASSEX));
+		WNDCLASSEXW windowClass;
+		memset(&windowClass, 0, sizeof(WNDCLASSEX));
 		HINSTANCE hinst = GetModuleHandle(0);
-		wc.cbSize = sizeof(WNDCLASSEX);
-		wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-		wc.lpfnWndProc = &Win32_Window::_mainProcessCallback;
-		wc.hInstance = hinst;
-		wc.hCursor = this->defaultCursor;
-		wc.lpszClassName = APRIL_WIN32_WINDOW_CLASS;
-		wc.hIcon = (HICON)LoadImage(hinst, MAKEINTRESOURCE(1), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
-		wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-		RegisterClassExW(&wc);
+		windowClass.cbSize = sizeof(WNDCLASSEX);
+		windowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+		windowClass.lpfnWndProc = &Win32_Window::_mainProcessCallback;
+		windowClass.hInstance = hinst;
+		windowClass.hCursor = this->defaultCursor;
+		windowClass.lpszClassName = APRIL_WIN32_WINDOW_CLASS;
+		windowClass.hIcon = (HICON)LoadImage(hinst, MAKEINTRESOURCE(1), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR);
+		windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+		RegisterClassExW(&windowClass);
 		// determine position
 		int screenWidth = GetSystemMetrics(SM_CXSCREEN);
 		int screenHeight = GetSystemMetrics(SM_CYSCREEN);
@@ -149,7 +149,7 @@ namespace april
 		// display the window on the screen
 		ShowWindow(this->hWnd, !this->options.minimized ? SW_SHOWNORMAL : SW_SHOWMINIMIZED);
 		UpdateWindow(this->hWnd);
-		SetCursor(wc.hCursor);
+		SetCursor(windowClass.hCursor);
 		this->setCursorVisible(true);
 		this->fpsCounter = options.fpsCounter;
 #ifdef _EGL
