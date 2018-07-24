@@ -104,9 +104,10 @@ namespace april
 		ComPtr<ID3D12Resource> depthStencil;
 		ComPtr<ID3D12CommandQueue> commandQueue;
 		ComPtr<ID3D12DescriptorHeap> rtvHeap; // render target view heap
+		ComPtr<ID3D12DescriptorHeap> cbvSrvUavHeap; // constant buffer view, shader resource view, unordered access view heap
 		ComPtr<ID3D12DescriptorHeap> srvHeap; // shader resource view heap
+		ComPtr<ID3D12DescriptorHeap> samplerHeap; // sampler heap
 		ComPtr<ID3D12DescriptorHeap> dsvHeap; // depth stencil view heap
-		ComPtr<ID3D12DescriptorHeap> cbvHeap; // constant buffer view heap
 		ComPtr<ID3D12CommandAllocator> commandAllocators[BACK_BUFFER_COUNT];
 		ComPtr<ID3D12GraphicsCommandList> commandList;
 		D3D12_VIEWPORT screenViewport;
@@ -125,7 +126,8 @@ namespace april
 
 		unsigned int currentFrame;
 		unsigned int rtvDescSize;
-		unsigned int cbvDescSize;
+		unsigned int cbvSrvUavDescSize;
+		unsigned int srvDescSize;
 
 		// cached device properties
 		Size logicalSize;
