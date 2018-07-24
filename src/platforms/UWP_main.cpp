@@ -24,6 +24,7 @@ namespace april
 {
 	int __mainStandard(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)(), int argc, char** argv)
 	{
+#ifdef _UWP_WINDOW
 		harray<hstr> args;
 		if (argv != NULL && argv[0] != NULL)
 		{
@@ -34,22 +35,15 @@ namespace april
 		}
 		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
 		april::application->setArgs(args);
-#ifdef _UWP_WINDOW
-		IFrameworkViewSource^ frameworkViewSource = ref new april::FrameworkViewSource();
-		//april::UWP::App = ;
+		IFrameworkViewSource^ frameworkViewSource = ref new april::UWP::FrameworkViewSource();
 		CoreApplication::Run(frameworkViewSource);
-		//return 0;
-		/*
-		Application::Start(ref new ApplicationInitializationCallback(
-			[](ApplicationInitializationCallbackParams^ p)
-			{
-				april::UWP::App = ref new april::UWP_App();
-			}
-		));
-		*/
+		if (april::application != NULL)
+		{
+			delete april::application;
+			april::application = NULL;
+		}
+		UWP::app = nullptr;
 #endif
-		delete april::application;
-		april::application = NULL;
 		return 0;
 	}
 	

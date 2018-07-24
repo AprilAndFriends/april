@@ -15,9 +15,10 @@
 #define APRIL_UWP_APP_H
 
 //#include <gtypes/Matrix4.h>
-//#include <gtypes/Vector2.h>
-//#include <hltypes/harray.h>
+#include <gtypes/Vector2.h>
+#include <hltypes/harray.h>
 
+#include "Keys.h"
 //#include "Color.h"
 //#include "pch.h"
 //#include "WinRT_XamlOverlay.xaml.h"
@@ -62,32 +63,37 @@ namespace april
 		void OnVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
 		*/
 
-		void OnTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
-		void OnTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
-		void OnTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
-		void OnMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
-		void OnKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
-		void OnKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
-		void OnCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
+		void onTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void onTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void onTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void onMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
+		void onKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
+		void onKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
+		void onCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
 
 	protected:
 		// Application lifecycle events
-		void OnActivated(CoreApplicationView^ applicationView, IActivatedEventArgs^ args);
-		void OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ args);
-		void OnResuming(Platform::Object^ sender, Platform::Object^ args);
+		void onActivated(CoreApplicationView^ applicationView, IActivatedEventArgs^ args);
+		void onSuspending(Platform::Object^ sender, SuspendingEventArgs^ args);
+		void onResuming(Platform::Object^ sender, Platform::Object^ args);
 		// CoreWindow events
-		void OnWindowSizeChanged(CoreWindow^ sender, WindowSizeChangedEventArgs^ args);
-		void OnVisibilityChanged(CoreWindow^ sender, VisibilityChangedEventArgs^ args);
-		void OnWindowClosed(CoreWindow^ sender, CoreWindowEventArgs^ args);
+		void onWindowSizeChanged(CoreWindow^ sender, WindowSizeChangedEventArgs^ args);
+		void onVisibilityChanged(CoreWindow^ sender, VisibilityChangedEventArgs^ args);
+		void onWindowClosed(CoreWindow^ sender, CoreWindowEventArgs^ args);
 		// DisplayInformation events
-		void OnDpiChanged(DisplayInformation^ sender, Platform::Object^ args);
-		void OnOrientationChanged(DisplayInformation^ sender, Platform::Object^ args);
-		void OnDisplayContentsInvalidated(DisplayInformation^ sender, Platform::Object^ args);
+		void onDpiChanged(DisplayInformation^ sender, Platform::Object^ args);
+		void onOrientationChanged(DisplayInformation^ sender, Platform::Object^ args);
+		void onDisplayContentsInvalidated(DisplayInformation^ sender, Platform::Object^ args);
 
-		void _updateWindowSize(float width, float height);
+		void _processWindowSizeChange(float width, float height);
+		void _processWindowFocusChange(bool focused);
 
 	private:
 		bool running;
+		bool visible;
+
+
+
 		/*
 		Texture* splashTexture;
 		*/
@@ -104,7 +110,6 @@ namespace april
 		int64_t startTime;
 		april::Key currentButton;
 
-		void _handleFocusChange(bool focused);
 		gvec2f _transformPosition(float x, float y);
 		void _resetTouches();
 		/*
@@ -114,13 +119,6 @@ namespace april
 		void _tryLoadBackgroundColor();
 		bool _findVisualElements(chstr nodeName, hstr& data, int& index);
 		*/
-
-	};
-
-	ref class FrameworkViewSource sealed : IFrameworkViewSource
-	{
-	public:
-		virtual IFrameworkView^ CreateView();
 
 	};
 

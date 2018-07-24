@@ -58,6 +58,7 @@ namespace april
 		//ApplicationView::GetForCurrentView()->FullScreenSystemOverlayMode = Windows::UI::ViewManagement::ApplicationView::FullScreenSystemOverlayMode::TryEnterFullScreenMode();
 		//ApplicationView::GetForCurrentView()->IsFullScreenMode = fullscreen;
 		fullscreen = ApplicationView::GetForCurrentView()->IsFullScreenMode;
+		//ApplicationView::GetForCurrentView()->PreferredLaunchViewSize = Windows::Foundation::Size(width)
 		Window::_systemCreate(width, height, fullscreen, title, options);
 		this->width = width;
 		this->height = height;
@@ -66,6 +67,7 @@ namespace april
 		this->cursorMappings.clear();
 		this->inputMode = InputMode::Touch;
 		this->setCursorVisible(true);
+		this->queueSizeChange(width, height, fullscreen);
 		return;
 	}
 	
@@ -204,7 +206,7 @@ namespace april
 	
 	void UWP_Window::_refreshCursor()
 	{
-		UWP::App->refreshCursor();
+		UWP::app->refreshCursor();
 	}
 	
 }

@@ -10,16 +10,13 @@
 /// 
 /// Defines UWP utility and global stuff.
 
-#ifdef _UWP
+#ifdef _UWP_WINDOW
 #ifndef APRIL_UWP_H
 #define APRIL_UWP_H
 
-#include <gtypes/Rectangle.h>
-#include <hltypes/harray.h>
-#include <hltypes/hstring.h>
-
 #include "UWP_App.h"
 
+using namespace Windows::ApplicationModel;
 using namespace Windows::Graphics::Display;
 
 namespace april
@@ -29,21 +26,19 @@ namespace april
 	class UWP
 	{
 	public:
-		~UWP() { }
-		
-		static void (*Init)(const harray<hstr>&);
-		static void (*Destroy)();
-		static harray<hstr> Args;
-		static UWP_App^ App;
+		ref class FrameworkViewSource sealed : IFrameworkViewSource
+		{
+		public:
+			virtual IFrameworkView^ CreateView();
+
+		};
+
+		static UWP_App^ app;
 		static float inline getDpiRatio() { return getDpiRatio(DisplayInformation::GetForCurrentView()->LogicalDpi); }
 		static float inline getDpiRatio(float dpi) { return (dpi / 96.0f); }
 
-	private:
-		UWP() { }
-		
 	};
 	
 }
-
 #endif
 #endif
