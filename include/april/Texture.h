@@ -76,12 +76,12 @@ namespace april
 		/// @brief Defines UV address mode.
 		HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, AddressMode,
 		(
-			/// @var static const AddressMode AddressMode::Wrap
-			/// @brief Wrapping UV coordinates.
-			HL_ENUM_DECLARE(AddressMode, Wrap);
 			/// @var static const AddressMode AddressMode::Clamp
 			/// @brief Clamping UV coordinates to the edge pixel.
 			HL_ENUM_DECLARE(AddressMode, Clamp);
+			/// @var static const AddressMode AddressMode::Wrap
+			/// @brief Wrapping UV coordinates.
+			HL_ENUM_DECLARE(AddressMode, Wrap);
 		));
 
 		/// @class LoadMode

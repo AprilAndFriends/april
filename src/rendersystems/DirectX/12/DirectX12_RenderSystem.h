@@ -30,7 +30,7 @@
 #include "DirectX_RenderSystem.h"
 #include "Window.h"
 
-#define BACK_BUFFER_COUNT DXGI_MAX_SWAP_CHAIN_BUFFERS
+#define BACKBUFFER_COUNT 3
 #define ALIGNED_CONSTANT_BUFFER_SIZE ((sizeof(ConstantBuffer) + 255) & ~255)
 #define INPUT_LAYOUT_COUNT 4
 #define PIXEL_SHADER_COUNT 3
@@ -99,14 +99,14 @@ namespace april
 		Platform::Agile<CoreWindow> coreWindow;
 		ComPtr<ID3D12RootSignature> rootSignatures[TEXTURE_STATE_COUNT];
 
-		ComPtr<ID3D12Resource> renderTargets[BACK_BUFFER_COUNT];
+		ComPtr<ID3D12Resource> renderTargets[BACKBUFFER_COUNT];
 		ComPtr<ID3D12Resource> depthStencil;
 		ComPtr<ID3D12CommandQueue> commandQueue;
 		ComPtr<ID3D12DescriptorHeap> rtvHeap; // render target view heap
 		ComPtr<ID3D12DescriptorHeap> cbvSrvUavHeap; // constant buffer view, shader resource view, unordered access view heap
 		ComPtr<ID3D12DescriptorHeap> samplerHeap; // sampler heap
 		ComPtr<ID3D12DescriptorHeap> dsvHeap; // depth stencil view heap
-		ComPtr<ID3D12CommandAllocator> commandAllocators[BACK_BUFFER_COUNT];
+		ComPtr<ID3D12CommandAllocator> commandAllocators[BACKBUFFER_COUNT];
 		ComPtr<ID3D12GraphicsCommandList> commandList;
 		D3D12_VIEWPORT screenViewport;
 
@@ -119,7 +119,7 @@ namespace april
 
 		// CPU/GPU synchronization
 		ComPtr<ID3D12Fence> fence;
-		UINT64 fenceValues[BACK_BUFFER_COUNT];
+		UINT64 fenceValues[BACKBUFFER_COUNT];
 		HANDLE fenceEvent;
 
 		unsigned int currentFrame;

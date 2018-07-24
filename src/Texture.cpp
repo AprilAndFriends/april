@@ -38,8 +38,8 @@ namespace april
 
 	HL_ENUM_CLASS_DEFINE(Texture::AddressMode,
 	(
-		HL_ENUM_DEFINE(Texture::AddressMode, Wrap);
 		HL_ENUM_DEFINE(Texture::AddressMode, Clamp);
+		HL_ENUM_DEFINE(Texture::AddressMode, Wrap);
 	));
 
 	HL_ENUM_CLASS_DEFINE(Texture::LoadMode,
