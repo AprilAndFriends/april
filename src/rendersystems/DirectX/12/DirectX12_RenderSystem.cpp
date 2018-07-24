@@ -1073,7 +1073,7 @@ namespace april
 		renderTargetView.ptr += this->currentFrame * this->rtvDescSize;
 		if (this->deviceState->useTexture && this->deviceState->texture != NULL)
 		{
-			this->commandList->SetGraphicsRootDescriptorTable(1, ((DirectX12_Texture*)this->deviceState->texture)->srvHeap->GetGPUDescriptorHandleForHeapStart());
+			//this->commandList->SetGraphicsRootDescriptorTable(1, ((DirectX12_Texture*)this->deviceState->texture)->srvHeap->GetGPUDescriptorHandleForHeapStart());
 		}
 		else
 		{
