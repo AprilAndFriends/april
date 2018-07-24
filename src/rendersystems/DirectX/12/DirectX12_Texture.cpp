@@ -100,20 +100,6 @@ namespace april
 			hlog::error(logTag, "Failed to create DX12 texture, unable to create upload heap!");
 			return false;
 		}
-		/*
-		D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-		srvHeapDesc.NumDescriptors = 1;
-		srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-		srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-		hr = D3D_DEVICE->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&this->srvHeap));
-		if (FAILED(hr))
-		{
-			this->d3dTexture = nullptr;
-			hlog::error(logTag, "Failed to create DX12 texture, unable to create SRV heap!");
-			return false;
-		}
-		this->srvHeap->SetName(this->_getInternalName().wStr().c_str());
-		*/
 		// upload
 		ComPtr<ID3D12GraphicsCommandList> commandList = DX12_RENDERSYS->getCommandList();
 		UpdateSubresources(commandList.Get(), this->d3dTexture.Get(), textureUploadHeap.Get(), 0, 0, 1, &textureData);
@@ -121,23 +107,6 @@ namespace april
 		DX12_RENDERSYS->executeCurrentCommands();
 		DX12_RENDERSYS->waitForCommands();
 		DX12_RENDERSYS->prepareNewCommands();
-		// create shader resource viwe
-		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		srvDesc.Format = textureDesc.Format;
-		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		srvDesc.Texture2D.MipLevels = 1;
-		CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle(DX12_RENDERSYS->cbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart(), BACK_BUFFER_COUNT, DX12_RENDERSYS->cbvSrvUavDescSize);
-		D3D_DEVICE->CreateShaderResourceView(this->d3dTexture.Get(), &srvDesc, cpuHandle);
-		//D3D_DEVICE->CreateShaderResourceView(this->d3dTexture.Get(), &srvDesc, DX12_RENDERSYS->cbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart());
-		/*
-		CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle(DX12_RENDERSYS->cbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart(), 1, DX12_RENDERSYS->cbvSrvUavDescSize);
-		for_iter(i, 0, BACK_BUFFER_COUNT)
-		{
-			D3D_DEVICE->CreateShaderResourceView(this->d3dTexture.Get(), &srvDesc, cpuHandle);
-			cpuHandle.Offset(DX12_RENDERSYS->cbvSrvUavDescSize * 2);
-		}
-		*/
 		return true;
 	}
 	

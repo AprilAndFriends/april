@@ -11,8 +11,8 @@
 /// Defines a DirectX12 render system.
 
 #ifdef _DIRECTX12
-#ifndef APRIL_DirectX12_RENDER_SYSTEM_H
-#define APRIL_DirectX12_RENDER_SYSTEM_H
+#ifndef APRIL_DIRECTX12_RENDER_SYSTEM_H
+#define APRIL_DIRECTX12_RENDER_SYSTEM_H
 
 #include <agile.h>
 #include <dxgi1_5.h>
@@ -30,7 +30,7 @@
 #include "DirectX_RenderSystem.h"
 #include "Window.h"
 
-#define BACK_BUFFER_COUNT 3
+#define BACK_BUFFER_COUNT DXGI_MAX_SWAP_CHAIN_BUFFERS
 #define ALIGNED_CONSTANT_BUFFER_SIZE ((sizeof(ConstantBuffer) + 255) & ~255)
 #define INPUT_LAYOUT_COUNT 4
 #define PIXEL_SHADER_COUNT 3
@@ -74,7 +74,6 @@ namespace april
 		int getVRam() const;
 		HL_DEFINE_GET(ID3D12CommandQueue*, commandQueue.Get(), CommandQueue);
 		HL_DEFINE_GET(ComPtr<ID3D12GraphicsCommandList>, commandList, CommandList);
-		HL_DEFINE_GET(ComPtr<ID3D12DescriptorHeap>, srvHeap, SrvHeap);
 		HL_DEFINE_GET(CD3DX12_HEAP_PROPERTIES, uploadHeapProperties, UploadHeapProperties);
 		
 		Image::Format getNativeTextureFormat(Image::Format format) const;
@@ -105,7 +104,6 @@ namespace april
 		ComPtr<ID3D12CommandQueue> commandQueue;
 		ComPtr<ID3D12DescriptorHeap> rtvHeap; // render target view heap
 		ComPtr<ID3D12DescriptorHeap> cbvSrvUavHeap; // constant buffer view, shader resource view, unordered access view heap
-		ComPtr<ID3D12DescriptorHeap> srvHeap; // shader resource view heap
 		ComPtr<ID3D12DescriptorHeap> samplerHeap; // sampler heap
 		ComPtr<ID3D12DescriptorHeap> dsvHeap; // depth stencil view heap
 		ComPtr<ID3D12CommandAllocator> commandAllocators[BACK_BUFFER_COUNT];
@@ -127,7 +125,8 @@ namespace april
 		unsigned int currentFrame;
 		unsigned int rtvDescSize;
 		unsigned int cbvSrvUavDescSize;
-		unsigned int srvDescSize;
+		unsigned int samplerDescSize;
+		unsigned int dsvDescSize;
 
 		// cached device properties
 		Size logicalSize;
@@ -154,6 +153,8 @@ namespace april
 		ComPtr<ID3D12Resource> constantBuffer;
 		ConstantBuffer constantBufferData;
 		unsigned char* mappedConstantBuffer;
+		// TODOuwp - will be needed later for HEAP_DATAPACKS_PER_FRAME
+		//unsigned char* mappedConstantBuffer[HEAP_DATAPACKS_PER_FRAME];
 
 		DirectX12_VertexShader* vertexShaderPlain;
 		DirectX12_VertexShader* vertexShaderTextured;

@@ -37,7 +37,6 @@
 #define LOG_TAG "demo_helloworld"
 
 april::Cursor* cursor = NULL;
-april::Texture* ball = NULL;
 april::TexturedVertex v[4];
 
 #if !defined(__ANDROID__) && !defined(_IOS) && !defined(_WINP8)
@@ -45,14 +44,17 @@ grectf drawRect(0.0f, 0.0f, 800.0f, 600.0f);
 #else
 grectf drawRect(0.0f, 0.0f, 480.0f, 320.0f);
 #endif
+grectf backgroundRect(50.0f, 50.0f, drawRect.w - 100.0f, drawRect.h - 100.0f);
 gvec2f size = drawRect.getSize() * 5 / 16;
-april::Color backgroundColor = april::Color::Black;
 
 class Ball
 {
 public:
-	Ball()
+	april::Texture* texture;
+
+	Ball(april::Texture* texture)
 	{
+		this->texture = texture;
 		this->position.set((float)hrand((int)drawRect.w - size), (float)hrand((int)drawRect.h - size));
 		this->velocity.set((float)speed, (float)speed);
 	}
@@ -80,7 +82,7 @@ public:
 		float x2 = this->position.x + size;
 		float y1 = this->position.y;
 		float y2 = this->position.y + size;
-		april::rendersys->setTexture(ball);
+		april::rendersys->setTexture(this->texture);
 		v[0].x = x1; v[0].y = y1; v[0].z = 0; v[0].u = 0; v[0].v = 0;
 		v[1].x = x2; v[1].y = y1; v[1].z = 0; v[1].u = 1; v[1].v = 0;
 		v[2].x = x1; v[2].y = y2; v[2].z = 0; v[2].u = 0; v[2].v = 1;
@@ -104,8 +106,9 @@ class UpdateDelegate : public april::UpdateDelegate
 	bool onUpdate(float timeDelta)
 	{	
 		april::rendersys->clear();
-		april::rendersys->setOrthoProjection(drawRect);	
-		april::rendersys->drawFilledRect(drawRect, backgroundColor);
+		april::rendersys->setOrthoProjection(drawRect);
+		april::rendersys->drawFilledRect(drawRect, april::Color::Grey);
+		april::rendersys->drawFilledRect(backgroundRect, april::Color::DarkGreen);
 		foreach (Ball, it, balls)
 		{
 			it->update(timeDelta);
@@ -196,8 +199,10 @@ void __aprilApplicationInit()
 	april::window->setSystemDelegate(systemDelegate);
 	cursor = april::window->createCursorFromResource(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
-	ball = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo");	
-	balls.add(Ball());
+	april::Texture* texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo");
+	balls.add(Ball(texture));
+	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "x");
+	balls.add(Ball(texture));
 }
 
 void __aprilApplicationDestroy()
@@ -205,8 +210,11 @@ void __aprilApplicationDestroy()
 	april::window->setCursor(NULL);
 	april::window->destroyCursor(cursor);
 	cursor = NULL;
-	april::rendersys->destroyTexture(ball);
-	ball = NULL;
+	foreach (Ball, it, balls)
+	{
+		april::rendersys->destroyTexture((*it).texture);
+	}
+	balls.clear();
 	april::destroy();
 	delete systemDelegate;
 	systemDelegate = NULL;
