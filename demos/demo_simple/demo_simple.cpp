@@ -48,6 +48,7 @@
 
 april::Cursor* cursor = NULL;
 april::Texture* texture = NULL;
+april::Texture* nearestTexture = NULL;
 april::Texture* manualTexture = NULL;
 april::TexturedVertex dv[4];
 april::PlainVertex pv[4];
@@ -71,18 +72,17 @@ class UpdateDelegate : public april::UpdateDelegate
 	{
 		april::rendersys->clear();
 		april::rendersys->setOrthoProjection(drawRect);
-		/// some general texture testing
 		april::rendersys->drawFilledRect(drawRect, april::Color(96, 96, 96));
-		// TODOx - re-enable and implement
+		// some general rendering testing
 		manualTexture->fillRect(hrand(manualTexture->getWidth()), hrand(manualTexture->getHeight()), hrand(1, 9), hrand(1, 9), april::Color(hrand(255), hrand(255), hrand(255)));
 		april::rendersys->setTexture(manualTexture);
 		april::rendersys->render(april::RenderOperation::TriangleStrip, dv, 4);
 		april::rendersys->setTexture(texture);
 		april::rendersys->drawTexturedRect(textureRect + offset, src);
-		april::rendersys->drawFilledRect(grectf(0.0f, drawRect.h - 75.0f, 100.0f, 75.0f), april::Color::Yellow);
-		april::rendersys->drawFilledRect(grectf(70.0f, drawRect.h - 65.0f, 80.0f, 55.0f), april::Color::Red);
+		april::rendersys->drawFilledRect(grectf(0.0f, drawRect.h - 75.0f, 40.0f, 75.0f), april::Color::Yellow);
+		april::rendersys->drawFilledRect(grectf(10.0f, drawRect.h - 65.0f, 80.0f, 55.0f), april::Color::Red);
 #ifdef _ENGINE_RENDER_TEST
-		// testing all render methods
+		// testing all general render methods
 		april::rendersys->drawFilledRect(grectf(drawRect.w - 110.0f, drawRect.h - 310.0f, 110.0f, 310.0f), april::Color::Black);
 		april::rendersys->render(april::RenderOperation::TriangleList, pv, 3);
 		april::rendersys->render(april::RenderOperation::TriangleList, &pv[1], 3, april::Color::Yellow);
@@ -90,6 +90,11 @@ class UpdateDelegate : public april::UpdateDelegate
 		april::rendersys->render(april::RenderOperation::TriangleList, &tv[1], 3, april::Color::Green);
 		april::rendersys->render(april::RenderOperation::TriangleList, cv, 3);
 		april::rendersys->render(april::RenderOperation::TriangleList, ctv, 3);
+		// texture filtering
+		april::rendersys->setTexture(nearestTexture);
+		april::rendersys->drawTexturedRect(grectf(drawRect.w - 50.0f, 0.0f, 50.0f, 100.0f), grectf(0.4375f, 0.25f, 0.03125f, 0.03125f));
+		april::rendersys->setTexture(texture);
+		april::rendersys->drawTexturedRect(grectf(drawRect.w - 100.0f, 0.0f, 50.0f, 100.0f), grectf(0.4375f, 0.25f, 0.03125f, 0.03125f));
 #endif
 		return true;
 	}
@@ -222,6 +227,8 @@ void __aprilApplicationInit()
 	cursor = april::window->createCursorFromResource(RESOURCE_PATH "cursor");
 	april::window->setCursor(cursor);
 	texture = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo", april::Texture::Type::Managed);
+	nearestTexture = april::rendersys->createTextureFromResource(RESOURCE_PATH "logo", april::Texture::Type::Managed);
+	nearestTexture->setFilter(april::Texture::Filter::Nearest);
 	textureRect.setSize(texture->getWidth() * 0.5f, texture->getHeight() * 0.5f);
 	textureRect.x = -textureRect.w * 0.5f;
 	textureRect.y = -textureRect.h * 0.5f;
@@ -243,6 +250,8 @@ void __aprilApplicationDestroy()
 	cursor = NULL;
 	april::rendersys->destroyTexture(texture);
 	texture = NULL;
+	april::rendersys->destroyTexture(nearestTexture);
+	nearestTexture = NULL;
 	april::rendersys->destroyTexture(manualTexture);
 	manualTexture = NULL;
 	april::destroy();

@@ -169,6 +169,8 @@ namespace april
 		{
 			if (lock.locked)
 			{
+				// TODOuwp - implement this properly
+				/*
 				if (!lock.renderTarget)
 				{
 					const UINT64 uploadBufferSize = GetRequiredIntermediateSize(this->d3dTexture.Get(), 0, 1);
@@ -198,6 +200,7 @@ namespace april
 				{
 					// TODOaa - implement
 				}
+				*/
 			}
 			this->firstUpload = false;
 		}
