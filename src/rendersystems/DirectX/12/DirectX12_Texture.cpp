@@ -101,9 +101,8 @@ namespace april
 			return false;
 		}
 		// upload
-		ComPtr<ID3D12GraphicsCommandList> commandList = DX12_RENDERSYS->getCommandList();
-		UpdateSubresources(commandList.Get(), this->d3dTexture.Get(), textureUploadHeap.Get(), 0, 0, 1, &textureData);
-		commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+		UpdateSubresources(DX12_RENDERSYS->commandList.Get(), this->d3dTexture.Get(), textureUploadHeap.Get(), 0, 0, 1, &textureData);
+		DX12_RENDERSYS->commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 		DX12_RENDERSYS->executeCurrentCommands();
 		DX12_RENDERSYS->waitForCommands();
 		DX12_RENDERSYS->prepareNewCommands();

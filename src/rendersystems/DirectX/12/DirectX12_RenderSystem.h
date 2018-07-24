@@ -73,12 +73,10 @@ namespace april
 
 		int getVRam() const;
 		HL_DEFINE_GET(ID3D12CommandQueue*, commandQueue.Get(), CommandQueue);
-		HL_DEFINE_GET(ComPtr<ID3D12GraphicsCommandList>, commandList, CommandList);
-		HL_DEFINE_GET(CD3DX12_HEAP_PROPERTIES, uploadHeapProperties, UploadHeapProperties);
 		
 		Image::Format getNativeTextureFormat(Image::Format format) const;
 		unsigned int getNativeColorUInt(const april::Color& color) const;
-		Image* takeScreenshot(Image::Format format);
+		Image* takeScreenshot(Image::Format format); // TODOuwp - implement screenshots properly
 
 		void updateDeviceReset();
 

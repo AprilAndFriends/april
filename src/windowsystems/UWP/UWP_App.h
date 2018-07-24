@@ -47,7 +47,8 @@ namespace april
 	{
 	public:
 		UWP_App();
-		//virtual void Connect(int connectionId, Object^ target);
+
+		inline bool isVisible() { return this->visible; }
 
 		// IFrameworkView methods.
 		virtual void Initialize(Core::CoreApplicationView^ applicationView);

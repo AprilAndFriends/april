@@ -101,12 +101,12 @@ namespace april
 		PointerVisualizationSettings^ pointerVisualizationSettings = PointerVisualizationSettings::GetForCurrentView();
 		pointerVisualizationSettings->IsContactFeedbackEnabled = false;
 		pointerVisualizationSettings->IsBarrelButtonFeedbackEnabled = false;
+		getSystemInfo(); // this call is required to setup the SystemInfo object from the proper thread
+		april::application->init();
 	}
 
 	void UWP_App::Load(Platform::String^ entryPoint)
 	{
-		getSystemInfo(); // this call is required to setup the SystemInfo object from the proper thread
-		april::application->init();
 	}
 
 	void UWP_App::Run()
@@ -143,22 +143,29 @@ namespace april
 
 	void UWP_App::onSuspending(Platform::Object^ sender, SuspendingEventArgs^ args)
 	{
-		hlog::write(logTag, "UWP suspending...");
-		this->_processWindowFocusChange(true);
-		// TODOuwp - might be needed after all
-		/*
+		hlog::write(logTag, "UWP suspend triggered.");
+		// using deferral here, because it's the suggested way to handle a suspend event
 		SuspendingDeferral^ deferral = args->SuspendingOperation->GetDeferral();
 		create_task([this, deferral]()
 		{
+			hlog::write(logTag, "UWP suspending...");
+			this->_processWindowFocusChange(true);
+			if (april::application != NULL)
+			{
+				april::application->suspend();
+			}
 			deferral->Complete();
 		});
-		*/
 	}
 
 	void UWP_App::onResuming(Platform::Object^ sender, Platform::Object^ args)
 	{
 		hlog::write(logTag, "UWP resuming...");
 		this->_processWindowFocusChange(true);
+		if (april::application != NULL)
+		{
+			april::application->resume();
+		}
 	}
 
 	// CoreWindow events
@@ -216,8 +223,11 @@ namespace april
 			int windowWidth = (int)width;
 			int windowHeight = (int)height;
 			bool fullscreen = ApplicationView::GetForCurrentView()->IsFullScreenMode;
-			UWP_WINDOW->_systemSetResolution(windowWidth, windowHeight, fullscreen);
-			april::window->queueSizeChange(windowWidth, windowHeight, fullscreen);
+			april::window->setResolution(windowWidth, windowHeight, fullscreen);
+			// TODOuwp - probably needs to be removed
+			//UWP_WINDOW->_systemSetResolution(windowWidth, windowHeight, fullscreen);
+			//april::window->queueSizeChange(windowWidth, windowHeight, fullscreen);
+			//UWP_WINDOW->_systemSetResolution(windowWidth, windowHeight, fullscreen);
 		}
 	}
 

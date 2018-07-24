@@ -663,7 +663,8 @@ namespace april
 		{
 			this->_createSwapChain((int)outputSize.Width, (int)outputSize.Height);
 		}
-		// root signatures
+		// TODOuwp - is this the right place for this code? do root signatures need to be created on size change?
+		// root signature without texture
 		CD3DX12_DESCRIPTOR_RANGE ranges[3];
 		ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
 		CD3DX12_ROOT_PARAMETER parameters[3];
@@ -677,6 +678,7 @@ namespace april
 		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
 		_TRY_UNSAFE(this->d3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&this->rootSignatures[0])), "Unable to create root signature!");
 		this->rootSignatures[0]->SetName(L"Root Signature 0");
+		// root signature with texture
 		ranges[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
 		ranges[2].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, 0);
 		parameters[1].InitAsDescriptorTable(1, &ranges[1], D3D12_SHADER_VISIBILITY_PIXEL);
@@ -727,7 +729,9 @@ namespace april
 			this->renderTargets[i] = nullptr;
 			this->fenceValues[i] = this->fenceValues[this->currentFrame];
 		}
-		HRESULT hr = this->swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
+		DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
+		this->swapChain->GetDesc(&swapChainDesc);
+		HRESULT hr = this->swapChain->ResizeBuffers(0, width, height, swapChainDesc.BufferDesc.Format, swapChainDesc.Flags);
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
 			// TODOuwp - this needs to be tested and fixed or implemented
@@ -751,6 +755,7 @@ namespace april
 		{
 			_TRY_UNSAFE(this->swapChain->GetBuffer(i, IID_PPV_ARGS(&this->renderTargets[i])), hsprintf("Unable to get buffer %d from swap chain!", i));
 			this->d3dDevice->CreateRenderTargetView(this->renderTargets[i].Get(), nullptr, cpuHandle);
+			this->renderTargets[i]->SetName(("Render Target " + hstr(i)).wStr().c_str());
 			cpuHandle.ptr += this->rtvDescSize;
 		}
 		// TODOuwp - maybe could be removed / disabled as depth buffers aren't supported widely in april
@@ -1044,19 +1049,16 @@ namespace april
 
 	void DirectX12_RenderSystem::prepareNewCommands()
 	{
-		if (this->deviceState->useTexture && this->deviceState->texture != NULL)
-		{
-			int a = 0;
-		}
 		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
 		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->deviceState_pipelineState.Get()), "Unable to reset command list!");
 		PIXBeginEvent(this->commandList.Get(), 0, L"");
 		this->commandList->SetGraphicsRootSignature(this->deviceState_rootSignature.Get());
+		CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle;
 		if (this->deviceState->useTexture && this->deviceState->texture != NULL)
 		{
 			ID3D12DescriptorHeap* heaps[] = { this->cbvSrvUavHeap.Get(), this->samplerHeap.Get() };
 			this->commandList->SetDescriptorHeaps(_countof(heaps), heaps);
-			CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(this->cbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart(), this->currentFrame, this->cbvSrvUavDescSize);
+			gpuHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(this->cbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart(), this->currentFrame, this->cbvSrvUavDescSize);
 			this->commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
 			// texture
 			april::DirectX12_Texture* texture = (april::DirectX12_Texture*)this->deviceState->texture;
@@ -1071,19 +1073,15 @@ namespace april
 			gpuHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(this->cbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart(), heapIndex, this->cbvSrvUavDescSize);
 			this->commandList->SetGraphicsRootDescriptorTable(1, gpuHandle);
 			// sampler
-
-			//CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle(this->cbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart(), heapIndex + 1, this->cbvSrvUavDescSize);
-			//this->d3dDevice->CreateShaderResourceView(texture->d3dTexture.Get(), &srvDesc, cpuHandle);
 			int adressModeSize = Texture::AddressMode::getValues().size();
 			gpuHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(this->samplerHeap->GetGPUDescriptorHandleForHeapStart(), texture->getFilter().value * adressModeSize + texture->getAddressMode().value, this->samplerDescSize);
 			this->commandList->SetGraphicsRootDescriptorTable(2, gpuHandle);
-
 		}
 		else
 		{
 			ID3D12DescriptorHeap* heaps[] = { this->cbvSrvUavHeap.Get() };
 			this->commandList->SetDescriptorHeaps(_countof(heaps), heaps);
-			CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(this->cbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart(), this->currentFrame, this->cbvSrvUavDescSize);
+			gpuHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(this->cbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart(), this->currentFrame, this->cbvSrvUavDescSize);
 			this->commandList->SetGraphicsRootDescriptorTable(0, gpuHandle);
 		}
 	}

@@ -159,9 +159,7 @@ namespace april
 
 	void UWP_Window::checkEvents()
 	{
-		// TODOuwp - implement this
-		/*
-		if (this->visible)
+		if (UWP::app->isVisible())
 		{
 			CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
 		}
@@ -169,8 +167,6 @@ namespace april
 		{
 			CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessOneAndAllPending);
 		}
-		*/
-		CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
 		Window::checkEvents();
 	}
 
