@@ -210,7 +210,7 @@ namespace april
 
 	void UWP_App::onDisplayContentsInvalidated(DisplayInformation^ sender, Platform::Object^ args)
 	{
-		int a = 0;
+		// TODOuwp - probably needs implementing
 		//GetDeviceResources()->ValidateDevice();
 	}
 
@@ -223,11 +223,8 @@ namespace april
 			int windowWidth = (int)width;
 			int windowHeight = (int)height;
 			bool fullscreen = ApplicationView::GetForCurrentView()->IsFullScreenMode;
-			april::window->setResolution(windowWidth, windowHeight, fullscreen);
-			// TODOuwp - probably needs to be removed
-			//UWP_WINDOW->_systemSetResolution(windowWidth, windowHeight, fullscreen);
-			//april::window->queueSizeChange(windowWidth, windowHeight, fullscreen);
-			//UWP_WINDOW->_systemSetResolution(windowWidth, windowHeight, fullscreen);
+			UWP_WINDOW->_systemSetResolution(windowWidth, windowHeight, fullscreen);
+			april::window->queueSizeChange(april::window->getWidth(), april::window->getHeight(), april::window->isFullscreen());
 		}
 	}
 

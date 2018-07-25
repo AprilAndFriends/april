@@ -35,7 +35,7 @@
 
 namespace april
 {
-	// TODOaa - refactor
+	// TODO - refactor or remove entirely
 	void (*Window::msLaunchCallback)(void*) = NULL;
 	void Window::handleLaunchCallback(void* args)
 	{

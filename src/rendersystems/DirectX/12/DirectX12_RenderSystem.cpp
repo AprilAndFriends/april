@@ -241,10 +241,9 @@ namespace april
 		// initial calls
 		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
 		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->deviceState_pipelineState.Get()), "Unable to reset command list!");
-		PIXBeginEvent(this->commandList.Get(), 0, L"");
 		grecti viewport(0, 0, window->getSize());
 		gvec2f windowSizeFloat((float)viewport.w, (float)viewport.h);
-		//this->_deviceClear(true);
+		PIXBeginEvent(this->commandList.Get(), 0, L"");
 		this->executeCurrentCommands();
 		_TRY_UNSAFE(this->swapChain->Present(1, 0), "Unable to present initial swap chain!");
 		this->deviceState_rootSignature = this->rootSignatures[0];
@@ -483,6 +482,14 @@ namespace april
 		_TRY_UNSAFE(hr, "Unable to resize swap chain buffers!");
 		this->_configureSwapChain(width, height);
 		this->prepareNewCommands();
+		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
+		renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		renderTargetResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
+		renderTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COMMON;
+		renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+		this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
 	}
 
 	void DirectX12_RenderSystem::_configureSwapChain(int width, int height)
