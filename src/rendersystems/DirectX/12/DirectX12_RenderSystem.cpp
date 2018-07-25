@@ -142,6 +142,128 @@ namespace april
 
 	void DirectX12_RenderSystem::_deviceAssignWindow(Window* window)
 	{
+		this->_createD3dDevice();
+		this->_createHeapDescriptors();
+		// commands
+		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+		queueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
+		queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+		queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+		queueDesc.NodeMask = 0;
+		_TRY_UNSAFE(this->d3dDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&this->commandQueue)), "Unable to create command queue!");
+		for_iter (i, 0, BACKBUFFER_COUNT)
+		{
+			_TRY_UNSAFE(this->d3dDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&this->commandAllocators[i])), hsprintf("Unable to create command allocator %d!", i));
+		}
+		// create synchronization objects
+		_TRY_UNSAFE(this->d3dDevice->CreateFence(this->fenceValues[this->currentFrame], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&this->fence)), "Unable to create fence");
+		++this->fenceValues[this->currentFrame];
+		this->fenceEvent = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
+		// configure device
+		this->coreWindow = CoreWindow::GetForCurrentThread();
+		DisplayInformation^ displayInformation = DisplayInformation::GetForCurrentView();
+		this->nativeOrientation = displayInformation->NativeOrientation;
+		this->logicalSize = Windows::Foundation::Size((float)window->getWidth(), (float)window->getHeight());
+		this->currentOrientation = displayInformation->CurrentOrientation;
+		this->dpi = displayInformation->LogicalDpi;
+		this->_setupSwapChain();
+		this->_createRootSignatures();
+		this->deviceState_rootSignature = this->rootSignatures[0];
+		this->_createShaders();
+		this->_createPipeline();
+		this->deviceState_pipelineState = this->pipelineStates[0][0][0][0][0];
+		_TRY_UNSAFE(this->d3dDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, this->commandAllocators[this->currentFrame].Get(),
+			this->deviceState_pipelineState.Get(), IID_PPV_ARGS(&this->commandList)), "Unable to create command allocators state!");
+		// vertex bufffers
+		this->uploadHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+		this->uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
+		this->uploadHeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+		this->uploadHeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+		this->uploadHeapProperties.CreationNodeMask = 1;
+		this->uploadHeapProperties.VisibleNodeMask = 1;
+		this->vertexBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+		this->vertexBufferDesc.Alignment = 0;
+		this->vertexBufferDesc.Width = VERTEX_BUFFER_COUNT;
+		this->vertexBufferDesc.Height = 1;
+		this->vertexBufferDesc.DepthOrArraySize = 1;
+		this->vertexBufferDesc.MipLevels = 1;
+		this->vertexBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
+		this->vertexBufferDesc.SampleDesc.Count = 1;
+		this->vertexBufferDesc.SampleDesc.Quality = 0;
+		this->vertexBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+		this->vertexBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+		CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
+		for_iter (i, 0, MAX_VERTEX_BUFFERS)
+		{
+			_TRY_UNSAFE(d3dDevice->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDesc,
+				D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&this->vertexBuffers[i])), "Unable to create vertex buffer!");
+		}
+		for_iter (i, 0, MAX_VERTEX_BUFFERS)
+		{
+			_TRY_UNSAFE(this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDesc,
+				D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->vertexBufferUploads[i])), "Unable to create vertex buffer upload heap!");
+		}
+		// constant buffer
+		this->constantBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+		this->constantBufferDesc.Alignment = 0;
+		this->constantBufferDesc.Width = BACKBUFFER_COUNT * ALIGNED_CONSTANT_BUFFER_SIZE;
+		this->constantBufferDesc.Height = 1;
+		this->constantBufferDesc.DepthOrArraySize = 1;
+		this->constantBufferDesc.MipLevels = 1;
+		this->constantBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
+		this->constantBufferDesc.SampleDesc.Count = 1;
+		this->constantBufferDesc.SampleDesc.Quality = 0;
+		this->constantBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+		this->constantBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+		_TRY_UNSAFE(this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->constantBufferDesc,
+			D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->constantBuffer)), "Unable to create constant buffer!");
+		// constant buffer views
+		D3D12_GPU_VIRTUAL_ADDRESS cbvGpuAddress = this->constantBuffer->GetGPUVirtualAddress();
+		D3D12_CPU_DESCRIPTOR_HANDLE cbvCpuHandle = this->cbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart();
+		D3D12_CONSTANT_BUFFER_VIEW_DESC desc;
+		desc.SizeInBytes = ALIGNED_CONSTANT_BUFFER_SIZE;
+		for_iter (i, 0, BACKBUFFER_COUNT)
+		{
+			desc.BufferLocation = cbvGpuAddress;
+			this->d3dDevice->CreateConstantBufferView(&desc, cbvCpuHandle);
+			cbvGpuAddress += desc.SizeInBytes;
+			cbvCpuHandle.ptr += this->cbvSrvUavDescSize;
+		}
+		D3D12_RANGE readRange = {};
+		readRange.Begin = 0;
+		readRange.End = 0;
+		this->constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&this->mappedConstantBuffer));
+		// finish and execute these commands
+		_TRY_UNSAFE(this->commandList->Close(), "Unable to close command list!");
+		ID3D12CommandList* ppCommandLists[] = { this->commandList.Get() };
+		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+		this->_waitForGpu();
+		// initial calls
+		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
+		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->deviceState_pipelineState.Get()), "Unable to reset command list!");
+		PIXBeginEvent(this->commandList.Get(), 0, L"");
+		grecti viewport(0, 0, window->getSize());
+		gvec2f windowSizeFloat((float)viewport.w, (float)viewport.h);
+		//this->_deviceClear(true);
+		this->executeCurrentCommands();
+		_TRY_UNSAFE(this->swapChain->Present(1, 0), "Unable to present initial swap chain!");
+		this->deviceState_rootSignature = this->rootSignatures[0];
+		this->waitForCommands();
+		this->prepareNewCommands();
+		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
+		renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		renderTargetResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
+		renderTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+		renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+		this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
+		this->setOrthoProjection(windowSizeFloat);
+		this->setViewport(viewport);
+	}
+
+	void DirectX12_RenderSystem::_createD3dDevice()
+	{
 		unsigned int dxgiFactoryFlags = 0;
 #ifndef _DEBUG
 		if (this->options.debugInfo)
@@ -202,7 +324,7 @@ namespace april
 		UINT adapterIndex = 0;
 		D3D_FEATURE_LEVEL availableFeatureLevels[MAX_D3D_FEATURE_LEVELS] = { D3D_FEATURE_LEVEL_12_1, D3D_FEATURE_LEVEL_12_0, D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0 };
 		D3D_FEATURE_LEVEL featureLevel = availableFeatureLevels[0];
-		for_iter (i, 0, MAX_D3D_FEATURE_LEVELS)
+		for_iter(i, 0, MAX_D3D_FEATURE_LEVELS)
 		{
 			adapterIndex = 0;
 			featureLevel = availableFeatureLevels[i];
@@ -252,7 +374,10 @@ namespace april
 			pInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, TRUE);
 		}
 #endif
-		// resource descriptors
+	}
+
+	void DirectX12_RenderSystem::_createHeapDescriptors()
+	{
 		D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
 		rtvHeapDesc.NumDescriptors = BACKBUFFER_COUNT;
 		rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
@@ -283,29 +408,164 @@ namespace april
 		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&this->dsvHeap)), "Unable to create DSV heap!");
 		this->dsvHeap->SetName(L"DSV Heap");
 		this->dsvDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-		// commands
-		D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-		queueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
-		queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-		queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-		queueDesc.NodeMask = 0;
-		_TRY_UNSAFE(this->d3dDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&this->commandQueue)), "Unable to create command queue!");
+	}
+
+	void DirectX12_RenderSystem::_setupSwapChain()
+	{
+		// swap chain
+		float dpiRatio = UWP::getDpiRatio(this->dpi);
+		Size outputSize((float)hmax(hround(this->logicalSize.Width * dpiRatio), 1), (float)hmax(hround(this->logicalSize.Height * dpiRatio), 1));
+		DXGI_MODE_ROTATION displayRotation = this->_getDxgiRotation();
+		if (displayRotation == DXGI_MODE_ROTATION_ROTATE90 || displayRotation == DXGI_MODE_ROTATION_ROTATE270)
+		{
+			hswap(outputSize.Width, outputSize.Height);
+		}
+		if (this->swapChain != nullptr)
+		{
+			this->_resizeSwapChain((int)outputSize.Width, (int)outputSize.Height);
+		}
+		else
+		{
+			this->_createSwapChain((int)outputSize.Width, (int)outputSize.Height);
+		}
+	}
+
+	void DirectX12_RenderSystem::_createSwapChain(int width, int height)
+	{
+		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
+		swapChainDesc.Width = width;
+		swapChainDesc.Height = height;
+		swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		swapChainDesc.Stereo = false;
+		swapChainDesc.SampleDesc.Count = 1;
+		swapChainDesc.SampleDesc.Quality = 0;
+		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		swapChainDesc.BufferCount = BACKBUFFER_COUNT;
+		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; // UWP apps MUST use a "_FLIP_" variant
+		swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+		swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
+		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
+		if (!this->options.vSync)
+		{
+			swapChainDesc.Flags |= DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
+		}
+		ComPtr<IDXGISwapChain1> swapChain;
+		_TRY_UNSAFE(this->dxgiFactory->CreateSwapChainForCoreWindow(this->commandQueue.Get(), reinterpret_cast<IUnknown*>(this->coreWindow.Get()),
+			&swapChainDesc, nullptr, &swapChain), "Unable to create swap chain!");
+		_TRY_UNSAFE(swapChain.As(&this->swapChain), "Unable to cast swap chain to non-COM object!");
+		DXGI_RGBA black = { 0.0f, 0.0f, 0.0f, 1.0f };
+		this->swapChain->SetBackgroundColor(&black);
+		this->_configureSwapChain(width, height);
+	}
+
+	void DirectX12_RenderSystem::_resizeSwapChain(int width, int height)
+	{
+		this->executeCurrentCommands();
+		this->waitForCommands();
+		this->_waitForGpu();
 		for_iter (i, 0, BACKBUFFER_COUNT)
 		{
-			_TRY_UNSAFE(this->d3dDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&this->commandAllocators[i])), hsprintf("Unable to create command allocator %d!", i));
+			this->renderTargets[i] = nullptr;
+			this->fenceValues[i] = this->fenceValues[this->currentFrame];
 		}
-		// create synchronization objects
-		_TRY_UNSAFE(this->d3dDevice->CreateFence(this->fenceValues[this->currentFrame], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&this->fence)), "Unable to create fence");
-		++this->fenceValues[this->currentFrame];
-		this->fenceEvent = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
-		// configure device
-		this->coreWindow = CoreWindow::GetForCurrentThread();
-		DisplayInformation^ displayInformation = DisplayInformation::GetForCurrentView();
-		this->nativeOrientation = displayInformation->NativeOrientation;
-		this->logicalSize = Windows::Foundation::Size((float)window->getWidth(), (float)window->getHeight());
-		this->currentOrientation = displayInformation->CurrentOrientation;
-		this->dpi = displayInformation->LogicalDpi;
-		this->_configureDevice();
+		DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
+		this->swapChain->GetDesc(&swapChainDesc);
+		HRESULT hr = this->swapChain->ResizeBuffers(0, width, height, swapChainDesc.BufferDesc.Format, swapChainDesc.Flags);
+		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
+		{
+			// TODOuwp - this needs to be tested and fixed or implemented
+			// If the device was removed for any reason, a new device and swap chain will need to be created.
+			//m_deviceRemoved = true;
+
+			// Do not continue execution of this method. DeviceResources will be destroyed and re-created.
+			return;
+		}
+		_TRY_UNSAFE(hr, "Unable to resize swap chain buffers!");
+		this->_configureSwapChain(width, height);
+		this->prepareNewCommands();
+	}
+
+	void DirectX12_RenderSystem::_configureSwapChain(int width, int height)
+	{
+		_TRY_UNSAFE(this->swapChain->SetRotation(this->_getDxgiRotation()), "Unable to set rotation on swap chain!");
+		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
+		D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
+		for_iter (i, 0, BACKBUFFER_COUNT)
+		{
+			_TRY_UNSAFE(this->swapChain->GetBuffer(i, IID_PPV_ARGS(&this->renderTargets[i])), hsprintf("Unable to get buffer %d from swap chain!", i));
+			this->d3dDevice->CreateRenderTargetView(this->renderTargets[i].Get(), nullptr, cpuHandle);
+			this->renderTargets[i]->SetName(("Render Target " + hstr(i)).wStr().c_str());
+			cpuHandle.ptr += this->rtvDescSize;
+		}
+		// TODOuwp - maybe could be removed / disabled as depth buffers aren't supported widely in april
+		if (this->options.depthBuffer)
+		{
+			D3D12_HEAP_PROPERTIES depthHeapProperties = {};
+			depthHeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
+			depthHeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+			depthHeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+			depthHeapProperties.CreationNodeMask = 1;
+			depthHeapProperties.VisibleNodeMask = 1;
+			D3D12_RESOURCE_DESC depthResourceDesc = {};
+			depthResourceDesc.Format = DXGI_FORMAT_D16_UNORM;
+			depthResourceDesc.Alignment = 0;
+			depthResourceDesc.Width = width;
+			depthResourceDesc.Height = height;
+			depthResourceDesc.DepthOrArraySize = 1;
+			depthResourceDesc.MipLevels = 1;
+			depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+			depthResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+			depthResourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+			depthResourceDesc.SampleDesc.Count = 1;
+			depthResourceDesc.SampleDesc.Quality = 0;
+			D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
+			float depth = 1.0f;
+			depthOptimizedClearValue.Format = DXGI_FORMAT_D16_UNORM;
+			// using memcpy to preserve NAN values
+			memcpy(&depthOptimizedClearValue.DepthStencil.Depth, &depth, sizeof(depth));
+			depthOptimizedClearValue.DepthStencil.Stencil = 0;
+			_TRY_UNSAFE(this->d3dDevice->CreateCommittedResource(&depthHeapProperties, D3D12_HEAP_FLAG_NONE, &depthResourceDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE,
+				&depthOptimizedClearValue, IID_PPV_ARGS(&this->depthStencil)), "Unable to create depth buffer!");
+			D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+			dsvDesc.Format = DXGI_FORMAT_D16_UNORM;
+			dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+			dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+			this->d3dDevice->CreateDepthStencilView(this->depthStencil.Get(), &dsvDesc, this->dsvHeap->GetCPUDescriptorHandleForHeapStart());
+		}
+		//this->screenViewport = { 0.0f, 0.0f, this->d3dRenderTargetSize.Width, this->d3dRenderTargetSize.Height, 0.0f, 1.0f };
+	}
+
+	void DirectX12_RenderSystem::_createRootSignatures()
+	{
+		// root signature without texture
+		CD3DX12_DESCRIPTOR_RANGE ranges[3];
+		ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
+		CD3DX12_ROOT_PARAMETER parameters[3];
+		parameters[0].InitAsDescriptorTable(1, &ranges[0], D3D12_SHADER_VISIBILITY_VERTEX);
+		CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
+		rootSignatureDesc.Init(1, parameters, 0, NULL, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+			D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
+			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS);
+		ComPtr<ID3DBlob> pSignature;
+		ComPtr<ID3DBlob> pError;
+		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
+		_TRY_UNSAFE(this->d3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&this->rootSignatures[0])), "Unable to create root signature!");
+		this->rootSignatures[0]->SetName(L"Root Signature 0");
+		// root signature with texture
+		ranges[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+		ranges[2].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, 0);
+		parameters[1].InitAsDescriptorTable(1, &ranges[1], D3D12_SHADER_VISIBILITY_PIXEL);
+		parameters[2].InitAsDescriptorTable(1, &ranges[2], D3D12_SHADER_VISIBILITY_PIXEL);
+		rootSignatureDesc.Init(3, parameters, 0, NULL, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+			D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
+			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS);
+		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
+		_TRY_UNSAFE(this->d3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&this->rootSignatures[1])), "Unable to create root signature!");
+		this->rootSignatures[1]->SetName(L"Root Signature 1");
+	}
+
+	void DirectX12_RenderSystem::_createShaders()
+	{
 		// default shaders
 		// TODOuwp - missing desaturate and sepia shaders
 		LOAD_SHADER(this->vertexShaderPlain, Vertex, Plain);
@@ -318,6 +578,46 @@ namespace april
 		LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply);
 		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap);
 		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp);
+		// texture samplers
+		D3D12_SAMPLER_DESC samplerDesc;
+		memset(&samplerDesc, 0, sizeof(samplerDesc));
+		samplerDesc.MaxAnisotropy = 0;
+		samplerDesc.MipLODBias = 0.0f;
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
+		samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+		samplerDesc.BorderColor[0] = 0.0f;
+		samplerDesc.BorderColor[1] = 0.0f;
+		samplerDesc.BorderColor[2] = 0.0f;
+		samplerDesc.BorderColor[3] = 0.0f;
+		D3D12_CPU_DESCRIPTOR_HANDLE samplerCpuHandle = this->samplerHeap->GetCPUDescriptorHandleForHeapStart();
+		int filterSize = Texture::Filter::getValues().size();
+		int adressModeSize = Texture::AddressMode::getValues().size();
+		for_iter (i, 0, filterSize)
+		{
+			samplerDesc.Filter = (i == 0 ? D3D12_FILTER_MIN_MAG_MIP_POINT : D3D12_FILTER_MIN_MAG_MIP_LINEAR);
+			for_iter (j, 0, adressModeSize)
+			{
+				if (j == 0)
+				{
+					samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+					samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+					samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+				}
+				else
+				{
+					samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+					samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+					samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+				}
+				this->d3dDevice->CreateSampler(&samplerDesc, samplerCpuHandle);
+				samplerCpuHandle.ptr += this->samplerDescSize;
+			}
+		}
+	}
+
+	void DirectX12_RenderSystem::_createPipeline()
+	{
 		// input layouts for default shaders
 		static const D3D12_INPUT_ELEMENT_DESC inputLayoutDescPlain[] =
 		{
@@ -473,138 +773,6 @@ namespace april
 				}
 			}
 		}
-		this->deviceState_pipelineState = this->pipelineStates[0][0][0][0][0];
-		this->deviceState_rootSignature = this->rootSignatures[0];
-		_TRY_UNSAFE(this->d3dDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, this->commandAllocators[this->currentFrame].Get(),
-			this->deviceState_pipelineState.Get(), IID_PPV_ARGS(&this->commandList)), "Unable to create command allocators state!");
-		this->uploadHeapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-		this->uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
-		this->uploadHeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-		this->uploadHeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-		this->uploadHeapProperties.CreationNodeMask = 1;
-		this->uploadHeapProperties.VisibleNodeMask = 1;
-		//this->vertexBufferData.pSysMem = NULL;
-		//this->vertexBufferData.SysMemPitch = 0;
-		//this->vertexBufferData.SysMemSlicePitch = 0;
-		this->vertexBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-		this->vertexBufferDesc.Alignment = 0;
-		this->vertexBufferDesc.Width = VERTEX_BUFFER_COUNT;
-		this->vertexBufferDesc.Height = 1;
-		this->vertexBufferDesc.DepthOrArraySize = 1;
-		this->vertexBufferDesc.MipLevels = 1;
-		this->vertexBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
-		this->vertexBufferDesc.SampleDesc.Count = 1;
-		this->vertexBufferDesc.SampleDesc.Quality = 0;
-		this->vertexBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-		this->vertexBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
-
-
-		CD3DX12_HEAP_PROPERTIES defaultHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
-
-		for_iter (i, 0, MAX_VERTEX_BUFFERS)
-		{
-			_TRY_UNSAFE(d3dDevice->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDesc,
-				D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&this->vertexBuffers[i])), "Unable to create vertex buffer!");
-		}
-
-		for_iter (i, 0, MAX_VERTEX_BUFFERS)
-		{
-			_TRY_UNSAFE(this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDesc,
-				D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->vertexBufferUploads[i])), "Unable to create vertex buffer upload!");
-		}
-		// constant buffer
-		this->constantBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-		this->constantBufferDesc.Alignment = 0;
-		this->constantBufferDesc.Width = BACKBUFFER_COUNT * ALIGNED_CONSTANT_BUFFER_SIZE;
-		this->constantBufferDesc.Height = 1;
-		this->constantBufferDesc.DepthOrArraySize = 1;
-		this->constantBufferDesc.MipLevels = 1;
-		this->constantBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
-		this->constantBufferDesc.SampleDesc.Count = 1;
-		this->constantBufferDesc.SampleDesc.Quality = 0;
-		this->constantBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-		this->constantBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
-		_TRY_UNSAFE(this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->constantBufferDesc,
-			D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->constantBuffer)), "Unable to create constant buffer!");
-		// constant buffer views
-		D3D12_GPU_VIRTUAL_ADDRESS cbvGpuAddress = this->constantBuffer->GetGPUVirtualAddress();
-		D3D12_CPU_DESCRIPTOR_HANDLE cbvCpuHandle = this->cbvSrvUavHeap->GetCPUDescriptorHandleForHeapStart();
-		D3D12_CONSTANT_BUFFER_VIEW_DESC desc;
-		desc.SizeInBytes = ALIGNED_CONSTANT_BUFFER_SIZE;
-		for_iter (i, 0, BACKBUFFER_COUNT)
-		{
-			desc.BufferLocation = cbvGpuAddress;
-			this->d3dDevice->CreateConstantBufferView(&desc, cbvCpuHandle);
-			cbvGpuAddress += desc.SizeInBytes;
-			cbvCpuHandle.ptr += this->cbvSrvUavDescSize;
-		}
-		D3D12_RANGE readRange = {};
-		readRange.Begin = 0;
-		readRange.End = 0;
-		this->constantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&this->mappedConstantBuffer));
-		// texture samplers
-		D3D12_SAMPLER_DESC samplerDesc;
-		memset(&samplerDesc, 0, sizeof(samplerDesc));
-		samplerDesc.MaxAnisotropy = 0;
-		samplerDesc.MipLODBias = 0.0f;
-		samplerDesc.MinLOD = 0;
-		samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
-		samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-		samplerDesc.BorderColor[0] = 0.0f;
-		samplerDesc.BorderColor[1] = 0.0f;
-		samplerDesc.BorderColor[2] = 0.0f;
-		samplerDesc.BorderColor[3] = 0.0f;
-		D3D12_CPU_DESCRIPTOR_HANDLE samplerCpuHandle = this->samplerHeap->GetCPUDescriptorHandleForHeapStart();
-		int filterSize = Texture::Filter::getValues().size();
-		int adressModeSize = Texture::AddressMode::getValues().size();
-		for_iter (i, 0, filterSize)
-		{
-			samplerDesc.Filter = (i == 0 ? D3D12_FILTER_MIN_MAG_MIP_POINT : D3D12_FILTER_MIN_MAG_MIP_LINEAR);
-			for_iter (j, 0, adressModeSize)
-			{
-				if (j == 0)
-				{
-					samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-					samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-					samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-				}
-				else
-				{
-					samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-					samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-					samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-				}
-				this->d3dDevice->CreateSampler(&samplerDesc, samplerCpuHandle);
-				samplerCpuHandle.ptr += this->samplerDescSize;
-			}
-		}
-		// finish and execute these commands
-		_TRY_UNSAFE(this->commandList->Close(), "Unable to close command list!");
-		ID3D12CommandList* ppCommandLists[] = { this->commandList.Get() };
-		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-		this->_waitForGpu();
-		// initial calls
-		_TRY_UNSAFE(this->commandAllocators[this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
-		_TRY_UNSAFE(this->commandList->Reset(this->commandAllocators[this->currentFrame].Get(), this->deviceState_pipelineState.Get()), "Unable to reset command list!");
-		PIXBeginEvent(this->commandList.Get(), 0, L"");
-		grecti viewport(0, 0, window->getSize());
-		gvec2f windowSizeFloat((float)viewport.w, (float)viewport.h);
-		//this->_deviceClear(true);
-		this->executeCurrentCommands();
-		_TRY_UNSAFE(this->swapChain->Present(1, 0), "Unable to present initial swap chain!");
-		this->deviceState_rootSignature = this->rootSignatures[0];
-		this->waitForCommands();
-		this->prepareNewCommands();
-		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
-		renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		renderTargetResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
-		renderTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-		renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-		this->commandList->ResourceBarrier(1, &renderTargetResourceBarrier);
-		this->setOrthoProjection(windowSizeFloat);
-		this->setViewport(viewport);
 	}
 
 	void DirectX12_RenderSystem::_deviceReset()
@@ -643,157 +811,6 @@ namespace april
 		}
 		WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
 		++this->fenceValues[this->currentFrame];
-	}
-
-	void DirectX12_RenderSystem::_configureDevice()
-	{
-		// swap chain
-		float dpiRatio = UWP::getDpiRatio(this->dpi);
-		Size outputSize((float)hmax(hround(this->logicalSize.Width * dpiRatio), 1), (float)hmax(hround(this->logicalSize.Height * dpiRatio), 1));
-		DXGI_MODE_ROTATION displayRotation = this->_getDxgiRotation();
-		if (displayRotation == DXGI_MODE_ROTATION_ROTATE90 || displayRotation == DXGI_MODE_ROTATION_ROTATE270)
-		{
-			hswap(outputSize.Width, outputSize.Height);
-		}
-		if (this->swapChain != nullptr)
-		{
-			this->_resizeSwapChain((int)outputSize.Width, (int)outputSize.Height);
-		}
-		else
-		{
-			this->_createSwapChain((int)outputSize.Width, (int)outputSize.Height);
-		}
-		// TODOuwp - is this the right place for this code? do root signatures need to be created on size change?
-		// root signature without texture
-		CD3DX12_DESCRIPTOR_RANGE ranges[3];
-		ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
-		CD3DX12_ROOT_PARAMETER parameters[3];
-		parameters[0].InitAsDescriptorTable(1, &ranges[0], D3D12_SHADER_VISIBILITY_VERTEX);
-		CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
-		rootSignatureDesc.Init(1, parameters, 0, NULL, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
-			D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
-			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS);
-		ComPtr<ID3DBlob> pSignature;
-		ComPtr<ID3DBlob> pError;
-		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
-		_TRY_UNSAFE(this->d3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&this->rootSignatures[0])), "Unable to create root signature!");
-		this->rootSignatures[0]->SetName(L"Root Signature 0");
-		// root signature with texture
-		ranges[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-		ranges[2].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, 0);
-		parameters[1].InitAsDescriptorTable(1, &ranges[1], D3D12_SHADER_VISIBILITY_PIXEL);
-		parameters[2].InitAsDescriptorTable(1, &ranges[2], D3D12_SHADER_VISIBILITY_PIXEL);
-		rootSignatureDesc.Init(3, parameters, 0, NULL, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
-			D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS | D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
-			D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS);
-		_TRY_UNSAFE(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, pSignature.GetAddressOf(), pError.GetAddressOf()), "Unable to serialize root signature!");
-		_TRY_UNSAFE(this->d3dDevice->CreateRootSignature(0, pSignature->GetBufferPointer(), pSignature->GetBufferSize(), IID_PPV_ARGS(&this->rootSignatures[1])), "Unable to create root signature!");
-		this->rootSignatures[1]->SetName(L"Root Signature 1");
-	}
-
-	void DirectX12_RenderSystem::_createSwapChain(int width, int height)
-	{
-		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-		swapChainDesc.Width = width;
-		swapChainDesc.Height = height;
-		swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		swapChainDesc.Stereo = false;
-		swapChainDesc.SampleDesc.Count = 1;
-		swapChainDesc.SampleDesc.Quality = 0;
-		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapChainDesc.BufferCount = BACKBUFFER_COUNT;
-		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; // UWP apps MUST use a "_FLIP_" variant
-		swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-		swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
-		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
-		if (!this->options.vSync)
-		{
-			swapChainDesc.Flags |= DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
-		}
-		ComPtr<IDXGISwapChain1> swapChain;
-		_TRY_UNSAFE(this->dxgiFactory->CreateSwapChainForCoreWindow(this->commandQueue.Get(), reinterpret_cast<IUnknown*>(this->coreWindow.Get()),
-			&swapChainDesc, nullptr, &swapChain), "Unable to create swap chain!");
-		_TRY_UNSAFE(swapChain.As(&this->swapChain), "Unable to cast swap chain to non-COM object!");
-		DXGI_RGBA black = { 0.0f, 0.0f, 0.0f, 1.0f };
-		this->swapChain->SetBackgroundColor(&black);
-		this->_configureSwapChain(width, height);
-	}
-
-	void DirectX12_RenderSystem::_resizeSwapChain(int width, int height)
-	{
-		this->executeCurrentCommands();
-		this->waitForCommands();
-		this->_waitForGpu();
-		for_iter (i, 0, BACKBUFFER_COUNT)
-		{
-			this->renderTargets[i] = nullptr;
-			this->fenceValues[i] = this->fenceValues[this->currentFrame];
-		}
-		DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-		this->swapChain->GetDesc(&swapChainDesc);
-		HRESULT hr = this->swapChain->ResizeBuffers(0, width, height, swapChainDesc.BufferDesc.Format, swapChainDesc.Flags);
-		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
-		{
-			// TODOuwp - this needs to be tested and fixed or implemented
-			// If the device was removed for any reason, a new device and swap chain will need to be created.
-			//m_deviceRemoved = true;
-
-			// Do not continue execution of this method. DeviceResources will be destroyed and re-created.
-			return;
-		}
-		_TRY_UNSAFE(hr, "Unable to resize swap chain buffers!");
-		this->_configureSwapChain(width, height);
-		this->prepareNewCommands();
-	}
-
-	void DirectX12_RenderSystem::_configureSwapChain(int width, int height)
-	{
-		_TRY_UNSAFE(this->swapChain->SetRotation(this->_getDxgiRotation()), "Unable to set rotation on swap chain!");
-		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
-		D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
-		for_iter (i, 0, BACKBUFFER_COUNT)
-		{
-			_TRY_UNSAFE(this->swapChain->GetBuffer(i, IID_PPV_ARGS(&this->renderTargets[i])), hsprintf("Unable to get buffer %d from swap chain!", i));
-			this->d3dDevice->CreateRenderTargetView(this->renderTargets[i].Get(), nullptr, cpuHandle);
-			this->renderTargets[i]->SetName(("Render Target " + hstr(i)).wStr().c_str());
-			cpuHandle.ptr += this->rtvDescSize;
-		}
-		// TODOuwp - maybe could be removed / disabled as depth buffers aren't supported widely in april
-		if (this->options.depthBuffer)
-		{
-			D3D12_HEAP_PROPERTIES depthHeapProperties = {};
-			depthHeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
-			depthHeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-			depthHeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-			depthHeapProperties.CreationNodeMask = 1;
-			depthHeapProperties.VisibleNodeMask = 1;
-			D3D12_RESOURCE_DESC depthResourceDesc = {};
-			depthResourceDesc.Format = DXGI_FORMAT_D16_UNORM;
-			depthResourceDesc.Alignment = 0;
-			depthResourceDesc.Width = width;
-			depthResourceDesc.Height = height;
-			depthResourceDesc.DepthOrArraySize = 1;
-			depthResourceDesc.MipLevels = 1;
-			depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-			depthResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-			depthResourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-			depthResourceDesc.SampleDesc.Count = 1;
-			depthResourceDesc.SampleDesc.Quality = 0;
-			D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
-			float depth = 1.0f;
-			depthOptimizedClearValue.Format = DXGI_FORMAT_D16_UNORM;
-			// using memcpy to preserve NAN values
-			memcpy(&depthOptimizedClearValue.DepthStencil.Depth, &depth, sizeof(depth));
-			depthOptimizedClearValue.DepthStencil.Stencil = 0;
-			_TRY_UNSAFE(this->d3dDevice->CreateCommittedResource(&depthHeapProperties, D3D12_HEAP_FLAG_NONE, &depthResourceDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE,
-				&depthOptimizedClearValue, IID_PPV_ARGS(&this->depthStencil)), "Unable to create depth buffer!");
-			D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-			dsvDesc.Format = DXGI_FORMAT_D16_UNORM;
-			dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-			dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
-			this->d3dDevice->CreateDepthStencilView(this->depthStencil.Get(), &dsvDesc, this->dsvHeap->GetCPUDescriptorHandleForHeapStart());
-		}
-		//this->screenViewport = { 0.0f, 0.0f, this->d3dRenderTargetSize.Width, this->d3dRenderTargetSize.Height, 0.0f, 1.0f };
 	}
 
 	int DirectX12_RenderSystem::getVRam() const
@@ -865,7 +882,7 @@ namespace april
 		}
 		if (changed)
 		{
-			this->_configureDevice();
+			this->_setupSwapChain();
 		}
 	}
 

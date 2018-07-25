@@ -177,10 +177,15 @@ namespace april
 		void _deviceSetupCaps();
 		void _deviceSetup();
 
-		void _configureDevice();
+		void _createD3dDevice();
+		void _createHeapDescriptors();
+		void _setupSwapChain();
 		void _createSwapChain(int width, int height);
 		void _resizeSwapChain(int width, int height);
 		void _configureSwapChain(int width, int height);
+		void _createRootSignatures();
+		void _createShaders();
+		void _createPipeline();
 
 		Texture* _deviceCreateTexture(bool fromResource);
 		PixelShader* _deviceCreatePixelShader();
