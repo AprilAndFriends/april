@@ -1,5 +1,5 @@
 /// @file
-/// @version 5.1
+/// @version 5.2
 /// 
 /// @section LICENSE
 /// 
@@ -1167,11 +1167,14 @@ namespace april
 			viewport.set(w, h, 0, 0);
 		}
 		*/
+		if (viewport.x > 0)
+		{
+			int a = 0;
+		}
 		// setting the system viewport
 		D3D12_VIEWPORT dx12Viewport;
 		dx12Viewport.MinDepth = D3D12_MIN_DEPTH;
 		dx12Viewport.MaxDepth = D3D12_MAX_DEPTH;
-		// these double-casts are to ensure consistent behavior among rendering systems
 		dx12Viewport.TopLeftX = (float)viewport.x;
 		dx12Viewport.TopLeftY = (float)viewport.y;
 		dx12Viewport.Width = (float)viewport.w;

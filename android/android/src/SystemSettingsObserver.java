@@ -1,6 +1,6 @@
 package com.april;
 
-/// @version 5.1
+/// @version 5.2
 
 import android.content.pm.ActivityInfo;
 import android.database.ContentObserver;
