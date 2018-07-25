@@ -7,6 +7,8 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _DIRECTX12
+#include <comdef.h>
+
 #include <hltypes/hlog.h>
 #include <hltypes/hstring.h>
 
@@ -24,14 +26,24 @@ namespace april
 	{
 		if (FAILED(hr))
 		{
-			throw Exception(hsprintf("%s - HRESULT: 0x%08X", errorMessage.cStr(), hr));
+			hstr systemError;
+			try
+			{
+				char message[1024];
+				FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), message, 1023, NULL);
+				systemError = hstr(message).replaced("\r\n", "\n").trimmedRight('\n');
+			}
+			catch (...)
+			{
+			}
+			throw Exception(hsprintf("%s - SYSTEM ERROR: '%s' - HRESULT: 0x%08X", errorMessage.cStr(), systemError.cStr(), hr));
 		}
 	}
 
 	DirectX12_Texture::DirectX12_Texture(bool fromResource) : DirectX_Texture(fromResource), dxgiFormat(DXGI_FORMAT_UNKNOWN)
 	{
 		this->d3dTexture = nullptr;
-		this->srvHeap = nullptr;
+		this->uploadHeap = nullptr;
 	}
 
 	DirectX12_Texture::~DirectX12_Texture()
@@ -90,10 +102,9 @@ namespace april
 			return false;
 		}
 		const UINT64 uploadBufferSize = GetRequiredIntermediateSize(this->d3dTexture.Get(), 0, 1);
-		ComPtr<ID3D12Resource> textureUploadHeap;
 		CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
 		CD3DX12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
-		hr = D3D_DEVICE->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &bufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&textureUploadHeap));
+		hr = D3D_DEVICE->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &bufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->uploadHeap));
 		if (FAILED(hr))
 		{
 			this->d3dTexture = nullptr;
@@ -101,7 +112,7 @@ namespace april
 			return false;
 		}
 		// upload
-		UpdateSubresources(DX12_RENDERSYS->commandList.Get(), this->d3dTexture.Get(), textureUploadHeap.Get(), 0, 0, 1, &textureData);
+		UpdateSubresources(DX12_RENDERSYS->commandList.Get(), this->d3dTexture.Get(), this->uploadHeap.Get(), 0, 0, 1, &textureData);
 		DX12_RENDERSYS->commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 		DX12_RENDERSYS->executeCurrentCommands();
 		DX12_RENDERSYS->waitForCommands();
@@ -143,7 +154,7 @@ namespace april
 		if (this->d3dTexture != nullptr)
 		{
 			this->d3dTexture = nullptr;
-			this->srvHeap = nullptr;
+			this->uploadHeap = nullptr;
 			return true;
 		}
 		return false;
@@ -152,9 +163,8 @@ namespace april
 	Texture::Lock DirectX12_Texture::_tryLockSystem(int x, int y, int w, int h)
 	{
 		Lock lock;
-		Image::Format nativeFormat = april::rendersys->getNativeTextureFormat(this->format);
 		lock.systemBuffer = this;
-		lock.activateLock(x, y, w, h, y, x, this->data, this->width, this->height, nativeFormat);
+		lock.activateLock(x, y, w, h, y, x, this->data, this->width, this->height, april::rendersys->getNativeTextureFormat(this->format));
 		return lock;
 	}
 
@@ -168,38 +178,21 @@ namespace april
 		{
 			if (lock.locked)
 			{
-				// TODOuwp - implement this properly
-				/*
 				if (!lock.renderTarget)
 				{
-					const UINT64 uploadBufferSize = GetRequiredIntermediateSize(this->d3dTexture.Get(), 0, 1);
-					ComPtr<ID3D12Resource> textureUploadHeap;
-					CD3DX12_HEAP_PROPERTIES uploadHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
-					CD3DX12_RESOURCE_DESC bufferDesc = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
-					HRESULT hr = D3D_DEVICE->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &bufferDesc,
-						D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&textureUploadHeap));
-					if (FAILED(hr))
-					{
-						hlog::error(logTag, "Failed to unlock DX12 texture, unable to create upload heap!");
-						return false;
-					}
 					D3D12_SUBRESOURCE_DATA textureData = {};
 					textureData.pData = this->data;
 					textureData.RowPitch = this->width * this->getBpp();
 					textureData.SlicePitch = textureData.RowPitch * this->height;
-					CD3DX12_RESOURCE_DESC textureDesc = CD3DX12_RESOURCE_DESC::Tex2D(this->dxgiFormat, this->width, this->height);
-					ComPtr<ID3D12GraphicsCommandList> commandList = DX12_RENDERSYS->getCommandList();
-					UpdateSubresources(commandList.Get(), this->d3dTexture.Get(), textureUploadHeap.Get(), 0, 0, 1, &textureData);
-					commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
-					DX12_RENDERSYS->executeCurrentCommands();
-					DX12_RENDERSYS->waitForCommands();
-					DX12_RENDERSYS->prepareNewCommands();
+					// this resource barrier change is weird, but it seems to be required
+					DX12_RENDERSYS->commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
+					UpdateSubresources(DX12_RENDERSYS->commandList.Get(), this->d3dTexture.Get(), this->uploadHeap.Get(), 0, 0, 1, &textureData);
+					DX12_RENDERSYS->commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 				}
 				else
 				{
 					// TODOaa - implement
 				}
-				*/
 			}
 			this->firstUpload = false;
 		}

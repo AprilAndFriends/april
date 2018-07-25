@@ -36,7 +36,7 @@ namespace april
 		~DirectX12_Texture();
 		
 		ComPtr<ID3D12Resource> d3dTexture;
-		ComPtr<ID3D12DescriptorHeap> srvHeap;
+		ComPtr<ID3D12Resource> uploadHeap;
 		DXGI_FORMAT dxgiFormat;
 
 		bool _deviceCreateTexture(unsigned char* data, int size);
