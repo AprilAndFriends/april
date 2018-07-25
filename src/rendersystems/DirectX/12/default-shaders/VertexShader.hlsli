@@ -1,9 +1,9 @@
-/// @version 4.1
+/// @version 5.1
 
 cbuffer constantBuffer : register(b0)
 {
-	min16float4x4 cMatrix;
-	min16float4 cSystemColor;
-	min16float4 cLerpAlpha;
+	float4x4 cMatrix;
+	float4 cSystemColor;
+	float4 cLerpAlpha;
 };
 

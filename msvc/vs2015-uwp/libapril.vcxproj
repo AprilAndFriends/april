@@ -433,6 +433,11 @@
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Desaturate.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Lerp.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
@@ -443,7 +448,17 @@
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Sepia.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedDesaturate.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
@@ -454,6 +469,11 @@
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedMultiply.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedSepia.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
@@ -480,6 +500,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup Condition="'$(Configuration)'=='Debug_DirectX12' or '$(Configuration)'=='DebugS_DirectX12' or '$(Configuration)'=='Release_DirectX12' or '$(Configuration)'=='ReleaseS_DirectX12'">
+    <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader.hlsli" />
     <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Plain.hlsli" />
     <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Textured.hlsli" />
     <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader.hlsli" />

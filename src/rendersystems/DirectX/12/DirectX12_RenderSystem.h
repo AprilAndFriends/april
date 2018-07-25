@@ -33,7 +33,7 @@
 #define BACKBUFFER_COUNT 3
 #define ALIGNED_CONSTANT_BUFFER_SIZE ((sizeof(ConstantBuffer) + 255) & ~255)
 #define INPUT_LAYOUT_COUNT 4
-#define PIXEL_SHADER_COUNT 3
+#define PIXEL_SHADER_COUNT 5
 #define BLEND_STATE_COUNT 4
 #define TEXTURE_STATE_COUNT 2
 #define PRIMITIVE_TOPOLOGY_COUNT 3
@@ -134,13 +134,6 @@ namespace april
 
 		DXGI_MODE_ROTATION _getDxgiRotation() const;
 
-		// TODOuwp - implement this functionality
-		/*
-		ComPtr<D3D12_CPU_DESCRIPTOR_HANDLE> samplerLinearWrap;
-		ComPtr<D3D12_CPU_DESCRIPTOR_HANDLE> samplerLinearClamp;
-		ComPtr<D3D12_CPU_DESCRIPTOR_HANDLE> samplerNearestWrap;
-		ComPtr<D3D12_CPU_DESCRIPTOR_HANDLE> samplerNearestClamp;
-		*/
 		CD3DX12_HEAP_PROPERTIES uploadHeapProperties;
 		D3D12_RESOURCE_DESC vertexBufferDesc;
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[MAX_VERTEX_BUFFERS];
@@ -151,19 +144,21 @@ namespace april
 		ComPtr<ID3D12Resource> constantBuffer;
 		ConstantBuffer constantBufferData;
 		unsigned char* mappedConstantBuffer;
-		// TODOuwp - will be needed later for HEAP_DATAPACKS_PER_FRAME
-		//unsigned char* mappedConstantBuffer[HEAP_DATAPACKS_PER_FRAME];
 
 		DirectX12_VertexShader* vertexShaderPlain;
 		DirectX12_VertexShader* vertexShaderTextured;
 		DirectX12_VertexShader* vertexShaderColored;
 		DirectX12_VertexShader* vertexShaderColoredTextured;
 		DirectX12_PixelShader* pixelShaderMultiply;
-		DirectX12_PixelShader* pixelShaderLerp;
 		DirectX12_PixelShader* pixelShaderAlphaMap;
+		DirectX12_PixelShader* pixelShaderLerp;
+		DirectX12_PixelShader* pixelShaderDesaturate;
+		DirectX12_PixelShader* pixelShaderSepia;
 		DirectX12_PixelShader* pixelShaderTexturedMultiply;
-		DirectX12_PixelShader* pixelShaderTexturedLerp;
 		DirectX12_PixelShader* pixelShaderTexturedAlphaMap;
+		DirectX12_PixelShader* pixelShaderTexturedLerp;
+		DirectX12_PixelShader* pixelShaderTexturedDesaturate;
+		DirectX12_PixelShader* pixelShaderTexturedSepia;
 
 		bool deviceState_constantBufferChanged;
 		ComPtr<ID3D12PipelineState> deviceState_pipelineState;

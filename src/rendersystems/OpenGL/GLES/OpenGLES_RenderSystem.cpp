@@ -151,8 +151,8 @@ namespace april
 		this->pixelShaderSepia = NULL;
 		this->pixelShaderTexturedMultiply = NULL;
 		this->pixelShaderTexturedAlphaMap = NULL;
-		this->pixelShaderTexturedDesaturate = NULL;
 		this->pixelShaderTexturedLerp = NULL;
+		this->pixelShaderTexturedDesaturate = NULL;
 		this->pixelShaderTexturedSepia = NULL;
 		this->pixelShaderColoredMultiply = NULL;
 		this->pixelShaderColoredAlphaMap = NULL;

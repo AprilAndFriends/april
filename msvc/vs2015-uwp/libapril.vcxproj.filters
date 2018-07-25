@@ -656,6 +656,18 @@
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Textured.hlsl">
       <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Desaturate.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Sepia.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedDesaturate.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedSepia.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Plain.hlsli">
@@ -665,6 +677,9 @@
       <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
     </None>
     <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </None>
+    <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader.hlsli">
       <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
     </None>
   </ItemGroup>

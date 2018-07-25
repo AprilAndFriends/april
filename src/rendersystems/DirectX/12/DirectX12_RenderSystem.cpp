@@ -95,12 +95,6 @@ namespace april
 	{
 		this->d3dDevice = nullptr;
 		this->swapChain = nullptr;
-		/*
-		this->samplerLinearWrap = nullptr;
-		this->samplerLinearClamp = nullptr;
-		this->samplerNearestWrap = nullptr;
-		this->samplerNearestClamp = nullptr;
-		*/
 		for_iter (i, 0, MAX_VERTEX_BUFFERS)
 		{
 			this->vertexBuffers[MAX_VERTEX_BUFFERS] = nullptr;
@@ -113,9 +107,13 @@ namespace april
 		this->pixelShaderMultiply = NULL;
 		this->pixelShaderAlphaMap = NULL;
 		this->pixelShaderLerp = NULL;
+		this->pixelShaderDesaturate = NULL;
+		this->pixelShaderSepia = NULL;
 		this->pixelShaderTexturedMultiply = NULL;
 		this->pixelShaderTexturedAlphaMap = NULL;
 		this->pixelShaderTexturedLerp = NULL;
+		this->pixelShaderTexturedDesaturate = NULL;
+		this->pixelShaderTexturedSepia = NULL;
 		this->deviceState_constantBufferChanged = true;
 	}
 
@@ -133,9 +131,13 @@ namespace april
 		_HL_TRY_DELETE(this->pixelShaderMultiply);
 		_HL_TRY_DELETE(this->pixelShaderAlphaMap);
 		_HL_TRY_DELETE(this->pixelShaderLerp);
+		_HL_TRY_DELETE(this->pixelShaderDesaturate);
+		_HL_TRY_DELETE(this->pixelShaderSepia);
 		_HL_TRY_DELETE(this->pixelShaderTexturedMultiply);
 		_HL_TRY_DELETE(this->pixelShaderTexturedAlphaMap);
 		_HL_TRY_DELETE(this->pixelShaderTexturedLerp);
+		_HL_TRY_DELETE(this->pixelShaderTexturedDesaturate);
+		_HL_TRY_DELETE(this->pixelShaderTexturedSepia);
 		this->setViewport(grecti(0, 0, april::getSystemInfo().displayResolution));
 		return true;
 	}
@@ -403,7 +405,6 @@ namespace april
 		dsvHeapDesc.NumDescriptors = 1;
 		dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 		dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		// TODOuwp - maybe could be removed / disabled as depth buffers aren't supported widely in april
 		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&this->dsvHeap)), "Unable to create DSV heap!");
 		this->dsvHeap->SetName(L"DSV Heap");
 		this->dsvDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
@@ -574,7 +575,6 @@ namespace april
 	void DirectX12_RenderSystem::_createShaders()
 	{
 		// default shaders
-		// TODOuwp - missing desaturate and sepia shaders
 		LOAD_SHADER(this->vertexShaderPlain, Vertex, Plain);
 		LOAD_SHADER(this->vertexShaderTextured, Vertex, Textured);
 		LOAD_SHADER(this->vertexShaderColored, Vertex, Colored);
@@ -582,9 +582,13 @@ namespace april
 		LOAD_SHADER(this->pixelShaderMultiply, Pixel, Multiply);
 		LOAD_SHADER(this->pixelShaderAlphaMap, Pixel, AlphaMap);
 		LOAD_SHADER(this->pixelShaderLerp, Pixel, Lerp);
+		LOAD_SHADER(this->pixelShaderDesaturate, Pixel, Desaturate);
+		LOAD_SHADER(this->pixelShaderSepia, Pixel, Sepia);
 		LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply);
 		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap);
 		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp);
+		LOAD_SHADER(this->pixelShaderTexturedDesaturate, Pixel, TexturedDesaturate);
+		LOAD_SHADER(this->pixelShaderTexturedSepia, Pixel, TexturedSepia);
 		// texture samplers
 		D3D12_SAMPLER_DESC samplerDesc;
 		memset(&samplerDesc, 0, sizeof(samplerDesc));
@@ -688,7 +692,6 @@ namespace april
 		renderTargetOverwrite.DestBlend = D3D12_BLEND_ZERO;
 		const D3D12_DEPTH_STENCILOP_DESC defaultStencilOperation = { D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_COMPARISON_FUNC_ALWAYS };
 		// indexed data
-		// TODOuwp - missing desaturate and sepia shaders
 		this->inputLayoutDescs.clear();
 		this->inputLayoutDescs += { inputLayoutDescPlain, _countof(inputLayoutDescPlain) };
 		this->inputLayoutDescs += { inputLayoutDescColored, _countof(inputLayoutDescColored) };
@@ -703,9 +706,13 @@ namespace april
 		this->pixelShaders += this->pixelShaderMultiply;
 		this->pixelShaders += this->pixelShaderAlphaMap;
 		this->pixelShaders += this->pixelShaderLerp;
+		this->pixelShaders += this->pixelShaderDesaturate;
+		this->pixelShaders += this->pixelShaderSepia;
 		this->pixelShaders += this->pixelShaderTexturedMultiply;
 		this->pixelShaders += this->pixelShaderTexturedAlphaMap;
 		this->pixelShaders += this->pixelShaderTexturedLerp;
+		this->pixelShaders += this->pixelShaderTexturedDesaturate;
+		this->pixelShaders += this->pixelShaderTexturedSepia;
 		this->blendStateRenderTargets.clear();
 		this->blendStateRenderTargets += renderTargetAlpha;
 		this->blendStateRenderTargets += renderTargetAdd;
@@ -785,6 +792,7 @@ namespace april
 	void DirectX12_RenderSystem::_deviceReset()
 	{
 		DirectX_RenderSystem::_deviceReset();
+		// TODOuwp - implement this
 		// possible Microsoft bug, required for SwapChainPanel to update its layout 
 		//reinterpret_cast<IUnknown*>(UWP::App->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
 		//this->swapChainNative->SetSwapChain(this->swapChain.Get());
@@ -923,7 +931,8 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceTexture(Texture* texture)
 	{
-		// not really the constant buffer, but the texture update
+		// TODOuwp - might not be needed, check
+		// not really the constant buffer, but the texture updated
 		this->deviceState_constantBufferChanged = true;
 	}
 
@@ -1032,7 +1041,6 @@ namespace april
 		}
 		this->deviceState_pipelineState = this->pipelineStates[i][j][k][l][m];
 		this->deviceState_rootSignature = this->rootSignatures[r];
-		//this->deviceState_rootSignature = this->rootSignatures[0];
 		this->executeCurrentCommands();
 		this->waitForCommands();
 		this->prepareNewCommands();
