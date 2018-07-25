@@ -29,7 +29,7 @@ namespace april
 			hstr systemError;
 			try
 			{
-				char message[1024];
+				char message[1024] = { 0 };
 				FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), message, 1023, NULL);
 				systemError = hstr(message).replaced("\r\n", "\n").trimmedRight('\n');
 			}

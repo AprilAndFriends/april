@@ -34,8 +34,7 @@
 #include "UWP_Window.h"
 
 #define SHADER_PATH "april/"
-#define VERTEX_BUFFER_COUNT 32768
-#define MAX_D3D_FEATURE_LEVELS 4
+#define VERTEX_BUFFER_COUNT 65536
 #define CBV_SRV_UAV_HEAP_SIZE 2
 #define SAMPLER_COUNT (Texture::Filter::getValues().size() * Texture::AddressMode::getValues().size())
 
@@ -59,7 +58,7 @@ namespace april
 			hstr systemError;
 			try
 			{
-				char message[1024];
+				char message[1024] = { 0 };
 				FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), message, 1023, NULL);
 				systemError = hstr(message).replaced("\r\n", "\n").trimmedRight('\n');
 			}
@@ -97,7 +96,7 @@ namespace april
 		this->swapChain = nullptr;
 		for_iter (i, 0, MAX_VERTEX_BUFFERS)
 		{
-			this->vertexBuffers[MAX_VERTEX_BUFFERS] = nullptr;
+			this->vertexBuffers[i] = nullptr;
 		}
 		this->constantBuffer = nullptr;
 		this->vertexShaderPlain = NULL;
@@ -323,9 +322,9 @@ namespace april
 		ComPtr<IDXGIAdapter1> adapter = nullptr;
 		DXGI_ADAPTER_DESC1 adapterDesc;
 		UINT adapterIndex = 0;
-		D3D_FEATURE_LEVEL availableFeatureLevels[MAX_D3D_FEATURE_LEVELS] = { D3D_FEATURE_LEVEL_12_1, D3D_FEATURE_LEVEL_12_0, D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0 };
+		D3D_FEATURE_LEVEL availableFeatureLevels[] = { D3D_FEATURE_LEVEL_12_1, D3D_FEATURE_LEVEL_12_0, D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0 };
 		D3D_FEATURE_LEVEL featureLevel = availableFeatureLevels[0];
-		for_iter(i, 0, MAX_D3D_FEATURE_LEVELS)
+		for_iter (i, 0, _countof(availableFeatureLevels))
 		{
 			adapterIndex = 0;
 			featureLevel = availableFeatureLevels[i];
@@ -1130,14 +1129,12 @@ namespace april
 		D3D12_RESOURCE_BARRIER vertexBufferResourceBarrier = {};
 		vertexBufferResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		vertexBufferResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-        vertexBufferResourceBarrier.Transition.pResource = this->vertexBuffers[this->vertexBufferIndex].Get();
-        vertexBufferResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-        vertexBufferResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
-        vertexBufferResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+		vertexBufferResourceBarrier.Transition.pResource = this->vertexBuffers[this->vertexBufferIndex].Get();
+		vertexBufferResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+		vertexBufferResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
+		vertexBufferResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 		this->commandList->ResourceBarrier(1, &vertexBufferResourceBarrier);
 
-		D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
-		renderTargetView.ptr += this->currentFrame * this->rtvDescSize;
 		grecti viewport = this->getViewport();
 		// TODOuwp - this used to be needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
 		// maybe it will be needed for UWP as well
@@ -1167,10 +1164,6 @@ namespace april
 			viewport.set(w, h, 0, 0);
 		}
 		*/
-		if (viewport.x > 0)
-		{
-			int a = 0;
-		}
 		// setting the system viewport
 		D3D12_VIEWPORT dx12Viewport;
 		dx12Viewport.MinDepth = D3D12_MIN_DEPTH;
@@ -1183,6 +1176,8 @@ namespace april
 		D3D12_RECT scissorRect = { (LONG)viewport.x, (LONG)viewport.y, (LONG)viewport.w, (LONG)viewport.h };
 		this->commandList->RSSetScissorRects(1, &scissorRect);
 
+		D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
+		renderTargetView.ptr += this->currentFrame * this->rtvDescSize;
 		// TODOuwp - maybe could be removed / disabled as depth buffers aren't supported widely in april
 		/*
 		D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = this->dsvHeap->GetCPUDescriptorHandleForHeapStart();

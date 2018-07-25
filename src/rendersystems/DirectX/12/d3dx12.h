@@ -1467,12 +1467,6 @@ inline UINT64 UpdateSubresources(
     {
        return 0;
     }
-	static int x = 0;
-	if (x == 12)
-	{
-		int a = 0;
-	}
-	++x;
     D3D12_PLACED_SUBRESOURCE_FOOTPRINT* pLayouts = reinterpret_cast<D3D12_PLACED_SUBRESOURCE_FOOTPRINT*>(pMem);
     UINT64* pRowSizesInBytes = reinterpret_cast<UINT64*>(pLayouts + NumSubresources);
     UINT* pNumRows = reinterpret_cast<UINT*>(pRowSizesInBytes + NumSubresources);
