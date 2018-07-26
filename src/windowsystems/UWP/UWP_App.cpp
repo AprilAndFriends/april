@@ -41,7 +41,15 @@ namespace april
 {
 	extern void _updateSystemInfo();
 
-	UWP_App::UWP_App() : 
+	static inline hstr _CoreWindowActivationStateName(CoreWindowActivationState state)
+	{
+		if (state == CoreWindowActivationState::CodeActivated)		return "CodeActivated";
+		if (state == CoreWindowActivationState::PointerActivated)	return "PointerActivated";
+		if (state == CoreWindowActivationState::Deactivated)		return "Deactivated";
+		return "Unknown";
+	}
+
+	UWP_App::UWP_App() :
 		running(true),
 		visible(true)
 	{
@@ -68,8 +76,6 @@ namespace april
 		applicationView->Activated += ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &UWP_App::onActivated);
 		CoreApplication::Suspending += ref new EventHandler<SuspendingEventArgs^>(this, &UWP_App::onSuspending);
 		CoreApplication::Resuming += ref new EventHandler<Platform::Object^>(this, &UWP_App::onResuming);
-
-
 		/*
 #ifdef _DEBUG
 		this->UnhandledException += ref new UnhandledExceptionEventHandler([](Object^ sender, UnhandledExceptionEventArgs^ args)
@@ -83,6 +89,7 @@ namespace april
 	void UWP_App::SetWindow(CoreWindow^ window)
 	{
 		DisplayInformation::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
+		window->Activated += ref new TypedEventHandler<CoreWindow^, WindowActivatedEventArgs^>(this, &UWP_App::onWindowFocusChanged);
 		window->SizeChanged += ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(this, &UWP_App::onWindowSizeChanged);
 		window->VisibilityChanged += ref new TypedEventHandler<CoreWindow^, VisibilityChangedEventArgs^>(this, &UWP_App::onVisibilityChanged);
 		window->Closed += ref new TypedEventHandler<CoreWindow^, CoreWindowEventArgs^>(this, &UWP_App::onWindowClosed);
@@ -175,10 +182,18 @@ namespace april
 		this->_processWindowSizeChange(sender->Bounds.Width, sender->Bounds.Height);
 	}
 
+	void UWP_App::onWindowFocusChanged(CoreWindow^ window, WindowActivatedEventArgs^ args)
+	{
+		hlog::write(logTag, "UWP activation change: " + _CoreWindowActivationStateName(args->WindowActivationState));
+		args->Handled = true;
+		this->_processWindowFocusChange(args->WindowActivationState != CoreWindowActivationState::Deactivated);
+	}
+
 	void UWP_App::onVisibilityChanged(CoreWindow^ sender, VisibilityChangedEventArgs^ args)
 	{
 		hlog::write(logTag, "UWP visibility change: " + hstr(args->Visible ? "true" : "false"));
 		args->Handled = true;
+		// TODOuwp - might not be needed
 		if (this->visible != args->Visible)
 		{
 			this->visible = args->Visible;

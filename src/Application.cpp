@@ -272,10 +272,6 @@ namespace april
 			lock.acquire(&april::application->updateMutex);
 			while (april::application->getState() == State::Running)
 			{
-				if (april::window->getOptions().suspendUpdateThread && april::application->updateSuspendQueued)
-				{
-					april::application->updateSuspendQueued = false;
-				}
 				lockTimeDelta.acquire(&april::application->timeDeltaMutex);
 				timeDelta = april::application->timeDelta;
 				april::application->timeDelta = 0.0f;
@@ -310,6 +306,7 @@ namespace april
 						hthread::sleep(0.001f);
 					}
 					april::window->_processEvents();
+					april::application->updateSuspendQueued = false; // make sure to unlock
 				}
 				lock.acquire(&april::application->updateMutex);
 			}
@@ -323,6 +320,7 @@ namespace april
 				april::window->_processEvents();
 			}
 		}
+		april::application->updateSuspendQueued = false; // make sure to unlock
 		(*april::application->aprilApplicationDestroy)();
 #ifdef __ANDROID__
 		if (env != NULL)

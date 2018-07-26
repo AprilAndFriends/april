@@ -79,6 +79,7 @@ namespace april
 		void onResuming(Platform::Object^ sender, Platform::Object^ args);
 		// CoreWindow events
 		void onWindowSizeChanged(CoreWindow^ sender, WindowSizeChangedEventArgs^ args);
+		void onWindowFocusChanged(CoreWindow^ window, WindowActivatedEventArgs^ args);
 		void onVisibilityChanged(CoreWindow^ sender, VisibilityChangedEventArgs^ args);
 		void onWindowClosed(CoreWindow^ sender, CoreWindowEventArgs^ args);
 		// DisplayInformation events

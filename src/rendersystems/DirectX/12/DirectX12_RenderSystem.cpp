@@ -33,7 +33,6 @@
 #include "UWP.h"
 #include "UWP_Window.h"
 
-#define _SEGMENTED_RENDERING
 #define SHADER_PATH "april/"
 #define VERTEX_BUFFER_SIZE 262144 // 256kb per vertex buffer for data is enough to handle most render data that is used
 #define CBV_SRV_UAV_HEAP_SIZE 2
@@ -1173,11 +1172,9 @@ namespace april
 		renderTargetView.ptr += this->currentFrame * this->rtvDescSize;
 		D3D12_PRIMITIVE_TOPOLOGY primitiveTopology = _dx12RenderOperations[renderOperation.value];
 		unsigned char* vertices = (unsigned char*)data;
-#ifdef _SEGMENTED_RENDERING
 		for_iter_step (i, 0, count, size)
 		{
 			size = this->_limitVertices(renderOperation, hmin(count - i, VERTEX_BUFFER_SIZE / (int)vertexSize));
-#endif
 			byteSize = size * vertexSize;
 			this->_updatePipelineState(renderOperation);
 			vertexData.pData = vertices;
@@ -1202,10 +1199,8 @@ namespace april
 			this->commandList->IASetVertexBuffers(0, 1, &this->vertexBufferViews[this->vertexBufferIndex]);
 			this->commandList->DrawInstanced(size, 1, 0, 0);
 			this->vertexBufferIndex = (this->vertexBufferIndex + 1) % MAX_VERTEX_BUFFERS;
-#ifdef _SEGMENTED_RENDERING
 			vertices += byteSize;
 		}
-#endif
 	}
 
 	Image::Format DirectX12_RenderSystem::getNativeTextureFormat(Image::Format format) const
