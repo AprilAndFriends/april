@@ -40,7 +40,7 @@
 #define DEPTH_ENABLED_COUNT 2
 
 // TODOuwp - needs refactoring
-#define MAX_VERTEX_BUFFERS 100
+#define MAX_VERTEX_BUFFERS 10
 
 using namespace Microsoft::WRL;
 using namespace Windows::Foundation;
@@ -161,8 +161,11 @@ namespace april
 		DirectX12_PixelShader* pixelShaderTexturedSepia;
 
 		bool deviceState_constantBufferChanged;
+		bool deviceState_textureChanged;
 		ComPtr<ID3D12PipelineState> deviceState_pipelineState;
 		ComPtr<ID3D12RootSignature> deviceState_rootSignature;
+		D3D12_VIEWPORT deviceViewport;
+		D3D12_RECT deviceScissorRect;
 
 		void _deviceInit();
 		bool _deviceCreate(Options options);

@@ -79,7 +79,7 @@ namespace april
 		D3D_PRIMITIVE_TOPOLOGY_UNDEFINED,		// triangle fans are deprecated in DX12
 	};
 
-	DirectX12_RenderSystem::DirectX12_RenderSystem() : DirectX_RenderSystem(), deviceState_constantBufferChanged(true)
+	DirectX12_RenderSystem::DirectX12_RenderSystem() : DirectX_RenderSystem(), deviceState_constantBufferChanged(true), deviceState_textureChanged(true)
 	{
 		this->name = april::RenderSystemType::DirectX12.getName();
 		this->vertexBufferIndex = 0;
@@ -114,6 +114,9 @@ namespace april
 		this->pixelShaderTexturedDesaturate = NULL;
 		this->pixelShaderTexturedSepia = NULL;
 		this->deviceState_constantBufferChanged = true;
+		this->deviceState_textureChanged = true;
+		this->deviceViewport.MinDepth = D3D12_MIN_DEPTH;
+		this->deviceViewport.MaxDepth = D3D12_MAX_DEPTH;
 	}
 
 	bool DirectX12_RenderSystem::_deviceCreate(Options options)
@@ -902,7 +905,43 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceViewport(cgrecti rect)
 	{
-		// not used
+		grecti viewport = rect;
+		// TODOuwp - this used to be needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
+		// TODOuwp - maybe it will be needed for UWP as well (the last time this was tested, it worked fine without this code on UWP!)
+		/*
+		gvec2i resolution = april::getSystemInfo().displayResolution;
+		int w = april::window->getWidth();
+		int h = april::window->getHeight();
+		if (viewport.x < 0)
+		{
+			viewport.w += viewport.x;
+			viewport.x = 0;
+		}
+		if (viewport.y < 0)
+		{
+			viewport.h += viewport.y;
+			viewport.y = 0;
+		}
+		viewport.w = hclamp(viewport.w, 0, hmax(w - viewport.x, 0));
+		viewport.h = hclamp(viewport.h, 0, hmax(h - viewport.y, 0));
+		if (viewport.w > 0 && viewport.h > 0)
+		{
+			viewport.x = hclamp(viewport.x, 0, w);
+			viewport.y = hclamp(viewport.y, 0, h);
+		}
+		else
+		{
+			viewport.set(w, h, 0, 0);
+		}
+		*/
+		this->deviceViewport.TopLeftX = (float)viewport.x;
+		this->deviceViewport.TopLeftY = (float)viewport.y;
+		this->deviceViewport.Width = (float)viewport.w;
+		this->deviceViewport.Height = (float)viewport.h;
+		this->deviceScissorRect.left = (LONG)viewport.x;
+		this->deviceScissorRect.top = (LONG)viewport.y;
+		this->deviceScissorRect.right = (LONG)viewport.right();
+		this->deviceScissorRect.bottom = (LONG)viewport.bottom();
 	}
 
 	void DirectX12_RenderSystem::_setDeviceModelviewMatrix(const gmat4& matrix)
@@ -930,9 +969,7 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceTexture(Texture* texture)
 	{
-		// TODOuwp - might not be needed, check
-		// not really the constant buffer, but the texture updated
-		this->deviceState_constantBufferChanged = true;
+		this->deviceState_textureChanged = true;
 	}
 
 	void DirectX12_RenderSystem::_setDeviceTextureFilter(const Texture::Filter& textureFilter)
@@ -1030,7 +1067,7 @@ namespace april
 			++m;
 		}
 		bool changed = false;
-		if (this->deviceState_constantBufferChanged || this->deviceState_pipelineState != this->pipelineStates[i][j][k][l][m])
+		if (this->deviceState_constantBufferChanged || this->deviceState_textureChanged || this->deviceState_pipelineState != this->pipelineStates[i][j][k][l][m])
 		{
 			changed = true;
 		}
@@ -1135,46 +1172,9 @@ namespace april
 		vertexBufferResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 		this->commandList->ResourceBarrier(1, &vertexBufferResourceBarrier);
 
-		grecti viewport = this->getViewport();
-		// TODOuwp - this used to be needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
-		// maybe it will be needed for UWP as well
-		/*
-		gvec2i resolution = april::getSystemInfo().displayResolution;
-		int w = april::window->getWidth();
-		int h = april::window->getHeight();
-		if (viewport.x < 0)
-		{
-			viewport.w += viewport.x;
-			viewport.x = 0;
-		}
-		if (viewport.y < 0)
-		{
-			viewport.h += viewport.y;
-			viewport.y = 0;
-		}
-		viewport.w = hclamp(viewport.w, 0, hmax(w - viewport.x, 0));
-		viewport.h = hclamp(viewport.h, 0, hmax(h - viewport.y, 0));
-		if (viewport.w > 0 && viewport.h > 0)
-		{
-			viewport.x = hclamp(viewport.x, 0, w);
-			viewport.y = hclamp(viewport.y, 0, h);
-		}
-		else
-		{
-			viewport.set(w, h, 0, 0);
-		}
-		*/
 		// setting the system viewport
-		D3D12_VIEWPORT dx12Viewport;
-		dx12Viewport.MinDepth = D3D12_MIN_DEPTH;
-		dx12Viewport.MaxDepth = D3D12_MAX_DEPTH;
-		dx12Viewport.TopLeftX = (float)viewport.x;
-		dx12Viewport.TopLeftY = (float)viewport.y;
-		dx12Viewport.Width = (float)viewport.w;
-		dx12Viewport.Height = (float)viewport.h;
-		this->commandList->RSSetViewports(1, &dx12Viewport);
-		D3D12_RECT scissorRect = { (LONG)viewport.x, (LONG)viewport.y, (LONG)viewport.w, (LONG)viewport.h };
-		this->commandList->RSSetScissorRects(1, &scissorRect);
+		this->commandList->RSSetViewports(1, &this->deviceViewport);
+		this->commandList->RSSetScissorRects(1, &this->deviceScissorRect);
 
 		D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		renderTargetView.ptr += this->currentFrame * this->rtvDescSize;
