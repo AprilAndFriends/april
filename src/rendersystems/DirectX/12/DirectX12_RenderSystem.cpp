@@ -34,7 +34,7 @@
 #include "UWP_Window.h"
 
 #define SHADER_PATH "april/"
-#define VERTEX_BUFFER_COUNT 65536
+#define VERTEX_BUFFER_COUNT 1000000//65536
 #define CBV_SRV_UAV_HEAP_SIZE 2
 #define SAMPLER_COUNT (Texture::Filter::getValues().size() * Texture::AddressMode::getValues().size())
 
