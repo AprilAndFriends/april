@@ -33,8 +33,9 @@
 #include "UWP.h"
 #include "UWP_Window.h"
 
+#define _SEGMENTED_RENDERING
 #define SHADER_PATH "april/"
-#define VERTEX_BUFFER_COUNT 1000000//65536
+#define VERTEX_BUFFER_SIZE 262144 // 256kb per vertex buffer for data is enough to handle most render data that is used
 #define CBV_SRV_UAV_HEAP_SIZE 2
 #define SAMPLER_COUNT (Texture::Filter::getValues().size() * Texture::AddressMode::getValues().size())
 
@@ -187,7 +188,7 @@ namespace april
 		this->uploadHeapProperties.VisibleNodeMask = 1;
 		this->vertexBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 		this->vertexBufferDesc.Alignment = 0;
-		this->vertexBufferDesc.Width = VERTEX_BUFFER_COUNT;
+		this->vertexBufferDesc.Width = VERTEX_BUFFER_SIZE;
 		this->vertexBufferDesc.Height = 1;
 		this->vertexBufferDesc.DepthOrArraySize = 1;
 		this->vertexBufferDesc.MipLevels = 1;
@@ -1156,44 +1157,55 @@ namespace april
 
 	void DirectX12_RenderSystem::_renderDX12VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize)
 	{
-		this->_updatePipelineState(renderOperation);
+		// This kind of approach to render chunks of vertices is due to the current implementation that
+		// doesn't use vertex buffers by default to handle data.
+		static int size = 0;
+		static int byteSize = 0;
+		size = count;
 		D3D12_SUBRESOURCE_DATA vertexData = {};
-		vertexData.pData = data;
-		vertexData.RowPitch = (count * vertexSize);
-		vertexData.SlicePitch = vertexData.RowPitch;
-		UpdateSubresources(this->commandList.Get(), this->vertexBuffers[this->vertexBufferIndex].Get(), this->vertexBufferUploads[this->vertexBufferIndex].Get(), 0, 0, 1, &vertexData);
-		
 		D3D12_RESOURCE_BARRIER vertexBufferResourceBarrier = {};
 		vertexBufferResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		vertexBufferResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		vertexBufferResourceBarrier.Transition.pResource = this->vertexBuffers[this->vertexBufferIndex].Get();
 		vertexBufferResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
 		vertexBufferResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
 		vertexBufferResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-		this->commandList->ResourceBarrier(1, &vertexBufferResourceBarrier);
-
-		// setting the system viewport
-		this->commandList->RSSetViewports(1, &this->deviceViewport);
-		this->commandList->RSSetScissorRects(1, &this->deviceScissorRect);
-
 		D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		renderTargetView.ptr += this->currentFrame * this->rtvDescSize;
-		// TODOuwp - maybe could be removed / disabled as depth buffers aren't supported widely in april
-		/*
-		D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = this->dsvHeap->GetCPUDescriptorHandleForHeapStart();
-		this->commandList->OMSetRenderTargets(1, &renderTargetView, false, &depthStencilView);
-		*/
-		this->commandList->OMSetRenderTargets(1, &renderTargetView, false, NULL);
-		
-		this->commandList->IASetPrimitiveTopology(_dx12RenderOperations[renderOperation.value]);
-		this->vertexBufferViews[this->vertexBufferIndex].BufferLocation = this->vertexBuffers[this->vertexBufferIndex]->GetGPUVirtualAddress();
-		this->vertexBufferViews[this->vertexBufferIndex].StrideInBytes = vertexSize;
-		this->vertexBufferViews[this->vertexBufferIndex].SizeInBytes = count * vertexSize;
-
-		this->commandList->IASetVertexBuffers(0, 1, &this->vertexBufferViews[this->vertexBufferIndex]);
-		this->commandList->DrawInstanced(count, 1, 0, 0);
-
-		this->vertexBufferIndex = (this->vertexBufferIndex + 1) % MAX_VERTEX_BUFFERS;
+		D3D12_PRIMITIVE_TOPOLOGY primitiveTopology = _dx12RenderOperations[renderOperation.value];
+		unsigned char* vertices = (unsigned char*)data;
+#ifdef _SEGMENTED_RENDERING
+		for_iter_step (i, 0, count, size)
+		{
+			size = this->_limitVertices(renderOperation, hmin(count - i, VERTEX_BUFFER_SIZE / (int)vertexSize));
+#endif
+			byteSize = size * vertexSize;
+			this->_updatePipelineState(renderOperation);
+			vertexData.pData = vertices;
+			vertexData.RowPitch = byteSize;
+			vertexData.SlicePitch = vertexData.RowPitch;
+			UpdateSubresources(this->commandList.Get(), this->vertexBuffers[this->vertexBufferIndex].Get(), this->vertexBufferUploads[this->vertexBufferIndex].Get(), 0, 0, 1, &vertexData);
+			vertexBufferResourceBarrier.Transition.pResource = this->vertexBuffers[this->vertexBufferIndex].Get();
+			this->commandList->ResourceBarrier(1, &vertexBufferResourceBarrier);
+			// viewport, scissor rect, render target
+			this->commandList->RSSetViewports(1, &this->deviceViewport);
+			this->commandList->RSSetScissorRects(1, &this->deviceScissorRect);
+			// TODOuwp - maybe could be removed / disabled as depth buffers aren't supported widely in april
+			/*
+			D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = this->dsvHeap->GetCPUDescriptorHandleForHeapStart();
+			this->commandList->OMSetRenderTargets(1, &renderTargetView, false, &depthStencilView);
+			*/
+			this->commandList->OMSetRenderTargets(1, &renderTargetView, false, NULL);
+			this->commandList->IASetPrimitiveTopology(primitiveTopology);
+			this->vertexBufferViews[this->vertexBufferIndex].BufferLocation = this->vertexBuffers[this->vertexBufferIndex]->GetGPUVirtualAddress();
+			this->vertexBufferViews[this->vertexBufferIndex].StrideInBytes = vertexSize;
+			this->vertexBufferViews[this->vertexBufferIndex].SizeInBytes = byteSize;
+			this->commandList->IASetVertexBuffers(0, 1, &this->vertexBufferViews[this->vertexBufferIndex]);
+			this->commandList->DrawInstanced(size, 1, 0, 0);
+			this->vertexBufferIndex = (this->vertexBufferIndex + 1) % MAX_VERTEX_BUFFERS;
+#ifdef _SEGMENTED_RENDERING
+			vertices += byteSize;
+		}
+#endif
 	}
 
 	Image::Format DirectX12_RenderSystem::getNativeTextureFormat(Image::Format format) const

@@ -38,9 +38,7 @@
 #define TEXTURE_STATE_COUNT 2
 #define PRIMITIVE_TOPOLOGY_COUNT 3
 #define DEPTH_ENABLED_COUNT 2
-
-// TODOuwp - needs refactoring
-#define MAX_VERTEX_BUFFERS 10
+#define MAX_VERTEX_BUFFERS 10 // 10 vertex buffers should be enough to handle all cases
 
 using namespace Microsoft::WRL;
 using namespace Windows::Foundation;
