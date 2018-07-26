@@ -133,7 +133,7 @@ namespace april
 		}
 		else if (nativeFormat == Image::Format::Alpha)
 		{
-			this->dxgiFormat = DXGI_FORMAT_A8_UNORM;
+			this->dxgiFormat = DXGI_FORMAT_R8_UNORM; // A8 doesn't work for some reason
 		}
 		else if (nativeFormat == Image::Format::Greyscale)
 		{
