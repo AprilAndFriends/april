@@ -193,12 +193,15 @@ namespace april
 	{
 		hlog::write(logTag, "UWP visibility change: " + hstr(args->Visible ? "true" : "false"));
 		args->Handled = true;
-		// TODOuwp - might not be needed
+		// TODOuwp - likely not needed
+		/*
 		if (this->visible != args->Visible)
 		{
 			this->visible = args->Visible;
 			this->_processWindowFocusChange(args->Visible);
 		}
+		*/
+		this->_resetTouches();
 	}
 
 	void UWP_App::onWindowClosed(CoreWindow^ sender, CoreWindowEventArgs^ args)
