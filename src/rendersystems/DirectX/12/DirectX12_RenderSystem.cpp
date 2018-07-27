@@ -36,7 +36,7 @@
 #define SHADER_PATH "april/"
 #define VERTEX_BUFFER_SIZE 262144 // 256kb per vertex buffer for data is enough to handle most render data that is used
 #define CBV_SRV_UAV_HEAP_SIZE 2
-#define SAMPLER_COUNT (Texture::Filter::getValues().size() * Texture::AddressMode::getValues().size())
+#define SAMPLER_COUNT (Texture::Filter::getCount() * Texture::AddressMode::getCount())
 
 #define __EXPAND(x) x
 
@@ -346,7 +346,7 @@ namespace april
 				break;
 			}
 		}
-		HRESULT hr;
+		HRESULT hr = S_OK;
 		if (adapter != nullptr)
 		{
 			hr = D3D12CreateDevice(adapter.Get(), featureLevel, IID_PPV_ARGS(&this->d3dDevice));
@@ -604,8 +604,8 @@ namespace april
 		samplerDesc.BorderColor[2] = 0.0f;
 		samplerDesc.BorderColor[3] = 0.0f;
 		D3D12_CPU_DESCRIPTOR_HANDLE samplerCpuHandle = this->samplerHeap->GetCPUDescriptorHandleForHeapStart();
-		int filterSize = Texture::Filter::getValues().size();
-		int adressModeSize = Texture::AddressMode::getValues().size();
+		int filterSize = Texture::Filter::getCount();
+		int adressModeSize = Texture::AddressMode::getCount();
 		for_iter (i, 0, filterSize)
 		{
 			samplerDesc.Filter = (i == 0 ? D3D12_FILTER_MIN_MAG_MIP_POINT : D3D12_FILTER_MIN_MAG_MIP_LINEAR);
@@ -1108,7 +1108,7 @@ namespace april
 		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
 		if (this->fence->GetCompletedValue() < this->fenceValues[this->currentFrame])
 		{
-			_TRY_UNSAFE(this->fence->SetEventOnCompletion(this->fenceValues[this->currentFrame], this->fenceEvent), "Unable to set even on completion!");
+			_TRY_UNSAFE(this->fence->SetEventOnCompletion(this->fenceValues[this->currentFrame], this->fenceEvent), "Unable to set event on completion!");
 			WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
 		}
 		this->fenceValues[this->currentFrame] = currentFenceValue + 1;
@@ -1141,7 +1141,7 @@ namespace april
 			gpuHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(this->cbvSrvUavHeap->GetGPUDescriptorHandleForHeapStart(), heapIndex, this->cbvSrvUavDescSize);
 			this->commandList->SetGraphicsRootDescriptorTable(1, gpuHandle);
 			// sampler
-			int adressModeSize = Texture::AddressMode::getValues().size();
+			int adressModeSize = Texture::AddressMode::getCount();
 			gpuHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(this->samplerHeap->GetGPUDescriptorHandleForHeapStart(), texture->getFilter().value * adressModeSize + texture->getAddressMode().value, this->samplerDescSize);
 			this->commandList->SetGraphicsRootDescriptorTable(2, gpuHandle);
 		}
