@@ -141,7 +141,7 @@ namespace april
 		}
 		else if (nativeFormat == Image::Format::Palette)
 		{
-			this->dxgiFormat = DXGI_FORMAT_R8G8B8A8_UNORM; // TODOaa - needs changing
+			this->dxgiFormat = DXGI_FORMAT_R8G8B8A8_UNORM; // TODOuwp - probably implement
 		}
 		else
 		{
@@ -191,7 +191,7 @@ namespace april
 				}
 				else
 				{
-					// TODOaa - implement
+					// TODOuwp - probably implement
 				}
 			}
 			this->firstUpload = false;

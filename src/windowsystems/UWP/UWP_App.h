@@ -105,8 +105,6 @@ namespace april
 		bool launched;
 		bool activated;
 		*/
-		// TODOa - special temporary hack required for input blocking the first frame after focus has been returned / the window was reactivated
-		bool firstFrameAfterActivateHack;
 		bool scrollHorizontal;
 		harray<unsigned int> pointerIds;
 		int64_t startTime;

@@ -1071,10 +1071,12 @@ namespace april
 		{
 			changed = true;
 		}
+		/*
 		if (!changed)
 		{
 			return;
 		}
+		*/
 		this->deviceState_pipelineState = this->pipelineStates[i][j][k][l][m];
 		this->deviceState_rootSignature = this->rootSignatures[r];
 		this->executeCurrentCommands();
@@ -1228,7 +1230,7 @@ namespace april
 
 	Image* DirectX12_RenderSystem::takeScreenshot(Image::Format format)
 	{
-		// TODOa - if possible
+		// TODOuwp - if possible
 		hlog::warn(logTag, "DirectX12_RenderSystem::takeScreenshot() not implemented!");
 		return NULL;
 	}
@@ -1317,13 +1319,13 @@ namespace april
 
 	Texture* DirectX12_RenderSystem::getRenderTarget()
 	{
-		// TODOa - implement
+		// TODOuwp - implement
 		return NULL;// this->renderTarget;
 	}
 
 	void DirectX12_RenderSystem::setRenderTarget(Texture* source)
 	{
-		// TODOa - implement (this code is experimental)
+		// TODOuwp - implement (this code is experimental)
 		/*
 		DirectX12_Texture* texture = (DirectX12_Texture*)source;
 		if (texture == NULL)
@@ -1348,13 +1350,13 @@ namespace april
 
 	void DirectX12_RenderSystem::setPixelShader(PixelShader* pixelShader)
 	{
-		// TODOa
+		// TODOuwp
 		//this->activePixelShader = (DirectX12_PixelShader*)pixelShader;
 	}
 
 	void DirectX12_RenderSystem::setVertexShader(VertexShader* vertexShader)
 	{
-		// TODOa
+		// TODOuwp
 		//this->activeVertexShader = (DirectX12_VertexShader*)vertexShader;
 	}
 

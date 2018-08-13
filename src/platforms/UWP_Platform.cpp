@@ -153,7 +153,7 @@ namespace april
 	
 	int64_t _getRamConsumption_platform()
 	{
-		// TODOa
+		// TODOuwp - implement this
 		hlog::warn(logTag, "Cannot use getRamConsumption() on this platform.");
 		return 0LL;
 	}	

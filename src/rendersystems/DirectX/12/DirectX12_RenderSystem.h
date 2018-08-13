@@ -38,7 +38,7 @@
 #define TEXTURE_STATE_COUNT 2
 #define PRIMITIVE_TOPOLOGY_COUNT 3
 #define DEPTH_ENABLED_COUNT 2
-#define MAX_VERTEX_BUFFERS 10 // 10 vertex buffers should be enough to handle all cases
+#define MAX_VERTEX_BUFFERS 1000 // 10 vertex buffers should be enough to handle all cases
 
 using namespace Microsoft::WRL;
 using namespace Windows::Foundation;
@@ -82,7 +82,7 @@ namespace april
 		void waitForCommands();
 		void prepareNewCommands();
 
-		// TODOa - implement
+		// TODOuwp - implement
 		Texture* getRenderTarget();
 		void setRenderTarget(Texture* source);
 		void setPixelShader(PixelShader* pixelShader);
