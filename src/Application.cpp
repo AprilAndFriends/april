@@ -354,8 +354,10 @@ namespace april
 			april::rendersys->_flushAsyncCommands();
 			if (april::rendersys->getOptions().clearOnSuspend)
 			{
+				april::rendersys->_updateDeviceState(april::rendersys->state, true);
 				april::rendersys->_deviceClear(true);
 				april::rendersys->_devicePresentFrame(true);
+				april::rendersys->_updateDeviceState(april::rendersys->state, true);
 				april::rendersys->_deviceClear(true);
 			}
 		}
