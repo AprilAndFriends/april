@@ -169,7 +169,13 @@ namespace april
 
 	static hversion version(5, 2, 0);
 
-	static harray<hstr> extensions;
+#ifdef _IOS
+	static harray<hstr> extensions = hstr(".jpt,.png,.jpg,.pvrz,.pvr").split(',');
+#elif __ANDROID__
+	static harray<hstr> extensions = hstr(".jpt,.png,.jpg,.etcx").split(',');
+#else
+	static harray<hstr> extensions = hstr(".jpt,.png,.jpg").split(',');
+#endif
 	static int maxAsyncTextureUploadsPerFrame = 0;
 #if defined(__ANDROID__) || defined(_IOS) || defined(_WINRT) && defined(_WINP8)
 	static int maxWaitingAsyncTextures = 8; // to limit RAM consumption
@@ -207,20 +213,6 @@ namespace april
 		hlog::writef(logTag, "Platform: %s %s, %d bit", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
 		// symbolic colors
 		resetSymbolicColors();
-		// extensions
-		if (extensions.size() == 0)
-		{
-			extensions += ".jpt";
-			extensions += ".png";
-			extensions += ".jpg";
-#ifdef _IOS
-			extensions += ".pvrz";
-			extensions += ".pvr";
-#endif
-#ifdef __ANDROID__
-			extensions += ".etcx";
-#endif
-		}
 #ifdef _EGL
 		if (april::egl == NULL)
 		{
