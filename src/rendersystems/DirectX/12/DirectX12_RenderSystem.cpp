@@ -1017,7 +1017,10 @@ namespace april
 
 	void DirectX12_RenderSystem::_deviceClearDepth()
 	{
-		this->commandList[this->commandListIndex]->ClearDepthStencilView(this->dsvHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+		if (this->options.depthBuffer)
+		{
+			this->commandList[this->commandListIndex]->ClearDepthStencilView(this->dsvHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+		}
 	}
 
 	void DirectX12_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const PlainVertex* vertices, int count)
