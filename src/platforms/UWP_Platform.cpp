@@ -93,7 +93,7 @@ namespace april
 		if (info.locale == "")
 		{
 			info.name = "winrt";
-			info.deviceName = "unnamedUWPDevice";
+			info.deviceName = "UWP-device";
 #ifdef _ARM
 			info.architecture = "ARM";
 #else
