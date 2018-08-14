@@ -30,7 +30,7 @@
 #include "DirectX_RenderSystem.h"
 #include "Window.h"
 
-#define MAX_BACKBUFFER_COUNT 3 // TODOuwp - make this configurable, because Rendersystem::Options::tripleBuffering should be supported
+#define MAX_BACKBUFFER_COUNT 3
 #define MAX_COMMAND_LISTS 5
 #define ALIGNED_CONSTANT_BUFFER_SIZE ((sizeof(ConstantBuffer) + 255) & ~255)
 #define INPUT_LAYOUT_COUNT 4
