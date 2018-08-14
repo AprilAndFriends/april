@@ -306,24 +306,11 @@ namespace april
 			ComPtr<IDXGIFactory5> dxgiFactory5;
 			if (SUCCEEDED(this->dxgiFactory.As(&dxgiFactory5)))
 			{
-				bool allowTearing = false;
+				// must use BOOL here due to how the internal implementation of CheckFeatureSupport() works
+				BOOL allowTearing = FALSE;
 				if (SUCCEEDED(dxgiFactory5->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &allowTearing, sizeof(allowTearing))))
 				{
-					if (allowTearing)
-					{
-						dxgiFactoryFlags |= DXGI_FEATURE_PRESENT_ALLOW_TEARING;
-						ComPtr<IDXGIFactory4> newDxgiFactory;
-						if (SUCCEEDED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&newDxgiFactory))))
-						{
-							this->dxgiFactory = newDxgiFactory;
-						}
-						else
-						{
-							hlog::warn(logTag, "Cannot disable V-Sync, could not create new DXGI factory!");
-							this->options.vSync = true;
-						}
-					}
-					else
+					if (allowTearing == FALSE)
 					{
 						hlog::warn(logTag, "Cannot disable V-Sync, DXGI factory 5 says it's not supported!");
 						this->options.vSync = true;
@@ -485,7 +472,7 @@ namespace april
 
 	void DirectX12_RenderSystem::_resizeSwapChain(int width, int height)
 	{
-		this->executeCurrentCommands();
+		this->executeCurrentCommand();
 		this->waitForAllCommands();
 		this->_waitForGpu();
 		for_iter (i, 0, BACKBUFFER_COUNT)
@@ -1120,10 +1107,7 @@ namespace april
 		}
 		//*/
 		//*
-		PIXEndEvent(this->commandList[this->commandListIndex].Get());
-		this->commandList[this->commandListIndex]->Close();
-		ID3D12CommandList* ppCommandLists[] = { this->commandList[this->commandListIndex].Get() };
-		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+		this->executeCurrentCommand();
 		//this->waitForLastCommand();
 
 		this->commandListIndex = (this->commandListIndex + 1) % MAX_COMMAND_LISTS;
@@ -1151,8 +1135,9 @@ namespace april
 	}
 
 	// TODOuwp - probably not needed anymore
-	void DirectX12_RenderSystem::executeCurrentCommands()
+	void DirectX12_RenderSystem::executeCurrentCommand()
 	{
+		/*
 		harray<ID3D12CommandList*> commandLists;
 		int j = 0;
 		for_iter (i, 0, this->commandListSize)
@@ -1163,6 +1148,11 @@ namespace april
 			commandLists += this->commandList[j].Get();
 		}
 		this->commandQueue->ExecuteCommandLists(commandLists.size(), (ID3D12CommandList* const*)commandLists);
+		*/
+		PIXEndEvent(this->commandList[this->commandListIndex].Get());
+		this->commandList[this->commandListIndex]->Close();
+		ID3D12CommandList* ppCommandLists[] = { this->commandList[this->commandListIndex].Get() };
+		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 	}
 
 	void DirectX12_RenderSystem::waitForAllCommands()
@@ -1337,7 +1327,7 @@ namespace april
 		this->waitForAllCommands();
 		//*/
 		//*
-		this->executeCurrentCommands();
+		this->executeCurrentCommand();
 		this->waitForAllCommands();
 		//*/
 
