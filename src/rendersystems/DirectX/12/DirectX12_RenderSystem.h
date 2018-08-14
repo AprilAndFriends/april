@@ -39,7 +39,7 @@
 #define TEXTURE_STATE_COUNT 2
 #define PRIMITIVE_TOPOLOGY_COUNT 3
 #define DEPTH_ENABLED_COUNT 2
-#define MAX_VERTEX_BUFFERS 500 // should be enough vertex buffers to handle all cases
+#define MAX_VERTEX_BUFFERS 100 // should be enough vertex buffers to handle all cases
 
 using namespace Microsoft::WRL;
 using namespace Windows::Foundation;
@@ -117,6 +117,7 @@ namespace april
 
 		// CPU/GPU synchronization
 		ComPtr<ID3D12Fence> fence;
+		UINT64 fenceLimits[BACKBUFFER_COUNT];
 		UINT64 fenceValues[BACKBUFFER_COUNT];
 		HANDLE fenceEvent;
 

@@ -168,7 +168,8 @@ namespace april
 			}
 		}
 		// create synchronization objects
-		_TRY_UNSAFE(this->d3dDevice->CreateFence(this->fenceValues[this->currentFrame], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&this->fence)), "Unable to create fence");
+		_TRY_UNSAFE(this->d3dDevice->CreateFence(this->fenceLimits[this->currentFrame], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&this->fence)), "Unable to create fence");
+		++this->fenceLimits[this->currentFrame];
 		++this->fenceValues[this->currentFrame];
 		this->fenceEvent = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
 		// configure device
@@ -478,7 +479,7 @@ namespace april
 		for_iter (i, 0, BACKBUFFER_COUNT)
 		{
 			this->renderTargets[i] = nullptr;
-			this->fenceValues[i] = this->fenceValues[this->currentFrame];
+			this->fenceValues[i] = this->fenceLimits[i] = this->fenceLimits[this->currentFrame];
 		}
 		DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 		this->swapChain->GetDesc(&swapChainDesc);
@@ -829,18 +830,19 @@ namespace april
 	// Wait for pending GPU work to complete.
 	void DirectX12_RenderSystem::_waitForGpu()
 	{
-		HRESULT hr = this->commandQueue->Signal(this->fence.Get(), this->fenceValues[this->currentFrame]);
+		HRESULT hr = this->commandQueue->Signal(this->fence.Get(), this->fenceLimits[this->currentFrame]);
 		if (FAILED(hr))
 		{
 			throw Exception("Could not Signal command queue!");
 		}
-		hr = this->fence->SetEventOnCompletion(this->fenceValues[this->currentFrame], this->fenceEvent);
+		hr = this->fence->SetEventOnCompletion(this->fenceLimits[this->currentFrame], this->fenceEvent);
 		if (FAILED(hr))
 		{
 			throw Exception("Could not Signal command queue!");
 		}
 		WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
-		++this->fenceValues[this->currentFrame];
+		++this->fenceLimits[this->currentFrame];
+		this->fenceValues[this->currentFrame] = this->fenceLimits[this->currentFrame];
 		this->commandListIndex = 0;
 		this->commandListSize = 1;
 	}
@@ -1116,8 +1118,8 @@ namespace april
 		{
 			//this->waitForLastCommand();
 			//this->commandListSize = 1;
-			//--this->commandListSize;
-			this->waitForAllCommands();
+			this->waitForLastCommand();
+			--this->commandListSize;
 		}
 		//*/
 		this->prepareNewCommands();
@@ -1134,30 +1136,30 @@ namespace april
 		}
 	}
 
-	// TODOuwp - probably not needed anymore
 	void DirectX12_RenderSystem::executeCurrentCommand()
 	{
-		/*
-		harray<ID3D12CommandList*> commandLists;
-		int j = 0;
-		for_iter (i, 0, this->commandListSize)
-		{
-			j = hmod(i - this->commandListSize + 1 + this->commandListIndex, MAX_COMMAND_LISTS);
-			PIXEndEvent(this->commandList[j].Get());
-			this->commandList[j]->Close();
-			commandLists += this->commandList[j].Get();
-		}
-		this->commandQueue->ExecuteCommandLists(commandLists.size(), (ID3D12CommandList* const*)commandLists);
-		*/
 		PIXEndEvent(this->commandList[this->commandListIndex].Get());
 		this->commandList[this->commandListIndex]->Close();
 		ID3D12CommandList* ppCommandLists[] = { this->commandList[this->commandListIndex].Get() };
 		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+		// signal queue to make sure it continues processing lists
+		const UINT64 currentFenceValue = this->fenceLimits[this->currentFrame];
+		_TRY_UNSAFE(this->commandQueue->Signal(this->fence.Get(), currentFenceValue), "Unable to signal command queue!");
+		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
+		this->fenceLimits[this->currentFrame] = currentFenceValue + 1;
 	}
 
 	void DirectX12_RenderSystem::waitForAllCommands()
 	{
-		this->waitForLastCommand();
+		const UINT64 currentFenceValue = this->fenceLimits[this->currentFrame];
+		_TRY_UNSAFE(this->commandQueue->Signal(this->fence.Get(), currentFenceValue), "Unable to signal command queue!");
+		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
+		if (this->fence->GetCompletedValue() < this->fenceLimits[this->currentFrame])
+		{
+			_TRY_UNSAFE(this->fence->SetEventOnCompletion(this->fenceLimits[this->currentFrame], this->fenceEvent), "Unable to set event on completion!");
+			WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
+		}
+		this->fenceValues[this->currentFrame] = this->fenceLimits[this->currentFrame] = currentFenceValue + 1;
 		this->vertexBufferIndex = 0;
 		this->commandListIndex = 0;
 		this->commandListSize = 1;
