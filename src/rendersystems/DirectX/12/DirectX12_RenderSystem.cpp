@@ -124,6 +124,7 @@ namespace april
 		this->pixelShaderTexturedDesaturate = NULL;
 		this->pixelShaderTexturedSepia = NULL;
 		this->deviceState_constantBufferChanged = true;
+		this->deviceState_colorModeChanged = true;
 		this->deviceViewport.MinDepth = D3D12_MIN_DEPTH;
 		this->deviceViewport.MaxDepth = D3D12_MAX_DEPTH;
 	}
@@ -986,7 +987,7 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
 	{
-		this->deviceState_constantBufferChanged = true;
+		this->deviceState_colorModeChanged = true;
 	}
 
 	void DirectX12_RenderSystem::_deviceClear(bool depth)
@@ -1088,11 +1089,15 @@ namespace april
 		if (this->deviceState_constantBufferChanged)
 		{
 			this->constantBufferData.matrix = (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).transposed();
+			this->deviceState_constantBufferChanged = false;
+		}
+		if (this->deviceState_colorModeChanged)
+		{
 			this->constantBufferData.systemColor.set(this->deviceState->systemColor.r_f(), this->deviceState->systemColor.g_f(),
 				this->deviceState->systemColor.b_f(), this->deviceState->systemColor.a_f());
 			this->constantBufferData.lerpAlpha.set(this->deviceState->colorModeFactor, this->deviceState->colorModeFactor,
 				this->deviceState->colorModeFactor, this->deviceState->colorModeFactor);
-			this->deviceState_constantBufferChanged = false;
+			this->deviceState_colorModeChanged = false;
 		}
 		unsigned char* mappedConstantBuffer = this->mappedConstantBuffers[this->commandListIndex] + (this->currentFrame * ALIGNED_CONSTANT_BUFFER_SIZE);
 		memcpy(mappedConstantBuffer, &this->constantBufferData, sizeof(ConstantBuffer));

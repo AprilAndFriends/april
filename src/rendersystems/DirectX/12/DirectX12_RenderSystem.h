@@ -164,6 +164,7 @@ namespace april
 		ComPtr<ID3D12PipelineState> deviceState_pipelineState;
 		ComPtr<ID3D12RootSignature> deviceState_rootSignature;
 		bool deviceState_constantBufferChanged;
+		bool deviceState_colorModeChanged;
 		D3D12_VIEWPORT deviceViewport;
 		D3D12_RECT deviceScissorRect;
 
