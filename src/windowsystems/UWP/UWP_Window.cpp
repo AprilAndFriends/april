@@ -148,15 +148,6 @@ namespace april
 		this->_setRenderSystemResolution(this->width, this->height, this->fullscreen);
 	}
 
-	bool UWP_Window::update(float timeDelta)
-	{
-		ID3D12CommandQueue* commandQueue = DX12_RENDERSYS->getCommandQueue();
-		PIXBeginEvent(commandQueue, 0, L"update()");
-		bool result = Window::update(timeDelta);
-		PIXEndEvent(commandQueue);
-		return result;
-	}
-
 	void UWP_Window::checkEvents()
 	{
 		if (UWP::app->isVisible())

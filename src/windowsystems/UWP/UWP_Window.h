@@ -49,7 +49,6 @@ namespace april
 		HL_DEFINE_GET(int, height, Height);
 		void* getBackendId() const;
 
-		bool update(float timeDelta);
 		void checkEvents();
 		hstr findCursorFile(chstr filename) const;
 		

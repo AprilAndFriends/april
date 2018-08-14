@@ -112,11 +112,11 @@ namespace april
 			return false;
 		}
 		// upload
-		UpdateSubresources(DX12_RENDERSYS->commandList.Get(), this->d3dTexture.Get(), this->uploadHeap.Get(), 0, 0, 1, &textureData);
-		DX12_RENDERSYS->commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
-		DX12_RENDERSYS->executeCurrentCommands();
-		DX12_RENDERSYS->waitForCommands();
-		DX12_RENDERSYS->prepareNewCommands();
+		UpdateSubresources(DX12_RENDERSYS->commandList[DX12_RENDERSYS->commandListIndex].Get(), this->d3dTexture.Get(), this->uploadHeap.Get(), 0, 0, 1, &textureData);
+		DX12_RENDERSYS->commandList[DX12_RENDERSYS->commandListIndex]->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+		//DX12_RENDERSYS->executeCurrentCommands();
+		//DX12_RENDERSYS->waitForCommands();
+		//DX12_RENDERSYS->prepareNewCommands();
 		return true;
 	}
 	
@@ -185,9 +185,9 @@ namespace april
 					textureData.RowPitch = this->width * this->getBpp();
 					textureData.SlicePitch = textureData.RowPitch * this->height;
 					// this resource barrier change is weird, but it seems to be required
-					DX12_RENDERSYS->commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
-					UpdateSubresources(DX12_RENDERSYS->commandList.Get(), this->d3dTexture.Get(), this->uploadHeap.Get(), 0, 0, 1, &textureData);
-					DX12_RENDERSYS->commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+					DX12_RENDERSYS->commandList[DX12_RENDERSYS->commandListIndex]->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
+					UpdateSubresources(DX12_RENDERSYS->commandList[DX12_RENDERSYS->commandListIndex].Get(), this->d3dTexture.Get(), this->uploadHeap.Get(), 0, 0, 1, &textureData);
+					DX12_RENDERSYS->commandList[DX12_RENDERSYS->commandListIndex]->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 				}
 				else
 				{

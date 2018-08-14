@@ -31,6 +31,7 @@
 #include "Window.h"
 
 #define BACKBUFFER_COUNT 3 // TODOuwp - make this configurable, because Rendersystem::Options::tripleBuffering should be supported
+#define MAX_COMMAND_LISTS 10
 #define ALIGNED_CONSTANT_BUFFER_SIZE ((sizeof(ConstantBuffer) + 255) & ~255)
 #define INPUT_LAYOUT_COUNT 4
 #define PIXEL_SHADER_COUNT 5
@@ -38,7 +39,7 @@
 #define TEXTURE_STATE_COUNT 2
 #define PRIMITIVE_TOPOLOGY_COUNT 3
 #define DEPTH_ENABLED_COUNT 2
-#define MAX_VERTEX_BUFFERS 1000 // 10 vertex buffers should be enough to handle all cases
+#define MAX_VERTEX_BUFFERS 400 // should be enough vertex buffers to handle all cases
 
 using namespace Microsoft::WRL;
 using namespace Windows::Foundation;
@@ -70,7 +71,6 @@ namespace april
 		~DirectX12_RenderSystem();
 
 		int getVRam() const;
-		HL_DEFINE_GET(ID3D12CommandQueue*, commandQueue.Get(), CommandQueue);
 		
 		Image::Format getNativeTextureFormat(Image::Format format) const;
 		unsigned int getNativeColorUInt(const april::Color& color) const;
@@ -99,12 +99,12 @@ namespace april
 		ComPtr<ID3D12Resource> depthStencil;
 		ComPtr<ID3D12CommandQueue> commandQueue;
 		ComPtr<ID3D12DescriptorHeap> rtvHeap; // render target view heap
-		ComPtr<ID3D12DescriptorHeap> cbvSrvUavHeap; // constant buffer view, shader resource view, unordered access view heap
-		ComPtr<ID3D12DescriptorHeap> samplerHeap; // sampler heap
+		ComPtr<ID3D12DescriptorHeap> cbvSrvUavHeaps[MAX_COMMAND_LISTS]; // constant buffer view, shader resource view, unordered access view heap
+		ComPtr<ID3D12DescriptorHeap> samplerHeaps[MAX_COMMAND_LISTS]; // sampler heap
 		ComPtr<ID3D12DescriptorHeap> dsvHeap; // depth stencil view heap
-		ComPtr<ID3D12CommandAllocator> commandAllocators[BACKBUFFER_COUNT];
-		ComPtr<ID3D12GraphicsCommandList> commandList;
-		D3D12_VIEWPORT screenViewport;
+		ComPtr<ID3D12CommandAllocator> commandAllocators[MAX_COMMAND_LISTS][BACKBUFFER_COUNT];
+		ComPtr<ID3D12GraphicsCommandList> commandList[MAX_COMMAND_LISTS];
+		int commandListIndex;
 
 		harray<D3D12_INPUT_LAYOUT_DESC> inputLayoutDescs;
 		harray<DirectX12_VertexShader*> vertexShaders;
@@ -139,9 +139,9 @@ namespace april
 		ComPtr<ID3D12Resource> vertexBuffers[MAX_VERTEX_BUFFERS];
 		ComPtr<ID3D12Resource> vertexBufferUploads[MAX_VERTEX_BUFFERS];
 		D3D12_RESOURCE_DESC constantBufferDesc;
-		ComPtr<ID3D12Resource> constantBuffer;
+		ComPtr<ID3D12Resource> constantBuffers[MAX_COMMAND_LISTS];
 		ConstantBuffer constantBufferData;
-		unsigned char* mappedConstantBuffer;
+		unsigned char* mappedConstantBuffers[MAX_COMMAND_LISTS];
 
 		DirectX12_VertexShader* vertexShaderPlain;
 		DirectX12_VertexShader* vertexShaderTextured;
