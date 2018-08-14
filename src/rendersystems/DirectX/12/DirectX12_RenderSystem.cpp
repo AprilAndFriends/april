@@ -71,15 +71,15 @@ namespace april
 
 	D3D_PRIMITIVE_TOPOLOGY DirectX12_RenderSystem::_dx12RenderOperations[] =
 	{
-		D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST,	// ROP_TRIANGLE_LIST
-		D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,	// ROP_TRIANGLE_STRIP
-		D3D_PRIMITIVE_TOPOLOGY_LINELIST,		// ROP_LINE_LIST
-		D3D_PRIMITIVE_TOPOLOGY_LINESTRIP,		// ROP_LINE_STRIP
-		D3D_PRIMITIVE_TOPOLOGY_POINTLIST,		// ROP_POINT_LIST
+		D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST,	// RenderOperation::TriangleList
+		D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,	// RenderOperation::TriangleStrip
+		D3D_PRIMITIVE_TOPOLOGY_LINELIST,		// RenderOperation::ListList
+		D3D_PRIMITIVE_TOPOLOGY_LINESTRIP,		// RenderOperation::LineStrip
+		D3D_PRIMITIVE_TOPOLOGY_POINTLIST,		// RenderOperation::PointList
 		D3D_PRIMITIVE_TOPOLOGY_UNDEFINED,		// triangle fans are deprecated in DX12
 	};
 
-	DirectX12_RenderSystem::DirectX12_RenderSystem() : DirectX_RenderSystem(), deviceState_constantBufferChanged(true), deviceState_textureChanged(true)
+	DirectX12_RenderSystem::DirectX12_RenderSystem() : DirectX_RenderSystem()
 	{
 		this->name = april::RenderSystemType::DirectX12.getName();
 		this->vertexBufferIndex = 0;
@@ -118,8 +118,6 @@ namespace april
 		this->pixelShaderTexturedLerp = NULL;
 		this->pixelShaderTexturedDesaturate = NULL;
 		this->pixelShaderTexturedSepia = NULL;
-		this->deviceState_constantBufferChanged = true;
-		this->deviceState_textureChanged = true;
 		this->deviceViewport.MinDepth = D3D12_MIN_DEPTH;
 		this->deviceViewport.MaxDepth = D3D12_MAX_DEPTH;
 	}
@@ -259,7 +257,6 @@ namespace april
 			_TRY_UNSAFE(this->commandList[i]->Close(), "Unable to close command list!");
 			commandLists += this->commandList[i].Get();
 		}
-		//ID3D12CommandList* ppCommandLists[] = { this->commandList[this->commandListIndex].Get() };
 		this->commandQueue->ExecuteCommandLists(commandLists.size(), (ID3D12CommandList* const*)commandLists);
 		this->_waitForGpu();
 		// initial calls
@@ -922,53 +919,24 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceViewport(cgrecti rect)
 	{
-		grecti viewport = rect;
-		// TODOuwp - this used to be needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
-		// TODOuwp - maybe it will be needed for UWP as well (the last time this was tested, it worked fine without this code on UWP!)
-		/*
-		gvec2i resolution = april::getSystemInfo().displayResolution;
-		int w = april::window->getWidth();
-		int h = april::window->getHeight();
-		if (viewport.x < 0)
-		{
-			viewport.w += viewport.x;
-			viewport.x = 0;
-		}
-		if (viewport.y < 0)
-		{
-			viewport.h += viewport.y;
-			viewport.y = 0;
-		}
-		viewport.w = hclamp(viewport.w, 0, hmax(w - viewport.x, 0));
-		viewport.h = hclamp(viewport.h, 0, hmax(h - viewport.y, 0));
-		if (viewport.w > 0 && viewport.h > 0)
-		{
-			viewport.x = hclamp(viewport.x, 0, w);
-			viewport.y = hclamp(viewport.y, 0, h);
-		}
-		else
-		{
-			viewport.set(w, h, 0, 0);
-		}
-		*/
-		this->deviceViewport.TopLeftX = (float)viewport.x;
-		this->deviceViewport.TopLeftY = (float)viewport.y;
-		this->deviceViewport.Width = (float)viewport.w;
-		this->deviceViewport.Height = (float)viewport.h;
-		this->deviceScissorRect.left = (LONG)viewport.x;
-		this->deviceScissorRect.top = (LONG)viewport.y;
-		this->deviceScissorRect.right = (LONG)viewport.right();
-		this->deviceScissorRect.bottom = (LONG)viewport.bottom();
+		this->deviceViewport.TopLeftX = (float)rect.x;
+		this->deviceViewport.TopLeftY = (float)rect.y;
+		this->deviceViewport.Width = (float)rect.w;
+		this->deviceViewport.Height = (float)rect.h;
+		this->deviceScissorRect.left = (LONG)rect.x;
+		this->deviceScissorRect.top = (LONG)rect.y;
+		this->deviceScissorRect.right = (LONG)rect.right();
+		this->deviceScissorRect.bottom = (LONG)rect.bottom();
 	}
 
 	void DirectX12_RenderSystem::_setDeviceModelviewMatrix(const gmat4& matrix)
 	{
-		this->deviceState_constantBufferChanged = true;
+		// not used
 	}
 
 	void DirectX12_RenderSystem::_setDeviceProjectionMatrix(const gmat4& matrix)
 	{
-		this->deviceState_constantBufferChanged = true;
+		// not used
 	}
 
 	void DirectX12_RenderSystem::_setDeviceDepthBuffer(bool enabled, bool writeEnabled)
@@ -986,7 +954,7 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceTexture(Texture* texture)
 	{
-		this->deviceState_textureChanged = true;
+		// not used
 	}
 
 	void DirectX12_RenderSystem::_setDeviceTextureFilter(const Texture::Filter& textureFilter)
@@ -1006,7 +974,7 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
 	{
-		this->deviceState_constantBufferChanged = true;
+		// not used
 	}
 
 	void DirectX12_RenderSystem::_deviceClear(bool depth)
@@ -1083,57 +1051,26 @@ namespace april
 		{
 			++m;
 		}
-		bool changed = false;
-		if (this->deviceState_constantBufferChanged || this->deviceState_textureChanged || this->deviceState_pipelineState != this->pipelineStates[i][j][k][l][m])
-		{
-			changed = true;
-		}
-		if (false)//!changed)
-		{
-			return;
-		}
 		this->deviceState_pipelineState = this->pipelineStates[i][j][k][l][m];
 		this->deviceState_rootSignature = this->rootSignatures[r];
-		this->deviceState_textureChanged = false;
-		/*
-		this->commandListIndex = (this->commandListIndex + 1) % MAX_COMMAND_LISTS;
-		++this->commandListSize;
-		if (this->commandListSize > MAX_COMMAND_LISTS)
-		{
-			PIXEndEvent(this->commandList[this->commandListIndex].Get());
-			this->commandList[this->commandListIndex]->Close();
-			ID3D12CommandList* ppCommandLists[] = { this->commandList[this->commandListIndex].Get() };
-			this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-			this->waitForLastCommand();
-			--this->commandListSize;
-		}
-		//*/
-		//*
 		this->executeCurrentCommand();
-		//this->waitForLastCommand();
-
 		this->commandListIndex = (this->commandListIndex + 1) % MAX_COMMAND_LISTS;
-		++this->commandListSize;
-		if (this->commandListSize > MAX_COMMAND_LISTS)
+		if (this->commandListSize >= MAX_COMMAND_LISTS)
 		{
-			//this->waitForLastCommand();
-			//this->commandListSize = 1;
 			this->waitForLastCommand();
-			--this->commandListSize;
 		}
-		//*/
-		this->prepareNewCommands();
-		if (true)//this->deviceState_constantBufferChanged)
+		else
 		{
-			this->constantBufferData.matrix = (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).transposed();
-			this->constantBufferData.systemColor.set(this->deviceState->systemColor.r_f(), this->deviceState->systemColor.g_f(),
-				this->deviceState->systemColor.b_f(), this->deviceState->systemColor.a_f());
-			this->constantBufferData.lerpAlpha.set(this->deviceState->colorModeFactor, this->deviceState->colorModeFactor,
-				this->deviceState->colorModeFactor, this->deviceState->colorModeFactor);
-			unsigned char* mappedConstantBuffer = this->mappedConstantBuffers[this->commandListIndex] + (this->currentFrame * ALIGNED_CONSTANT_BUFFER_SIZE);
-			memcpy(mappedConstantBuffer, &this->constantBufferData, sizeof(ConstantBuffer));
-			this->deviceState_constantBufferChanged = false;
+			++this->commandListSize;
 		}
+		this->prepareNewCommands();
+		this->constantBufferData.matrix = (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).transposed();
+		this->constantBufferData.systemColor.set(this->deviceState->systemColor.r_f(), this->deviceState->systemColor.g_f(),
+			this->deviceState->systemColor.b_f(), this->deviceState->systemColor.a_f());
+		this->constantBufferData.lerpAlpha.set(this->deviceState->colorModeFactor, this->deviceState->colorModeFactor,
+			this->deviceState->colorModeFactor, this->deviceState->colorModeFactor);
+		unsigned char* mappedConstantBuffer = this->mappedConstantBuffers[this->commandListIndex] + (this->currentFrame * ALIGNED_CONSTANT_BUFFER_SIZE);
+		memcpy(mappedConstantBuffer, &this->constantBufferData, sizeof(ConstantBuffer));
 	}
 
 	void DirectX12_RenderSystem::executeCurrentCommand()
@@ -1180,14 +1117,6 @@ namespace april
 
 	void DirectX12_RenderSystem::prepareNewCommands()
 	{
-		// TODOuwp - can probably be removed
-		//int index = (this->commandListIndex + MAX_COMMAND_LISTS - 1) % MAX_COMMAND_LISTS;
-		/*
-		if (this->commandListIndex == 0)
-		{
-			this->waitForAllCommands();
-		}
-		*/
 		_TRY_UNSAFE(this->commandAllocators[this->commandListIndex][this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
 		_TRY_UNSAFE(this->commandList[this->commandListIndex]->Reset(this->commandAllocators[this->commandListIndex][this->currentFrame].Get(), this->deviceState_pipelineState.Get()), "Unable to reset command list!");
 		PIXBeginEvent(this->commandList[this->commandListIndex].Get(), 0, L"");
@@ -1315,26 +1244,9 @@ namespace april
 		presentResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 		presentResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 		this->commandList[this->commandListIndex]->ResourceBarrier(1, &presentResourceBarrier);
-		
-		/*
-		ID3D12CommandList* ppCommandLists[] = { NULL };
-		harray<ID3D12CommandList*> commandLists;
-		for_iter (i, 0, this->commandListIndex + 1)
-		{
-			PIXEndEvent(this->commandList[i].Get());
-			this->commandList[i]->Close();
-			ppCommandLists[0] = this->commandList[i].Get();
-			this->commandQueue->ExecuteCommandLists(1, ppCommandLists);
-		}
-		this->waitForAllCommands();
-		//*/
-		//*
 		this->executeCurrentCommand();
 		this->waitForAllCommands();
-		//*/
-
-		// TODOuwp - to support disabled vsync properly, this might have to be this->swapChain->Present(0, 0)
-		HRESULT hr = this->swapChain->Present(1, 0);
+		HRESULT hr = this->swapChain->Present((this->options.vSync ? 1 : 0), 0);
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
 			// TODOuwp - handle this properly
@@ -1431,7 +1343,6 @@ namespace april
 		}
 		this->renderTarget = texture;
 		*/
-		this->deviceState_constantBufferChanged = true;
 	}
 
 	void DirectX12_RenderSystem::setPixelShader(PixelShader* pixelShader)

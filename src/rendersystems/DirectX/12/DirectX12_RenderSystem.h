@@ -161,8 +161,6 @@ namespace april
 		DirectX12_PixelShader* pixelShaderTexturedDesaturate;
 		DirectX12_PixelShader* pixelShaderTexturedSepia;
 
-		bool deviceState_constantBufferChanged;
-		bool deviceState_textureChanged;
 		ComPtr<ID3D12PipelineState> deviceState_pipelineState;
 		ComPtr<ID3D12RootSignature> deviceState_rootSignature;
 		D3D12_VIEWPORT deviceViewport;
