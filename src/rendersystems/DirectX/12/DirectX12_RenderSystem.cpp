@@ -1106,39 +1106,34 @@ namespace april
 		this->deviceState_pipelineState = this->pipelineStates[i][j][k][l][m];
 		this->deviceState_rootSignature = this->rootSignatures[r];
 		this->deviceState_textureChanged = false;
-		//this->executeCurrentCommands();
-		//this->waitForAllCommands();
-		///*
-		//int previousIndex = this->commandListIndex;
+		/*
 		this->commandListIndex = (this->commandListIndex + 1) % MAX_COMMAND_LISTS;
 		++this->commandListSize;
 		if (this->commandListSize > MAX_COMMAND_LISTS)
 		{
-			/*
-			ID3D12CommandList* ppCommandLists[] = { NULL };
-			harray<ID3D12CommandList*> commandLists;
-			for_iter (i, 0, 1)
-			{
-				PIXEndEvent(this->commandList[i].Get());
-				this->commandList[i]->Close();
-				ppCommandLists[0] = this->commandList[i].Get();
-				this->commandQueue->ExecuteCommandLists(1, ppCommandLists);
-				this->waitForAllCommands();
-			}
-			//*/
-			//*
-			harray<ID3D12CommandList*> commandLists;
-			//for_iter (i, 0, MAX_COMMAND_LISTS)
-			{
-				PIXEndEvent(this->commandList[this->commandListIndex].Get());
-				this->commandList[this->commandListIndex]->Close();
-				commandLists += this->commandList[this->commandListIndex].Get();
-			}
-			this->commandQueue->ExecuteCommandLists(commandLists.size(), (ID3D12CommandList* const*)commandLists);
+			PIXEndEvent(this->commandList[this->commandListIndex].Get());
+			this->commandList[this->commandListIndex]->Close();
+			ID3D12CommandList* ppCommandLists[] = { this->commandList[this->commandListIndex].Get() };
+			this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 			this->waitForLastCommand();
 			--this->commandListSize;
-			//*/
-			
+		}
+		//*/
+		//*
+		PIXEndEvent(this->commandList[this->commandListIndex].Get());
+		this->commandList[this->commandListIndex]->Close();
+		ID3D12CommandList* ppCommandLists[] = { this->commandList[this->commandListIndex].Get() };
+		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+		//this->waitForLastCommand();
+
+		this->commandListIndex = (this->commandListIndex + 1) % MAX_COMMAND_LISTS;
+		++this->commandListSize;
+		if (this->commandListSize > MAX_COMMAND_LISTS)
+		{
+			//this->waitForLastCommand();
+			//this->commandListSize = 1;
+			//--this->commandListSize;
+			this->waitForAllCommands();
 		}
 		//*/
 		this->prepareNewCommands();
@@ -1158,10 +1153,16 @@ namespace april
 	// TODOuwp - probably not needed anymore
 	void DirectX12_RenderSystem::executeCurrentCommands()
 	{
-		PIXEndEvent(this->commandList[this->commandListIndex].Get());
-		this->commandList[this->commandListIndex]->Close();
-		ID3D12CommandList* ppCommandLists[] = { this->commandList[this->commandListIndex].Get() };
-		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+		harray<ID3D12CommandList*> commandLists;
+		int j = 0;
+		for_iter (i, 0, this->commandListSize)
+		{
+			j = hmod(i - this->commandListSize + 1 + this->commandListIndex, MAX_COMMAND_LISTS);
+			PIXEndEvent(this->commandList[j].Get());
+			this->commandList[j]->Close();
+			commandLists += this->commandList[j].Get();
+		}
+		this->commandQueue->ExecuteCommandLists(commandLists.size(), (ID3D12CommandList* const*)commandLists);
 	}
 
 	void DirectX12_RenderSystem::waitForAllCommands()
@@ -1336,25 +1337,10 @@ namespace april
 		this->waitForAllCommands();
 		//*/
 		//*
-		//if (this->commandListSize > 0)
-		{
-			harray<ID3D12CommandList*> commandLists;
-			//this->commandListSize = 0;
-			int j = 0;
-			for_iter (i, 0, this->commandListSize)
-				//for_iter (i, 0, this->commandListIndex + 1)
-			{
-				j = hmod(i - this->commandListSize + 1 + this->commandListIndex, MAX_COMMAND_LISTS);
-				PIXEndEvent(this->commandList[j].Get());
-				this->commandList[j]->Close();
-				commandLists += this->commandList[j].Get();
-			}
-			this->commandQueue->ExecuteCommandLists(commandLists.size(), (ID3D12CommandList* const*)commandLists);
-		}
+		this->executeCurrentCommands();
 		this->waitForAllCommands();
 		//*/
 
-		//this->executeCurrentCommands();
 		// TODOuwp - to support disabled vsync properly, this might have to be this->swapChain->Present(0, 0)
 		HRESULT hr = this->swapChain->Present(1, 0);
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
