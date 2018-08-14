@@ -125,6 +125,7 @@ namespace april
 		this->pixelShaderTexturedSepia = NULL;
 		this->deviceState_constantBufferChanged = true;
 		this->deviceState_colorModeChanged = true;
+		this->deviceState_textureChanged = true;
 		this->deviceViewport.MinDepth = D3D12_MIN_DEPTH;
 		this->deviceViewport.MaxDepth = D3D12_MAX_DEPTH;
 	}
@@ -439,14 +440,17 @@ namespace april
 		}
 		this->cbvSrvUavDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		this->samplerDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
-		// depth stencil view
-		D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
-		dsvHeapDesc.NumDescriptors = 1;
-		dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-		dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&this->dsvHeap)), "Unable to create DSV heap!");
-		this->dsvHeap->SetName(L"DSV Heap");
-		this->dsvDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+		if (this->options.depthBuffer)
+		{
+			// depth stencil view
+			D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+			dsvHeapDesc.NumDescriptors = 1;
+			dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+			dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+			_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&this->dsvHeap)), "Unable to create DSV heap!");
+			this->dsvHeap->SetName(L"DSV Heap");
+			this->dsvDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+		}
 	}
 
 	void DirectX12_RenderSystem::_setupSwapChain()
@@ -967,7 +971,7 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceTexture(Texture* texture)
 	{
-		// not used
+		this->deviceState_textureChanged = true;
 	}
 
 	void DirectX12_RenderSystem::_setDeviceTextureFilter(const Texture::Filter& textureFilter)
@@ -1052,7 +1056,7 @@ namespace april
 		int k = this->deviceState->blendMode.value;
 		int l = 0;
 		int m = 0;
-		if (this->deviceState->useTexture)
+		if (this->deviceState->useTexture && this->deviceState->texture != NULL)
 		{
 			i += 2;
 			++r;
@@ -1072,6 +1076,11 @@ namespace april
 		if (this->deviceState->depthBuffer)
 		{
 			++m;
+		}
+		if (this->deviceState_pipelineState == this->pipelineStates[i][j][k][l][m] && this->deviceState_rootSignature == this->rootSignatures[r] &&
+			!this->deviceState_constantBufferChanged && !this->deviceState_colorModeChanged && !this->deviceState_textureChanged)
+		{
+			return;
 		}
 		this->deviceState_pipelineState = this->pipelineStates[i][j][k][l][m];
 		this->deviceState_rootSignature = this->rootSignatures[r];
@@ -1099,6 +1108,7 @@ namespace april
 				this->deviceState->colorModeFactor, this->deviceState->colorModeFactor);
 			this->deviceState_colorModeChanged = false;
 		}
+		this->deviceState_textureChanged = false;
 		unsigned char* mappedConstantBuffer = this->mappedConstantBuffers[this->commandListIndex] + (this->currentFrame * ALIGNED_CONSTANT_BUFFER_SIZE);
 		memcpy(mappedConstantBuffer, &this->constantBufferData, sizeof(ConstantBuffer));
 	}
@@ -1110,10 +1120,8 @@ namespace april
 		ID3D12CommandList* ppCommandLists[] = { this->commandList[this->commandListIndex].Get() };
 		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 		// signal queue to make sure it continues processing lists
-		const UINT64 currentFenceValue = this->fenceLimits[this->currentFrame];
-		_TRY_UNSAFE(this->commandQueue->Signal(this->fence.Get(), currentFenceValue), "Unable to signal command queue!");
-		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
-		this->fenceLimits[this->currentFrame] = currentFenceValue + 1;
+		_TRY_UNSAFE(this->commandQueue->Signal(this->fence.Get(), this->fenceLimits[this->currentFrame]), "Unable to signal command queue!");
+		++this->fenceLimits[this->currentFrame];
 	}
 
 	void DirectX12_RenderSystem::waitForAllCommands()
@@ -1130,19 +1138,20 @@ namespace april
 		this->vertexBufferIndex = 0;
 		this->commandListIndex = 0;
 		this->commandListSize = 1;
+		this->deviceState_constantBufferChanged = true;
+		this->deviceState_colorModeChanged = true;
+		this->deviceState_textureChanged = true;
 	}
 
 	void DirectX12_RenderSystem::waitForLastCommand()
 	{
-		const UINT64 currentFenceValue = this->fenceValues[this->currentFrame];
-		_TRY_UNSAFE(this->commandQueue->Signal(this->fence.Get(), currentFenceValue), "Unable to signal command queue!");
-		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
+		_TRY_UNSAFE(this->commandQueue->Signal(this->fence.Get(), this->fenceValues[this->currentFrame]), "Unable to signal command queue!");
 		if (this->fence->GetCompletedValue() < this->fenceValues[this->currentFrame])
 		{
 			_TRY_UNSAFE(this->fence->SetEventOnCompletion(this->fenceValues[this->currentFrame], this->fenceEvent), "Unable to set event on completion!");
 			WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
 		}
-		this->fenceValues[this->currentFrame] = currentFenceValue + 1;
+		++this->fenceValues[this->currentFrame];
 	}
 
 	void DirectX12_RenderSystem::prepareNewCommands()
@@ -1217,14 +1226,14 @@ namespace april
 			// viewport, scissor rect, render target
 			this->commandList[this->commandListIndex]->RSSetViewports(1, &this->deviceViewport);
 			this->commandList[this->commandListIndex]->RSSetScissorRects(1, &this->deviceScissorRect);
-			if (this->deviceState->depthBuffer)
+			if (!this->deviceState->depthBuffer)
 			{
-				depthStencilView = this->dsvHeap->GetCPUDescriptorHandleForHeapStart();
-				this->commandList[this->commandListIndex]->OMSetRenderTargets(1, &renderTargetView, false, &depthStencilView);
+				this->commandList[this->commandListIndex]->OMSetRenderTargets(1, &renderTargetView, false, NULL);
 			}
 			else
 			{
-				this->commandList[this->commandListIndex]->OMSetRenderTargets(1, &renderTargetView, false, NULL);
+				depthStencilView = this->dsvHeap->GetCPUDescriptorHandleForHeapStart();
+				this->commandList[this->commandListIndex]->OMSetRenderTargets(1, &renderTargetView, false, &depthStencilView);
 			}
 			this->commandList[this->commandListIndex]->IASetPrimitiveTopology(primitiveTopology);
 			this->vertexBufferViews[this->vertexBufferIndex].BufferLocation = this->vertexBuffers[this->vertexBufferIndex]->GetGPUVirtualAddress();
@@ -1289,7 +1298,6 @@ namespace april
 			return;
 		}
 		_TRY_UNSAFE(hr, "Unable to present swap chain!");
-		this->deviceState_rootSignature = (this->deviceState->useTexture && this->deviceState->texture != NULL ? this->rootSignatures[1] : this->rootSignatures[0]);
 		this->waitForAllCommands();
 		this->prepareNewCommands();
 		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
@@ -1309,7 +1317,6 @@ namespace april
 
 	void DirectX12_RenderSystem::_deviceCopyRenderTargetData(Texture* source, Texture* destination)
 	{
-
 	}
 
 	void DirectX12_RenderSystem::updateDeviceReset()
