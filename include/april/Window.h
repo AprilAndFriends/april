@@ -81,8 +81,6 @@ namespace april
 
 			/// @brief Basic constructor.
 			Options();
-			/// @brief Destructor.
-			~Options();
 
 			/// @brief Creates a string representation of the object.
 			/// @return A string representation of the object.

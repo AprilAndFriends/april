@@ -61,10 +61,6 @@ namespace april
 		this->defaultWindowModeResolutionFactor = 0.8f;
 	}
 	
-	Window::Options::~Options()
-	{
-	}
-
 	hstr Window::Options::toString() const
 	{
 		harray<hstr> options;

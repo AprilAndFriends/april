@@ -55,10 +55,6 @@ namespace april
 		this->refreshRate = refreshRate;
 	}
 
-	RenderSystem::DisplayMode::~DisplayMode()
-	{
-	}
-	
 	bool RenderSystem::DisplayMode::operator==(const DisplayMode& other) const
 	{
 		return (this->width == other.width && this->height == other.height && this->refreshRate == other.refreshRate);
@@ -78,7 +74,11 @@ namespace april
 	{
 		this->depthBuffer = false;
 		this->vSync = true;
+#ifndef _UWP
 		this->tripleBuffering = false;
+#else // UWP works better with triple buffering turned on
+		this->tripleBuffering = true;
+#endif
 		this->clearOnSuspend = false;
 #ifndef _ANDROID
 		this->intermediateRenderTexture = false;
@@ -88,10 +88,6 @@ namespace april
 		this->debugInfo = false;
 	}
 
-	RenderSystem::Options::~Options()
-	{
-	}
-
 	RenderSystem::Caps::Caps()
 	{
 		this->maxTextureSize = 0;
@@ -99,10 +95,6 @@ namespace april
 		this->npotTextures = false;
 		this->textureFormats = Image::Format::getValues();
 		this->renderTarget = false;
-	}
-
-	RenderSystem::Caps::~Caps()
-	{
 	}
 
 	hstr RenderSystem::Options::toString()

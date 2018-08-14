@@ -113,8 +113,6 @@ namespace april
 			/// @param[in] height Height in pixels.
 			/// @param[in] refreshRate Screen refresh rate in Hz.
 			DisplayMode(int width, int height, int refreshRate);
-			/// @brief Destructor.
-			~DisplayMode();
 
 			/// @return True if both DisplayMode instances are the same.
 			bool operator==(const DisplayMode& other) const;
@@ -146,8 +144,6 @@ namespace april
 
 			/// @brief Basic constructor.
 			Options();
-			/// @brief Destructor.
-			~Options();
 
 			/// @brief Gets the string representation of the Options object.
 			/// @return String representation of the Options object.
@@ -173,8 +169,6 @@ namespace april
 
 			/// @brief Basic constructor.
 			Caps();
-			/// @brief Destructor.
-			~Caps();
 
 		};
 
