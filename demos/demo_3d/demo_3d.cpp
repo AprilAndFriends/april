@@ -108,7 +108,7 @@ public:
 		april::rendersys->setTexture(texture);
 		april::rendersys->render(april::RenderOperation::TriangleList, v, 36);
 		april::rendersys->setTexture(logo);
-		//april::rendersys->render(april::RenderOperation::TriangleList, v, 36);
+		april::rendersys->render(april::RenderOperation::TriangleList, v, 36);
 		return true;
 	}
 
@@ -192,7 +192,7 @@ void __aprilApplicationInit()
 #ifdef _WINRT
 	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
 #endif
-	//april::rendersys->setDepthBuffer(true, true);
+	april::rendersys->setDepthBuffer(true, true);
 	april::window->setUpdateDelegate(updateDelegate);
 	april::window->setSystemDelegate(systemDelegate);
 	april::window->setMouseDelegate(mouseDelegate);

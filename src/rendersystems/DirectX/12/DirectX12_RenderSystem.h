@@ -30,7 +30,7 @@
 #include "DirectX_RenderSystem.h"
 #include "Window.h"
 
-#define BACKBUFFER_COUNT 3 // TODOuwp - make this configurable, because Rendersystem::Options::tripleBuffering should be supported
+#define MAX_BACKBUFFER_COUNT 3 // TODOuwp - make this configurable, because Rendersystem::Options::tripleBuffering should be supported
 #define MAX_COMMAND_LISTS 5
 #define ALIGNED_CONSTANT_BUFFER_SIZE ((sizeof(ConstantBuffer) + 255) & ~255)
 #define INPUT_LAYOUT_COUNT 4
@@ -96,14 +96,14 @@ namespace april
 		Platform::Agile<CoreWindow> coreWindow;
 		ComPtr<ID3D12RootSignature> rootSignatures[TEXTURE_STATE_COUNT];
 
-		ComPtr<ID3D12Resource> renderTargets[BACKBUFFER_COUNT];
+		ComPtr<ID3D12Resource> renderTargets[MAX_BACKBUFFER_COUNT];
 		ComPtr<ID3D12Resource> depthStencil;
 		ComPtr<ID3D12CommandQueue> commandQueue;
 		ComPtr<ID3D12DescriptorHeap> rtvHeap; // render target view heap
 		ComPtr<ID3D12DescriptorHeap> cbvSrvUavHeaps[MAX_COMMAND_LISTS]; // constant buffer view, shader resource view, unordered access view heap
 		ComPtr<ID3D12DescriptorHeap> samplerHeaps[MAX_COMMAND_LISTS]; // sampler heap
 		ComPtr<ID3D12DescriptorHeap> dsvHeap; // depth stencil view heap
-		ComPtr<ID3D12CommandAllocator> commandAllocators[MAX_COMMAND_LISTS][BACKBUFFER_COUNT];
+		ComPtr<ID3D12CommandAllocator> commandAllocators[MAX_COMMAND_LISTS][MAX_BACKBUFFER_COUNT];
 		ComPtr<ID3D12GraphicsCommandList> commandList[MAX_COMMAND_LISTS];
 		int commandListIndex;
 		int commandListSize;
@@ -117,8 +117,8 @@ namespace april
 
 		// CPU/GPU synchronization
 		ComPtr<ID3D12Fence> fence;
-		UINT64 fenceLimits[BACKBUFFER_COUNT];
-		UINT64 fenceValues[BACKBUFFER_COUNT];
+		UINT64 fenceLimits[MAX_BACKBUFFER_COUNT];
+		UINT64 fenceValues[MAX_BACKBUFFER_COUNT];
 		HANDLE fenceEvent;
 
 		unsigned int currentFrame;
@@ -163,8 +163,11 @@ namespace april
 
 		ComPtr<ID3D12PipelineState> deviceState_pipelineState;
 		ComPtr<ID3D12RootSignature> deviceState_rootSignature;
+		bool deviceState_constantBufferChanged;
 		D3D12_VIEWPORT deviceViewport;
 		D3D12_RECT deviceScissorRect;
+
+		int _getBackbufferCount() const;
 
 		void _deviceInit();
 		bool _deviceCreate(Options options);

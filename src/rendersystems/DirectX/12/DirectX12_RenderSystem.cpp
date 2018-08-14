@@ -92,6 +92,11 @@ namespace april
 		this->destroy();
 	}
 
+	int DirectX12_RenderSystem::_getBackbufferCount() const
+	{
+		return (this->options.tripleBuffering ? 3 : 2);
+	}
+
 	void DirectX12_RenderSystem::_deviceInit()
 	{
 		this->d3dDevice = nullptr;
@@ -118,6 +123,7 @@ namespace april
 		this->pixelShaderTexturedLerp = NULL;
 		this->pixelShaderTexturedDesaturate = NULL;
 		this->pixelShaderTexturedSepia = NULL;
+		this->deviceState_constantBufferChanged = true;
 		this->deviceViewport.MinDepth = D3D12_MIN_DEPTH;
 		this->deviceViewport.MaxDepth = D3D12_MAX_DEPTH;
 	}
@@ -158,9 +164,10 @@ namespace april
 		queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 		queueDesc.NodeMask = 0;
 		_TRY_UNSAFE(this->d3dDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&this->commandQueue)), "Unable to create command queue!");
+		int backbufferCount = this->_getBackbufferCount();
 		for_iter (j, 0, MAX_COMMAND_LISTS)
 		{
-			for_iter (i, 0, BACKBUFFER_COUNT)
+			for_iter (i, 0, backbufferCount)
 			{
 				_TRY_UNSAFE(this->d3dDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&this->commandAllocators[j][i])), hsprintf("Unable to create command allocator %d!", i));
 			}
@@ -220,7 +227,7 @@ namespace april
 		// constant buffer
 		this->constantBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 		this->constantBufferDesc.Alignment = 0;
-		this->constantBufferDesc.Width = BACKBUFFER_COUNT * ALIGNED_CONSTANT_BUFFER_SIZE;
+		this->constantBufferDesc.Width = backbufferCount * ALIGNED_CONSTANT_BUFFER_SIZE;
 		this->constantBufferDesc.Height = 1;
 		this->constantBufferDesc.DepthOrArraySize = 1;
 		this->constantBufferDesc.MipLevels = 1;
@@ -238,7 +245,7 @@ namespace april
 			D3D12_CPU_DESCRIPTOR_HANDLE cbvCpuHandle = this->cbvSrvUavHeaps[j]->GetCPUDescriptorHandleForHeapStart();
 			D3D12_CONSTANT_BUFFER_VIEW_DESC desc;
 			desc.SizeInBytes = ALIGNED_CONSTANT_BUFFER_SIZE;
-			for_iter (i, 0, BACKBUFFER_COUNT)
+			for_iter (i, 0, backbufferCount)
 			{
 				desc.BufferLocation = cbvGpuAddress;
 				this->d3dDevice->CreateConstantBufferView(&desc, cbvCpuHandle);
@@ -301,8 +308,8 @@ namespace april
 		if (!this->options.vSync)
 		{
 			// graphical debugging tools aren't available in 1.4 (at the time of writing) so they are upcast to 1.5 
-			ComPtr<IDXGIFactory5> dxgiFactory5;
-			if (SUCCEEDED(this->dxgiFactory.As(&dxgiFactory5)))
+			ComPtr<IDXGIFactory5> dxgiFactory5 = nullptr;
+			if (SUCCEEDED(this->dxgiFactory.As(&dxgiFactory5)) && dxgiFactory5 != nullptr)
 			{
 				// must use BOOL here due to how the internal implementation of CheckFeatureSupport() works
 				BOOL allowTearing = FALSE;
@@ -373,6 +380,26 @@ namespace april
 			hr = D3D12CreateDevice(warpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&this->d3dDevice));
 		}
 		_TRY_UNSAFE(hr, "Unable to create DX12 device!");
+		// TODOuwp - is this even needed?
+		/*
+		if (!this->options.depthBuffer)
+		{
+			D3D12_FEATURE_DATA_D3D12_OPTIONS2 d3dOptions = {};
+			if (SUCCEEDED(this->d3dDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS2, &d3dOptions, sizeof(d3dOptions))))
+			{
+				if (!d3dOptions.DepthBoundsTestSupported)
+				{
+					hlog::warn(logTag, "Cannot enable Depth-Buffer, D3D device says DepthBoundsTestSupported is not supported!");
+					this->options.depthBuffer = true;
+				}
+			}
+			else
+			{
+				hlog::warn(logTag, "Cannot enable Depth-Buffer, D3D device is unable to check for support!");
+				this->options.depthBuffer = true;
+			}
+		}
+		*/
 #ifdef _DEBUG
 		ComPtr<ID3D12InfoQueue> pInfoQueue;
 		if (SUCCEEDED(this->d3dDevice.As(&pInfoQueue)))
@@ -386,31 +413,32 @@ namespace april
 
 	void DirectX12_RenderSystem::_createHeapDescriptors()
 	{
+		int backbufferCount = this->_getBackbufferCount();
 		D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-		rtvHeapDesc.NumDescriptors = BACKBUFFER_COUNT;
+		rtvHeapDesc.NumDescriptors = backbufferCount;
 		rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 		_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&this->rtvHeap)), "Unable to create RTV heap!");
 		this->rtvHeap->SetName(L"RTV Heap");
 		this->rtvDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(rtvHeapDesc.Type);
+		D3D12_DESCRIPTOR_HEAP_DESC cbvSrvUavHeapDesc = {};
+		cbvSrvUavHeapDesc.NumDescriptors = backbufferCount * CBV_SRV_UAV_HEAP_SIZE;
+		cbvSrvUavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+		cbvSrvUavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+		D3D12_DESCRIPTOR_HEAP_DESC samplerHeapDesc = {};
+		samplerHeapDesc.NumDescriptors = SAMPLER_COUNT;
+		samplerHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
+		samplerHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 		for_iter (i, 0, MAX_COMMAND_LISTS)
 		{
-			D3D12_DESCRIPTOR_HEAP_DESC cbvSrvUavHeapDesc = {};
-			cbvSrvUavHeapDesc.NumDescriptors = BACKBUFFER_COUNT * CBV_SRV_UAV_HEAP_SIZE;
-			cbvSrvUavHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-			cbvSrvUavHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 			_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&cbvSrvUavHeapDesc, IID_PPV_ARGS(&this->cbvSrvUavHeaps[i])), "Unable to create CBV heap!");
-			this->cbvSrvUavHeaps[i]->SetName(L"CBV Heap");
-			this->cbvSrvUavDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-			D3D12_DESCRIPTOR_HEAP_DESC samplerHeapDesc = {};
-			samplerHeapDesc.NumDescriptors = SAMPLER_COUNT;
-			samplerHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
-			samplerHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+			this->cbvSrvUavHeaps[i]->SetName(hstr("CBV Heap " + hstr(i)).wStr().c_str());
 			_TRY_UNSAFE(this->d3dDevice->CreateDescriptorHeap(&samplerHeapDesc, IID_PPV_ARGS(&this->samplerHeaps[i])), "Unable to create sampler heap!");
-			this->samplerHeaps[i]->SetName(L"Sampler Heap");
-			this->samplerDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
+			this->samplerHeaps[i]->SetName(hstr("Sampler Heap " + hstr(i)).wStr().c_str());
 		}
-		// TODOuwp - maybe could be removed / disabled as depth buffers aren't supported widely in april
+		this->cbvSrvUavDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		this->samplerDescSize = this->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
+		// depth stencil view
 		D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
 		dsvHeapDesc.NumDescriptors = 1;
 		dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
@@ -450,7 +478,7 @@ namespace april
 		swapChainDesc.SampleDesc.Count = 1;
 		swapChainDesc.SampleDesc.Quality = 0;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapChainDesc.BufferCount = BACKBUFFER_COUNT;
+		swapChainDesc.BufferCount = this->_getBackbufferCount();
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; // UWP apps MUST use a "_FLIP_" variant
 		swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 		swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
@@ -473,7 +501,8 @@ namespace april
 		this->executeCurrentCommand();
 		this->waitForAllCommands();
 		this->_waitForGpu();
-		for_iter (i, 0, BACKBUFFER_COUNT)
+		int backbufferCount = this->_getBackbufferCount();
+		for_iter (i, 0, backbufferCount)
 		{
 			this->renderTargets[i] = nullptr;
 			this->fenceValues[i] = this->fenceLimits[i] = this->fenceLimits[this->currentFrame];
@@ -508,44 +537,26 @@ namespace april
 		_TRY_UNSAFE(this->swapChain->SetRotation(this->_getDxgiRotation()), "Unable to set rotation on swap chain!");
 		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
 		D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
-		for_iter (i, 0, BACKBUFFER_COUNT)
+		int backbufferCount = this->_getBackbufferCount();
+		for_iter (i, 0, backbufferCount)
 		{
 			_TRY_UNSAFE(this->swapChain->GetBuffer(i, IID_PPV_ARGS(&this->renderTargets[i])), hsprintf("Unable to get buffer %d from swap chain!", i));
 			this->d3dDevice->CreateRenderTargetView(this->renderTargets[i].Get(), nullptr, cpuHandle);
 			this->renderTargets[i]->SetName(("Render Target " + hstr(i)).wStr().c_str());
 			cpuHandle.ptr += this->rtvDescSize;
 		}
-		// TODOuwp - maybe could be removed / disabled as depth buffers aren't supported widely in april
 		if (this->options.depthBuffer)
 		{
-			D3D12_HEAP_PROPERTIES depthHeapProperties = {};
-			depthHeapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;
-			depthHeapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-			depthHeapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-			depthHeapProperties.CreationNodeMask = 1;
-			depthHeapProperties.VisibleNodeMask = 1;
-			D3D12_RESOURCE_DESC depthResourceDesc = {};
-			depthResourceDesc.Format = DXGI_FORMAT_D16_UNORM;
-			depthResourceDesc.Alignment = 0;
-			depthResourceDesc.Width = width;
-			depthResourceDesc.Height = height;
-			depthResourceDesc.DepthOrArraySize = 1;
-			depthResourceDesc.MipLevels = 1;
-			depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-			depthResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-			depthResourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-			depthResourceDesc.SampleDesc.Count = 1;
-			depthResourceDesc.SampleDesc.Quality = 0;
+			CD3DX12_HEAP_PROPERTIES depthHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
+			CD3DX12_RESOURCE_DESC depthResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, width, height, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 			D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
-			float depth = 1.0f;
-			depthOptimizedClearValue.Format = DXGI_FORMAT_D16_UNORM;
-			// using memcpy to preserve NAN values
-			memcpy(&depthOptimizedClearValue.DepthStencil.Depth, &depth, sizeof(depth));
+			depthOptimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+			depthOptimizedClearValue.DepthStencil.Depth = 1.0f;
 			depthOptimizedClearValue.DepthStencil.Stencil = 0;
 			_TRY_UNSAFE(this->d3dDevice->CreateCommittedResource(&depthHeapProperties, D3D12_HEAP_FLAG_NONE, &depthResourceDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE,
 				&depthOptimizedClearValue, IID_PPV_ARGS(&this->depthStencil)), "Unable to create depth buffer!");
 			D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-			dsvDesc.Format = DXGI_FORMAT_D16_UNORM;
+			dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
 			dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 			dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 			this->d3dDevice->CreateDepthStencilView(this->depthStencil.Get(), &dsvDesc, this->dsvHeap->GetCPUDescriptorHandleForHeapStart());
@@ -604,7 +615,7 @@ namespace april
 		memset(&samplerDesc, 0, sizeof(samplerDesc));
 		samplerDesc.MaxAnisotropy = 0;
 		samplerDesc.MipLODBias = 0.0f;
-		samplerDesc.MinLOD = 0;
+		samplerDesc.MinLOD = 0.0f;
 		samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
 		samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
 		samplerDesc.BorderColor[0] = 0.0f;
@@ -753,7 +764,7 @@ namespace april
 		{
 			state.RTVFormats[i] = DXGI_FORMAT_UNKNOWN;
 		}
-		state.DSVFormat = DXGI_FORMAT_D16_UNORM;
+		state.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 		state.SampleMask = UINT_MAX;
 		state.NumRenderTargets = 1;
 		state.SampleDesc.Count = 1;
@@ -761,7 +772,7 @@ namespace april
 		state.BlendState.AlphaToCoverageEnable = false;
 		state.BlendState.IndependentBlendEnable = false;
 		state.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-		state.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+		state.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // using the slower less-equal so multiple overlays can be rendered properly
 		state.DepthStencilState.StencilEnable = false;
 		state.DepthStencilState.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
 		state.DepthStencilState.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
@@ -784,18 +795,17 @@ namespace april
 				state.PS.BytecodeLength = (SIZE_T)this->pixelShaders[pixelIndex]->shaderData.size();
 				for_iter (k, 0, this->blendStateRenderTargets.size())
 				{
-					for_iter (m, 0, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT)
+					for_iter (l, 0, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT)
 					{
-						state.BlendState.RenderTarget[m] = this->blendStateRenderTargets[k];
+						state.BlendState.RenderTarget[l] = this->blendStateRenderTargets[k];
 					}
-					for_iter (m, 0, this->primitiveTopologyTypes.size())
+					for_iter (l, 0, this->primitiveTopologyTypes.size())
 					{
-						state.PrimitiveTopologyType = this->primitiveTopologyTypes[m];
+						state.PrimitiveTopologyType = this->primitiveTopologyTypes[l];
 						state.DepthStencilState.DepthEnable = false;
-						_TRY_UNSAFE(this->d3dDevice->CreateGraphicsPipelineState(&state, IID_PPV_ARGS(&this->pipelineStates[i][j][k][m][0])), "Unable to create graphics pipeline state!");
-						// TODOuwp - maybe could be removed / disabled as depth buffers aren't supported widely in april
+						_TRY_UNSAFE(this->d3dDevice->CreateGraphicsPipelineState(&state, IID_PPV_ARGS(&this->pipelineStates[i][j][k][l][0])), "Unable to create graphics pipeline state!");
 						state.DepthStencilState.DepthEnable = true;
-						_TRY_UNSAFE(this->d3dDevice->CreateGraphicsPipelineState(&state, IID_PPV_ARGS(&this->pipelineStates[i][j][k][m][1])), "Unable to create graphics pipeline state!");
+						_TRY_UNSAFE(this->d3dDevice->CreateGraphicsPipelineState(&state, IID_PPV_ARGS(&this->pipelineStates[i][j][k][l][1])), "Unable to create graphics pipeline state!");
 					}
 				}
 			}
@@ -815,8 +825,7 @@ namespace april
 	{
 		this->caps.maxTextureSize = D3D_FL9_3_REQ_TEXTURE1D_U_DIMENSION;
 		this->caps.npotTexturesLimited = true;
-		// TODOuwp - this might actually work on DX12 by default, check
-		this->caps.npotTextures = false;
+		this->caps.npotTextures = true;
 	}
 
 	void DirectX12_RenderSystem::_deviceSetup()
@@ -931,20 +940,23 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceModelviewMatrix(const gmat4& matrix)
 	{
-		// not used
+		this->deviceState_constantBufferChanged = true;
 	}
 
 	void DirectX12_RenderSystem::_setDeviceProjectionMatrix(const gmat4& matrix)
 	{
-		// not used
+		this->deviceState_constantBufferChanged = true;
 	}
 
 	void DirectX12_RenderSystem::_setDeviceDepthBuffer(bool enabled, bool writeEnabled)
 	{
+		/*
 		if (enabled || writeEnabled)
 		{
 			hlog::error(logTag, "_setDeviceDepthBuffer() is not implemented in: " + this->name);
 		}
+		*/
+		// not used
 	}
 
 	void DirectX12_RenderSystem::_setDeviceRenderMode(bool useTexture, bool useColor)
@@ -974,7 +986,7 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
 	{
-		// not used
+		this->deviceState_constantBufferChanged = true;
 	}
 
 	void DirectX12_RenderSystem::_deviceClear(bool depth)
@@ -982,6 +994,10 @@ namespace april
 		static const float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 		CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle(this->rtvHeap->GetCPUDescriptorHandleForHeapStart(), this->currentFrame, this->rtvDescSize);
 		this->commandList[this->commandListIndex]->ClearRenderTargetView(cpuHandle, clearColor, 0, nullptr);
+		if (depth)
+		{
+			this->_deviceClearDepth();
+		}
 	}
 	
 	void DirectX12_RenderSystem::_deviceClear(const Color& color, bool depth)
@@ -993,12 +1009,14 @@ namespace april
 		clearColor[3] = color.a_f();
 		CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle(this->rtvHeap->GetCPUDescriptorHandleForHeapStart(), this->currentFrame, this->rtvDescSize);
 		this->commandList[this->commandListIndex]->ClearRenderTargetView(cpuHandle, clearColor, 0, nullptr);
+		if (depth)
+		{
+			this->_deviceClearDepth();
+		}
 	}
 
 	void DirectX12_RenderSystem::_deviceClearDepth()
 	{
-		static const float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-		// TODOuwp - maybe could be removed / disabled as depth buffers aren't supported widely in april
 		this->commandList[this->commandListIndex]->ClearDepthStencilView(this->dsvHeap->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	}
 
@@ -1064,11 +1082,15 @@ namespace april
 			++this->commandListSize;
 		}
 		this->prepareNewCommands();
-		this->constantBufferData.matrix = (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).transposed();
-		this->constantBufferData.systemColor.set(this->deviceState->systemColor.r_f(), this->deviceState->systemColor.g_f(),
-			this->deviceState->systemColor.b_f(), this->deviceState->systemColor.a_f());
-		this->constantBufferData.lerpAlpha.set(this->deviceState->colorModeFactor, this->deviceState->colorModeFactor,
-			this->deviceState->colorModeFactor, this->deviceState->colorModeFactor);
+		if (this->deviceState_constantBufferChanged)
+		{
+			this->constantBufferData.matrix = (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).transposed();
+			this->constantBufferData.systemColor.set(this->deviceState->systemColor.r_f(), this->deviceState->systemColor.g_f(),
+				this->deviceState->systemColor.b_f(), this->deviceState->systemColor.a_f());
+			this->constantBufferData.lerpAlpha.set(this->deviceState->colorModeFactor, this->deviceState->colorModeFactor,
+				this->deviceState->colorModeFactor, this->deviceState->colorModeFactor);
+			this->deviceState_constantBufferChanged = false;
+		}
 		unsigned char* mappedConstantBuffer = this->mappedConstantBuffers[this->commandListIndex] + (this->currentFrame * ALIGNED_CONSTANT_BUFFER_SIZE);
 		memcpy(mappedConstantBuffer, &this->constantBufferData, sizeof(ConstantBuffer));
 	}
@@ -1135,7 +1157,7 @@ namespace april
 			srvDesc.Format = texture->dxgiFormat;
 			srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 			srvDesc.Texture2D.MipLevels = 1;
-			int heapIndex = BACKBUFFER_COUNT + this->currentFrame;
+			int heapIndex = this->_getBackbufferCount() + this->currentFrame;
 			CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle(this->cbvSrvUavHeaps[this->commandListIndex]->GetCPUDescriptorHandleForHeapStart(), heapIndex, this->cbvSrvUavDescSize);
 			this->d3dDevice->CreateShaderResourceView(texture->d3dTexture.Get(), &srvDesc, cpuHandle);
 			gpuHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(this->cbvSrvUavHeaps[this->commandListIndex]->GetGPUDescriptorHandleForHeapStart(), heapIndex, this->cbvSrvUavDescSize);
@@ -1172,6 +1194,7 @@ namespace april
 		renderTargetView.ptr += this->currentFrame * this->rtvDescSize;
 		D3D12_PRIMITIVE_TOPOLOGY primitiveTopology = _dx12RenderOperations[renderOperation.value];
 		unsigned char* vertices = (unsigned char*)data;
+		D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView;
 		for_iter_step (i, 0, count, size)
 		{
 			size = this->_limitVertices(renderOperation, hmin(count - i, VERTEX_BUFFER_SIZE / (int)vertexSize));
@@ -1186,12 +1209,15 @@ namespace april
 			// viewport, scissor rect, render target
 			this->commandList[this->commandListIndex]->RSSetViewports(1, &this->deviceViewport);
 			this->commandList[this->commandListIndex]->RSSetScissorRects(1, &this->deviceScissorRect);
-			// TODOuwp - maybe could be removed / disabled as depth buffers aren't supported widely in april
-			/*
-			D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView = this->dsvHeap->GetCPUDescriptorHandleForHeapStart();
-			this->commandList[this->commandListIndex]->OMSetRenderTargets(1, &renderTargetView, false, &depthStencilView);
-			*/
-			this->commandList[this->commandListIndex]->OMSetRenderTargets(1, &renderTargetView, false, NULL);
+			if (this->deviceState->depthBuffer)
+			{
+				depthStencilView = this->dsvHeap->GetCPUDescriptorHandleForHeapStart();
+				this->commandList[this->commandListIndex]->OMSetRenderTargets(1, &renderTargetView, false, &depthStencilView);
+			}
+			else
+			{
+				this->commandList[this->commandListIndex]->OMSetRenderTargets(1, &renderTargetView, false, NULL);
+			}
 			this->commandList[this->commandListIndex]->IASetPrimitiveTopology(primitiveTopology);
 			this->vertexBufferViews[this->vertexBufferIndex].BufferLocation = this->vertexBuffers[this->vertexBufferIndex]->GetGPUVirtualAddress();
 			this->vertexBufferViews[this->vertexBufferIndex].StrideInBytes = vertexSize;
