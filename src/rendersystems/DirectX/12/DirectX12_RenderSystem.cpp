@@ -84,6 +84,7 @@ namespace april
 		this->name = april::RenderSystemType::DirectX12.getName();
 		this->vertexBufferIndex = 0;
 		this->commandListIndex = 0;
+		this->commandListSize = 1;
 	}
 
 	DirectX12_RenderSystem::~DirectX12_RenderSystem()
@@ -261,19 +262,16 @@ namespace april
 		this->commandQueue->ExecuteCommandLists(commandLists.size(), (ID3D12CommandList* const*)commandLists);
 		this->_waitForGpu();
 		// initial calls
-		//for_iter(i, 0, MAX_COMMAND_LISTS)
-		{
-			++this->commandListIndex;
-			_TRY_UNSAFE(this->commandAllocators[this->commandListIndex][this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
-			_TRY_UNSAFE(this->commandList[this->commandListIndex]->Reset(this->commandAllocators[this->commandListIndex][this->currentFrame].Get(), this->deviceState_pipelineState.Get()), "Unable to reset command list!");
-		}
 		grecti viewport(0, 0, window->getSize());
 		gvec2f windowSizeFloat((float)viewport.w, (float)viewport.h);
-		PIXBeginEvent(this->commandList[this->commandListIndex].Get(), 0, L"");
-		this->executeCurrentCommands();
+		_TRY_UNSAFE(this->commandAllocators[this->commandListIndex][this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
+		_TRY_UNSAFE(this->commandList[this->commandListIndex]->Reset(this->commandAllocators[this->commandListIndex][this->currentFrame].Get(), this->deviceState_pipelineState.Get()), "Unable to reset command list!");
+		this->commandList[this->commandListIndex]->Close();
+		ID3D12CommandList* ppCommandLists[] = { this->commandList[this->commandListIndex].Get() };
+		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 		_TRY_UNSAFE(this->swapChain->Present(1, 0), "Unable to present initial swap chain!");
 		this->deviceState_rootSignature = this->rootSignatures[0];
-		this->waitForCommands();
+		this->waitForAllCommands();
 		this->prepareNewCommands();
 		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
 		renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -488,7 +486,7 @@ namespace april
 	void DirectX12_RenderSystem::_resizeSwapChain(int width, int height)
 	{
 		this->executeCurrentCommands();
-		this->waitForCommands();
+		this->waitForAllCommands();
 		this->_waitForGpu();
 		for_iter (i, 0, BACKBUFFER_COUNT)
 		{
@@ -856,6 +854,8 @@ namespace april
 		}
 		WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
 		++this->fenceValues[this->currentFrame];
+		this->commandListIndex = 0;
+		this->commandListSize = 1;
 	}
 
 	int DirectX12_RenderSystem::getVRam() const
@@ -1107,10 +1107,12 @@ namespace april
 		this->deviceState_rootSignature = this->rootSignatures[r];
 		this->deviceState_textureChanged = false;
 		//this->executeCurrentCommands();
-		//this->waitForCommands();
+		//this->waitForAllCommands();
 		///*
+		//int previousIndex = this->commandListIndex;
 		this->commandListIndex = (this->commandListIndex + 1) % MAX_COMMAND_LISTS;
-		if (this->commandListIndex == 0)
+		++this->commandListSize;
+		if (this->commandListSize > MAX_COMMAND_LISTS)
 		{
 			/*
 			ID3D12CommandList* ppCommandLists[] = { NULL };
@@ -1121,19 +1123,20 @@ namespace april
 				this->commandList[i]->Close();
 				ppCommandLists[0] = this->commandList[i].Get();
 				this->commandQueue->ExecuteCommandLists(1, ppCommandLists);
-				this->waitForCommands();
+				this->waitForAllCommands();
 			}
 			//*/
 			//*
 			harray<ID3D12CommandList*> commandLists;
-			for_iter (i, 0, MAX_COMMAND_LISTS)
+			//for_iter (i, 0, MAX_COMMAND_LISTS)
 			{
-				PIXEndEvent(this->commandList[i].Get());
-				this->commandList[i]->Close();
-				commandLists += this->commandList[i].Get();
+				PIXEndEvent(this->commandList[this->commandListIndex].Get());
+				this->commandList[this->commandListIndex]->Close();
+				commandLists += this->commandList[this->commandListIndex].Get();
 			}
 			this->commandQueue->ExecuteCommandLists(commandLists.size(), (ID3D12CommandList* const*)commandLists);
-			this->waitForCommands();
+			this->waitForLastCommand();
+			--this->commandListSize;
 			//*/
 			
 		}
@@ -1152,6 +1155,7 @@ namespace april
 		}
 	}
 
+	// TODOuwp - probably not needed anymore
 	void DirectX12_RenderSystem::executeCurrentCommands()
 	{
 		PIXEndEvent(this->commandList[this->commandListIndex].Get());
@@ -1160,7 +1164,15 @@ namespace april
 		this->commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 	}
 
-	void DirectX12_RenderSystem::waitForCommands()
+	void DirectX12_RenderSystem::waitForAllCommands()
+	{
+		this->waitForLastCommand();
+		this->vertexBufferIndex = 0;
+		this->commandListIndex = 0;
+		this->commandListSize = 1;
+	}
+
+	void DirectX12_RenderSystem::waitForLastCommand()
 	{
 		const UINT64 currentFenceValue = this->fenceValues[this->currentFrame];
 		_TRY_UNSAFE(this->commandQueue->Signal(this->fence.Get(), currentFenceValue), "Unable to signal command queue!");
@@ -1171,17 +1183,16 @@ namespace april
 			WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
 		}
 		this->fenceValues[this->currentFrame] = currentFenceValue + 1;
-		this->vertexBufferIndex = 0;
-		this->commandListIndex = 0;
 	}
 
 	void DirectX12_RenderSystem::prepareNewCommands()
 	{
+		// TODOuwp - can probably be removed
 		//int index = (this->commandListIndex + MAX_COMMAND_LISTS - 1) % MAX_COMMAND_LISTS;
 		/*
 		if (this->commandListIndex == 0)
 		{
-			this->waitForCommands();
+			this->waitForAllCommands();
 		}
 		*/
 		_TRY_UNSAFE(this->commandAllocators[this->commandListIndex][this->currentFrame]->Reset(), hsprintf("Unable to reset command allocator %d!", this->currentFrame));
@@ -1322,18 +1333,25 @@ namespace april
 			ppCommandLists[0] = this->commandList[i].Get();
 			this->commandQueue->ExecuteCommandLists(1, ppCommandLists);
 		}
-		this->waitForCommands();
+		this->waitForAllCommands();
 		//*/
 		//*
-		harray<ID3D12CommandList*> commandLists;
-		for_iter (i, 0, this->commandListIndex + 1)
+		//if (this->commandListSize > 0)
 		{
-			PIXEndEvent(this->commandList[i].Get());
-			this->commandList[i]->Close();
-			commandLists += this->commandList[i].Get();
+			harray<ID3D12CommandList*> commandLists;
+			//this->commandListSize = 0;
+			int j = 0;
+			for_iter (i, 0, this->commandListSize)
+				//for_iter (i, 0, this->commandListIndex + 1)
+			{
+				j = hmod(i - this->commandListSize + 1 + this->commandListIndex, MAX_COMMAND_LISTS);
+				PIXEndEvent(this->commandList[j].Get());
+				this->commandList[j]->Close();
+				commandLists += this->commandList[j].Get();
+			}
+			this->commandQueue->ExecuteCommandLists(commandLists.size(), (ID3D12CommandList* const*)commandLists);
 		}
-		this->commandQueue->ExecuteCommandLists(commandLists.size(), (ID3D12CommandList* const*)commandLists);
-		this->waitForCommands();
+		this->waitForAllCommands();
 		//*/
 
 		//this->executeCurrentCommands();
@@ -1348,7 +1366,7 @@ namespace april
 		}
 		_TRY_UNSAFE(hr, "Unable to present swap chain!");
 		this->deviceState_rootSignature = (this->deviceState->useTexture && this->deviceState->texture != NULL ? this->rootSignatures[1] : this->rootSignatures[0]);
-		this->waitForCommands();
+		this->waitForAllCommands();
 		this->prepareNewCommands();
 		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
 		renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;

@@ -31,7 +31,7 @@
 #include "Window.h"
 
 #define BACKBUFFER_COUNT 3 // TODOuwp - make this configurable, because Rendersystem::Options::tripleBuffering should be supported
-#define MAX_COMMAND_LISTS 10
+#define MAX_COMMAND_LISTS 200
 #define ALIGNED_CONSTANT_BUFFER_SIZE ((sizeof(ConstantBuffer) + 255) & ~255)
 #define INPUT_LAYOUT_COUNT 4
 #define PIXEL_SHADER_COUNT 5
@@ -39,7 +39,7 @@
 #define TEXTURE_STATE_COUNT 2
 #define PRIMITIVE_TOPOLOGY_COUNT 3
 #define DEPTH_ENABLED_COUNT 2
-#define MAX_VERTEX_BUFFERS 400 // should be enough vertex buffers to handle all cases
+#define MAX_VERTEX_BUFFERS 500 // should be enough vertex buffers to handle all cases
 
 using namespace Microsoft::WRL;
 using namespace Windows::Foundation;
@@ -79,7 +79,8 @@ namespace april
 		void updateDeviceReset();
 
 		void executeCurrentCommands();
-		void waitForCommands();
+		void waitForAllCommands();
+		void waitForLastCommand();
 		void prepareNewCommands();
 
 		// TODOuwp - implement
@@ -105,6 +106,7 @@ namespace april
 		ComPtr<ID3D12CommandAllocator> commandAllocators[MAX_COMMAND_LISTS][BACKBUFFER_COUNT];
 		ComPtr<ID3D12GraphicsCommandList> commandList[MAX_COMMAND_LISTS];
 		int commandListIndex;
+		int commandListSize;
 
 		harray<D3D12_INPUT_LAYOUT_DESC> inputLayoutDescs;
 		harray<DirectX12_VertexShader*> vertexShaders;
