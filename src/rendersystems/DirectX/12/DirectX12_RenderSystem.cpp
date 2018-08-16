@@ -34,7 +34,8 @@
 #include "UWP_Window.h"
 
 #define SHADER_PATH "april/"
-#define VERTEX_BUFFER_SIZE 262144 // 256kb per vertex buffer for data is enough to handle most render data that is used
+#define VERTEX_BUFFER_SIZE ((int)(100 * 3 * sizeof(ColoredTexturedVertex))) // 100 polygons
+#define LARGE_VERTEX_BUFFER_SIZE (256 * 1024) // 256kb per vertex buffer for big data is enough to handle most render data that is used
 #define CBV_SRV_UAV_HEAP_SIZE 2
 #define SAMPLER_COUNT (Texture::Filter::getCount() * Texture::AddressMode::getCount())
 
@@ -83,6 +84,7 @@ namespace april
 	{
 		this->name = april::RenderSystemType::DirectX12.getName();
 		this->vertexBufferIndex = 0;
+		this->largeVertexBufferIndex = 0;
 		this->commandListIndex = 0;
 		this->commandListSize = 1;
 	}
@@ -104,6 +106,10 @@ namespace april
 		for_iter (i, 0, MAX_VERTEX_BUFFERS)
 		{
 			this->vertexBuffers[i] = nullptr;
+		}
+		for_iter (i, 0, MAX_LARGE_VERTEX_BUFFERS)
+		{
+			this->largeVertexBuffers[i] = nullptr;
 		}
 		for_iter (i, 0, MAX_COMMAND_LISTS)
 		{
@@ -225,6 +231,18 @@ namespace april
 		{
 			_TRY_UNSAFE(this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->vertexBufferDesc,
 				D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->vertexBufferUploads[i])), "Unable to create vertex buffer upload heap!");
+		}
+		this->largeVertexBufferDesc = this->vertexBufferDesc;
+		this->largeVertexBufferDesc.Width = LARGE_VERTEX_BUFFER_SIZE;
+		for_iter (i, 0, MAX_LARGE_VERTEX_BUFFERS)
+		{
+			_TRY_UNSAFE(d3dDevice->CreateCommittedResource(&defaultHeapProperties, D3D12_HEAP_FLAG_NONE, &this->largeVertexBufferDesc,
+				D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&this->largeVertexBuffers[i])), "Unable to create vertex buffer!");
+		}
+		for_iter (i, 0, MAX_LARGE_VERTEX_BUFFERS)
+		{
+			_TRY_UNSAFE(this->d3dDevice->CreateCommittedResource(&this->uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &this->largeVertexBufferDesc,
+				D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&this->largeVertexBufferUploads[i])), "Unable to create vertex buffer upload heap!");
 		}
 		// constant buffer
 		this->constantBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
@@ -1198,7 +1216,9 @@ namespace april
 		static D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView;
 		static D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView;
 		static unsigned char* vertices = NULL;
+		static bool useLargeBuffer = false;
 		size = count;
+		byteSize = size * vertexSize;
 		primitiveTopology = _dx12RenderOperations[renderOperation.value];
 		renderTargetView = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		renderTargetView.ptr += this->currentFrame * this->rtvDescSize;
@@ -1208,13 +1228,24 @@ namespace april
 		// doesn't use vertex buffers by default to handle data.
 		for_iter_step (i, 0, count, size)
 		{
-			size = this->_limitVertices(renderOperation, hmin(count - i, VERTEX_BUFFER_SIZE / (int)vertexSize));
+			useLargeBuffer = (byteSize > VERTEX_BUFFER_SIZE);
+			size = this->_limitVertices(renderOperation, hmin(count - i, (!useLargeBuffer ? VERTEX_BUFFER_SIZE : LARGE_VERTEX_BUFFER_SIZE) / (int)vertexSize));
 			byteSize = size * vertexSize;
 			vertexData.pData = vertices;
 			vertexData.RowPitch = byteSize;
 			vertexData.SlicePitch = vertexData.RowPitch;
-			UpdateSubresources(this->commandList[this->commandListIndex].Get(), this->vertexBuffers[this->vertexBufferIndex].Get(), this->vertexBufferUploads[this->vertexBufferIndex].Get(), 0, 0, 1, &vertexData);
-			vertexBufferResourceBarrier.Transition.pResource = this->vertexBuffers[this->vertexBufferIndex].Get();
+			if (!useLargeBuffer)
+			{
+				UpdateSubresources(this->commandList[this->commandListIndex].Get(), this->vertexBuffers[this->vertexBufferIndex].Get(),
+					this->vertexBufferUploads[this->vertexBufferIndex].Get(), 0, 0, 1, &vertexData);
+				vertexBufferResourceBarrier.Transition.pResource = this->vertexBuffers[this->vertexBufferIndex].Get();
+			}
+			else
+			{
+				UpdateSubresources(this->commandList[this->commandListIndex].Get(), this->largeVertexBuffers[this->largeVertexBufferIndex].Get(),
+					this->largeVertexBufferUploads[this->largeVertexBufferIndex].Get(), 0, 0, 1, &vertexData);
+				vertexBufferResourceBarrier.Transition.pResource = this->largeVertexBuffers[this->largeVertexBufferIndex].Get();
+			}
 			this->commandList[this->commandListIndex]->ResourceBarrier(1, &vertexBufferResourceBarrier);
 			// viewport, scissor rect, render target
 			this->commandList[this->commandListIndex]->RSSetViewports(1, &this->deviceViewport);
@@ -1229,12 +1260,23 @@ namespace april
 				this->commandList[this->commandListIndex]->OMSetRenderTargets(1, &renderTargetView, false, &depthStencilView);
 			}
 			this->commandList[this->commandListIndex]->IASetPrimitiveTopology(primitiveTopology);
-			this->vertexBufferViews[this->vertexBufferIndex].BufferLocation = this->vertexBuffers[this->vertexBufferIndex]->GetGPUVirtualAddress();
-			this->vertexBufferViews[this->vertexBufferIndex].StrideInBytes = vertexSize;
-			this->vertexBufferViews[this->vertexBufferIndex].SizeInBytes = byteSize;
-			this->commandList[this->commandListIndex]->IASetVertexBuffers(0, 1, &this->vertexBufferViews[this->vertexBufferIndex]);
+			if (!useLargeBuffer)
+			{
+				this->vertexBufferViews[this->vertexBufferIndex].BufferLocation = this->vertexBuffers[this->vertexBufferIndex]->GetGPUVirtualAddress();
+				this->vertexBufferViews[this->vertexBufferIndex].StrideInBytes = vertexSize;
+				this->vertexBufferViews[this->vertexBufferIndex].SizeInBytes = byteSize;
+				this->commandList[this->commandListIndex]->IASetVertexBuffers(0, 1, &this->vertexBufferViews[this->vertexBufferIndex]);
+				this->vertexBufferIndex = (this->vertexBufferIndex + 1) % MAX_VERTEX_BUFFERS;
+			}
+			else
+			{
+				this->largeVertexBufferViews[this->largeVertexBufferIndex].BufferLocation = this->largeVertexBuffers[this->largeVertexBufferIndex]->GetGPUVirtualAddress();
+				this->largeVertexBufferViews[this->largeVertexBufferIndex].StrideInBytes = vertexSize;
+				this->largeVertexBufferViews[this->largeVertexBufferIndex].SizeInBytes = byteSize;
+				this->commandList[this->commandListIndex]->IASetVertexBuffers(0, 1, &this->largeVertexBufferViews[this->largeVertexBufferIndex]);
+				this->largeVertexBufferIndex = (this->largeVertexBufferIndex + 1) % MAX_LARGE_VERTEX_BUFFERS;
+			}
 			this->commandList[this->commandListIndex]->DrawInstanced(size, 1, 0, 0);
-			this->vertexBufferIndex = (this->vertexBufferIndex + 1) % MAX_VERTEX_BUFFERS;
 			vertices += byteSize;
 		}
 	}
@@ -1294,7 +1336,6 @@ namespace april
 			D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, D3D12_RESOURCE_BARRIER_FLAG_NONE);
 		renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
 		this->commandList[this->commandListIndex]->ResourceBarrier(1, &renderTargetResourceBarrier);
-		hlog::writef("OK", "PRESENT %d", this->commandListIndex);
 	}
 
 	void DirectX12_RenderSystem::_deviceRepeatLastFrame()

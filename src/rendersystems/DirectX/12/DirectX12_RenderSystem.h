@@ -31,7 +31,7 @@
 #include "Window.h"
 
 #define MAX_BACKBUFFER_COUNT 3
-#define MAX_COMMAND_LISTS 5
+#define MAX_COMMAND_LISTS 100
 #define ALIGNED_CONSTANT_BUFFER_SIZE ((sizeof(ConstantBuffer) + 255) & ~255)
 #define INPUT_LAYOUT_COUNT 4
 #define PIXEL_SHADER_COUNT 5
@@ -39,7 +39,8 @@
 #define TEXTURE_STATE_COUNT 2
 #define PRIMITIVE_TOPOLOGY_COUNT 3
 #define DEPTH_ENABLED_COUNT 2
-#define MAX_VERTEX_BUFFERS 100 // should be enough vertex buffers to handle all cases
+#define MAX_VERTEX_BUFFERS 2000 // should be enough vertex buffers to handle all cases
+#define MAX_LARGE_VERTEX_BUFFERS 100 // should be enough large vertex buffers to handle all cases
 
 using namespace Microsoft::WRL;
 using namespace Windows::Foundation;
@@ -141,6 +142,11 @@ namespace april
 		int vertexBufferIndex;
 		ComPtr<ID3D12Resource> vertexBuffers[MAX_VERTEX_BUFFERS];
 		ComPtr<ID3D12Resource> vertexBufferUploads[MAX_VERTEX_BUFFERS];
+		D3D12_RESOURCE_DESC largeVertexBufferDesc;
+		D3D12_VERTEX_BUFFER_VIEW largeVertexBufferViews[MAX_LARGE_VERTEX_BUFFERS];
+		int largeVertexBufferIndex;
+		ComPtr<ID3D12Resource> largeVertexBuffers[MAX_LARGE_VERTEX_BUFFERS];
+		ComPtr<ID3D12Resource> largeVertexBufferUploads[MAX_LARGE_VERTEX_BUFFERS];
 		D3D12_RESOURCE_DESC constantBufferDesc;
 		ComPtr<ID3D12Resource> constantBuffers[MAX_COMMAND_LISTS];
 		ConstantBuffer constantBufferData;
