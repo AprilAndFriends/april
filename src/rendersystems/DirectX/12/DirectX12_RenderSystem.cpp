@@ -854,7 +854,7 @@ namespace april
 		WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
 		++this->fenceLimits[this->currentFrame];
 		this->fenceValues[this->currentFrame] = this->fenceLimits[this->currentFrame];
-		this->commandListIndex = 0;
+		this->commandListIndex = (this->commandListIndex + 1) % MAX_COMMAND_LISTS;
 		this->commandListSize = 1;
 	}
 
@@ -955,12 +955,6 @@ namespace april
 
 	void DirectX12_RenderSystem::_setDeviceDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		/*
-		if (enabled || writeEnabled)
-		{
-			hlog::error(logTag, "_setDeviceDepthBuffer() is not implemented in: " + this->name);
-		}
-		*/
 		// not used
 	}
 
@@ -1135,8 +1129,7 @@ namespace april
 			WaitForSingleObjectEx(this->fenceEvent, INFINITE, FALSE);
 		}
 		this->fenceValues[this->currentFrame] = this->fenceLimits[this->currentFrame] = currentFenceValue + 1;
-		this->vertexBufferIndex = 0;
-		this->commandListIndex = 0;
+		this->commandListIndex = (this->commandListIndex + 1) % MAX_COMMAND_LISTS;
 		this->commandListSize = 1;
 		this->deviceState_constantBufferChanged = true;
 		this->deviceState_colorModeChanged = true;
@@ -1195,28 +1188,28 @@ namespace april
 
 	void DirectX12_RenderSystem::_renderDX12VertexBuffer(const RenderOperation& renderOperation, const void* data, int count, unsigned int vertexSize)
 	{
-		// This kind of approach to render chunks of vertices is due to the current implementation that
-		// doesn't use vertex buffers by default to handle data.
+		// using static variables to speed up this method
 		static int size = 0;
 		static int byteSize = 0;
+		static D3D12_SUBRESOURCE_DATA vertexData = {};
+		static D3D12_RESOURCE_BARRIER vertexBufferResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(NULL, D3D12_RESOURCE_STATE_COPY_DEST,
+			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, D3D12_RESOURCE_BARRIER_FLAG_NONE);
+		static D3D12_PRIMITIVE_TOPOLOGY primitiveTopology;
+		static D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView;
+		static D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView;
+		static unsigned char* vertices = NULL;
 		size = count;
-		D3D12_SUBRESOURCE_DATA vertexData = {};
-		D3D12_RESOURCE_BARRIER vertexBufferResourceBarrier = {};
-		vertexBufferResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		vertexBufferResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		vertexBufferResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-		vertexBufferResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
-		vertexBufferResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-		D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
+		primitiveTopology = _dx12RenderOperations[renderOperation.value];
+		renderTargetView = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		renderTargetView.ptr += this->currentFrame * this->rtvDescSize;
-		D3D12_PRIMITIVE_TOPOLOGY primitiveTopology = _dx12RenderOperations[renderOperation.value];
-		unsigned char* vertices = (unsigned char*)data;
-		D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView;
+		vertices = (unsigned char*)data;
+		this->_updatePipelineState(renderOperation);
+		// This kind of approach to render chunks of vertices is due to the current implementation that
+		// doesn't use vertex buffers by default to handle data.
 		for_iter_step (i, 0, count, size)
 		{
 			size = this->_limitVertices(renderOperation, hmin(count - i, VERTEX_BUFFER_SIZE / (int)vertexSize));
 			byteSize = size * vertexSize;
-			this->_updatePipelineState(renderOperation);
 			vertexData.pData = vertices;
 			vertexData.RowPitch = byteSize;
 			vertexData.SlicePitch = vertexData.RowPitch;
@@ -1279,16 +1272,13 @@ namespace april
 	void DirectX12_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
 		RenderSystem::_devicePresentFrame(systemEnabled);
-		D3D12_RESOURCE_BARRIER presentResourceBarrier = {};
-		presentResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		presentResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		// using static variables to speed up this method
+		static D3D12_RESOURCE_BARRIER presentResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(NULL,
+			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, D3D12_RESOURCE_BARRIER_FLAG_NONE);
 		presentResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
-		presentResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		presentResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-		presentResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 		this->commandList[this->commandListIndex]->ResourceBarrier(1, &presentResourceBarrier);
 		this->executeCurrentCommand();
-		this->waitForAllCommands();
+		this->waitForAllCommands(); // this must be here, because otherwise it can cause issues with texture unloading
 		HRESULT hr = this->swapChain->Present((this->options.vSync ? 1 : 0), 0);
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
@@ -1298,7 +1288,14 @@ namespace april
 			return;
 		}
 		_TRY_UNSAFE(hr, "Unable to present swap chain!");
-		this->waitForAllCommands();
+		const UINT64 currentFenceValue = this->fenceLimits[this->currentFrame];
+		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
+		this->fenceValues[this->currentFrame] = this->fenceLimits[this->currentFrame] = currentFenceValue;
+		this->commandListIndex = (this->commandListIndex + 1) % MAX_COMMAND_LISTS;
+		this->commandListSize = 1;
+		this->deviceState_constantBufferChanged = true;
+		this->deviceState_colorModeChanged = true;
+		this->deviceState_textureChanged = true;
 		this->prepareNewCommands();
 		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
 		renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
