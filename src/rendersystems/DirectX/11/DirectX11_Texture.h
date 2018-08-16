@@ -39,9 +39,8 @@ namespace april
 		ComPtr<ID3D11ShaderResourceView> d3dView;
 		ComPtr<ID3D11RenderTargetView> d3dRenderTargetView;
 		DXGI_FORMAT dxgiFormat;
-		Type internalType;
 
-		bool _deviceCreateTexture(unsigned char* data, int size, Type type);
+		bool _deviceCreateTexture(unsigned char* data, int size);
 		bool _deviceDestroyTexture();
 		void _assignFormat();
 

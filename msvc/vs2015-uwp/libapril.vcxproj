@@ -17,6 +17,22 @@
       <Configuration>ReleaseS</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_DirectX11|Win32">
+      <Configuration>Debug_DirectX11</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugS_DirectX11|Win32">
+      <Configuration>DebugS_DirectX11</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_DirectX11|Win32">
+      <Configuration>Release_DirectX11</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseS_DirectX11|Win32">
+      <Configuration>ReleaseS_DirectX11</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug_DirectX12|Win32">
       <Configuration>Debug_DirectX12</Configuration>
       <Platform>Win32</Platform>
@@ -65,6 +81,22 @@
       <Configuration>ReleaseS</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_DirectX11|x64">
+      <Configuration>Debug_DirectX11</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugS_DirectX11|x64">
+      <Configuration>DebugS_DirectX11</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_DirectX11|x64">
+      <Configuration>Release_DirectX11</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseS_DirectX11|x64">
+      <Configuration>ReleaseS_DirectX11</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug_DirectX12|x64">
       <Configuration>Debug_DirectX12</Configuration>
       <Platform>x64</Platform>
@@ -111,6 +143,22 @@
     </ProjectConfiguration>
     <ProjectConfiguration Include="ReleaseS|ARM">
       <Configuration>ReleaseS</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_DirectX11|ARM">
+      <Configuration>Debug_DirectX11</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugS_DirectX11|ARM">
+      <Configuration>DebugS_DirectX11</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_DirectX11|ARM">
+      <Configuration>Release_DirectX11</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseS_DirectX11|ARM">
+      <Configuration>ReleaseS_DirectX11</Configuration>
       <Platform>ARM</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug_DirectX12|ARM">
@@ -162,6 +210,20 @@
   <Import Project="props\default.props" />
   <Import Project="..\..\..\hltypes\msvc\vs2015-uwp\props-generic\platform-$(Platform).props" />
   <Import Project="..\..\..\hltypes\msvc\vs2015-uwp\props-generic\configurations.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|Win32'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS_DirectX11|Win32'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|Win32'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS_DirectX11|Win32'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX12|Win32'">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
@@ -190,6 +252,20 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|x64'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS_DirectX11|x64'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|x64'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS_DirectX11|x64'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX12|x64'">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
@@ -215,6 +291,20 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES2|x64'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX11|ARM'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS_DirectX11|ARM'">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release_DirectX11|ARM'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS_DirectX11|ARM'">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
@@ -281,6 +371,10 @@
     <ClCompile Include="..\..\src\platforms\UWP_Platform.cpp" />
     <ClCompile Include="..\..\src\RenderHelper.cpp" />
     <ClCompile Include="..\..\src\RenderHelperLayered2D.cpp" />
+    <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_PixelShader.cpp" />
+    <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_RenderSystem.cpp" />
+    <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_Texture.cpp" />
+    <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_VertexShader.cpp" />
     <ClCompile Include="..\..\src\rendersystems\DirectX\12\DirectX12_PixelShader.cpp" />
     <ClCompile Include="..\..\src\rendersystems\DirectX\12\DirectX12_RenderSystem.cpp" />
     <ClCompile Include="..\..\src\rendersystems\DirectX\12\DirectX12_Texture.cpp" />
@@ -410,6 +504,10 @@
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_RenderSystem.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_Texture.h" />
     <ClInclude Include="..\..\src\rendersystems\OpenGL\GLES\OpenGLES_VertexShader.h" />
+    <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_PixelShader.h" />
+    <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_RenderSystem.h" />
+    <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_Texture.h" />
+    <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_VertexShader.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\12\d3dx12.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\12\DirectX12_PixelShader.h" />
     <ClInclude Include="..\..\src\rendersystems\DirectX\12\DirectX12_RenderSystem.h" />
@@ -427,79 +525,185 @@
     <ClInclude Include="..\..\src\windowsystems\UWP\UWP_Cursor.h" />
     <ClInclude Include="..\..\src\windowsystems\UWP\UWP_Window.h" />
   </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)'=='Debug_DirectX12' or '$(Configuration)'=='DebugS_DirectX12' or '$(Configuration)'=='Release_DirectX12' or '$(Configuration)'=='ReleaseS_DirectX12'">
+  <ItemGroup>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_AlphaMap.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Desaturate.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Lerp.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Multiply.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Sepia.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedDesaturate.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedLerp.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedMultiply.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedSepia.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Colored.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Vertex</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_ColoredTextured.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Vertex</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Plain.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Vertex</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Textured.hlsl">
+      <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShaderType>Vertex</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader.hlsli" />
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Plain.hlsli" />
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Textured.hlsli" />
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_AlphaMap.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Desaturate.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Lerp.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Multiply.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Sepia.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedDesaturate.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedLerp.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedMultiply.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedSepia.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Colored.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
       <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_ColoredTextured.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
       <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Plain.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
       <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Textured.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
       <ShaderModel>5.0</ShaderModel>
+      <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)'=='Debug_DirectX12' or '$(Configuration)'=='DebugS_DirectX12' or '$(Configuration)'=='Release_DirectX12' or '$(Configuration)'=='ReleaseS_DirectX12'">
+  <ItemGroup>
     <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader.hlsli" />
     <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Plain.hlsli" />
     <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Textured.hlsli" />

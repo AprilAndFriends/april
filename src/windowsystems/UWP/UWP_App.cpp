@@ -17,7 +17,6 @@
 
 #include "Application.h"
 #include "april.h"
-#include "DirectX12_RenderSystem.h"
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "UpdateDelegate.h"
@@ -34,7 +33,6 @@ using namespace Windows::UI::Core;
 using namespace Windows::UI::Input;
 using namespace Windows::UI::ViewManagement;
 
-#define DX12_RENDERSYS ((DirectX12_RenderSystem*)rendersys)
 #define UWP_WINDOW ((UWP_Window*)april::window)
 
 namespace april

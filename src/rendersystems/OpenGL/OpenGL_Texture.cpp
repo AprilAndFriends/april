@@ -19,7 +19,7 @@
 #include "OpenGL_Texture.h"
 #include "RenderState.h"
 
-#define APRIL_OGL_RENDERSYS ((OpenGL_RenderSystem*)april::rendersys)
+#define OGL_RENDERSYS ((OpenGL_RenderSystem*)april::rendersys)
 
 namespace april
 {
@@ -118,10 +118,10 @@ namespace april
 	void OpenGL_Texture::_setCurrentTexture()
 	{
 		// filtering and address mode applied before loading texture data, some systems are optimized to work like this (e.g. iOS OpenGLES guidelines suggest it)
-		APRIL_OGL_RENDERSYS->_setDeviceTextureFilter(this->filter);
-		APRIL_OGL_RENDERSYS->_setDeviceTextureAddressMode(this->addressMode);
-		APRIL_OGL_RENDERSYS->_setDeviceTexture(this);
-		APRIL_OGL_RENDERSYS->deviceState->texture = this;
+		OGL_RENDERSYS->_setDeviceTextureFilter(this->filter);
+		OGL_RENDERSYS->_setDeviceTextureAddressMode(this->addressMode);
+		OGL_RENDERSYS->_setDeviceTexture(this);
+		OGL_RENDERSYS->deviceState->texture = this;
 	}
 
 	Texture::Lock OpenGL_Texture::_tryLockSystem(int x, int y, int w, int h)

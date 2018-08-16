@@ -17,7 +17,7 @@
 #include "DirectX12_Texture.h"
 #include "Image.h"
 
-#define DX12_RENDERSYS ((DirectX12_RenderSystem*)april::rendersys)
+#define DX_RENDERSYS ((DirectX12_RenderSystem*)april::rendersys)
 #define D3D_DEVICE (((DirectX12_RenderSystem*)april::rendersys)->d3dDevice)
 
 namespace april
@@ -112,8 +112,8 @@ namespace april
 			return false;
 		}
 		// upload
-		UpdateSubresources(DX12_RENDERSYS->commandList[DX12_RENDERSYS->commandListIndex].Get(), this->d3dTexture.Get(), this->uploadHeap.Get(), 0, 0, 1, &textureData);
-		DX12_RENDERSYS->commandList[DX12_RENDERSYS->commandListIndex]->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+		UpdateSubresources(DX_RENDERSYS->commandList[DX_RENDERSYS->commandListIndex].Get(), this->d3dTexture.Get(), this->uploadHeap.Get(), 0, 0, 1, &textureData);
+		DX_RENDERSYS->commandList[DX_RENDERSYS->commandListIndex]->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 		return true;
 	}
 	
@@ -181,9 +181,9 @@ namespace april
 					textureData.pData = this->data;
 					textureData.RowPitch = this->width * this->getBpp();
 					textureData.SlicePitch = textureData.RowPitch * this->height;
-					DX12_RENDERSYS->commandList[DX12_RENDERSYS->commandListIndex]->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
-					UpdateSubresources(DX12_RENDERSYS->commandList[DX12_RENDERSYS->commandListIndex].Get(), this->d3dTexture.Get(), this->uploadHeap.Get(), 0, 0, 1, &textureData);
-					DX12_RENDERSYS->commandList[DX12_RENDERSYS->commandListIndex]->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+					DX_RENDERSYS->commandList[DX_RENDERSYS->commandListIndex]->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, D3D12_RESOURCE_STATE_COPY_DEST));
+					UpdateSubresources(DX_RENDERSYS->commandList[DX_RENDERSYS->commandListIndex].Get(), this->d3dTexture.Get(), this->uploadHeap.Get(), 0, 0, 1, &textureData);
+					DX_RENDERSYS->commandList[DX_RENDERSYS->commandListIndex]->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->d3dTexture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 				}
 				else
 				{

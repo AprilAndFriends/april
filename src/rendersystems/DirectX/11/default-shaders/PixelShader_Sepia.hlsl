@@ -4,5 +4,5 @@
 
 float4 main(PixelShaderInput input) : SV_Target
 {
-	return input.color;
+	return float4(MAKE_SEPIA(input.color), input.color.a);
 }

@@ -93,6 +93,15 @@
     <Filter Include="Source Files\events">
       <UniqueIdentifier>{f276082f-b9c1-47ee-93ee-47e1c2e42537}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\rendersystems\DirectX\11">
+      <UniqueIdentifier>{310f7bee-b35b-4722-a239-19e2a3667306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rendersystems\DirectX\11\default-shaders">
+      <UniqueIdentifier>{1471bfa5-c211-4745-8066-d3431931ddc0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\rendersystems\DirectX\11">
+      <UniqueIdentifier>{4f44e649-925c-40be-a3a2-dce7f79977c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\Color.cpp">
@@ -352,6 +361,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\async\TakeScreenshotCommand.cpp">
       <Filter>Source Files\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_PixelShader.cpp">
+      <Filter>Source Files\rendersystems\DirectX\11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_RenderSystem.cpp">
+      <Filter>Source Files\rendersystems\DirectX\11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_Texture.cpp">
+      <Filter>Source Files\rendersystems\DirectX\11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rendersystems\DirectX\11\DirectX11_VertexShader.cpp">
+      <Filter>Source Files\rendersystems\DirectX\11</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -619,6 +640,18 @@
     <ClInclude Include="..\..\src\async\TakeScreenshotCommand.h">
       <Filter>Header Files\async</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_PixelShader.h">
+      <Filter>Header Files\rendersystems\DirectX\11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_RenderSystem.h">
+      <Filter>Header Files\rendersystems\DirectX\11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_Texture.h">
+      <Filter>Header Files\rendersystems\DirectX\11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rendersystems\DirectX\11\DirectX11_VertexShader.h">
+      <Filter>Header Files\rendersystems\DirectX\11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\fileproperties.rc">
@@ -668,6 +701,48 @@
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedSepia.hlsl">
       <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_AlphaMap.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Desaturate.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Lerp.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Multiply.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Sepia.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedDesaturate.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedLerp.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedMultiply.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedSepia.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Colored.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_ColoredTextured.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Plain.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Textured.hlsl">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Plain.hlsli">
@@ -681,6 +756,18 @@
     </None>
     <None Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader.hlsli">
       <Filter>Source Files\rendersystems\DirectX\12\default-shaders</Filter>
+    </None>
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </None>
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Plain.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </None>
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Textured.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
+    </None>
+    <None Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader.hlsli">
+      <Filter>Source Files\rendersystems\DirectX\11\default-shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

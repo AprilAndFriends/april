@@ -7,7 +7,7 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _DIRECTX11
-#include <d3d11_2.h>
+#include <d3d11_4.h>
 #include <stdio.h>
 
 #include <gtypes/Rectangle.h>
@@ -28,8 +28,8 @@
 #include "Platform.h"
 #include "RenderState.h"
 #include "Timer.h"
-#include "WinRT.h"
-#include "WinRT_Window.h"
+#include "UWP.h"
+#include "UWP_Window.h"
 
 #define SHADER_PATH "april/"
 #define VERTEX_BUFFER_COUNT 65536
@@ -156,7 +156,7 @@ namespace april
 	bool DirectX11_RenderSystem::_deviceCreate(Options options)
 	{
 		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_deviceCreate()");
-		this->setViewport(grect(0.0f, 0.0f, april::getSystemInfo().displayResolution));
+		this->setViewport(grecti(0, 0, april::getSystemInfo().displayResolution));
 		return true;
 	}
 
@@ -185,7 +185,7 @@ namespace april
 		_HL_TRY_DELETE(this->shaderColoredTexturedLerp);
 		_HL_TRY_DELETE(this->shaderColoredTexturedAlphaMap);
 		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_deviceDestroy()");
-		this->setViewport(grect(0.0f, 0.0f, april::getSystemInfo().displayResolution));
+		this->setViewport(grecti(0, 0, april::getSystemInfo().displayResolution));
 		return true;
 	}
 
@@ -267,7 +267,7 @@ namespace april
 		// initial calls
 		this->_deviceClear(true);
 		this->presentFrame();
-		this->setOrthoProjection(gvec2((float)window->getWidth(), (float)window->getHeight()));
+		this->setOrthoProjection(gvec2f((float)window->getWidth(), (float)window->getHeight()));
 		// default shaders
 		LOAD_SHADER(this->vertexShaderPlain, Vertex, Plain);
 		LOAD_SHADER(this->vertexShaderTextured, Vertex, Textured);
@@ -322,9 +322,12 @@ namespace april
 	void DirectX11_RenderSystem::_deviceReset()
 	{
 		DirectX_RenderSystem::_deviceReset();
+		// TODOuwp - implement this
+		/*
 		// possible Microsoft bug, required for SwapChainPanel to update its layout 
-		reinterpret_cast<IUnknown*>(WinRT::App->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
+		reinterpret_cast<IUnknown*>(UWP::app->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
+		*/
 	}
 
 	void DirectX11_RenderSystem::_deviceSetupCaps()
@@ -370,8 +373,8 @@ namespace april
 		}
 		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_createSwapChain()");
 		SystemInfo info = april::getSystemInfo();
-		int w = hround(info.displayResolution.x);
-		int h = hround(info.displayResolution.y);
+		int w = info.displayResolution.x;
+		int h = info.displayResolution.y;
 		if (w != width || h != height)
 		{
 			hlog::warnf(logTag, "On WinRT the window resolution (%d,%d) should match the display resolution (%d,%d) in order to avoid problems.", width, height, w, h);
@@ -395,10 +398,13 @@ namespace april
 			throw Exception("Unable to create swap chain!");
 		}
 		_swapChain.As(&this->swapChain);
-		reinterpret_cast<IUnknown*>(WinRT::App->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
+		// TODOuwp - implement this
+		/*
+		reinterpret_cast<IUnknown*>(UWP::app->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
 		this->swapChainNative->SetSwapChain(this->swapChain.Get());
 		this->_configureSwapChain();
 		this->updateOrientation();
+		*/
 	}
 
 	void DirectX11_RenderSystem::_resizeSwapChain(int width, int height)
@@ -418,8 +424,11 @@ namespace april
 	{
 		// so... we have to apply an inverted scale to the swap chain?
 		DXGI_MATRIX_3X2_F inverseScale = { 0 };
+		// TODOuwp - implement this
+		/*
 		inverseScale._11 = 1.0f / WinRT::App->Overlay->CompositionScaleX;
 		inverseScale._22 = 1.0f / WinRT::App->Overlay->CompositionScaleY;
+		*/
 		this->swapChain->SetMatrixTransform(&inverseScale);
 		// get the back buffer
 		ComPtr<ID3D11Texture2D> _backBuffer;
@@ -472,7 +481,7 @@ namespace april
 		_backBuffer->GetDesc(&backBufferDesc);
 		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_configureDevice()");
 		SystemInfo info = april::getSystemInfo();
-		this->setViewport(grect(0.0f, 0.0f, (float)backBufferDesc.Width, (float)backBufferDesc.Height)); // just to be on the safe side and prevent floating point errors
+		this->setViewport(grecti(0, 0, backBufferDesc.Width, backBufferDesc.Height)); // just to be on the safe side and prevent floating point errors
 		// blend modes
 		D3D11_BLEND_DESC blendDesc = {0};
 		blendDesc.AlphaToCoverageEnable = false;
@@ -613,10 +622,10 @@ namespace april
 
 	void DirectX11_RenderSystem::_setDeviceViewport(cgrecti rect)
 	{
-		grect viewport = rect;
+		grecti viewport = rect;
 		// this is needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
 		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_setDeviceViewport()");
-		gvec2 resolution = april::getSystemInfo().displayResolution;
+		gvec2i resolution = april::getSystemInfo().displayResolution;
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();
 		if (viewport.x < 0)

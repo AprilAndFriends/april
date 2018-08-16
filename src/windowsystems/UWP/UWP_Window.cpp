@@ -14,7 +14,6 @@
 #include <hltypes/hthread.h>
 
 #include "april.h"
-#include "DirectX12_RenderSystem.h"
 #include "Platform.h"
 #include "RenderSystem.h"
 #include "SystemDelegate.h"
@@ -23,9 +22,8 @@
 #include "UWP_Cursor.h"
 #include "UWP_Window.h"
 
+using namespace Windows::Foundation;
 using namespace Windows::UI::ViewManagement;
-
-#define DX12_RENDERSYS ((DirectX12_RenderSystem*)rendersys)
 
 namespace april
 {

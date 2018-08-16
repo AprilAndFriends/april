@@ -5,5 +5,5 @@
 float4 main(PixelShaderInput input) : SV_Target
 {
 	float4 tex = cTexture.Sample(cSampler, input.tex);
-	return float4(lerp(tex.rgb, input.color.rgb, input.lerpAlpha.a), tex.a * input.color.a);
+	return float4(MAKE_SEPIA_FLOAT3(tex.rgb) * input.color.rgb, tex.a * input.color.a);
 }

@@ -31,9 +31,8 @@ namespace april
 	{
 	}
 
-	bool DirectX11_Texture::_deviceCreateTexture(unsigned char* data, int size, Type type)
+	bool DirectX11_Texture::_deviceCreateTexture(unsigned char* data, int size)
 	{
-		this->internalType = type;
 		int bpp = this->format.getBpp();
 		D3D11_SUBRESOURCE_DATA textureSubresourceData = {0};
 		textureSubresourceData.pSysMem = data;
