@@ -87,6 +87,7 @@ namespace april
 		this->largeVertexBufferIndex = 0;
 		this->commandListIndex = 0;
 		this->commandListSize = 1;
+		hlog::warnf(logTag, "Using render system '%s' is NOT recommended due to stability and performance issues!", this->name.cStr());
 	}
 
 	DirectX12_RenderSystem::~DirectX12_RenderSystem()
