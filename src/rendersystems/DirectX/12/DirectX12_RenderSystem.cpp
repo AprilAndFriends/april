@@ -1289,21 +1289,18 @@ namespace april
 		}
 		_TRY_UNSAFE(hr, "Unable to present swap chain!");
 		const UINT64 currentFenceValue = this->fenceLimits[this->currentFrame];
+		_TRY_UNSAFE(this->commandQueue->Signal(this->fence.Get(), currentFenceValue), "Unable to signal command queue!");
 		this->currentFrame = this->swapChain->GetCurrentBackBufferIndex();
-		this->fenceValues[this->currentFrame] = this->fenceLimits[this->currentFrame] = currentFenceValue;
+		this->fenceValues[this->currentFrame] = this->fenceLimits[this->currentFrame] = currentFenceValue + 1;
 		this->commandListIndex = (this->commandListIndex + 1) % MAX_COMMAND_LISTS;
 		this->commandListSize = 1;
 		this->deviceState_constantBufferChanged = true;
 		this->deviceState_colorModeChanged = true;
 		this->deviceState_textureChanged = true;
 		this->prepareNewCommands();
-		D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = {};
-		renderTargetResourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		renderTargetResourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		static D3D12_RESOURCE_BARRIER renderTargetResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(NULL,
+			D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES, D3D12_RESOURCE_BARRIER_FLAG_NONE);
 		renderTargetResourceBarrier.Transition.pResource = this->renderTargets[this->currentFrame].Get();
-		renderTargetResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-		renderTargetResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		renderTargetResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 		this->commandList[this->commandListIndex]->ResourceBarrier(1, &renderTargetResourceBarrier);
 	}
 
