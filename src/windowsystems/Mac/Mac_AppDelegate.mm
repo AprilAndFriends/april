@@ -60,7 +60,7 @@ bool g_WindowFocusedBeforeSleep = false;
 	april::application->updateInitializing();
 	if (april::window == NULL)
 	{
-		[NSApp terminate:nil];
+		[[NSApplication sharedApplication] terminate:nil];
 		return;
 	}
 	NSNotificationCenter* c = [[NSWorkspace sharedWorkspace] notificationCenter];
