@@ -112,7 +112,7 @@ namespace april
 	{
 	}
 
-	DirectX11_RenderSystem::DirectX11_RenderSystem() : DirectX_RenderSystem(), deviceState_constantBufferChanged(true),
+	DirectX11_RenderSystem::DirectX11_RenderSystem() : DirectX_RenderSystem(), deviceState_constantBufferChanged(true), deviceState_colorModeChanged(true),
 		deviceState_shader(NULL), deviceState_sampler(nullptr), deviceState_renderOperation(RenderOperation::PointList)
 	{
 		this->name = april::RenderSystemType::DirectX11.getName();
@@ -184,6 +184,7 @@ namespace april
 		this->shaderColoredTexturedDesaturate = NULL;
 		this->shaderColoredTexturedSepia = NULL;
 		this->deviceState_constantBufferChanged = true;
+		this->deviceState_colorModeChanged = true;
 		this->deviceState_shader = NULL;
 		this->deviceState_sampler = nullptr;
 		this->deviceState_renderOperation = RenderOperation::PointList;
@@ -936,7 +937,7 @@ namespace april
 
 	void DirectX11_RenderSystem::_setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
 	{
-		this->deviceState_constantBufferChanged = true;
+		this->deviceState_colorModeChanged = true;
 	}
 
 	void DirectX11_RenderSystem::_updateDeviceState(RenderState* state, bool forceUpdate)
@@ -968,6 +969,10 @@ namespace april
 		else if (this->deviceState->colorMode == ColorMode::Sepia)
 		{
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Sepia);
+		}
+		else
+		{
+			hlog::error(logTag, "No appropriate shader could be selected!");
 		}
 		// change shaders
 		bool inputLayoutChanged = false;
@@ -1005,17 +1010,27 @@ namespace april
 			}
 		}
 		// change other data
+		bool changed = false;
 		if (this->deviceState_constantBufferChanged)
 		{
 			this->constantBufferData.matrix = (this->deviceState->projectionMatrix * this->deviceState->modelviewMatrix).transposed();
+			this->deviceState_constantBufferChanged = false;
+			changed = true;
+		}
+		if (this->deviceState_colorModeChanged)
+		{
 			this->constantBufferData.systemColor.set(this->deviceState->systemColor.r_f(), this->deviceState->systemColor.g_f(),
 				this->deviceState->systemColor.b_f(), this->deviceState->systemColor.a_f());
 			this->constantBufferData.lerpAlpha.set(this->deviceState->colorModeFactor, this->deviceState->colorModeFactor,
 				this->deviceState->colorModeFactor, this->deviceState->colorModeFactor);
+			this->deviceState_colorModeChanged = false;
+			changed = true;
+		}
+		if (changed)
+		{
 			this->d3dDeviceContext->Map(this->constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &this->mappedSubResource);
 			memcpy(this->mappedSubResource.pData, &this->constantBufferData, sizeof(ConstantBuffer));
 			this->d3dDeviceContext->Unmap(this->constantBuffer.Get(), 0);
-			this->deviceState_constantBufferChanged = false;
 		}
 	}
 

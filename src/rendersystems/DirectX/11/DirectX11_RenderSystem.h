@@ -153,6 +153,7 @@ namespace april
 		ShaderComposition* shaderColoredTexturedSepia;
 
 		bool deviceState_constantBufferChanged;
+		bool deviceState_colorModeChanged;
 		ShaderComposition* deviceState_shader;
 		ComPtr<ID3D11SamplerState> deviceState_sampler;
 		RenderOperation deviceState_renderOperation;
