@@ -7,6 +7,8 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _DIRECTX12
+#pragma message("WARNING! Using render system 'DirectX12' is NOT recommended due to stability and performance issues!")
+
 #include <comdef.h>
 #include <d3d12.h>
 #include <dxgi1_5.h>

@@ -155,6 +155,10 @@ namespace april
 		{
 			hlog::write(logTag, "UWP suspending...");
 			this->_processWindowFocusChange(true);
+			if (april::rendersys != NULL)
+			{
+				april::rendersys->suspend();
+			}
 			if (april::application != NULL)
 			{
 				april::application->suspend();

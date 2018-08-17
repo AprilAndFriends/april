@@ -76,8 +76,6 @@ namespace april
 
 		void updateOrientation();
 
-		void trim(); // needed by Win 8.1
-
 		// TODOa - implement
 		Texture* getRenderTarget();
 		void setRenderTarget(Texture* source);
@@ -143,11 +141,14 @@ namespace april
 		ComPtr<ID3D11SamplerState> deviceState_sampler;
 		RenderOperation deviceState_renderOperation;
 
+		int _getBackbufferCount() const;
+
 		void _deviceInit();
 		bool _deviceCreate(Options options);
 		bool _deviceDestroy();
 		void _deviceAssignWindow(Window* window);
 		void _deviceReset();
+		void _deviceSuspend();
 		void _deviceSetupCaps();
 		void _deviceSetup();
 		void _getAdapter(IDXGIAdapter1** adapter, bool hardware = true);

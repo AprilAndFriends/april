@@ -38,7 +38,6 @@
 
 #define SHADER_PATH "april/"
 #define VERTEX_BUFFER_COUNT 65536
-#define BACKBUFFER_COUNT 2
 
 #define __EXPAND(x) x
 
@@ -90,8 +89,6 @@ namespace april
 			throw Exception(hsprintf("%s - SYSTEM ERROR: '%s' - HRESULT: 0x%08X", errorMessage.cStr(), systemError.cStr(), hr));
 		}
 	}
-
-	static ColoredTexturedVertex static_ctv[VERTEX_BUFFER_COUNT];
 
 	D3D11_PRIMITIVE_TOPOLOGY DirectX11_RenderSystem::_dx11RenderOperations[] =
 	{
@@ -175,6 +172,11 @@ namespace april
 		this->deviceState_shader = NULL;
 		this->deviceState_sampler = nullptr;
 		this->deviceState_renderOperation = RenderOperation::PointList;
+	}
+
+	int DirectX11_RenderSystem::_getBackbufferCount() const
+	{
+		return (this->options.tripleBuffering ? 3 : 2);
 	}
 
 	bool DirectX11_RenderSystem::_deviceCreate(Options options)
@@ -277,10 +279,7 @@ namespace april
 			D3D_FEATURE_LEVEL_11_1,
 			D3D_FEATURE_LEVEL_11_0,
 			D3D_FEATURE_LEVEL_10_1,
-			D3D_FEATURE_LEVEL_10_0,
-			D3D_FEATURE_LEVEL_9_3,
-			D3D_FEATURE_LEVEL_9_2,
-			D3D_FEATURE_LEVEL_9_1
+			D3D_FEATURE_LEVEL_10_0
 		};
 		ComPtr<IDXGIAdapter1> adapter = nullptr;
 		this->_getAdapter(adapter.GetAddressOf());
@@ -440,12 +439,22 @@ namespace april
 		*/
 	}
 
+	void DirectX11_RenderSystem::_deviceSuspend()
+	{
+		DirectX_RenderSystem::_deviceSuspend();
+		// This provides a hint to the driver that the app is entering an idle state and that temporary buffers can be reclaimed for use by other apps.
+		ComPtr<IDXGIDevice3> dxgiDevice;
+		if (SUCCEEDED(this->d3dDevice.As(&dxgiDevice)))
+		{
+			dxgiDevice->Trim();
+		}
+	}
+
 	void DirectX11_RenderSystem::_deviceSetupCaps()
 	{
-		// depends on FEATURE_LEVEL, while 9.3 supports 4096, 9.2 and 9.1 support only 2048 so using 2048 is considered safe
-		this->caps.maxTextureSize = D3D_FL9_1_REQ_TEXTURE1D_U_DIMENSION;
+		this->caps.maxTextureSize = D3D_FL9_3_REQ_TEXTURE1D_U_DIMENSION;
 		this->caps.npotTexturesLimited = true;
-		this->caps.npotTextures = false; // because of usage of feature level 9_3
+		this->caps.npotTextures = true;
 	}
 
 	void DirectX11_RenderSystem::_deviceSetup()
@@ -501,7 +510,6 @@ namespace april
 		// created on the same adapter as the existing D3D Device.
 		ComPtr<IDXGIDevice3> dxgiDevice;
 		_TRY_UNSAFE(this->d3dDevice.As(&dxgiDevice), "Unable to retrieve DXGI device!");
-		// TODOuwp - this might need to be removed for vsync=disabled to work
 		_TRY_UNSAFE(dxgiDevice->SetMaximumFrameLatency(1), "Unable to set MaximumFrameLatency!");
 		ComPtr<IDXGIAdapter> dxgiAdapter;
 		_TRY_UNSAFE(dxgiDevice->GetAdapter(&dxgiAdapter), "Unable to get adapter from DXGI device!");
@@ -519,15 +527,14 @@ namespace april
 		swapChainDesc.Height = height;
 		swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapChainDesc.BufferCount = BACKBUFFER_COUNT; // TODOuwp - should respect tripleBuffering option
+		swapChainDesc.BufferCount = this->_getBackbufferCount();
 		swapChainDesc.SampleDesc.Count = 1;
 		swapChainDesc.SampleDesc.Quality = 0;
 		swapChainDesc.Scaling = DXGI_SCALING_ASPECT_RATIO_STRETCH;
-		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL; // TODOuwp - test this
-		//swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
-		swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // TODOuwp - test this
-		if (this->options.vSync)
+		swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+		if (!this->options.vSync)
 		{
 			swapChainDesc.Flags |= DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
 		}
@@ -541,28 +548,19 @@ namespace april
 
 	void DirectX11_RenderSystem::_resizeSwapChain(int width, int height)
 	{
-		UINT flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // TODOuwp - test this
-		if (this->options.vSync)
+		UINT flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+		if (!this->options.vSync)
 		{
 			flags |= DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
 		}
-		_TRY_UNSAFE(this->swapChain->ResizeBuffers(BACKBUFFER_COUNT, width, height, DXGI_FORMAT_B8G8R8A8_UNORM, flags), "Unable to resize swap chain buffers!");
+		_TRY_UNSAFE(this->swapChain->ResizeBuffers(this->_getBackbufferCount(), width, height, DXGI_FORMAT_B8G8R8A8_UNORM, flags), "Unable to resize swap chain buffers!");
 		this->_configureSwapChain();
 		this->updateOrientation();
 	}
 
 	void DirectX11_RenderSystem::_configureSwapChain()
 	{
-		// so... we have to apply an inverted scale to the swap chain?
-		DXGI_MATRIX_3X2_F inverseScale = { 0 };
-		// TODOuwp - implement this
-		/*
-		inverseScale._11 = 1.0f / WinRT::App->Overlay->CompositionScaleX;
-		inverseScale._22 = 1.0f / WinRT::App->Overlay->CompositionScaleY;
-		*/
-		//this->swapChain->SetMatrixTransform(&inverseScale);
 		// get the back buffer
-		//ComPtr<ID3D11Texture2D> _backBuffer;
 		_TRY_UNSAFE(this->swapChain->GetBuffer(0, IID_PPV_ARGS(&this->renderTarget)), "Unable to get swap chain back buffer!");
 		// Create a descriptor for the RenderTargetView.
 		CD3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc(D3D11_RTV_DIMENSION_TEXTURE2DARRAY, DXGI_FORMAT_B8G8R8A8_UNORM, 0, 0, 1);
@@ -959,7 +957,6 @@ namespace april
 	void DirectX11_RenderSystem::_deviceClear(bool depth)
 	{
 		static const float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-		// TODOuwp - does this work?
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 	
@@ -970,7 +967,6 @@ namespace april
 		clearColor[1] = color.g_f();
 		clearColor[2] = color.r_f();
 		clearColor[3] = color.a_f();
-		// TODOuwp - does this work?
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 
@@ -1064,7 +1060,6 @@ namespace april
 	void DirectX11_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
 		RenderSystem::_devicePresentFrame(systemEnabled);
-		// TODOuwp - for vsync support, is this correct?
 		this->options.vSync ? this->swapChain->Present(1, 0) : this->swapChain->Present(0, DXGI_PRESENT_ALLOW_TEARING);
 		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
 		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
@@ -1096,14 +1091,6 @@ namespace april
 			hlog::error(logTag, "Undefined screen orienation, using default landscape!");
 			rotation = DXGI_MODE_ROTATION_ROTATE90;
 		}
-	}
-
-	void DirectX11_RenderSystem::trim()
-	{
-		// TODOuwp - is this still needed in UWP?
-		ComPtr<IDXGIDevice3> dxgiDevice;
-		_TRY_UNSAFE(this->d3dDevice.As(&dxgiDevice), "Unable to retrieve DXGI device!");
-		dxgiDevice->Trim();
 	}
 
 	Texture* DirectX11_RenderSystem::getRenderTarget()
