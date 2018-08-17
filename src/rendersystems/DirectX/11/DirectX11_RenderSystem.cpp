@@ -151,23 +151,35 @@ namespace april
 		this->vertexShaderColored = NULL;
 		this->vertexShaderColoredTextured = NULL;
 		this->pixelShaderMultiply = NULL;
-		this->pixelShaderLerp = NULL;
 		this->pixelShaderAlphaMap = NULL;
+		this->pixelShaderLerp = NULL;
+		this->pixelShaderDesaturate = NULL;
+		this->pixelShaderSepia = NULL;
 		this->pixelShaderTexturedMultiply = NULL;
-		this->pixelShaderTexturedLerp = NULL;
 		this->pixelShaderTexturedAlphaMap = NULL;
+		this->pixelShaderTexturedLerp = NULL;
+		this->pixelShaderTexturedDesaturate = NULL;
+		this->pixelShaderTexturedSepia = NULL;
 		this->shaderMultiply = NULL;
-		this->shaderLerp = NULL;
 		this->shaderAlphaMap = NULL;
+		this->shaderLerp = NULL;
+		this->shaderDesaturate = NULL;
+		this->shaderSepia = NULL;
 		this->shaderTexturedMultiply = NULL;
-		this->shaderTexturedLerp = NULL;
 		this->shaderTexturedAlphaMap = NULL;
+		this->shaderTexturedLerp = NULL;
+		this->shaderTexturedDesaturate = NULL;
+		this->shaderTexturedSepia = NULL;
 		this->shaderColoredMultiply = NULL;
-		this->shaderColoredLerp = NULL;
 		this->shaderColoredAlphaMap = NULL;
+		this->shaderColoredLerp = NULL;
+		this->shaderColoredDesaturate = NULL;
+		this->shaderColoredSepia = NULL;
 		this->shaderColoredTexturedMultiply = NULL;
-		this->shaderColoredTexturedLerp = NULL;
 		this->shaderColoredTexturedAlphaMap = NULL;
+		this->shaderColoredTexturedLerp = NULL;
+		this->shaderColoredTexturedDesaturate = NULL;
+		this->shaderColoredTexturedSepia = NULL;
 		this->deviceState_constantBufferChanged = true;
 		this->deviceState_shader = NULL;
 		this->deviceState_sampler = nullptr;
@@ -193,23 +205,35 @@ namespace april
 		_HL_TRY_DELETE(this->vertexShaderColored);
 		_HL_TRY_DELETE(this->vertexShaderColoredTextured);
 		_HL_TRY_DELETE(this->pixelShaderMultiply);
-		_HL_TRY_DELETE(this->pixelShaderLerp);
 		_HL_TRY_DELETE(this->pixelShaderAlphaMap);
+		_HL_TRY_DELETE(this->pixelShaderLerp);
+		_HL_TRY_DELETE(this->pixelShaderDesaturate);
+		_HL_TRY_DELETE(this->pixelShaderSepia);
 		_HL_TRY_DELETE(this->pixelShaderTexturedMultiply);
-		_HL_TRY_DELETE(this->pixelShaderTexturedLerp);
 		_HL_TRY_DELETE(this->pixelShaderTexturedAlphaMap);
+		_HL_TRY_DELETE(this->pixelShaderTexturedLerp);
+		_HL_TRY_DELETE(this->pixelShaderTexturedDesaturate);
+		_HL_TRY_DELETE(this->pixelShaderTexturedSepia);
 		_HL_TRY_DELETE(this->shaderMultiply);
-		_HL_TRY_DELETE(this->shaderLerp);
 		_HL_TRY_DELETE(this->shaderAlphaMap);
+		_HL_TRY_DELETE(this->shaderLerp);
+		_HL_TRY_DELETE(this->shaderDesaturate);
+		_HL_TRY_DELETE(this->shaderSepia);
 		_HL_TRY_DELETE(this->shaderTexturedMultiply);
-		_HL_TRY_DELETE(this->shaderTexturedLerp);
 		_HL_TRY_DELETE(this->shaderTexturedAlphaMap);
+		_HL_TRY_DELETE(this->shaderTexturedLerp);
+		_HL_TRY_DELETE(this->shaderTexturedDesaturate);
+		_HL_TRY_DELETE(this->shaderTexturedSepia);
 		_HL_TRY_DELETE(this->shaderColoredMultiply);
-		_HL_TRY_DELETE(this->shaderColoredLerp);
 		_HL_TRY_DELETE(this->shaderColoredAlphaMap);
+		_HL_TRY_DELETE(this->shaderColoredLerp);
+		_HL_TRY_DELETE(this->shaderColoredDesaturate);
+		_HL_TRY_DELETE(this->shaderColoredSepia);
 		_HL_TRY_DELETE(this->shaderColoredTexturedMultiply);
-		_HL_TRY_DELETE(this->shaderColoredTexturedLerp);
 		_HL_TRY_DELETE(this->shaderColoredTexturedAlphaMap);
+		_HL_TRY_DELETE(this->shaderColoredTexturedLerp);
+		_HL_TRY_DELETE(this->shaderColoredTexturedDesaturate);
+		_HL_TRY_DELETE(this->shaderColoredTexturedSepia);
 		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_deviceDestroy()");
 		this->setViewport(grecti(0, 0, april::getSystemInfo().displayResolution));
 		return true;
@@ -383,11 +407,15 @@ namespace april
 		LOAD_SHADER(this->vertexShaderColored, Vertex, Colored);
 		LOAD_SHADER(this->vertexShaderColoredTextured, Vertex, ColoredTextured);
 		LOAD_SHADER(this->pixelShaderMultiply, Pixel, Multiply);
-		LOAD_SHADER(this->pixelShaderLerp, Pixel, Lerp);
 		LOAD_SHADER(this->pixelShaderAlphaMap, Pixel, AlphaMap);
+		LOAD_SHADER(this->pixelShaderLerp, Pixel, Lerp);
+		LOAD_SHADER(this->pixelShaderDesaturate, Pixel, Desaturate);
+		LOAD_SHADER(this->pixelShaderSepia, Pixel, Sepia);
 		LOAD_SHADER(this->pixelShaderTexturedMultiply, Pixel, TexturedMultiply);
-		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp);
 		LOAD_SHADER(this->pixelShaderTexturedAlphaMap, Pixel, TexturedAlphaMap);
+		LOAD_SHADER(this->pixelShaderTexturedLerp, Pixel, TexturedLerp);
+		LOAD_SHADER(this->pixelShaderTexturedDesaturate, Pixel, TexturedDesaturate);
+		LOAD_SHADER(this->pixelShaderTexturedSepia, Pixel, TexturedSepia);
 		// input layouts for default shaders
 		static const D3D11_INPUT_ELEMENT_DESC inputLayoutDescPlain[] =
 		{
@@ -415,17 +443,25 @@ namespace april
 		CREATE_INPUT_LAYOUT(this->inputLayoutColoredTextured, ColoredTextured, inputLayoutDescColoredTextured);
 		// shader compositions for rendering modes
 		CREATE_COMPOSITION(this->shaderMultiply, Plain, Multiply);
-		CREATE_COMPOSITION(this->shaderLerp, Plain, Lerp);
 		CREATE_COMPOSITION(this->shaderAlphaMap, Plain, AlphaMap);
+		CREATE_COMPOSITION(this->shaderLerp, Plain, Lerp);
+		CREATE_COMPOSITION(this->shaderDesaturate, Plain, Desaturate);
+		CREATE_COMPOSITION(this->shaderSepia, Plain, Sepia);
 		CREATE_COMPOSITION(this->shaderTexturedMultiply, Textured, TexturedMultiply);
-		CREATE_COMPOSITION(this->shaderTexturedLerp, Textured, TexturedLerp);
 		CREATE_COMPOSITION(this->shaderTexturedAlphaMap, Textured, TexturedAlphaMap);
+		CREATE_COMPOSITION(this->shaderTexturedLerp, Textured, TexturedLerp);
+		CREATE_COMPOSITION(this->shaderTexturedDesaturate, Textured, TexturedDesaturate);
+		CREATE_COMPOSITION(this->shaderTexturedSepia, Textured, TexturedSepia);
 		CREATE_COMPOSITION(this->shaderColoredMultiply, Colored, Multiply);
 		CREATE_COMPOSITION(this->shaderColoredLerp, Colored, Lerp);
+		CREATE_COMPOSITION(this->shaderColoredDesaturate, Colored, Desaturate);
+		CREATE_COMPOSITION(this->shaderColoredSepia, Colored, Sepia);
 		CREATE_COMPOSITION(this->shaderColoredAlphaMap, Colored, AlphaMap);
 		CREATE_COMPOSITION(this->shaderColoredTexturedMultiply, ColoredTextured, TexturedMultiply);
-		CREATE_COMPOSITION(this->shaderColoredTexturedLerp, ColoredTextured, TexturedLerp);
 		CREATE_COMPOSITION(this->shaderColoredTexturedAlphaMap, ColoredTextured, TexturedAlphaMap);
+		CREATE_COMPOSITION(this->shaderColoredTexturedLerp, ColoredTextured, TexturedLerp);
+		CREATE_COMPOSITION(this->shaderColoredTexturedDesaturate, ColoredTextured, TexturedDesaturate);
+		CREATE_COMPOSITION(this->shaderColoredTexturedSepia, ColoredTextured, TexturedSepia);
 	}
 
 	void DirectX11_RenderSystem::_deviceReset()
@@ -903,6 +939,14 @@ namespace april
 		else if (this->deviceState->colorMode == ColorMode::Lerp)
 		{
 			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Lerp);
+		}
+		else if (this->deviceState->colorMode == ColorMode::Desaturate)
+		{
+			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Desaturate);
+		}
+		else if (this->deviceState->colorMode == ColorMode::Sepia)
+		{
+			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Sepia);
 		}
 		// change shaders
 		bool inputLayoutChanged = false;
