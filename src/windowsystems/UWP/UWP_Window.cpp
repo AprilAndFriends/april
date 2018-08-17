@@ -71,6 +71,7 @@ namespace april
 	
 	hstr UWP_Window::getParam(chstr param)
 	{
+		// TODOuwp - remove all _WINP8 code
 #ifndef _WINP8
 		if (param == UWP_CURSOR_MAPPINGS)
 		{
@@ -160,12 +161,31 @@ namespace april
 
 	void UWP_Window::showVirtualKeyboard()
 	{
-		//UWP::App->Overlay->showKeyboard();
+		// TODOuwp - finish this
+		/*
+		DispatchedHandler^ handler = ref new DispatchedHandler(
+			[]()
+		{
+			InputPane::GetForCurrentView()->TryShow();
+		});
+		try
+		{
+			CoreWindow^ window = CoreWindow::GetForCurrentThread(); // window is NULL in this thread
+			window->Dispatcher->RunAsync(CoreDispatcherPriority::Normal, handler);
+		}
+		catch (Platform::AccessDeniedException^ e)
+		{
+			//hlog::warn(logTag, "messagebox() on UWP called \"recursively\"! Queueing to UI thread now...");
+		}
+		*/
 	}
 
 	void UWP_Window::hideVirtualKeyboard()
 	{
-		//UWP::App->Overlay->hideKeyboard();
+		// TODOuwp - finish this
+		/*
+		InputPane::GetForCurrentView()->TryHide(); // crashes when not called on main thread
+		*/
 	}
 
 	hstr UWP_Window::findCursorFile(chstr filename) const

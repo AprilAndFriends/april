@@ -56,11 +56,6 @@ namespace april
 #else
 		this->defaultCursor = nullptr;
 #endif
-		/*
-		this->backgroundColor = Color::Black;
-		this->launched = false;
-		this->activated = false;
-		*/
 		this->scrollHorizontal = false;
 		this->startTime = htickCount();
 		this->currentButton = Key::None;
@@ -74,14 +69,6 @@ namespace april
 		applicationView->Activated += ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &UWP_App::onActivated);
 		CoreApplication::Suspending += ref new EventHandler<SuspendingEventArgs^>(this, &UWP_App::onSuspending);
 		CoreApplication::Resuming += ref new EventHandler<Platform::Object^>(this, &UWP_App::onResuming);
-		/*
-#ifdef _DEBUG
-		this->UnhandledException += ref new UnhandledExceptionEventHandler([](Object^ sender, UnhandledExceptionEventArgs^ args)
-		{
-			hlog::error("FATAL", _HL_PSTR_TO_HSTR(args->Message));
-		});
-#endif
-*/
 	}
 
 	void UWP_App::SetWindow(CoreWindow^ window)
@@ -98,6 +85,9 @@ namespace april
 		window->KeyDown += ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(this, &UWP_App::onKeyDown);
 		window->KeyUp += ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(this, &UWP_App::onKeyUp);
 		window->CharacterReceived += ref new TypedEventHandler<CoreWindow^, CharacterReceivedEventArgs^>(this, &UWP_App::onCharacterReceived);
+		InputPane^ inputPane = InputPane::GetForCurrentView();
+		inputPane->Showing += ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(this, &UWP_App::onVirtualKeyboardShow);
+		inputPane->Hiding += ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(this, &UWP_App::onVirtualKeyboardHide);
 		DisplayInformation^ displayInformation = DisplayInformation::GetForCurrentView();
 		displayInformation->DpiChanged += ref new TypedEventHandler<DisplayInformation^, Object^>(this, &UWP_App::onDpiChanged);
 		displayInformation->OrientationChanged += ref new TypedEventHandler<DisplayInformation^, Object^>(this, &UWP_App::onOrientationChanged);
@@ -289,13 +279,11 @@ namespace april
 		}
 	}
 
-	// TODOuwp - implement
-	/*
 	void UWP_App::onVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)
 	{
 		if (april::window != NULL)
 		{
-			april::window->handleVirtualKeyboardChange(true, args->OccludedRect.Height / CoreWindow::GetForCurrentThread()->Bounds.Height);
+			april::window->queueVirtualKeyboardChange(true, args->OccludedRect.Height / CoreWindow::GetForCurrentThread()->Bounds.Height);
 		}
 		this->_resetTouches();
 	}
@@ -304,11 +292,10 @@ namespace april
 	{
 		if (april::window != NULL)
 		{
-			april::window->handleVirtualKeyboardChange(false, 0.0f);
+			april::window->queueVirtualKeyboardChange(false, 0.0f);
 		}
 		this->_resetTouches();
 	}
-	*/
 
 	void UWP_App::onTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
 	{

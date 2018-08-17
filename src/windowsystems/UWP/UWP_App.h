@@ -14,30 +14,17 @@
 #ifndef APRIL_UWP_APP_H
 #define APRIL_UWP_APP_H
 
-//#include <gtypes/Matrix4.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/harray.h>
 
 #include "Keys.h"
-//#include "Color.h"
-//#include "pch.h"
-//#include "WinRT_XamlOverlay.xaml.h"
 
 using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Activation;
 using namespace Windows::ApplicationModel::Core;
 using namespace Windows::Graphics::Display;
 using namespace Windows::UI::Core;
-/*
-using namespace Windows::Foundation;
-using namespace Windows::Graphics::Display;
 using namespace Windows::UI::ViewManagement;
-using namespace Windows::UI::Xaml;
-using namespace Windows::UI::Xaml::Markup;
-#ifdef _WINP8
-using namespace Windows::Phone::UI::Input;
-#endif
-*/
 
 namespace april
 {
@@ -59,10 +46,8 @@ namespace april
 
 		void refreshCursor();
 		
-		/*
-		void OnVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
-		void OnVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
-		*/
+		void onVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
+		void onVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
 
 		void onTouchDown(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
 		void onTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args);
