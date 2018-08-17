@@ -91,6 +91,9 @@ namespace april
 		ComPtr<ID3D11RasterizerState> rasterState;
 		ComPtr<ID3D11Texture2D> renderTarget;
 		ComPtr<ID3D11RenderTargetView> renderTargetView;
+		ComPtr<ID3D11Texture2D> depthBuffer;
+		ComPtr<ID3D11DepthStencilView> depthBufferView;
+
 		ComPtr<ID3D11BlendState> blendStateAlpha;
 		ComPtr<ID3D11BlendState> blendStateAdd;
 		ComPtr<ID3D11BlendState> blendStateSubtract;
@@ -99,6 +102,7 @@ namespace april
 		ComPtr<ID3D11SamplerState> samplerLinearClamp;
 		ComPtr<ID3D11SamplerState> samplerNearestWrap;
 		ComPtr<ID3D11SamplerState> samplerNearestClamp;
+		ComPtr<ID3D11DepthStencilState> depthState;
 
 		D3D11_BUFFER_DESC vertexBufferDesc;
 		D3D11_SUBRESOURCE_DATA vertexBufferData;

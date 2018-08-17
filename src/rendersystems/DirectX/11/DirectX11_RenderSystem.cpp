@@ -132,6 +132,8 @@ namespace april
 		this->rasterState = nullptr;
 		this->renderTarget = nullptr;
 		this->renderTargetView = nullptr;
+		this->depthBuffer = nullptr;
+		this->depthBufferView = nullptr;
 		this->blendStateAlpha = nullptr;
 		this->blendStateAdd = nullptr;
 		this->blendStateSubtract = nullptr;
@@ -140,6 +142,7 @@ namespace april
 		this->samplerLinearClamp = nullptr;
 		this->samplerNearestWrap = nullptr;
 		this->samplerNearestClamp = nullptr;
+		this->depthState = nullptr;
 		this->vertexBuffer = nullptr;
 		this->constantBuffer = nullptr;
 		this->inputLayoutPlain = nullptr;
@@ -467,12 +470,7 @@ namespace april
 	void DirectX11_RenderSystem::_deviceReset()
 	{
 		DirectX_RenderSystem::_deviceReset();
-		// TODOuwp - is this still needed?
-		/*
-		// possible Microsoft bug, required for SwapChainPanel to update its layout 
-		reinterpret_cast<IUnknown*>(UWP::app->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
-		this->swapChainNative->SetSwapChain(this->swapChain.Get());
-		*/
+		// TODOuwp - implement
 	}
 
 	void DirectX11_RenderSystem::_deviceSuspend()
@@ -542,8 +540,7 @@ namespace april
 
 	void DirectX11_RenderSystem::_createSwapChain(int width, int height)
 	{
-		// Once the swap chain desc is configured, it must be
-		// created on the same adapter as the existing D3D Device.
+		// Once the swap chain desc is configured, it must be created on the same adapter as the existing D3D Device.
 		ComPtr<IDXGIDevice3> dxgiDevice;
 		_TRY_UNSAFE(this->d3dDevice.As(&dxgiDevice), "Unable to retrieve DXGI device!");
 		_TRY_UNSAFE(dxgiDevice->SetMaximumFrameLatency(1), "Unable to set MaximumFrameLatency!");
@@ -584,6 +581,12 @@ namespace april
 
 	void DirectX11_RenderSystem::_resizeSwapChain(int width, int height)
 	{
+		this->d3dDeviceContext->OMSetRenderTargets(0, NULL, NULL);
+		this->renderTarget = nullptr;
+		this->renderTargetView = nullptr;
+		this->depthBuffer = nullptr;
+		this->depthBufferView = nullptr;
+		this->d3dDeviceContext->Flush();
 		UINT flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 		if (!this->options.vSync)
 		{
@@ -601,19 +604,27 @@ namespace april
 		// Create a descriptor for the RenderTargetView.
 		CD3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc(D3D11_RTV_DIMENSION_TEXTURE2DARRAY, DXGI_FORMAT_B8G8R8A8_UNORM, 0, 0, 1);
 		_TRY_UNSAFE(this->d3dDevice->CreateRenderTargetView(this->renderTarget.Get(), &renderTargetViewDesc, &this->renderTargetView), "Unable to create render target view!");
+		if (this->options.depthBuffer)
+		{
+			// Create a depth stencil view for use with 3D rendering if needed.
+			CD3D11_TEXTURE2D_DESC depthBufferDesc(DXGI_FORMAT_D32_FLOAT, april::window->getWidth(), april::window->getHeight(), 1, 1, D3D11_BIND_DEPTH_STENCIL);
+			_TRY_UNSAFE(this->d3dDevice->CreateTexture2D(&depthBufferDesc, NULL, &this->depthBuffer), "Could not create depth buffer!");
+			CD3D11_DEPTH_STENCIL_VIEW_DESC depthBufferViewDesc(D3D11_DSV_DIMENSION_TEXTURE2D, DXGI_FORMAT_D32_FLOAT);
+			_TRY_UNSAFE(this->d3dDevice->CreateDepthStencilView(this->depthBuffer.Get(), &depthBufferViewDesc, &this->depthBufferView), "Could not create depth buffer!");
+		}
 		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
-		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+		if (!this->options.depthBuffer || !this->deviceState->depthBuffer || !this->deviceState->depthBufferWrite)
+		{
+			this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+		}
+		else
+		{
+			this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), this->depthBufferView.Get());
+		}
 	}
 
 	void DirectX11_RenderSystem::_configureDevice()
 	{
-		this->d3dDeviceContext->OMSetRenderTargets(0, NULL, NULL);
-		this->renderTargetView = nullptr;
-		this->renderTarget = nullptr;
-		// TODOuwp - implement
-		//this->d3dDepthStencilView = nullptr;
-		//this->depthStencil = nullptr;
-		this->d3dDeviceContext->Flush();
 		if (this->swapChain != nullptr)
 		{
 			this->_resizeSwapChain(april::window->getWidth(), april::window->getHeight());
@@ -712,6 +723,16 @@ namespace april
 		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
 		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 		this->d3dDevice->CreateSamplerState(&samplerDesc, &this->samplerNearestClamp);
+		if (this->options.depthBuffer)
+		{
+			// depth test
+			D3D11_DEPTH_STENCIL_DESC depthDesc;
+			depthDesc.DepthEnable = true;
+			depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+			depthDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+			depthDesc.StencilEnable = false;
+			_TRY_UNSAFE(this->d3dDevice->CreateDepthStencilState(&depthDesc, &this->depthState), "Could not create depth test state!");
+		}
 		// other
 		this->_deviceClear(true);
 		this->_devicePresentFrame(true);
@@ -765,13 +786,6 @@ namespace april
 
 	void DirectX11_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
 	{
-		this->d3dDeviceContext->OMSetRenderTargets(0, NULL, NULL);
-		this->renderTargetView = nullptr;
-		this->renderTarget = nullptr;
-		// TODOuwp - implement
-		//this->d3dDepthStencilView = nullptr;
-		//this->depthStencil = nullptr;
-		this->d3dDeviceContext->Flush();
 		if (this->swapChain != nullptr)
 		{
 			this->_resizeSwapChain(april::window->getWidth(), april::window->getHeight());
@@ -834,7 +848,14 @@ namespace april
 
 	void DirectX11_RenderSystem::_setDeviceDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		//hlog::error(logTag, "Not implemented!");
+		if (this->options.depthBuffer && enabled && writeEnabled)
+		{
+			this->d3dDeviceContext->OMSetDepthStencilState(this->depthState.Get(), 1);
+		}
+		else
+		{
+			this->d3dDeviceContext->OMSetDepthStencilState(NULL, 0);
+		}
 	}
 
 	void DirectX11_RenderSystem::_setDeviceRenderMode(bool useTexture, bool useColor)
@@ -1002,6 +1023,10 @@ namespace april
 	{
 		static const float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
+		if (depth)
+		{
+			this->_deviceClearDepth();
+		}
 	}
 	
 	void DirectX11_RenderSystem::_deviceClear(const Color& color, bool depth)
@@ -1012,13 +1037,18 @@ namespace april
 		clearColor[2] = color.r_f();
 		clearColor[3] = color.a_f();
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
+		if (depth)
+		{
+			this->_deviceClearDepth();
+		}
 	}
 
 	void DirectX11_RenderSystem::_deviceClearDepth()
 	{
-		// TODOuwp - implement
-		//static const float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-		//this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
+		if (this->options.depthBuffer)
+		{
+			this->d3dDeviceContext->ClearDepthStencilView(this->depthBufferView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+		}
 	}
 
 	void DirectX11_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const PlainVertex* vertices, int count)
@@ -1106,7 +1136,14 @@ namespace april
 		RenderSystem::_devicePresentFrame(systemEnabled);
 		this->options.vSync ? this->swapChain->Present(1, 0) : this->swapChain->Present(0, DXGI_PRESENT_ALLOW_TEARING);
 		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
-		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+		if (!this->options.depthBuffer || !this->deviceState->depthBuffer || !this->deviceState->depthBufferWrite)
+		{
+			this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+		}
+		else
+		{
+			this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), this->depthBufferView.Get());
+		}
 	}
 
 	void DirectX11_RenderSystem::updateOrientation()
