@@ -546,8 +546,7 @@ namespace april
 		{
 			flags |= DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
 		}
-
-		_TRY_UNSAFE(this->swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, flags), "Unable to resize swap chain buffers!");
+		_TRY_UNSAFE(this->swapChain->ResizeBuffers(BACKBUFFER_COUNT, width, height, DXGI_FORMAT_B8G8R8A8_UNORM, flags), "Unable to resize swap chain buffers!");
 		this->_configureSwapChain();
 		this->updateOrientation();
 	}
@@ -732,6 +731,13 @@ namespace april
 
 	void DirectX11_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
 	{
+		this->d3dDeviceContext->OMSetRenderTargets(0, NULL, NULL);
+		this->renderTargetView = nullptr;
+		this->renderTarget = nullptr;
+		// TODOuwp - implement
+		//this->d3dDepthStencilView = nullptr;
+		//this->depthStencil = nullptr;
+		this->d3dDeviceContext->Flush();
 		if (this->swapChain != nullptr)
 		{
 			this->_resizeSwapChain(april::window->getWidth(), april::window->getHeight());
@@ -1058,13 +1064,10 @@ namespace april
 	void DirectX11_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
 		RenderSystem::_devicePresentFrame(systemEnabled);
-		if (systemEnabled)
-		{
-			// TODOuwp - for vsync support, is this correct?
-			this->swapChain->Present((this->options.vSync ? 1 : 0), 0);
-			// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
-			this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
-		}
+		// TODOuwp - for vsync support, is this correct?
+		this->options.vSync ? this->swapChain->Present(1, 0) : this->swapChain->Present(0, DXGI_PRESENT_ALLOW_TEARING);
+		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
+		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
 	}
 
 	void DirectX11_RenderSystem::updateOrientation()
