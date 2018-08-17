@@ -51,7 +51,7 @@ static NSString* getLocalizedString(NSString* key, NSString* fallback)
 #ifdef _SDL
 	gAprilShouldInvokeQuitCallback = 1;
 #else
-	if (sender == nil) // called from Window::terminateMainLoop()
+	if (april::window == NULL)
 	{
 		[super terminate:sender];
 	}
