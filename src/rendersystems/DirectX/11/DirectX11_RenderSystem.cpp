@@ -7,8 +7,13 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifdef _DIRECTX11
+#include <comdef.h>
 #include <d3d11_4.h>
+#include <dxgi1_5.h>
 #include <stdio.h>
+#ifdef _DEBUG
+#include <dxgidebug.h>
+#endif
 
 #include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
@@ -68,16 +73,34 @@ using namespace Windows::Graphics::Display;
 
 namespace april
 {
+	static inline void _TRY_UNSAFE(HRESULT hr, chstr errorMessage)
+	{
+		if (FAILED(hr))
+		{
+			hstr systemError;
+			try
+			{
+				char message[1024] = { 0 };
+				FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), message, 1023, NULL);
+				systemError = hstr(message).replaced("\r\n", "\n").trimmedRight('\n');
+			}
+			catch (...)
+			{
+			}
+			throw Exception(hsprintf("%s - SYSTEM ERROR: '%s' - HRESULT: 0x%08X", errorMessage.cStr(), systemError.cStr(), hr));
+		}
+	}
+
 	static ColoredTexturedVertex static_ctv[VERTEX_BUFFER_COUNT];
 
 	D3D11_PRIMITIVE_TOPOLOGY DirectX11_RenderSystem::_dx11RenderOperations[] =
 	{
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,	// ROP_TRIANGLE_LIST
-		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,	// ROP_TRIANGLE_STRIP
-		D3D11_PRIMITIVE_TOPOLOGY_LINELIST,		// ROP_LINE_LIST
-		D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,		// ROP_LINE_STRIP
-		D3D11_PRIMITIVE_TOPOLOGY_POINTLIST,		// ROP_POINT_LIST
-		D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED,		// triangle fans are deprecated in DX11
+		D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST,	// RenderOperation::TriangleList
+		D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,	// RenderOperation::TriangleStrip
+		D3D_PRIMITIVE_TOPOLOGY_LINELIST,		// RenderOperation::ListList
+		D3D_PRIMITIVE_TOPOLOGY_LINESTRIP,		// RenderOperation::LineStrip
+		D3D_PRIMITIVE_TOPOLOGY_POINTLIST,		// RenderOperation::PointList
+		D3D_PRIMITIVE_TOPOLOGY_UNDEFINED,		// triangle fans are deprecated in DX11
 	};
 
 	DirectX11_RenderSystem::ShaderComposition::ShaderComposition(ComPtr<ID3D11InputLayout> inputLayout,
@@ -105,11 +128,12 @@ namespace april
 
 	void DirectX11_RenderSystem::_deviceInit()
 	{
+		this->dxgiFactory = nullptr;
 		this->d3dDevice = nullptr;
 		this->d3dDeviceContext = nullptr;
 		this->swapChain = nullptr;
-		this->swapChainNative = nullptr;
 		this->rasterState = nullptr;
+		this->renderTarget = nullptr;
 		this->renderTargetView = nullptr;
 		this->blendStateAlpha = nullptr;
 		this->blendStateAdd = nullptr;
@@ -192,48 +216,138 @@ namespace april
 	void DirectX11_RenderSystem::_deviceAssignWindow(Window* window)
 	{
 		unsigned int creationFlags = 0;
+		unsigned int dxgiFactoryFlags = 0;
 		creationFlags |= D3D11_CREATE_DEVICE_PREVENT_ALTERING_LAYER_SETTINGS_FROM_REGISTRY;
+#ifndef _DEBUG
 		if (this->options.debugInfo)
+#endif
 		{
-			//creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
+			if (SUCCEEDED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_NULL, 0, D3D11_CREATE_DEVICE_DEBUG, nullptr, 0, D3D11_SDK_VERSION, nullptr, nullptr, nullptr)))
+			{
+				creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
+				dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
+			}
+			else
+			{
+				hlog::warn(logTag, "D3D debug device is not available.");
+			}
 		}
-		D3D_FEATURE_LEVEL featureLevels[] =
+#ifdef _DEBUG
+		ComPtr<IDXGIInfoQueue> dxgiInfoQueue;
+		if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(dxgiInfoQueue.GetAddressOf()))))
 		{
-			// Intel HD GPUs have driver problems with 11.x feature levels so they have been disabled
-			//D3D_FEATURE_LEVEL_11_1,
-			//D3D_FEATURE_LEVEL_11_0,
+			dxgiInfoQueue->SetBreakOnSeverity(DXGI_DEBUG_ALL, DXGI_INFO_QUEUE_MESSAGE_SEVERITY_WARNING, true);
+			dxgiInfoQueue->SetBreakOnSeverity(DXGI_DEBUG_ALL, DXGI_INFO_QUEUE_MESSAGE_SEVERITY_ERROR, true);
+			dxgiInfoQueue->SetBreakOnSeverity(DXGI_DEBUG_ALL, DXGI_INFO_QUEUE_MESSAGE_SEVERITY_CORRUPTION, true);
+		}
+#endif
+		_TRY_UNSAFE(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&this->dxgiFactory)), "Unable to create DXGI factory!");
+		if (!this->options.vSync)
+		{
+			// graphical debugging tools aren't available in 1.4 (at the time of writing) so they are upcast to 1.5 
+			ComPtr<IDXGIFactory5> dxgiFactory5 = nullptr;
+			if (SUCCEEDED(this->dxgiFactory.As(&dxgiFactory5)) && dxgiFactory5 != nullptr)
+			{
+				// must use BOOL here due to how the internal implementation of CheckFeatureSupport() works
+				BOOL allowTearing = FALSE;
+				if (SUCCEEDED(dxgiFactory5->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &allowTearing, sizeof(allowTearing))))
+				{
+					if (allowTearing == FALSE)
+					{
+						hlog::warn(logTag, "Cannot disable V-Sync, DXGI factory 5 says it's not supported!");
+						this->options.vSync = true;
+					}
+				}
+				else
+				{
+					hlog::warn(logTag, "Cannot disable V-Sync, DXGI factory 5 is unable to check for support!");
+					this->options.vSync = true;
+				}
+			}
+			else
+			{
+				hlog::warn(logTag, "Cannot disable V-Sync, DXGI factory 5 is not available!");
+				this->options.vSync = true;
+			}
+		}
+		D3D_FEATURE_LEVEL availableFeatureLevels[] =
+		{
+			D3D_FEATURE_LEVEL_12_1,
+			D3D_FEATURE_LEVEL_12_0,
+			D3D_FEATURE_LEVEL_11_1,
+			D3D_FEATURE_LEVEL_11_0,
 			D3D_FEATURE_LEVEL_10_1,
 			D3D_FEATURE_LEVEL_10_0,
 			D3D_FEATURE_LEVEL_9_3,
 			D3D_FEATURE_LEVEL_9_2,
 			D3D_FEATURE_LEVEL_9_1
 		};
-		ComPtr<ID3D11Device> _d3dDevice;
-		ComPtr<ID3D11DeviceContext> _d3dDeviceContext;
-		HRESULT hr;
-		hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, creationFlags, featureLevels,
-			ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &_d3dDevice, NULL, &_d3dDeviceContext);
-		if (FAILED(hr))
+		ComPtr<IDXGIAdapter1> adapter = nullptr;
+		this->_getAdapter(adapter.GetAddressOf());
+		HRESULT hr = E_FAIL;
+		ComPtr<ID3D11Device> device;
+		ComPtr<ID3D11DeviceContext> context;
+		D3D_FEATURE_LEVEL createdFeatureLevel;
+		if (adapter != nullptr)
 		{
-			hlog::write(logTag, "Hardware device not available. Falling back to WARP device.");
-			// if hardware device is not available, try a WARP device as a fallback instead
-			hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_WARP, NULL, creationFlags, featureLevels,
-				ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &_d3dDevice, NULL, &_d3dDeviceContext);
+			hr = D3D11CreateDevice(adapter.Get(), D3D_DRIVER_TYPE_UNKNOWN, 0, creationFlags, availableFeatureLevels, _countof(availableFeatureLevels),
+				D3D11_SDK_VERSION, device.GetAddressOf(), &createdFeatureLevel, context.GetAddressOf());
 			if (FAILED(hr))
 			{
-				throw Exception("Unable to create DX11 device!");
+				hlog::write(logTag, "Hardware device not available. Falling back to software device.");
+				adapter = nullptr;
 			}
 		}
-		hr = _d3dDevice.As(&this->d3dDevice);
-		if (FAILED(hr))
+		else
 		{
-			throw Exception("Unable to retrieve Direct3D 11.1 device interface!");
+			hlog::write(logTag, "Unable to find hardware adapter. Falling back to software device.");
 		}
-		hr = _d3dDeviceContext.As(&this->d3dDeviceContext);
-		if (FAILED(hr))
+		if (adapter == nullptr)
 		{
-			throw Exception("Unable to retrieve Direct3D 11.1 device context interface!");
+			this->_getAdapter(adapter.GetAddressOf(), false);
+			if (adapter != nullptr)
+			{
+				hr = D3D11CreateDevice(adapter.Get(), D3D_DRIVER_TYPE_UNKNOWN, 0, creationFlags, availableFeatureLevels, _countof(availableFeatureLevels),
+					D3D11_SDK_VERSION, device.GetAddressOf(), &createdFeatureLevel, context.GetAddressOf());
+				if (FAILED(hr))
+				{
+					hlog::write(logTag, "Software device not available. Falling back to WARP device.");
+					adapter = nullptr;
+				}
+			}
+			else
+			{
+				hlog::write(logTag, "Unable to find software adapter. Falling back to WARP device.");
+			}
 		}
+		// no valid adapter, use WARP
+		if (adapter == nullptr)
+		{
+			ComPtr<IDXGIAdapter> warpAdapter = nullptr;
+			_TRY_UNSAFE(this->dxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter)), "Unable to create DX12 device! WARP device not available!");
+			hr = D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_WARP, 0, creationFlags, availableFeatureLevels, _countof(availableFeatureLevels),
+				D3D11_SDK_VERSION, device.GetAddressOf(), &createdFeatureLevel, context.GetAddressOf());
+		}
+		_TRY_UNSAFE(hr, "Unable to create DX11 device!");
+#ifdef _DEBUG
+		ComPtr<ID3D11Debug> d3dDebug;
+		if (SUCCEEDED(device.As(&d3dDebug)))
+		{
+			ComPtr<ID3D11InfoQueue> d3dInfoQueue;
+			if (SUCCEEDED(d3dDebug.As(&d3dInfoQueue)))
+			{
+				d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
+				d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
+				D3D11_MESSAGE_ID hide[] = { D3D11_MESSAGE_ID_SETPRIVATEDATA_CHANGINGPARAMS, };
+				D3D11_INFO_QUEUE_FILTER filter = {};
+				filter.DenyList.NumIDs = _countof(hide);
+				filter.DenyList.pIDList = hide;
+				d3dInfoQueue->AddStorageFilterEntries(&filter);
+			}
+		}
+#endif
+		_TRY_UNSAFE(device.As(&this->d3dDevice), "Could not cast D3D device!");
+		_TRY_UNSAFE(context.As(&this->d3dDeviceContext), "Could not cast D3D device context!");
 		// device config
 		this->_configureDevice();
 		// initial vertex buffer data
@@ -247,7 +361,7 @@ namespace april
 		this->vertexBufferDesc.MiscFlags = 0;
 		this->vertexBufferDesc.StructureByteStride = 0;
 		// initial constant buffer
-		D3D11_SUBRESOURCE_DATA constantSubresourceData = {0};
+		D3D11_SUBRESOURCE_DATA constantSubresourceData = { 0 };
 		constantSubresourceData.pSysMem = &this->constantBufferData;
 		constantSubresourceData.SysMemPitch = 0;
 		constantSubresourceData.SysMemSlicePitch = 0;
@@ -258,16 +372,12 @@ namespace april
 		constantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		constantBufferDesc.MiscFlags = 0;
 		constantBufferDesc.StructureByteStride = 0;
-		hr = this->d3dDevice->CreateBuffer(&constantBufferDesc, &constantSubresourceData, &this->constantBuffer);
-		if (FAILED(hr))
-		{
-			throw Exception("Unable to create constant buffer!");
-		}
+		_TRY_UNSAFE(this->d3dDevice->CreateBuffer(&constantBufferDesc, &constantSubresourceData, &this->constantBuffer), "Unable to create constant buffer!");
 		this->d3dDeviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
 		// initial calls
-		this->_deviceClear(true);
-		this->presentFrame();
 		this->setOrthoProjection(gvec2f((float)window->getWidth(), (float)window->getHeight()));
+		this->_deviceClear(true);
+		this->_devicePresentFrame(true);
 		// default shaders
 		LOAD_SHADER(this->vertexShaderPlain, Vertex, Plain);
 		LOAD_SHADER(this->vertexShaderTextured, Vertex, Textured);
@@ -322,7 +432,7 @@ namespace april
 	void DirectX11_RenderSystem::_deviceReset()
 	{
 		DirectX_RenderSystem::_deviceReset();
-		// TODOuwp - implement this
+		// TODOuwp - is this still needed?
 		/*
 		// possible Microsoft bug, required for SwapChainPanel to update its layout 
 		reinterpret_cast<IUnknown*>(UWP::app->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
@@ -343,79 +453,101 @@ namespace april
 		// not used
 	}
 
+	void DirectX11_RenderSystem::_getAdapter(IDXGIAdapter1** adapter, bool hardware)
+	{
+		*adapter = NULL;
+		ComPtr<IDXGIAdapter1> currentAdapter;
+		UINT currentAdapterIndex = 0;
+		DXGI_ADAPTER_DESC1 currentAdapterDesc;
+#if defined(__dxgi1_6_h__) && defined(NTDDI_WIN10_RS4) // TODOuwp - this has actually not been implemented yet
+		ComPtr<IDXGIFactory6> factory6;
+		HRESULT hr = this->dxgiFactory.As(&factory6);
+		if (SUCCEEDED(hr))
+		{
+			while (DXGI_ERROR_NOT_FOUND != factory6->EnumAdapterByGpuPreference(currentAdapterIndex, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(currentAdapter.ReleaseAndGetAddressOf())))
+			{
+				currentAdapter->GetDesc1(&currentAdapterDesc);
+				if (((currentAdapterDesc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) == 0) == hardware)
+				{
+					break;
+				}
+				currentAdapter = nullptr;
+				++currentAdapterIndex;
+			}
+		}
+		else
+#endif
+		{
+			while (DXGI_ERROR_NOT_FOUND != this->dxgiFactory->EnumAdapters1(currentAdapterIndex, currentAdapter.ReleaseAndGetAddressOf()))
+			{
+				currentAdapter->GetDesc1(&currentAdapterDesc);
+				if (((currentAdapterDesc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) == 0) == hardware)
+				{
+					break;
+				}
+				currentAdapter = nullptr;
+				++currentAdapterIndex;
+			}
+		}
+		if (currentAdapter != nullptr)
+		{
+			*adapter = currentAdapter.Detach();
+		}
+	}
+
 	void DirectX11_RenderSystem::_createSwapChain(int width, int height)
 	{
 		// Once the swap chain desc is configured, it must be
 		// created on the same adapter as the existing D3D Device.
-		HRESULT hr;
 		ComPtr<IDXGIDevice3> dxgiDevice;
-		hr = this->d3dDevice.As(&dxgiDevice);
-		if (FAILED(hr))
-		{
-			throw Exception("Unable to retrieve DXGI device!");
-		}
-		hr = dxgiDevice->SetMaximumFrameLatency(1);
-		if (FAILED(hr))
-		{
-			throw Exception("Unable to set MaximumFrameLatency!");
-		}
+		_TRY_UNSAFE(this->d3dDevice.As(&dxgiDevice), "Unable to retrieve DXGI device!");
+		// TODOuwp - this might need to be removed for vsync=disabled to work
+		_TRY_UNSAFE(dxgiDevice->SetMaximumFrameLatency(1), "Unable to set MaximumFrameLatency!");
 		ComPtr<IDXGIAdapter> dxgiAdapter;
-		hr = dxgiDevice->GetAdapter(&dxgiAdapter);
-		if (FAILED(hr))
-		{
-			throw Exception("Unable to get adapter from DXGI device!");
-		}
+		_TRY_UNSAFE(dxgiDevice->GetAdapter(&dxgiAdapter), "Unable to get adapter from DXGI device!");
 		ComPtr<IDXGIFactory3> dxgiFactory;
-		hr = dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
-		if (FAILED(hr))
-		{
-			throw Exception("Unable to get parent factory from DXGI adapter!");
-		}
-		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_createSwapChain()");
+		_TRY_UNSAFE(dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory)), "Unable to get parent factory from DXGI adapter!");
 		SystemInfo info = april::getSystemInfo();
 		int w = info.displayResolution.x;
 		int h = info.displayResolution.y;
 		if (w != width || h != height)
 		{
-			hlog::warnf(logTag, "On WinRT the window resolution (%d,%d) should match the display resolution (%d,%d) in order to avoid problems.", width, height, w, h);
+			hlog::warnf(logTag, "On UWP the window resolution (%d,%d) should match the display resolution (%d,%d) in order to avoid problems.", width, height, w, h);
 		}
-		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = { 0 };
-		swapChainDesc.Stereo = false;
-		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
-		swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = { };
 		swapChainDesc.Width = width;
 		swapChainDesc.Height = height;
 		swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		swapChainDesc.BufferCount = BACKBUFFER_COUNT; // TODOuwp - should respect tripleBuffering option
 		swapChainDesc.SampleDesc.Count = 1;
 		swapChainDesc.SampleDesc.Quality = 0;
-		swapChainDesc.BufferCount = BACKBUFFER_COUNT;
-		ComPtr<IDXGISwapChain1> _swapChain;
-		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-		hr = dxgiFactory->CreateSwapChainForComposition(this->d3dDevice.Get(), &swapChainDesc, nullptr, &_swapChain);
-		if (FAILED(hr))
+		swapChainDesc.Scaling = DXGI_SCALING_ASPECT_RATIO_STRETCH;
+		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL; // TODOuwp - test this
+		//swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
+		swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // TODOuwp - test this
+		if (this->options.vSync)
 		{
-			throw Exception("Unable to create swap chain!");
+			swapChainDesc.Flags |= DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
 		}
-		_swapChain.As(&this->swapChain);
-		// TODOuwp - implement this
-		/*
-		reinterpret_cast<IUnknown*>(UWP::app->Overlay)->QueryInterface(IID_PPV_ARGS(&this->swapChainNative));
-		this->swapChainNative->SetSwapChain(this->swapChain.Get());
+		ComPtr<IDXGISwapChain1> _swapChain;
+		_TRY_UNSAFE(this->dxgiFactory->CreateSwapChainForCoreWindow(this->d3dDevice.Get(), (IUnknown*)april::window->getBackendId(), &swapChainDesc,
+			nullptr, _swapChain.GetAddressOf()), "Unable to create swap chain!");
+		_TRY_UNSAFE(_swapChain.As(&this->swapChain), "Could not cast swap chain!");
 		this->_configureSwapChain();
 		this->updateOrientation();
-		*/
 	}
 
 	void DirectX11_RenderSystem::_resizeSwapChain(int width, int height)
 	{
-		this->d3dDeviceContext->OMSetRenderTargets(0, NULL, NULL);
-		this->renderTargetView = nullptr;
-		HRESULT hr = this->swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
-		if (FAILED(hr))
+		UINT flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // TODOuwp - test this
+		if (this->options.vSync)
 		{
-			throw Exception("Unable to resize swap chain buffers!");
+			flags |= DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
 		}
+
+		_TRY_UNSAFE(this->swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, flags), "Unable to resize swap chain buffers!");
 		this->_configureSwapChain();
 		this->updateOrientation();
 	}
@@ -429,27 +561,26 @@ namespace april
 		inverseScale._11 = 1.0f / WinRT::App->Overlay->CompositionScaleX;
 		inverseScale._22 = 1.0f / WinRT::App->Overlay->CompositionScaleY;
 		*/
-		this->swapChain->SetMatrixTransform(&inverseScale);
+		//this->swapChain->SetMatrixTransform(&inverseScale);
 		// get the back buffer
-		ComPtr<ID3D11Texture2D> _backBuffer;
-		HRESULT hr = this->swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBuffer));
-		if (FAILED(hr))
-		{
-			throw Exception("Unable to get swap chain back buffer!");
-		}
+		//ComPtr<ID3D11Texture2D> _backBuffer;
+		_TRY_UNSAFE(this->swapChain->GetBuffer(0, IID_PPV_ARGS(&this->renderTarget)), "Unable to get swap chain back buffer!");
 		// Create a descriptor for the RenderTargetView.
 		CD3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc(D3D11_RTV_DIMENSION_TEXTURE2DARRAY, DXGI_FORMAT_B8G8R8A8_UNORM, 0, 0, 1);
-		hr = this->d3dDevice->CreateRenderTargetView(_backBuffer.Get(), &renderTargetViewDesc, &this->renderTargetView);
-		if (FAILED(hr))
-		{
-			throw Exception("Unable to create render target view!");
-		}
+		_TRY_UNSAFE(this->d3dDevice->CreateRenderTargetView(this->renderTarget.Get(), &renderTargetViewDesc, &this->renderTargetView), "Unable to create render target view!");
 		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
 		this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
 	}
 
 	void DirectX11_RenderSystem::_configureDevice()
 	{
+		this->d3dDeviceContext->OMSetRenderTargets(0, NULL, NULL);
+		this->renderTargetView = nullptr;
+		this->renderTarget = nullptr;
+		// TODOuwp - implement
+		//this->d3dDepthStencilView = nullptr;
+		//this->depthStencil = nullptr;
+		this->d3dDeviceContext->Flush();
 		if (this->swapChain != nullptr)
 		{
 			this->_resizeSwapChain(april::window->getWidth(), april::window->getHeight());
@@ -458,8 +589,6 @@ namespace april
 		{
 			this->_createSwapChain(april::window->getWidth(), april::window->getHeight());
 		}
-		ComPtr<ID3D11Texture2D> _backBuffer;
-		HRESULT hr = this->swapChain->GetBuffer(0, IID_PPV_ARGS(&_backBuffer));
 		D3D11_RASTERIZER_DESC rasterDesc;
 		rasterDesc.AntialiasedLineEnable = false;
 		rasterDesc.CullMode = D3D11_CULL_NONE;
@@ -471,24 +600,17 @@ namespace april
 		rasterDesc.MultisampleEnable = false;
 		rasterDesc.ScissorEnable = false;
 		rasterDesc.SlopeScaledDepthBias = 0.0f;
-		hr = this->d3dDevice->CreateRasterizerState(&rasterDesc, &this->rasterState);
-		if (FAILED(hr))
-		{
-			throw Exception("Unable to create raster state!");
-		}
+		_TRY_UNSAFE(this->d3dDevice->CreateRasterizerState(&rasterDesc, &this->rasterState), "Unable to create raster state!");
 		this->d3dDeviceContext->RSSetState(this->rasterState.Get());
-		D3D11_TEXTURE2D_DESC backBufferDesc = {0};
-		_backBuffer->GetDesc(&backBufferDesc);
-		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_configureDevice()");
-		SystemInfo info = april::getSystemInfo();
+		D3D11_TEXTURE2D_DESC backBufferDesc = { };
+		this->renderTarget->GetDesc(&backBufferDesc);
 		this->setViewport(grecti(0, 0, backBufferDesc.Width, backBufferDesc.Height)); // just to be on the safe side and prevent floating point errors
 		// blend modes
-		D3D11_BLEND_DESC blendDesc = {0};
+		D3D11_BLEND_DESC blendDesc = { };
 		blendDesc.AlphaToCoverageEnable = false;
 		blendDesc.IndependentBlendEnable = false;
 		blendDesc.RenderTarget[0].BlendEnable = true;
-		blendDesc.RenderTarget[0].RenderTargetWriteMask = (D3D11_COLOR_WRITE_ENABLE_RED |
-			D3D11_COLOR_WRITE_ENABLE_GREEN | D3D11_COLOR_WRITE_ENABLE_BLUE);
+		blendDesc.RenderTarget[0].RenderTargetWriteMask = (D3D11_COLOR_WRITE_ENABLE_RED | D3D11_COLOR_WRITE_ENABLE_GREEN | D3D11_COLOR_WRITE_ENABLE_BLUE);
 		// alpha
 		blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
@@ -559,7 +681,7 @@ namespace april
 		this->d3dDevice->CreateSamplerState(&samplerDesc, &this->samplerNearestClamp);
 		// other
 		this->_deviceClear(true);
-		this->presentFrame();
+		this->_devicePresentFrame(true);
 	}
 
 	int DirectX11_RenderSystem::getVRam() const
@@ -624,8 +746,8 @@ namespace april
 	{
 		grecti viewport = rect;
 		// this is needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
-		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_setDeviceViewport()");
 		gvec2i resolution = april::getSystemInfo().displayResolution;
+		// TODOuwp - is this still needed in DX11?
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();
 		if (viewport.x < 0)
@@ -653,7 +775,6 @@ namespace april
 		D3D11_VIEWPORT dx11Viewport;
 		dx11Viewport.MinDepth = D3D11_MIN_DEPTH;
 		dx11Viewport.MaxDepth = D3D11_MAX_DEPTH;
-		// these double-casts are to ensure consistent behavior among rendering systems
 		dx11Viewport.TopLeftX = (float)viewport.x;
 		dx11Viewport.TopLeftY = (float)viewport.y;
 		dx11Viewport.Width = (float)viewport.w;
@@ -673,7 +794,7 @@ namespace april
 
 	void DirectX11_RenderSystem::_setDeviceDepthBuffer(bool enabled, bool writeEnabled)
 	{
-		hlog::error(logTag, "Not implemented!");
+		//hlog::error(logTag, "Not implemented!");
 	}
 
 	void DirectX11_RenderSystem::_setDeviceRenderMode(bool useTexture, bool useColor)
@@ -832,7 +953,7 @@ namespace april
 	void DirectX11_RenderSystem::_deviceClear(bool depth)
 	{
 		static const float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-		// TODOa - should use current renderTargetView, not global one
+		// TODOuwp - does this work?
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 	
@@ -843,15 +964,15 @@ namespace april
 		clearColor[1] = color.g_f();
 		clearColor[2] = color.r_f();
 		clearColor[3] = color.a_f();
-		// TODOa - should use current renderTargetView, not global one
+		// TODOuwp - does this work?
 		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 
 	void DirectX11_RenderSystem::_deviceClearDepth()
 	{
-		static const float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-		// TODOa - should use current renderTargetView, not global one
-		this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
+		// TODOuwp - implement
+		//static const float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		//this->d3dDeviceContext->ClearRenderTargetView(this->renderTargetView.Get(), clearColor);
 	}
 
 	void DirectX11_RenderSystem::_deviceRender(const RenderOperation& renderOperation, const PlainVertex* vertices, int count)
@@ -939,7 +1060,8 @@ namespace april
 		RenderSystem::_devicePresentFrame(systemEnabled);
 		if (systemEnabled)
 		{
-			this->swapChain->Present(1, 0);
+			// TODOuwp - for vsync support, is this correct?
+			this->swapChain->Present((this->options.vSync ? 1 : 0), 0);
 			// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
 			this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
 		}
@@ -947,6 +1069,7 @@ namespace april
 
 	void DirectX11_RenderSystem::updateOrientation()
 	{
+		// TODOuwp - this doesn't seem to do anything, remove?
 		DisplayOrientations orientation = DisplayInformation::GetForCurrentView()->CurrentOrientation;
 		DXGI_MODE_ROTATION rotation = DXGI_MODE_ROTATION_UNSPECIFIED;
 		if (orientation == DisplayOrientations::Landscape)
@@ -974,12 +1097,9 @@ namespace april
 
 	void DirectX11_RenderSystem::trim()
 	{
+		// TODOuwp - is this still needed in UWP?
 		ComPtr<IDXGIDevice3> dxgiDevice;
-		HRESULT hr = this->d3dDevice.As(&dxgiDevice);
-		if (FAILED(hr))
-		{
-			throw Exception("Unable to retrieve DXGI device!");
-		}
+		_TRY_UNSAFE(this->d3dDevice.As(&dxgiDevice), "Unable to retrieve DXGI device!");
 		dxgiDevice->Trim();
 	}
 

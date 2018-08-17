@@ -14,10 +14,7 @@
 #ifndef APRIL_DIRECTX11_RENDER_SYSTEM_H
 #define APRIL_DIRECTX11_RENDER_SYSTEM_H
 
-#include <windows.ui.xaml.media.dxinterop.h>
-using namespace Windows::UI::Xaml::Controls;
-
-#include <d3d11_2.h>
+#include <d3d11_4.h>
 
 #include <gtypes/Matrix4.h>
 #include <gtypes/Quaternion.h>
@@ -88,12 +85,13 @@ namespace april
 		void setVertexShader(VertexShader* vertexShader);
 
 	protected:
-		ComPtr<ID3D11Device2> d3dDevice;
+		ComPtr<IDXGIFactory4> dxgiFactory;
+		ComPtr<ID3D11Device3> d3dDevice;
 		ComPtr<ID3D11DeviceContext2> d3dDeviceContext;
-		ComPtr<IDXGISwapChain2> swapChain;
-		ComPtr<ISwapChainPanelNative> swapChainNative;
+		ComPtr<IDXGISwapChain3> swapChain;
 
 		ComPtr<ID3D11RasterizerState> rasterState;
+		ComPtr<ID3D11Texture2D> renderTarget;
 		ComPtr<ID3D11RenderTargetView> renderTargetView;
 		ComPtr<ID3D11BlendState> blendStateAlpha;
 		ComPtr<ID3D11BlendState> blendStateAdd;
@@ -152,6 +150,7 @@ namespace april
 		void _deviceReset();
 		void _deviceSetupCaps();
 		void _deviceSetup();
+		void _getAdapter(IDXGIAdapter1** adapter, bool hardware = true);
 
 		void _createSwapChain(int width, int height);
 		void _resizeSwapChain(int width, int height);

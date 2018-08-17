@@ -134,8 +134,7 @@ namespace april
 	
 	void* UWP_Window::getBackendId() const
 	{
-		// TODO ?
-		return 0;
+		return reinterpret_cast<IUnknown*>(CoreWindow::GetForCurrentThread());
 	}
 
 	void UWP_Window::_systemSetResolution(int width, int height, bool fullscreen)

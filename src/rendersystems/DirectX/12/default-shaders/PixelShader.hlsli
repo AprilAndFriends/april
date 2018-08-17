@@ -1,4 +1,4 @@
-/// @version 5.1
+/// @version 5.2
 
 #define MAKE_DESATURATE(color) dot(color.rgb, float3(0.2125, 0.7154, 0.0721))
 #define MAKE_SEPIA_R(color) (color.r * 0.393 + color.g * 0.769 + color.b * 0.189)
