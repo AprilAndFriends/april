@@ -321,7 +321,13 @@ namespace april
 			}
 		}
 		april::application->updateSuspendQueued = false; // make sure to unlock
+		bool initialized = (april::window != NULL);
 		(*april::application->aprilApplicationDestroy)();
+		if (!initialized)
+		{
+			april::application->finish();
+			april::application->finalize();
+		}
 #ifdef __ANDROID__
 		if (env != NULL)
 		{

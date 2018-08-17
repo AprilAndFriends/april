@@ -58,9 +58,12 @@ bool g_WindowFocusedBeforeSleep = false;
 	mAppFocused = true;	// register for sleep/wake notifications, needed for proper handling of focus/unfocus events
 	april::application->init();
 	april::application->updateInitializing();
-	if (april::window == NULL)
+	if (april::window == NULL) // didn't actually initialize
 	{
-		[[NSApplication sharedApplication] terminate:nil];
+		dispatch_async(dispatch_get_main_queue(),
+		^{
+			[[NSApplication sharedApplication] terminate:nil];
+		});
 		return;
 	}
 	NSNotificationCenter* c = [[NSWorkspace sharedWorkspace] notificationCenter];
