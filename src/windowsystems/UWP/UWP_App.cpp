@@ -56,9 +56,12 @@ namespace april
 #else
 		this->defaultCursor = nullptr;
 #endif
+		this->currentCursor = this->defaultCursor;
 		this->scrollHorizontal = false;
 		this->startTime = htickCount();
 		this->currentButton = Key::None;
+		this->virtualKeyboardCurrentState = false;
+		this->virtualKeyboardRequestState = false;
 	}
 
 	void UWP_App::Initialize(Core::CoreApplicationView^ applicationView)
@@ -110,6 +113,9 @@ namespace april
 		{
 			april::application->updateInitializing();
 			april::application->enterMainLoop();
+			april::application->finish();
+			april::application->updateFinishing();
+			april::application->destroy();
 		}
 		else
 		{
@@ -117,16 +123,68 @@ namespace april
 		}
 	}
 
-	// Required for IFrameworkView.
-	// Terminate events do not cause Uninitialize to be called. It will be called if your IFrameworkView
-	// class is torn down while the app is in the foreground.
+	// terminate events do not cause Uninitialize to be called, it will be called if the IFrameworkView class is torn down while the app is in the foreground
 	void UWP_App::Uninitialize()
 	{
 		// TODOuwp - probably needs changing / moving somewhere else
 		if (april::application != NULL)
 		{
+			april::application->finish();
 			april::application->updateFinishing();
 			april::application->destroy();
+		}
+	}
+
+	void UWP_App::updateMainThread()
+	{
+		CoreWindow^ window = CoreWindow::GetForCurrentThread();
+		if (window->PointerCursor != UWP::app->currentCursor)
+		{
+			window->PointerCursor = UWP::app->currentCursor;
+		}
+		if (this->virtualKeyboardCurrentState != this->virtualKeyboardRequestState)
+		{
+			this->virtualKeyboardCurrentState = this->virtualKeyboardRequestState;
+			if (this->virtualKeyboardCurrentState)
+			{
+				InputPane::GetForCurrentView()->TryShow();
+			}
+			else
+			{
+				InputPane::GetForCurrentView()->TryHide();
+			}
+		}
+	}
+
+	void UWP_App::showVirtualKeyboard()
+	{
+		this->virtualKeyboardRequestState = true;
+	}
+
+	void UWP_App::hideVirtualKeyboard()
+	{
+		this->virtualKeyboardRequestState = false;
+	}
+
+	void UWP_App::refreshCursor()
+	{
+		if (april::window != NULL)
+		{
+			// do not change this code due to threading synchronization!
+			CoreCursor^ cursor = nullptr;
+			if (april::window->isCursorVisible())
+			{
+				Cursor* windowCursor = april::window->getCursor();
+				if (windowCursor != NULL)
+				{
+					cursor = ((UWP_Cursor*)windowCursor)->getCursor();
+				}
+				if (cursor == nullptr)
+				{
+					cursor = this->defaultCursor;
+				}
+			}
+			this->currentCursor = cursor;
 		}
 	}
 
@@ -256,33 +314,12 @@ namespace april
 		this->pointerIds.clear();
 	}
 
-	void UWP_App::refreshCursor()
-	{
-		// TODOuwp - should be queued into main thread
-		if (april::window != NULL)
-		{
-			CoreCursor^ cursor = nullptr;
-			if (april::window->isCursorVisible())
-			{
-				Cursor* windowCursor = april::window->getCursor();
-				if (windowCursor != NULL)
-				{
-					cursor = ((UWP_Cursor*)windowCursor)->getCursor();
-				}
-				if (cursor == nullptr)
-				{
-					cursor = this->defaultCursor;
-				}
-			}
-			// TODOuwp - implement this, can't be called from secondary thread
-			//CoreWindow::GetForCurrentThread()->PointerCursor = cursor;
-		}
-	}
-
 	void UWP_App::onVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args)
 	{
 		if (april::window != NULL)
 		{
+			this->virtualKeyboardCurrentState = true;
+			this->virtualKeyboardRequestState = true;
 			april::window->queueVirtualKeyboardChange(true, args->OccludedRect.Height / CoreWindow::GetForCurrentThread()->Bounds.Height);
 		}
 		this->_resetTouches();
@@ -292,6 +329,8 @@ namespace april
 	{
 		if (april::window != NULL)
 		{
+			this->virtualKeyboardCurrentState = false;
+			this->virtualKeyboardRequestState = false;
 			april::window->queueVirtualKeyboardChange(false, 0.0f);
 		}
 		this->_resetTouches();
@@ -312,7 +351,7 @@ namespace april
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
-			april::window->setInputMode(InputMode::Mouse);
+			april::window->queueInputModeChange(InputMode::Mouse);
 			if (args->CurrentPoint->Properties->IsRightButtonPressed)
 			{
 				this->currentButton = Key::MouseR;
@@ -326,7 +365,7 @@ namespace april
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
 #endif
-			april::window->setInputMode(InputMode::Touch);
+			april::window->queueInputModeChange(InputMode::Touch);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.indexOf(id);
 			if (index < 0)
@@ -355,13 +394,13 @@ namespace april
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
-			april::window->setInputMode(InputMode::Mouse);
+			april::window->queueInputModeChange(InputMode::Mouse);
 			april::window->queueMouseInput(MouseEvent::Type::Up, position, this->currentButton);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
 #endif
-			april::window->setInputMode(InputMode::Touch);
+			april::window->queueInputModeChange(InputMode::Touch);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.indexOf(id);
 			if (index < 0)
@@ -394,13 +433,13 @@ namespace april
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
-			april::window->setInputMode(InputMode::Mouse);
+			april::window->queueInputModeChange(InputMode::Mouse);
 			april::window->queueMouseInput(MouseEvent::Type::Move, position, this->currentButton);
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
 #endif
-			april::window->setInputMode(InputMode::Touch);
+			april::window->queueInputModeChange(InputMode::Touch);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.indexOf(id);
 			if (index < 0)
@@ -421,7 +460,7 @@ namespace april
 		{
 			return;
 		}
-		april::window->setInputMode(InputMode::Mouse);
+		april::window->queueInputModeChange(InputMode::Mouse);
 		float _wheelDelta = (float)args->CurrentPoint->Properties->MouseWheelDelta / WHEEL_DELTA;
 		if (this->scrollHorizontal ^ args->CurrentPoint->Properties->IsHorizontalMouseWheel)
 		{
@@ -479,7 +518,6 @@ namespace april
 
 	gvec2f UWP_App::_transformPosition(float x, float y)
 	{
-		// UWP is dumb
 		return (gvec2f(x, y) * UWP::getDpiRatio());
 	}
 

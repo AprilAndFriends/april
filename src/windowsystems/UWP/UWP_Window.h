@@ -24,7 +24,6 @@
 #include "Window.h"
 #include "UWP.h"
 
-#define UWP_DELAY_SPLASH "delay_splash"
 #define UWP_CURSOR_MAPPINGS "cursor_mappings"
 #define WINP8_BACK_BUTTON_SYSTEM_HANDLING "back_button_system_handling"
 
@@ -47,7 +46,7 @@ namespace april
 		void setTitle(chstr title);
 		HL_DEFINE_GET(int, width, Width);
 		HL_DEFINE_GET(int, height, Height);
-		void* getBackendId() const;
+		HL_DEFINE_GET(void*, backendId, BackendId);
 
 		void checkEvents();
 		hstr findCursorFile(chstr filename) const;
@@ -59,9 +58,9 @@ namespace april
 	protected:
 		int width;
 		int height;
-		float delaySplash;
 		bool backButtonSystemHandling;
 		hmap<hstr, int> cursorMappings;
+		void* backendId;
 
 		void _systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options);
 		

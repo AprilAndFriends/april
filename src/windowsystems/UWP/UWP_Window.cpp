@@ -27,14 +27,15 @@ using namespace Windows::UI::ViewManagement;
 
 namespace april
 {
-	UWP_Window::UWP_Window() : Window()
+	UWP_Window::UWP_Window() :
+		Window()
 	{
 		this->name = april::WindowType::UWP.getName();
 		this->width = 0;
 		this->height = 0;
-		this->delaySplash = 0.0f;
 		this->cursorExtensions += ".ani";
 		this->cursorExtensions += ".cur";
+		this->backendId = NULL;
 	}
 
 	UWP_Window::~UWP_Window()
@@ -60,10 +61,10 @@ namespace april
 		Window::_systemCreate(width, height, fullscreen, title, options);
 		this->width = width;
 		this->height = height;
-		this->delaySplash = 0.0f;
 		this->backButtonSystemHandling = false;
 		this->cursorMappings.clear();
 		this->inputMode = InputMode::Touch;
+		this->backendId = reinterpret_cast<IUnknown*>(CoreWindow::GetForCurrentThread());
 		this->setCursorVisible(true);
 		this->queueSizeChange(width, height, fullscreen);
 		return;
@@ -88,10 +89,6 @@ namespace april
 			return hstr(this->backButtonSystemHandling ? "1" : "0");
 		}
 #endif
-		if (param == UWP_DELAY_SPLASH)
-		{
-			return hstr(this->delaySplash);
-		}
 		return "";
 	}
 
@@ -120,24 +117,14 @@ namespace april
 			return;
 		}
 #endif
-		if (param == UWP_DELAY_SPLASH)
-		{
-			this->delaySplash = (float)value;
-			return;
-		}
 		Window::setParam(param, value);
 	}
 
 	void UWP_Window::setTitle(chstr title)
 	{
-		hlog::warn(logTag, "Window::setTitle() does nothing on WinRT.");
+		hlog::warn(logTag, "Window::setTitle() does nothing on: " + this->name);
 	}
 	
-	void* UWP_Window::getBackendId() const
-	{
-		return reinterpret_cast<IUnknown*>(CoreWindow::GetForCurrentThread());
-	}
-
 	void UWP_Window::_systemSetResolution(int width, int height, bool fullscreen)
 	{
 		this->width = width;
@@ -150,6 +137,7 @@ namespace april
 	{
 		if (UWP::app->isVisible())
 		{
+			UWP::app->updateMainThread();
 			CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
 		}
 		else
@@ -161,31 +149,12 @@ namespace april
 
 	void UWP_Window::showVirtualKeyboard()
 	{
-		// TODOuwp - finish this
-		/*
-		DispatchedHandler^ handler = ref new DispatchedHandler(
-			[]()
-		{
-			InputPane::GetForCurrentView()->TryShow();
-		});
-		try
-		{
-			CoreWindow^ window = CoreWindow::GetForCurrentThread(); // window is NULL in this thread
-			window->Dispatcher->RunAsync(CoreDispatcherPriority::Normal, handler);
-		}
-		catch (Platform::AccessDeniedException^ e)
-		{
-			//hlog::warn(logTag, "messagebox() on UWP called \"recursively\"! Queueing to UI thread now...");
-		}
-		*/
+		UWP::app->showVirtualKeyboard();
 	}
 
 	void UWP_Window::hideVirtualKeyboard()
 	{
-		// TODOuwp - finish this
-		/*
-		InputPane::GetForCurrentView()->TryHide(); // crashes when not called on main thread
-		*/
+		UWP::app->hideVirtualKeyboard();
 	}
 
 	hstr UWP_Window::findCursorFile(chstr filename) const

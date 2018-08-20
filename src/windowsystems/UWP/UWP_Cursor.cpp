@@ -16,7 +16,8 @@
 
 namespace april
 {
-	UWP_Cursor::UWP_Cursor(bool fromResource) : Cursor(fromResource)
+	UWP_Cursor::UWP_Cursor(bool fromResource) :
+		Cursor(fromResource)
 	{
 		this->cursor = nullptr;
 	}

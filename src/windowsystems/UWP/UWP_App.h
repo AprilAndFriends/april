@@ -35,7 +35,7 @@ namespace april
 	public:
 		UWP_App();
 
-		inline bool isVisible() { return this->visible; }
+		inline bool isVisible() { return this->visible; } // can't use HL_DEFINE, const is not supported in WinRT types
 
 		// IFrameworkView methods.
 		virtual void Initialize(Core::CoreApplicationView^ applicationView);
@@ -44,8 +44,12 @@ namespace april
 		virtual void Run();
 		virtual void Uninitialize();
 
+		void updateMainThread();
+
+		void showVirtualKeyboard();
+		void hideVirtualKeyboard();
 		void refreshCursor();
-		
+
 		void onVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
 		void onVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
 
@@ -78,32 +82,19 @@ namespace april
 	private:
 		bool running;
 		bool visible;
-
-
-
-		/*
-		Texture* splashTexture;
-		*/
 		CoreCursor^ defaultCursor;
-		/*
-		Color backgroundColor;
-		bool launched;
-		bool activated;
-		*/
+		CoreCursor^ currentCursor;
 		bool scrollHorizontal;
 		harray<unsigned int> pointerIds;
 		int64_t startTime;
 		april::Key currentButton;
+		/// @brief This is required due to multi-threading issues, because InputPane cannot be called in a non-main thread
+		bool virtualKeyboardCurrentState;
+		bool virtualKeyboardRequestState;
+
 
 		gvec2f _transformPosition(float x, float y);
 		void _resetTouches();
-		/*
-		void _tryRenderSplashTexture(int count = 1);
-		april::Texture* _tryLoadTexture(chstr nodeName, chstr attributeName);
-		void _tryLoadSplashTexture();
-		void _tryLoadBackgroundColor();
-		bool _findVisualElements(chstr nodeName, hstr& data, int& index);
-		*/
 
 	};
 
