@@ -110,9 +110,10 @@ namespace april
 	{
 		if (april::application != NULL)
 		{
-			april::application->enterMainLoop();
-			april::application->finish();
-			april::application->updateFinishing();
+			if (april::window != NULL && april::rendersys != NULL)
+			{
+				april::application->enterMainLoop();
+			}
 			april::application->destroy();
 		}
 		else
@@ -128,6 +129,7 @@ namespace april
 		if (april::application != NULL)
 		{
 			april::application->finish();
+			april::application->finalize();
 			april::application->updateFinishing();
 			april::application->destroy();
 		}

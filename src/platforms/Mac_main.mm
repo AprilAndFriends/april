@@ -55,18 +55,18 @@ static NSString* getLocalizedString(NSString* key, NSString* fallback)
 	{
 		[super terminate:sender];
 	}
-    bool result = true;
-    if (april::isUsingCVDisplayLink())
-    {
+	bool result = true;
+	if (april::isUsingCVDisplayLink())
+	{
 		hmutex::ScopeLock lock(&MAC_WINDOW->renderThreadSyncMutex);
-        result = april::window->handleQuitRequest(true);
-        lock.release();
-    }
-    else
-    {
-        result = april::window->handleQuitRequest(true);
-    }
-    if (result)
+		result = april::window->handleQuitRequest(true);
+		lock.release();
+	}
+	else
+	{
+		result = april::window->handleQuitRequest(true);
+	}
+	if (result)
 	{
 		[super terminate:sender];
 	}
@@ -197,8 +197,11 @@ namespace april
 		april::application = new Application(aprilApplicationInit, aprilApplicationDestroy);
 		april::application->setArgs(args);
 		CustomApplicationMain();
-		delete april::application;
-		april::application = NULL;
+		if (april::application != NULL)
+		{
+			delete april::application;
+			april::application = NULL;
+		}
 		return 0;
 	}
 	
