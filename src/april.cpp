@@ -56,9 +56,6 @@
 #ifdef _WIN32_WINDOW
 #include "Win32_Window.h"
 #endif
-#ifdef _WINRT_WINDOW
-#include "WinRT_Window.h"
-#endif
 #ifdef _UWP_WINDOW
 #include "UWP_Window.h"
 #endif
@@ -78,12 +75,10 @@
 	#elif defined(_OPENGLES2)
 		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES2
 	#endif
-	#ifndef _WINRT
+	#ifndef _UWP
 		#define WS_INTERNAL_DEFAULT WindowType::Win32
-	#elif defined(_UWP)
-		#define WS_INTERNAL_DEFAULT WindowType::UWP
 	#else
-		#define WS_INTERNAL_DEFAULT WindowType::WinRT
+		#define WS_INTERNAL_DEFAULT WindowType::UWP
 	#endif
 #elif defined(__APPLE__)
 	#ifdef _IOS
@@ -286,12 +281,6 @@ namespace april
 		if (april::window == NULL && window == WindowType::Win32)
 		{
 			april::window = new Win32_Window();
-		}
-#endif
-#ifdef _WINRT_WINDOW
-		if (april::window == NULL && window == WindowType::WinRT)
-		{
-			april::window = new WinRT_Window();
 		}
 #endif
 #ifdef _UWP_WINDOW

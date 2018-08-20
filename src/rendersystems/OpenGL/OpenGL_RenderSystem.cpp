@@ -69,7 +69,7 @@ namespace april
 		{
 			this->_intermediateRenderVertices[i].y = -this->_intermediateRenderVertices[i].y;
 		}
-#if defined(_WIN32) && !defined(_WINRT)
+#if defined(_WIN32) && !defined(_UWP)
 		this->hWnd = 0;
 		this->hDC = 0;
 #endif
@@ -87,7 +87,7 @@ namespace april
 		this->deviceState_texturePointer = NULL;
 		this->deviceState_colorStride = 0;
 		this->deviceState_colorPointer = NULL;
-#if defined(_WIN32) && !defined(_WINRT)
+#if defined(_WIN32) && !defined(_UWP)
 		this->hWnd = 0;
 		this->hDC = 0;
 #endif
@@ -100,7 +100,7 @@ namespace april
 
 	bool OpenGL_RenderSystem::_deviceDestroy()
 	{
-#if defined(_WIN32) && !defined(_WINRT)
+#if defined(_WIN32) && !defined(_UWP)
 		this->_releaseWindow();
 #endif
 		return true;
@@ -108,7 +108,7 @@ namespace april
 
 	void OpenGL_RenderSystem::_deviceAssignWindow(Window* window)
 	{
-#if defined(_WIN32) && !defined(_WINRT)
+#if defined(_WIN32) && !defined(_UWP)
 		this->_initWin32(window);
 #endif
 	}
@@ -118,7 +118,7 @@ namespace april
 		GL_SAFE_CALL(glGetIntegerv, (GL_MAX_TEXTURE_SIZE, &this->caps.maxTextureSize));
 	}
 
-#if defined(_WIN32) && !defined(_WINRT)
+#if defined(_WIN32) && !defined(_UWP)
 	void OpenGL_RenderSystem::_releaseWindow()
 	{
 		if (this->hDC != 0)

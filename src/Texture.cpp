@@ -406,7 +406,7 @@ namespace april
 		}
 		else
 		{
-#if defined(_WIN32) && !defined(_WINRT)
+#if defined(_WIN32) && !defined(_UWP)
 			result += hsprintf("<0x%p>", this); // only basic Win32 doesn't add 0x to %p
 #else
 			result += hsprintf("<%p>", this);

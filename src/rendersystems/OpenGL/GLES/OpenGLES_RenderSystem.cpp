@@ -267,14 +267,14 @@ namespace april
 			extensions = (const char*)extensionsString;
 		}
 		hlog::write(logTag, "Extensions supported:\n- " + extensions.trimmedRight().replaced(" ", "\n- "));
-#if defined(_IOS) || defined(_WINRT) // iOS devices support limited NPOT textures as per device specification since iPhone 3GS
+#if defined(_IOS) || defined(_UWP) // iOS devices support limited NPOT textures as per device specification since iPhone 3GS
 		this->caps.npotTexturesLimited = true;
 #else
 		this->caps.npotTexturesLimited = (extensions.contains("IMG_texture_npot") || extensions.contains("APPLE_texture_2D_limited_npot"));
 #endif
 		this->caps.npotTextures = (extensions.contains("OES_texture_npot") || extensions.contains("ARB_texture_non_power_of_two"));
 		// TODO - is there a way to make this work on Win32?
-#if !defined(_WIN32) || defined(_WINRT)
+#if !defined(_WIN32) || defined(_UWP)
 		this->blendSeparationSupported = (extensions.contains("OES_blend_equation_separate") && extensions.contains("OES_blend_func_separate"));
 		hlog::write(logTag, "Blend-separate supported: " + hstr(this->blendSeparationSupported ? "yes" : "no"));
 #endif
@@ -467,7 +467,7 @@ namespace april
 
 	void OpenGLES_RenderSystem::_setDeviceBlendMode(const BlendMode& blendMode)
 	{
-#if !defined(_WIN32) || defined(_WINRT)
+#if !defined(_WIN32) || defined(_UWP)
 		if (this->blendSeparationSupported)
 		{
 			// blending for the new generations

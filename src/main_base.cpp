@@ -15,13 +15,13 @@
 
 namespace april
 {
-#if defined(_WIN32) && !defined(_WINRT)
+#if defined(_WIN32) && !defined(_UWP)
 	static HANDLE lockMutex;
 #endif
 
 	bool __lockSingleInstanceMutex(hstr instanceName, chstr fallbackName)
 	{
-#if defined(_WIN32) && !defined(_WINRT)
+#if defined(_WIN32) && !defined(_UWP)
 		if (instanceName == "")
 		{
 			instanceName = fallbackName;
@@ -40,7 +40,7 @@ namespace april
 
 	void __unlockSingleInstanceMutex()
 	{
-#if defined(_WIN32) && !defined(_WINRT)
+#if defined(_WIN32) && !defined(_UWP)
 		if (lockMutex != 0)
 		{
 			CloseHandle(lockMutex);

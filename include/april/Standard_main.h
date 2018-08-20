@@ -10,7 +10,7 @@
 /// 
 /// Defines main for standard C/C++.
 
-#if !defined(_WIN32) || defined(_CONSOLE) && !defined(_WINRT)
+#if !defined(_WIN32) || defined(_CONSOLE) && !defined(_UWP)
 #ifndef APRIL_STANDARD_MAIN_H
 #define APRIL_STANDARD_MAIN_H
 

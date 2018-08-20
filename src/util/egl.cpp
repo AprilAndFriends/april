@@ -107,7 +107,7 @@ namespace april
 			for_iter (i, 0, nConfigs)
             {
 				memset(&size, 0, 3 * sizeof(EGLint));
-#if !defined(_WIN32) || defined(_WINRT)
+#if !defined(_WIN32) || defined(_UWP)
                 // alpha == 0
                 if (eglGetConfigAttrib(this->display, configs[i], EGL_ALPHA_SIZE, &size[0]) && size[0] == 0)
 #endif
@@ -131,7 +131,7 @@ namespace april
         if (this->surface == NULL)
 		{
 			// hWnd is assigned outside of this code on some non-win32 platforms, so we have to use it.
-#if defined(_WIN32) && !defined(_WINRT)
+#if defined(_WIN32) && !defined(_UWP)
 			this->hWnd = (EGLNativeWindowType)april::window->getBackendId();
 #endif
 			EGLint surfaceAttributes[1] = { EGL_NONE };

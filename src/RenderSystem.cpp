@@ -675,7 +675,7 @@ namespace april
 	{
 		if (format != Image::Format::Invalid && !this->getCaps().textureFormats.has(format))
 		{
-#if defined(_WIN32) && !defined(_WINRT)
+#if defined(_WIN32) && !defined(_UWP)
 			hstr address = hsprintf("<0x%p>", data); // only basic Win32 doesn't add 0x to %p
 #else
 			hstr address = hsprintf("<%p>", data);

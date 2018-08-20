@@ -19,7 +19,6 @@
 /// - Windows native: _WIN32
 /// - Windows with console: _WIN32 _CONSOLE
 /// - UWP: _UWP
-/// - WinRT: _WINRT
 /// - Android: __ANDROID__
 /// - Mac: __APPLE__
 /// - iOS: __APPLE__
@@ -44,8 +43,6 @@
 	#include "Android_main.h"
 #elif defined(_UWP)
 	#include "UWP_main.h"
-#elif defined(_WINRT)
-	#include "WinRT_main.h"
 #elif defined(_WIN32) && !defined(_CONSOLE)
 	#include "Win32_main.h"
 #else

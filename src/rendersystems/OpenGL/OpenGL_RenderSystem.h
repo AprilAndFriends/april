@@ -137,7 +137,7 @@ namespace april
 		virtual void _setGlTexturePointer(int stride, const void* pointer) = 0;
 		virtual void _setGlColorPointer(int stride, const void* pointer) = 0;
 
-#if defined(_WIN32) && !defined(_WINRT)
+#if defined(_WIN32) && !defined(_UWP)
 	public:
 		inline HDC getHDC() { return this->hDC; }
 
