@@ -53,7 +53,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Defines image file formats.  
+<p>Creates the default parameters for the given <a class="el" href="classapril_1_1_image_1_1_format.html" title="Gets the BPP. ">Format</a>.  
  <a href="classapril_1_1_image_1_1_file_format.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_image_8h_source.html">Image.h</a>&gt;</code></p>
@@ -74,12 +74,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6e5686414f4e1275a9d17ad4fb9c7ef8"><td class="memItemLeft" align="right" valign="top"><a id="a6e5686414f4e1275a9d17ad4fb9c7ef8"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>FileFormat</b> (chstr name, unsigned int value)</td></tr>
 <tr class="separator:a6e5686414f4e1275a9d17ad4fb9c7ef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a896f95211666a275d40da7f99459002f"><td class="memItemLeft" align="right" valign="top"><a id="a896f95211666a275d40da7f99459002f"></a>
-<a class="el" href="classapril_1_1_image_1_1_file_format.html">FileFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><b>next</b> ()</td></tr>
-<tr class="separator:a896f95211666a275d40da7f99459002f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8500f36e9ca0103f0639e220e736379b"><td class="memItemLeft" align="right" valign="top"><a id="a8500f36e9ca0103f0639e220e736379b"></a>
-<a class="el" href="classapril_1_1_image_1_1_file_format.html">FileFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><b>previous</b> ()</td></tr>
-<tr class="separator:a8500f36e9ca0103f0639e220e736379b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff3177aa3dcbe078b2366ed1fb300e38"><td class="memItemLeft" align="right" valign="top"><a id="aff3177aa3dcbe078b2366ed1fb300e38"></a>
+<a class="el" href="classapril_1_1_image_1_1_file_format.html">FileFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><b>next</b> () const</td></tr>
+<tr class="separator:aff3177aa3dcbe078b2366ed1fb300e38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafde96dfcaf9c8f6686d3cb6cb99233a"><td class="memItemLeft" align="right" valign="top"><a id="aafde96dfcaf9c8f6686d3cb6cb99233a"></a>
+<a class="el" href="classapril_1_1_image_1_1_file_format.html">FileFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><b>previous</b> () const</td></tr>
+<tr class="separator:aafde96dfcaf9c8f6686d3cb6cb99233a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23193e08f7f7a671a3006d8bf9bd9467"><td class="memItemLeft" align="right" valign="top"><a id="a23193e08f7f7a671a3006d8bf9bd9467"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;</b> (const <a class="el" href="classapril_1_1_image_1_1_file_format.html">FileFormat</a> &amp;other) const</td></tr>
 <tr class="separator:a23193e08f7f7a671a3006d8bf9bd9467"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -98,9 +98,24 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
 <tr class="memitem:a8decf1b821b6190873bf71ba3239b23e"><td class="memItemLeft" align="right" valign="top"><a id="a8decf1b821b6190873bf71ba3239b23e"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="classapril_1_1_image_1_1_file_format.html">FileFormat</a> &amp;other) const</td></tr>
 <tr class="separator:a8decf1b821b6190873bf71ba3239b23e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2383a4df3e23894ad5de855f5fd2d0b6"><td class="memItemLeft" align="right" valign="top"><a id="a2383a4df3e23894ad5de855f5fd2d0b6"></a>
+<a class="el" href="classapril_1_1_image.html#a41d7d0c3ef5b6c3298fefc68bc65d575">SaveParameters</a>&#160;</td><td class="memItemRight" valign="bottom"><b>makeDefaultParameters</b> (chstr customExtension=&quot;&quot;) const</td></tr>
+<tr class="separator:a2383a4df3e23894ad5de855f5fd2d0b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:afc25a3c6184ca4516fdc7e3d764ac5ea"><td class="memItemLeft" align="right" valign="top"><a id="afc25a3c6184ca4516fdc7e3d764ac5ea"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><b>getCount</b> ()</td></tr>
+<tr class="separator:afc25a3c6184ca4516fdc7e3d764ac5ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb362a38722c945b6b69a305d618fd79"><td class="memItemLeft" align="right" valign="top"><a id="acb362a38722c945b6b69a305d618fd79"></a>
+static hltypes::Array&lt; <a class="el" href="classapril_1_1_image_1_1_file_format.html">FileFormat</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getValues</b> ()</td></tr>
+<tr class="separator:acb362a38722c945b6b69a305d618fd79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad632073dc553e373401cff0acc6c401e"><td class="memItemLeft" align="right" valign="top"><a id="ad632073dc553e373401cff0acc6c401e"></a>
+static hstr&#160;</td><td class="memItemRight" valign="bottom"><b>getEnumName</b> ()</td></tr>
+<tr class="separator:ad632073dc553e373401cff0acc6c401e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4183e22adc66c092e4f7bf767ece15eb"><td class="memItemLeft" align="right" valign="top"><a id="a4183e22adc66c092e4f7bf767ece15eb"></a>
+static hltypes::Map&lt; unsigned int, hstr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getAsMap</b> ()</td></tr>
+<tr class="separator:a4183e22adc66c092e4f7bf767ece15eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaece4b3efcbbba6a96080a8d4065e692"><td class="memItemLeft" align="right" valign="top"><a id="aaece4b3efcbbba6a96080a8d4065e692"></a>
 static <a class="el" href="classapril_1_1_image_1_1_file_format.html">FileFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><b>fromInt</b> (int value)</td></tr>
 <tr class="separator:aaece4b3efcbbba6a96080a8d4065e692"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,15 +134,6 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasValueFor</b
 <tr class="memitem:a52b89e71d97d092d926ea3a646b9245a"><td class="memItemLeft" align="right" valign="top"><a id="a52b89e71d97d092d926ea3a646b9245a"></a>
 static bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasValueFor</b> (unsigned int value)</td></tr>
 <tr class="separator:a52b89e71d97d092d926ea3a646b9245a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb362a38722c945b6b69a305d618fd79"><td class="memItemLeft" align="right" valign="top"><a id="acb362a38722c945b6b69a305d618fd79"></a>
-static hltypes::Array&lt; <a class="el" href="classapril_1_1_image_1_1_file_format.html">FileFormat</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getValues</b> ()</td></tr>
-<tr class="separator:acb362a38722c945b6b69a305d618fd79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad632073dc553e373401cff0acc6c401e"><td class="memItemLeft" align="right" valign="top"><a id="ad632073dc553e373401cff0acc6c401e"></a>
-static hstr&#160;</td><td class="memItemRight" valign="bottom"><b>getEnumName</b> ()</td></tr>
-<tr class="separator:ad632073dc553e373401cff0acc6c401e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4183e22adc66c092e4f7bf767ece15eb"><td class="memItemLeft" align="right" valign="top"><a id="a4183e22adc66c092e4f7bf767ece15eb"></a>
-static hltypes::Map&lt; unsigned int, hstr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getAsMap</b> ()</td></tr>
-<tr class="separator:a4183e22adc66c092e4f7bf767ece15eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -135,6 +141,10 @@ Static Public Attributes</h2></td></tr>
 static const <a class="el" href="classapril_1_1_image_1_1_file_format.html">FileFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_image_1_1_file_format.html#a1a9fa0f3ad9b0bc0939674fed455ad85">Png</a></td></tr>
 <tr class="memdesc:a1a9fa0f3ad9b0bc0939674fed455ad85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines PNG. <br /></td></tr>
 <tr class="separator:a1a9fa0f3ad9b0bc0939674fed455ad85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d9738a3042c84523f82236eb1f8d190"><td class="memItemLeft" align="right" valign="top"><a id="a3d9738a3042c84523f82236eb1f8d190"></a>
+static const <a class="el" href="classapril_1_1_image_1_1_file_format.html">FileFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_image_1_1_file_format.html#a3d9738a3042c84523f82236eb1f8d190">Jpeg</a></td></tr>
+<tr class="memdesc:a3d9738a3042c84523f82236eb1f8d190"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines JPEG. <br /></td></tr>
+<tr class="separator:a3d9738a3042c84523f82236eb1f8d190"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f17651355dc9511a58d708c6de02aca"><td class="memItemLeft" align="right" valign="top"><a id="a8f17651355dc9511a58d708c6de02aca"></a>
 static const <a class="el" href="classapril_1_1_image_1_1_file_format.html">FileFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_image_1_1_file_format.html#a8f17651355dc9511a58d708c6de02aca">Custom</a></td></tr>
 <tr class="memdesc:a8f17651355dc9511a58d708c6de02aca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines a custom format. <br /></td></tr>
@@ -150,7 +160,14 @@ hltypes::Map&lt; unsigned int, hstr &gt; &amp;&#160;</td><td class="memItemRight
 <tr class="separator:ae0669ebbbf6a69543e8ac3428143d869"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Defines image file formats. </p>
+<div class="textblock"><p>Creates the default parameters for the given <a class="el" href="classapril_1_1_image_1_1_format.html" title="Gets the BPP. ">Format</a>. </p>
+<p>Defines image file formats.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">customExtension</td><td>Used when format is Custom to determine which custom format should be saved.  The default parameters for the given <a class="el" href="classapril_1_1_image_1_1_format.html" title="Gets the BPP. ">Format</a>.</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section note"><dt>Note</dt><dd>Usually only used for file writing. </dd></dl>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/april/<a class="el" href="_image_8h_source.html">Image.h</a></li>

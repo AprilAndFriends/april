@@ -74,12 +74,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aeaa3a92e142c8b39cff4ede01eb1181c"><td class="memItemLeft" align="right" valign="top"><a id="aeaa3a92e142c8b39cff4ede01eb1181c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>RenderOperation</b> (chstr name, unsigned int value)</td></tr>
 <tr class="separator:aeaa3a92e142c8b39cff4ede01eb1181c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8975fe52ef4067671a3b2795d531a335"><td class="memItemLeft" align="right" valign="top"><a id="a8975fe52ef4067671a3b2795d531a335"></a>
-<a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a>&#160;</td><td class="memItemRight" valign="bottom"><b>next</b> ()</td></tr>
-<tr class="separator:a8975fe52ef4067671a3b2795d531a335"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a393b6f6862a745d6fbe23200c0fb2b52"><td class="memItemLeft" align="right" valign="top"><a id="a393b6f6862a745d6fbe23200c0fb2b52"></a>
-<a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a>&#160;</td><td class="memItemRight" valign="bottom"><b>previous</b> ()</td></tr>
-<tr class="separator:a393b6f6862a745d6fbe23200c0fb2b52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9c88e75ab14dd2147052719aae4d675"><td class="memItemLeft" align="right" valign="top"><a id="ad9c88e75ab14dd2147052719aae4d675"></a>
+<a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a>&#160;</td><td class="memItemRight" valign="bottom"><b>next</b> () const</td></tr>
+<tr class="separator:ad9c88e75ab14dd2147052719aae4d675"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc7ca38599483a17abd50b54bf402d60"><td class="memItemLeft" align="right" valign="top"><a id="afc7ca38599483a17abd50b54bf402d60"></a>
+<a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a>&#160;</td><td class="memItemRight" valign="bottom"><b>previous</b> () const</td></tr>
+<tr class="separator:afc7ca38599483a17abd50b54bf402d60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8454ee6d9b25510ef5816d2f0bc9aec5"><td class="memItemLeft" align="right" valign="top"><a id="a8454ee6d9b25510ef5816d2f0bc9aec5"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;</b> (const <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &amp;other) const</td></tr>
 <tr class="separator:a8454ee6d9b25510ef5816d2f0bc9aec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -110,6 +110,18 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>isPoint</b> () const<
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ab5fbe6db0ce87a1a388b24f9da10e7ba"><td class="memItemLeft" align="right" valign="top"><a id="ab5fbe6db0ce87a1a388b24f9da10e7ba"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><b>getCount</b> ()</td></tr>
+<tr class="separator:ab5fbe6db0ce87a1a388b24f9da10e7ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47b8f1864edfd3a859f80377baea42bd"><td class="memItemLeft" align="right" valign="top"><a id="a47b8f1864edfd3a859f80377baea42bd"></a>
+static hltypes::Array&lt; <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getValues</b> ()</td></tr>
+<tr class="separator:a47b8f1864edfd3a859f80377baea42bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb641bd69dfd380abd0a516bd9b96817"><td class="memItemLeft" align="right" valign="top"><a id="aeb641bd69dfd380abd0a516bd9b96817"></a>
+static hstr&#160;</td><td class="memItemRight" valign="bottom"><b>getEnumName</b> ()</td></tr>
+<tr class="separator:aeb641bd69dfd380abd0a516bd9b96817"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18dd0af543ddb6002e0ce5790439a910"><td class="memItemLeft" align="right" valign="top"><a id="a18dd0af543ddb6002e0ce5790439a910"></a>
+static hltypes::Map&lt; unsigned int, hstr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getAsMap</b> ()</td></tr>
+<tr class="separator:a18dd0af543ddb6002e0ce5790439a910"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2607147a5a8d8237cbb02ff788060895"><td class="memItemLeft" align="right" valign="top"><a id="a2607147a5a8d8237cbb02ff788060895"></a>
 static <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a>&#160;</td><td class="memItemRight" valign="bottom"><b>fromInt</b> (int value)</td></tr>
 <tr class="separator:a2607147a5a8d8237cbb02ff788060895"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -128,15 +140,6 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasValueFor</b
 <tr class="memitem:acb270bd8031fed5b33f9d923bef2579f"><td class="memItemLeft" align="right" valign="top"><a id="acb270bd8031fed5b33f9d923bef2579f"></a>
 static bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasValueFor</b> (unsigned int value)</td></tr>
 <tr class="separator:acb270bd8031fed5b33f9d923bef2579f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47b8f1864edfd3a859f80377baea42bd"><td class="memItemLeft" align="right" valign="top"><a id="a47b8f1864edfd3a859f80377baea42bd"></a>
-static hltypes::Array&lt; <a class="el" href="classapril_1_1_render_operation.html">RenderOperation</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getValues</b> ()</td></tr>
-<tr class="separator:a47b8f1864edfd3a859f80377baea42bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb641bd69dfd380abd0a516bd9b96817"><td class="memItemLeft" align="right" valign="top"><a id="aeb641bd69dfd380abd0a516bd9b96817"></a>
-static hstr&#160;</td><td class="memItemRight" valign="bottom"><b>getEnumName</b> ()</td></tr>
-<tr class="separator:aeb641bd69dfd380abd0a516bd9b96817"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18dd0af543ddb6002e0ce5790439a910"><td class="memItemLeft" align="right" valign="top"><a id="a18dd0af543ddb6002e0ce5790439a910"></a>
-static hltypes::Map&lt; unsigned int, hstr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getAsMap</b> ()</td></tr>
-<tr class="separator:a18dd0af543ddb6002e0ce5790439a910"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>

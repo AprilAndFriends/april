@@ -103,8 +103,9 @@ Public Member Functions</h2></td></tr>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a4abf8f12cad6c55eed3a24db01008fbf">isAnyMessageBoxQueued</a> ()</td></tr>
 <tr class="memdesc:a4abf8f12cad6c55eed3a24db01008fbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether any OS message boxes are queued for display. <br /></td></tr>
 <tr class="separator:a4abf8f12cad6c55eed3a24db01008fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a247770a9094842100fef614f99261b4d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a247770a9094842100fef614f99261b4d">init</a> ()</td></tr>
-<tr class="memdesc:a247770a9094842100fef614f99261b4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the initialization procedure defined by the user.  <a href="#a247770a9094842100fef614f99261b4d">More...</a><br /></td></tr>
+<tr class="memitem:a247770a9094842100fef614f99261b4d"><td class="memItemLeft" align="right" valign="top"><a id="a247770a9094842100fef614f99261b4d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a247770a9094842100fef614f99261b4d">init</a> ()</td></tr>
+<tr class="memdesc:a247770a9094842100fef614f99261b4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls the initialization procedure defined by the user. <br /></td></tr>
 <tr class="separator:a247770a9094842100fef614f99261b4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68c90c12d79334096257b8d5610bb835"><td class="memItemLeft" align="right" valign="top"><a id="a68c90c12d79334096257b8d5610bb835"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#a68c90c12d79334096257b8d5610bb835">destroy</a> ()</td></tr>
@@ -202,6 +203,10 @@ void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cl
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#ab9bcc76c282fee27b29d87fcc6799e1e">suspended</a></td></tr>
 <tr class="memdesc:ab9bcc76c282fee27b29d87fcc6799e1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the application has been suspended. Required by some OSes. <br /></td></tr>
 <tr class="separator:ab9bcc76c282fee27b29d87fcc6799e1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add0dd1c2f228cd8054ae8bc3cc468e83"><td class="memItemLeft" align="right" valign="top"><a id="add0dd1c2f228cd8054ae8bc3cc468e83"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#add0dd1c2f228cd8054ae8bc3cc468e83">updateSuspendQueued</a></td></tr>
+<tr class="memdesc:add0dd1c2f228cd8054ae8bc3cc468e83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the update-thread is waiting to be suspended. Required by some OSes. <br /></td></tr>
+<tr class="separator:add0dd1c2f228cd8054ae8bc3cc468e83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef00c3064da84c2ec0d6924f5ce4bc3a"><td class="memItemLeft" align="right" valign="top"><a id="aef00c3064da84c2ec0d6924f5ce4bc3a"></a>
 <a class="el" href="classapril_1_1_timer.html">Timer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_application.html#aef00c3064da84c2ec0d6924f5ce4bc3a">timer</a></td></tr>
 <tr class="memdesc:aef00c3064da84c2ec0d6924f5ce4bc3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <a class="el" href="classapril_1_1_timer.html" title="Defines a generic timer. ">Timer</a> object used for general timing purposes. <br /></td></tr>
@@ -435,31 +440,6 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Window</b></td></tr>
 
 <p>The maximum allowed time-delta between frames. </p>
 <dl class="section note"><dt>Note</dt><dd>Limiting this makes sense, because on weak hardware configurations it allows that large frameskips don't result in too large time skips. </dd></dl>
-
-</div>
-</div>
-<a id="a247770a9094842100fef614f99261b4d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a247770a9094842100fef614f99261b4d">&#9670;&nbsp;</a></span>init()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void april::Application::init </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Calls the initialization procedure defined by the user. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>Launch arguments. </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>

@@ -292,6 +292,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#ae48599d677ce2bf669799ac1b2148bf8">handleLowMemoryWarning</a> ()</td></tr>
 <tr class="memdesc:ae48599d677ce2bf669799ac1b2148bf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles a low memory warning event and propagates it to the delegate. <br /></td></tr>
 <tr class="separator:ae48599d677ce2bf669799ac1b2148bf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed5eb80ac97f43708efc03c59330ddda"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#aed5eb80ac97f43708efc03c59330ddda">handleScreenshot</a> (<a class="el" href="classapril_1_1_image.html">Image</a> *image)</td></tr>
+<tr class="memdesc:aed5eb80ac97f43708efc03c59330ddda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles a screenshot event and propagates it to the delegate.  <a href="#aed5eb80ac97f43708efc03c59330ddda">More...</a><br /></td></tr>
+<tr class="separator:aed5eb80ac97f43708efc03c59330ddda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1952aa52500d4587ea4955c7c3a7e8aa"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a1952aa52500d4587ea4955c7c3a7e8aa">handleMouseInput</a> (<a class="el" href="classapril_1_1_mouse_event_1_1_type.html">MouseEvent::Type</a> type, cgvec2f position, <a class="el" href="classapril_1_1_key.html">Key</a> keyCode)</td></tr>
 <tr class="memdesc:a1952aa52500d4587ea4955c7c3a7e8aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles a mouse event and propagates it to the delegate.  <a href="#a1952aa52500d4587ea4955c7c3a7e8aa">More...</a><br /></td></tr>
 <tr class="separator:a1952aa52500d4587ea4955c7c3a7e8aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -314,7 +317,7 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memdesc:a968b41ecbba1d41dff1bd119c7e7c83a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles a keyboard character event and propagates it to the delegate.  <a href="#a968b41ecbba1d41dff1bd119c7e7c83a">More...</a><br /></td></tr>
 <tr class="separator:a968b41ecbba1d41dff1bd119c7e7c83a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a267f34e6318f4e0388c79047fcb54325"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a267f34e6318f4e0388c79047fcb54325">queueQuitRequest</a> (bool canCancel)</td></tr>
-<tr class="memdesc:a267f34e6318f4e0388c79047fcb54325"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a quit event and propagates it to the delegate.  <a href="#a267f34e6318f4e0388c79047fcb54325">More...</a><br /></td></tr>
+<tr class="memdesc:a267f34e6318f4e0388c79047fcb54325"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a quit event.  <a href="#a267f34e6318f4e0388c79047fcb54325">More...</a><br /></td></tr>
 <tr class="separator:a267f34e6318f4e0388c79047fcb54325"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9760db4df00fd4369777bb31918db59c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a9760db4df00fd4369777bb31918db59c">queueFocusChange</a> (bool <a class="el" href="classapril_1_1_window.html#a2bed91b15e817e5182734f303fd36317">focused</a>)</td></tr>
 <tr class="memdesc:a9760db4df00fd4369777bb31918db59c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a focus change event for processing before the start of the next frame.  <a href="#a9760db4df00fd4369777bb31918db59c">More...</a><br /></td></tr>
@@ -329,12 +332,15 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memdesc:a2edbf53593b7c803ce24b473ca50742e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a size change event for processing before the start of the next frame.  <a href="#a2edbf53593b7c803ce24b473ca50742e">More...</a><br /></td></tr>
 <tr class="separator:a2edbf53593b7c803ce24b473ca50742e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2445c2b38d58267168e440eab1a8a8a0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a2445c2b38d58267168e440eab1a8a8a0">queueVirtualKeyboardChange</a> (bool visible, float heightRatio)</td></tr>
-<tr class="memdesc:a2445c2b38d58267168e440eab1a8a8a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a virtual-keyboard-change event and propagates it to the delegate.  <a href="#a2445c2b38d58267168e440eab1a8a8a0">More...</a><br /></td></tr>
+<tr class="memdesc:a2445c2b38d58267168e440eab1a8a8a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a virtual-keyboard-change event.  <a href="#a2445c2b38d58267168e440eab1a8a8a0">More...</a><br /></td></tr>
 <tr class="separator:a2445c2b38d58267168e440eab1a8a8a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add8b8b8d1c093be0dc4e0f817c2c9859"><td class="memItemLeft" align="right" valign="top"><a id="add8b8b8d1c093be0dc4e0f817c2c9859"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#add8b8b8d1c093be0dc4e0f817c2c9859">queueLowMemoryWarning</a> ()</td></tr>
-<tr class="memdesc:add8b8b8d1c093be0dc4e0f817c2c9859"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a low memory warning event and propagates it to the delegate. <br /></td></tr>
+<tr class="memdesc:add8b8b8d1c093be0dc4e0f817c2c9859"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a low memory warning event. <br /></td></tr>
 <tr class="separator:add8b8b8d1c093be0dc4e0f817c2c9859"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab827a5d2136f8d348c31387e2b9c8fd2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#ab827a5d2136f8d348c31387e2b9c8fd2">queueScreenshot</a> (<a class="el" href="classapril_1_1_image.html">Image</a> *image)</td></tr>
+<tr class="memdesc:ab827a5d2136f8d348c31387e2b9c8fd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a screenshot event.  <a href="#ab827a5d2136f8d348c31387e2b9c8fd2">More...</a><br /></td></tr>
+<tr class="separator:ab827a5d2136f8d348c31387e2b9c8fd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d8e92de54af074914324a8c638c5d4f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classapril_1_1_window.html#a2d8e92de54af074914324a8c638c5d4f">queueMouseInput</a> (<a class="el" href="classapril_1_1_mouse_event_1_1_type.html">MouseEvent::Type</a> type, cgvec2f position, <a class="el" href="classapril_1_1_key.html">Key</a> keyCode)</td></tr>
 <tr class="memdesc:a2d8e92de54af074914324a8c638c5d4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queues a mouse event for processing before the start of the next frame.  <a href="#a2d8e92de54af074914324a8c638c5d4f">More...</a><br /></td></tr>
 <tr class="separator:a2d8e92de54af074914324a8c638c5d4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1825,6 +1831,40 @@ This is used internally only. </dd></dl>
 
 </div>
 </div>
+<a id="aed5eb80ac97f43708efc03c59330ddda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed5eb80ac97f43708efc03c59330ddda">&#9670;&nbsp;</a></span>handleScreenshot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void april::Window::handleScreenshot </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_image.html">Image</a> *&#160;</td>
+          <td class="paramname"><em>image</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handles a screenshot event and propagates it to the delegate. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">image</td><td>The <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a> objet containing the screenshot bitmap data. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a0e7d52eaaeb6ae76a13a59828f30aa17"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0e7d52eaaeb6ae76a13a59828f30aa17">&#9670;&nbsp;</a></span>handleSizeChange()</h2>
 
@@ -2564,7 +2604,7 @@ This is used internally only. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Queues a quit event and propagates it to the delegate. </p>
+<p>Queues a quit event. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">canCancel</td><td>Whether the window quitting can be canceled. </td></tr>
@@ -2572,6 +2612,40 @@ This is used internally only. </dd></dl>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the system is allowed to actually close the window. </dd></dl>
+
+</div>
+</div>
+<a id="ab827a5d2136f8d348c31387e2b9c8fd2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab827a5d2136f8d348c31387e2b9c8fd2">&#9670;&nbsp;</a></span>queueScreenshot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void april::Window::queueScreenshot </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classapril_1_1_image.html">Image</a> *&#160;</td>
+          <td class="paramname"><em>image</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Queues a screenshot event. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">image</td><td>The <a class="el" href="classapril_1_1_image.html" title="Defines a generic image data source. ">Image</a> objet containing the screenshot bitmap data. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -2715,7 +2789,7 @@ This is used internally only. </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>Queues a virtual-keyboard-change event and propagates it to the delegate. </p>
+<p>Queues a virtual-keyboard-change event. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">visible</td><td>Whether the virtual keyboard is visible. </td></tr>

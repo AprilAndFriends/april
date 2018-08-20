@@ -47,12 +47,12 @@ _timer_8h_source.html
 _touch_delegate_8h_source.html
 _touch_event_8h_source.html
 _update_delegate_8h_source.html
+_u_w_p__main_8h_source.html
 _vertex_shader_8h_source.html
 _virtual_keyboard_8h_source.html
 _win32__main_8h_source.html
 _window_8h_source.html
 _win_r_t__main_8h_source.html
-_win_u_w_p__main_8h_source.html
 _android__main_8h.html
 android_util_j_n_i_8h.html
 _application_8h.html
@@ -88,12 +88,12 @@ _timer_8h.html
 _touch_delegate_8h.html
 _touch_event_8h.html
 _update_delegate_8h.html
+_u_w_p__main_8h.html
 _vertex_shader_8h.html
 _virtual_keyboard_8h.html
 _win32__main_8h.html
 _window_8h.html
 _win_r_t__main_8h.html
-_win_u_w_p__main_8h.html
 classapril_1_1_application.html
 classapril_1_1_application-members.html
 classapril_1_1_application_1_1_state.html
@@ -233,6 +233,7 @@ functions_f.html
 functions_g.html
 functions_h.html
 functions_i.html
+functions_j.html
 functions_k.html
 functions_l.html
 functions_m.html
@@ -284,6 +285,7 @@ functions_vars_f.html
 functions_vars_g.html
 functions_vars_h.html
 functions_vars_i.html
+functions_vars_j.html
 functions_vars_k.html
 functions_vars_l.html
 functions_vars_m.html
@@ -300,6 +302,7 @@ functions_vars_w.html
 functions_vars_x.html
 functions_vars_y.html
 functions_vars_z.html
+functions_type.html
 files.html
 globals.html
 globals_func.html

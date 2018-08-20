@@ -74,12 +74,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a435b00635417e49a81a7a306b3039b13"><td class="memItemLeft" align="right" valign="top"><a id="a435b00635417e49a81a7a306b3039b13"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>MessageBoxButton</b> (chstr name, unsigned int value)</td></tr>
 <tr class="separator:a435b00635417e49a81a7a306b3039b13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e45d3e9cc1a9dc5a551fff2721a7d03"><td class="memItemLeft" align="right" valign="top"><a id="a3e45d3e9cc1a9dc5a551fff2721a7d03"></a>
-<a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a>&#160;</td><td class="memItemRight" valign="bottom"><b>next</b> ()</td></tr>
-<tr class="separator:a3e45d3e9cc1a9dc5a551fff2721a7d03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f34dff14d57659107776c22dc8f651c"><td class="memItemLeft" align="right" valign="top"><a id="a1f34dff14d57659107776c22dc8f651c"></a>
-<a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a>&#160;</td><td class="memItemRight" valign="bottom"><b>previous</b> ()</td></tr>
-<tr class="separator:a1f34dff14d57659107776c22dc8f651c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfafe34b900c61f912481d046b793d7e"><td class="memItemLeft" align="right" valign="top"><a id="adfafe34b900c61f912481d046b793d7e"></a>
+<a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a>&#160;</td><td class="memItemRight" valign="bottom"><b>next</b> () const</td></tr>
+<tr class="separator:adfafe34b900c61f912481d046b793d7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57ae2cd27a8abcc58d54c810bfc95c48"><td class="memItemLeft" align="right" valign="top"><a id="a57ae2cd27a8abcc58d54c810bfc95c48"></a>
+<a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a>&#160;</td><td class="memItemRight" valign="bottom"><b>previous</b> () const</td></tr>
+<tr class="separator:a57ae2cd27a8abcc58d54c810bfc95c48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af66490e9d46dc128545b1896221fea6b"><td class="memItemLeft" align="right" valign="top"><a id="af66490e9d46dc128545b1896221fea6b"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;</b> (const <a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a> &amp;other) const</td></tr>
 <tr class="separator:af66490e9d46dc128545b1896221fea6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -113,6 +113,18 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasNo</b> () const</t
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a6462bd906fa348f79de73c90e4c2fd6a"><td class="memItemLeft" align="right" valign="top"><a id="a6462bd906fa348f79de73c90e4c2fd6a"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><b>getCount</b> ()</td></tr>
+<tr class="separator:a6462bd906fa348f79de73c90e4c2fd6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae243331e237c6702afae35e8dbb74aed"><td class="memItemLeft" align="right" valign="top"><a id="ae243331e237c6702afae35e8dbb74aed"></a>
+static hltypes::Array&lt; <a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getValues</b> ()</td></tr>
+<tr class="separator:ae243331e237c6702afae35e8dbb74aed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf4932f65adb55cf21c10b2cf1a967f2"><td class="memItemLeft" align="right" valign="top"><a id="acf4932f65adb55cf21c10b2cf1a967f2"></a>
+static hstr&#160;</td><td class="memItemRight" valign="bottom"><b>getEnumName</b> ()</td></tr>
+<tr class="separator:acf4932f65adb55cf21c10b2cf1a967f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a061c18ce705108d90d44349e03602732"><td class="memItemLeft" align="right" valign="top"><a id="a061c18ce705108d90d44349e03602732"></a>
+static hltypes::Map&lt; unsigned int, hstr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getAsMap</b> ()</td></tr>
+<tr class="separator:a061c18ce705108d90d44349e03602732"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0519de74b599308652abc4d423220dc"><td class="memItemLeft" align="right" valign="top"><a id="ab0519de74b599308652abc4d423220dc"></a>
 static <a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a>&#160;</td><td class="memItemRight" valign="bottom"><b>fromInt</b> (int value)</td></tr>
 <tr class="separator:ab0519de74b599308652abc4d423220dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -131,15 +143,6 @@ static bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasValueFor</b
 <tr class="memitem:ae3db82f222a4bb40e7b70ee4d205aafc"><td class="memItemLeft" align="right" valign="top"><a id="ae3db82f222a4bb40e7b70ee4d205aafc"></a>
 static bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasValueFor</b> (unsigned int value)</td></tr>
 <tr class="separator:ae3db82f222a4bb40e7b70ee4d205aafc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae243331e237c6702afae35e8dbb74aed"><td class="memItemLeft" align="right" valign="top"><a id="ae243331e237c6702afae35e8dbb74aed"></a>
-static hltypes::Array&lt; <a class="el" href="classapril_1_1_message_box_button.html">MessageBoxButton</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getValues</b> ()</td></tr>
-<tr class="separator:ae243331e237c6702afae35e8dbb74aed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf4932f65adb55cf21c10b2cf1a967f2"><td class="memItemLeft" align="right" valign="top"><a id="acf4932f65adb55cf21c10b2cf1a967f2"></a>
-static hstr&#160;</td><td class="memItemRight" valign="bottom"><b>getEnumName</b> ()</td></tr>
-<tr class="separator:acf4932f65adb55cf21c10b2cf1a967f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a061c18ce705108d90d44349e03602732"><td class="memItemLeft" align="right" valign="top"><a id="a061c18ce705108d90d44349e03602732"></a>
-static hltypes::Map&lt; unsigned int, hstr &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getAsMap</b> ()</td></tr>
-<tr class="separator:a061c18ce705108d90d44349e03602732"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
