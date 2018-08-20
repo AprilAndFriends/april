@@ -119,14 +119,12 @@
 #endif
 
 #ifdef _WIN32
-	#ifndef _WINRT
+	#ifndef _UWP
 		#define APRIL_PLATFORM_NAME "Win32"
-	#elif defined(_UWP)
+	#elif !defined(_WINPHONE)
 		#define APRIL_PLATFORM_NAME "UWP"
-	#elif !defined(_WINP8)
-		#define APRIL_PLATFORM_NAME "WinRT"
 	#else
-		#define APRIL_PLATFORM_NAME "WinP8"
+		#define APRIL_PLATFORM_NAME "WinPhone"
 	#endif
 #elif defined(__ANDROID__)
 	#define APRIL_PLATFORM_NAME "Android"
@@ -177,7 +175,7 @@ namespace april
 	static harray<hstr> extensions = hstr(".jpt,.png,.jpg").split(',');
 #endif
 	static int maxAsyncTextureUploadsPerFrame = 0;
-#if defined(__ANDROID__) || defined(_IOS) || defined(_WINRT) && defined(_WINP8)
+#if defined(__ANDROID__) || defined(_IOS) || defined(_UWP) && defined(_WINHONE)
 	static int maxWaitingAsyncTextures = 8; // to limit RAM consumption
 #else
 	static int maxWaitingAsyncTextures = 0;

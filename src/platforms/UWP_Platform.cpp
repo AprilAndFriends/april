@@ -104,7 +104,7 @@ namespace april
 			GetNativeSystemInfo(&w32info);
 			info.cpuCores = w32info.dwNumberOfProcessors;
 			// RAM size
-#ifndef _WINP8
+#ifndef _WINPHONE // TODOuwp - needs implementation if WinPhone 10 will be supported in the future
 			// pure UWP can't retrieve this information so some arbitrary value is used
 #ifndef _ARM
 			info.ram = 2048;

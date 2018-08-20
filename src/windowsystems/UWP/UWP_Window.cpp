@@ -72,8 +72,6 @@ namespace april
 	
 	hstr UWP_Window::getParam(chstr param)
 	{
-		// TODOuwp - remove all _WINP8 code
-#ifndef _WINP8
 		if (param == UWP_CURSOR_MAPPINGS)
 		{
 			harray<hstr> mappings;
@@ -83,18 +81,11 @@ namespace april
 			}
 			return mappings.joined('\n');
 		}
-#else
-		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
-		{
-			return hstr(this->backButtonSystemHandling ? "1" : "0");
-		}
-#endif
 		return "";
 	}
 
 	void UWP_Window::setParam(chstr param, chstr value)
 	{
-#ifndef _WINP8
 		if (param == UWP_CURSOR_MAPPINGS)
 		{
 			this->cursorMappings.clear();
@@ -110,13 +101,6 @@ namespace april
 			}
 			return;
 		}
-#else
-		if (param == WINP8_BACK_BUTTON_SYSTEM_HANDLING)
-		{
-			this->backButtonSystemHandling = (value != "0");
-			return;
-		}
-#endif
 		Window::setParam(param, value);
 	}
 

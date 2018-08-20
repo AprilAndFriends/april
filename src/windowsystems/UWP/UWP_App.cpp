@@ -51,11 +51,7 @@ namespace april
 		running(true),
 		visible(true)
 	{
-#ifndef _WINP8
 		this->defaultCursor = ref new CoreCursor(CoreCursorType::Arrow, 0);
-#else
-		this->defaultCursor = nullptr;
-#endif
 		this->scrollHorizontal = false;
 		this->startTime = htickCount();
 		this->currentButton = Key::None;
@@ -339,7 +335,6 @@ namespace april
 		unsigned int id;
 		int index;
 		gvec2f position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
-#ifndef _WINP8
 		this->currentButton = Key::MouseL;
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
@@ -357,7 +352,6 @@ namespace april
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
-#endif
 			april::window->queueInputModeChange(InputMode::Touch);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.indexOf(id);
@@ -367,10 +361,8 @@ namespace april
 				this->pointerIds += id;
 			}
 			april::window->queueTouchInput(MouseEvent::Type::Down, position, index);
-#ifndef _WINP8
 			break;
 		}
-#endif
 	}
 
 	void UWP_App::onTouchUp(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
@@ -383,7 +375,6 @@ namespace april
 		unsigned int id;
 		int index;
 		gvec2f position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
-#ifndef _WINP8
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
@@ -392,7 +383,6 @@ namespace april
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
-#endif
 			april::window->queueInputModeChange(InputMode::Touch);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.indexOf(id);
@@ -405,11 +395,9 @@ namespace april
 				this->pointerIds.removeAt(index);
 			}
 			april::window->queueTouchInput(MouseEvent::Type::Up, position, index);
-#ifndef _WINP8
 			break;
 		}
 		this->currentButton = Key::None;
-#endif
 	}
 
 	void UWP_App::onTouchMove(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)
@@ -422,7 +410,6 @@ namespace april
 		unsigned int id;
 		int index;
 		gvec2f position = this->_transformPosition(args->CurrentPoint->Position.X, args->CurrentPoint->Position.Y);
-#ifndef _WINP8
 		switch (args->CurrentPoint->PointerDevice->PointerDeviceType)
 		{
 		case Windows::Devices::Input::PointerDeviceType::Mouse:
@@ -431,7 +418,6 @@ namespace april
 			break;
 		case Windows::Devices::Input::PointerDeviceType::Touch:
 		case Windows::Devices::Input::PointerDeviceType::Pen:
-#endif
 			april::window->queueInputModeChange(InputMode::Touch);
 			id = args->CurrentPoint->PointerId;
 			index = this->pointerIds.indexOf(id);
@@ -440,10 +426,8 @@ namespace april
 				index = this->pointerIds.size();
 			}
 			april::window->queueTouchInput(MouseEvent::Type::Move, position, index);
-#ifndef _WINP8
 			break;
 		}
-#endif
 	}
 
 	void UWP_App::onMouseScroll(_In_ CoreWindow^ sender, _In_ PointerEventArgs^ args)

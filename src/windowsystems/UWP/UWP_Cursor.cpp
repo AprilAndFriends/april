@@ -32,7 +32,6 @@ namespace april
 
 	bool UWP_Cursor::_create(chstr filename)
 	{
-#ifndef _WINP8
 		hmap<hstr, int> cursorMappings;
 		harray<hstr> lines = april::window->getParam(UWP_CURSOR_MAPPINGS).split('\n', -1, true);
 		harray<hstr> data;
@@ -49,18 +48,13 @@ namespace april
 		{
 			return false;
 		}
-#endif
 		if (!Cursor::_create(filename))
 		{
 			return false;
 		}
 		// does not actually differ between hresource and hfile as only internal .exe resources can be cursors
-#ifndef _WINP8
 		this->cursor = ref new CoreCursor(CoreCursorType::Custom, id);
 		return (this->cursor != nullptr);
-#else
-		return false;
-#endif
 	}
 
 }

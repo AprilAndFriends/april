@@ -25,7 +25,6 @@
 #include "UWP.h"
 
 #define UWP_CURSOR_MAPPINGS "cursor_mappings"
-#define WINP8_BACK_BUTTON_SYSTEM_HANDLING "back_button_system_handling"
 
 namespace april
 {
