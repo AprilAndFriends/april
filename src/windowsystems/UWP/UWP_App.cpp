@@ -286,6 +286,7 @@ namespace april
 
 	void UWP_App::onDisplayContentsInvalidated(DisplayInformation^ sender, Platform::Object^ args)
 	{
+		hlog::error(logTag, "DisplayContentsInvalidated");
 		// TODOuwp - probably needs implementing
 		//GetDeviceResources()->ValidateDevice();
 	}
