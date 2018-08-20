@@ -843,8 +843,7 @@ namespace april
 
 	void DirectX11_RenderSystem::_updateDeviceReset()
 	{
-		hlog::error(logTag, "Device lost, recreating now...");
-		//this->
+		hlog::error(logTag, "Device lost!");
 	}
 
 	void DirectX11_RenderSystem::_setDeviceViewport(cgrecti rect)

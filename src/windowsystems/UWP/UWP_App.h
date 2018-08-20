@@ -77,7 +77,6 @@ namespace april
 		// DisplayInformation events
 		void onDpiChanged(DisplayInformation^ sender, Platform::Object^ args);
 		void onOrientationChanged(DisplayInformation^ sender, Platform::Object^ args);
-		void onDisplayContentsInvalidated(DisplayInformation^ sender, Platform::Object^ args);
 
 		void _processWindowSizeChange(float width, float height);
 		void _processWindowFocusChange(bool focused);

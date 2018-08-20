@@ -93,7 +93,6 @@ namespace april
 		DisplayInformation^ displayInformation = DisplayInformation::GetForCurrentView();
 		displayInformation->DpiChanged += ref new TypedEventHandler<DisplayInformation^, Object^>(this, &UWP_App::onDpiChanged);
 		displayInformation->OrientationChanged += ref new TypedEventHandler<DisplayInformation^, Object^>(this, &UWP_App::onOrientationChanged);
-		DisplayInformation::DisplayContentsInvalidated += ref new TypedEventHandler<DisplayInformation^, Object^>(this, &UWP_App::onDisplayContentsInvalidated);
 		// disable all pointer visual feedback for better performance when touching.
 		PointerVisualizationSettings^ pointerVisualizationSettings = PointerVisualizationSettings::GetForCurrentView();
 		pointerVisualizationSettings->IsContactFeedbackEnabled = false;
@@ -282,13 +281,6 @@ namespace april
 	{
 		CoreWindow^ window = CoreWindow::GetForCurrentThread();
 		this->_processWindowSizeChange(window->Bounds.Width, window->Bounds.Height);
-	}
-
-	void UWP_App::onDisplayContentsInvalidated(DisplayInformation^ sender, Platform::Object^ args)
-	{
-		hlog::error(logTag, "DisplayContentsInvalidated");
-		// TODOuwp - probably needs implementing
-		//GetDeviceResources()->ValidateDevice();
 	}
 
 	void UWP_App::_processWindowSizeChange(float width, float height)
