@@ -109,7 +109,7 @@ namespace april
 		void _deviceSetupCaps();
 		void _deviceSetup();
 
-		void _deviceChangeResolution(int w, int h, bool fullscreen);
+		void _deviceChangeResolution(int width, int height, bool fullscreen);
 
 		void _setDeviceViewport(cgrecti rect);
 		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);

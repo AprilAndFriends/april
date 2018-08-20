@@ -60,7 +60,6 @@ namespace april
 		int width;
 		int height;
 		hstr fpsTitle;
-		bool fpsCounter;
 #ifdef _WIN32_XINPUT
 		XINPUT_STATE xinputStates[XUSER_MAX_COUNT];
 		bool connectedControllers[XUSER_MAX_COUNT];

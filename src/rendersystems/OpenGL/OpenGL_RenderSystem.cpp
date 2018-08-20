@@ -166,9 +166,9 @@ namespace april
 		return 0; // this API is likely not available on OpenGL
 	}
 
-	void OpenGL_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
+	void OpenGL_RenderSystem::_deviceChangeResolution(int width, int height, bool fullscreen)
 	{
-		grecti viewport(0, 0, w, h);
+		grecti viewport(0, 0, width, height);
 		this->setViewport(viewport);
 		this->setOrthoProjection(viewport);
 		this->_updateDeviceState(this->state, true);

@@ -47,6 +47,8 @@ namespace april
 		HL_DEFINE_GET(int, height, Height);
 		HL_DEFINE_GET(void*, backendId, BackendId);
 
+		bool update(float timeDelta);
+
 		void checkEvents();
 		hstr findCursorFile(chstr filename) const;
 		
@@ -57,6 +59,7 @@ namespace april
 	protected:
 		int width;
 		int height;
+		hstr fpsTitle;
 		bool backButtonSystemHandling;
 		hmap<hstr, int> cursorMappings;
 		void* backendId;

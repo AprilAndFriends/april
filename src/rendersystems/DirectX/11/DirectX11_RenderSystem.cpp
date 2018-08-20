@@ -785,7 +785,7 @@ namespace april
 		return new DirectX11_VertexShader();
 	}
 
-	void DirectX11_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
+	void DirectX11_RenderSystem::_deviceChangeResolution(int width, int height, bool fullscreen)
 	{
 		ApplicationView^ view = ApplicationView::GetForCurrentView();
 		if (view->IsFullScreenMode != fullscreen)
@@ -802,6 +802,7 @@ namespace april
 				view->ExitFullScreenMode();
 			}
 		}
+		// it's safer to use window width/height
 		if (this->swapChain != nullptr)
 		{
 			this->_resizeSwapChain(april::window->getWidth(), april::window->getHeight());
@@ -848,7 +849,6 @@ namespace april
 
 	void DirectX11_RenderSystem::_setDeviceViewport(cgrecti rect)
 	{
-		// setting the system viewport
 		D3D11_VIEWPORT dx11Viewport;
 		dx11Viewport.MinDepth = D3D11_MIN_DEPTH;
 		dx11Viewport.MaxDepth = D3D11_MAX_DEPTH;

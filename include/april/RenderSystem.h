@@ -742,10 +742,10 @@ namespace april
 		virtual VertexShader* _deviceCreateVertexShader();
 
 		/// @brief Changes the device backbuffer resolution and fullscreen mode.
-		/// @param[in] w Width of the new backbuffer in pixels.
-		/// @param[in] h Height of the new backbuffer in pixels.
+		/// @param[in] width Width of the new backbuffer in pixels.
+		/// @param[in] height Height of the new backbuffer in pixels.
 		/// @param[in] fullscreen Whether the device is in fullscreen or not.
-		virtual void _deviceChangeResolution(int w, int h, bool fullscreen);
+		virtual void _deviceChangeResolution(int width, int height, bool fullscreen);
 
 		/// @brief Sets the device viewport.
 		/// @param[in] rect The viewport rectangle.

@@ -56,6 +56,7 @@ namespace april
 		this->scrollHorizontal = false;
 		this->startTime = htickCount();
 		this->currentButton = Key::None;
+		this->windowTitleRequested = nullptr;
 		this->virtualKeyboardCurrentState = false;
 		this->virtualKeyboardRequestState = false;
 		this->refreshCursorRequested = false;
@@ -135,6 +136,11 @@ namespace april
 
 	void UWP_App::updateMainThread()
 	{
+		if (this->windowTitleRequested != nullptr)
+		{
+			ApplicationView::GetForCurrentView()->Title = this->windowTitleRequested;
+			this->windowTitleRequested = nullptr;
+		}
 		if (this->refreshCursorRequested)
 		{
 			if (april::window != NULL)
@@ -169,6 +175,11 @@ namespace april
 				InputPane::GetForCurrentView()->TryHide();
 			}
 		}
+	}
+
+	void UWP_App::setWindowTitle(Platform::String^ title)
+	{
+		this->windowTitleRequested = title;
 	}
 
 	void UWP_App::refreshCursor()

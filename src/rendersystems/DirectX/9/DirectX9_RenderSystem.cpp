@@ -349,15 +349,15 @@ namespace april
 		return new DirectX9_VertexShader();
 	}
 
-	void DirectX9_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
+	void DirectX9_RenderSystem::_deviceChangeResolution(int width, int height, bool fullscreen)
 	{
 		if (this->backBuffer == NULL)
 		{
 			return;
 		}
-		if (w <= 0 || h <= 0)
+		if (width <= 0 || height <= 0)
 		{
-			hlog::warnf(logTag, "Cannot set resolution to: %d x %d", w, h);
+			hlog::warnf(logTag, "Cannot set resolution to: %d x %d", width, height);
 			return;
 		}
 		bool resizable = IS_WINDOW_RESIZABLE;
@@ -375,13 +375,13 @@ namespace april
 				{
 					this->_tryUnassignChildWindow();
 				}
-				this->setViewport(grecti(0, 0, w, h));
+				this->setViewport(grecti(0, 0, width, height));
 				SystemInfo info = april::getSystemInfo();
-				w = (int)info.displayResolution.x;
-				h = (int)info.displayResolution.y;
+				width = (int)info.displayResolution.x;
+				height = (int)info.displayResolution.y;
 			}
-			this->d3dpp->BackBufferWidth = w;
-			this->d3dpp->BackBufferHeight = h;
+			this->d3dpp->BackBufferWidth = width;
+			this->d3dpp->BackBufferHeight = height;
 			this->_deviceReset();
 		}
 		else
@@ -390,7 +390,7 @@ namespace april
 			{
 				this->_tryAssignChildWindow();
 			}
-			this->setViewport(grecti(0, 0, w, h));
+			this->setViewport(grecti(0, 0, width, height));
 		}
 	}
 

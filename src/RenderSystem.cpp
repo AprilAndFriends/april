@@ -889,7 +889,7 @@ namespace april
 		this->state->colorModeFactor = colorModeFactor;
 	}
 
-	void RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
+	void RenderSystem::_deviceChangeResolution(int width, int height, bool fullscreen)
 	{
 		hlog::warnf(logTag, "Changing resolutions is not implemented in render system '%s'!", this->name.cStr());
 	}

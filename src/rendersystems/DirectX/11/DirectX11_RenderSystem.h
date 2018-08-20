@@ -177,7 +177,7 @@ namespace april
 		PixelShader* _deviceCreatePixelShader();
 		VertexShader* _deviceCreateVertexShader();
 
-		void _deviceChangeResolution(int w, int h, bool fullscreen);
+		void _deviceChangeResolution(int width, int height, bool fullscreen);
 		void _updateOrientation();
 		void _updateDeviceReset();
 

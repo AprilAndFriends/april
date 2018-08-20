@@ -13,6 +13,7 @@
 #include <hltypes/hrdir.h>
 #include <hltypes/hthread.h>
 
+#include "Application.h"
 #include "april.h"
 #include "Platform.h"
 #include "RenderSystem.h"
@@ -56,30 +57,8 @@ namespace april
 			hlog::warn(logTag, "Option 'resizable' cannot be turned off on window system: " + this->name);
 		}
 		ApplicationView^ view = ApplicationView::GetForCurrentView();
+		view->PreferredLaunchWindowingMode = (fullscreen ? ApplicationViewWindowingMode::FullScreen : ApplicationViewWindowingMode::PreferredLaunchViewSize);
 		view->PreferredLaunchViewSize = Size((float)width, (float)height);
-		if (view->IsFullScreenMode != fullscreen)
-		{
-			if (fullscreen)
-			{
-				if (!view->TryEnterFullScreenMode())
-				{
-					hlog::error(logTag, "Could not enter fullscreen mode!");
-				}
-			}
-			else
-			{
-				view->ExitFullScreenMode();
-			}
-		}
-		else if (fullscreen)
-		{
-			view->PreferredLaunchWindowingMode = ApplicationViewWindowingMode::FullScreen;
-		}
-		else
-		{
-			view->PreferredLaunchWindowingMode = ApplicationViewWindowingMode::PreferredLaunchViewSize;
-		}
-		// UWP overrides the actual window size values
 		Window::_systemCreate(width, height, fullscreen, title, options);
 		Rect rect = CoreWindow::GetForCurrentThread()->Bounds;
 		this->width = (int)rect.Width;
@@ -132,9 +111,34 @@ namespace april
 
 	void UWP_Window::setTitle(chstr title)
 	{
-		hlog::warn(logTag, "Window::setTitle() does nothing on: " + this->name);
+		if (this->options.fpsCounter)
+		{
+			hstr newTitle = title + hsprintf(" [FPS: %d]", april::application->getFps());
+			// optimization to prevent setting title every frame
+			if (newTitle == this->fpsTitle)
+			{
+				return;
+			}
+			this->fpsTitle = newTitle;
+			UWP::app->setWindowTitle(_HL_HSTR_TO_PSTR(newTitle));
+		}
+		else
+		{
+			UWP::app->setWindowTitle(_HL_HSTR_TO_PSTR(title));
+		}
+		this->title = title;
 	}
 	
+	bool UWP_Window::update(float timeDelta)
+	{
+		bool result = Window::update(timeDelta);
+		if (this->options.fpsCounter)
+		{
+			this->setTitle(this->title); // has to come after Window::updateOneFrame(), otherwise FPS value in title would be late one frame
+		}
+		return result;
+	}
+
 	void UWP_Window::_systemSetResolution(int width, int height, bool fullscreen)
 	{
 		this->width = width;

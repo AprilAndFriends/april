@@ -46,6 +46,7 @@ namespace april
 
 		void updateMainThread();
 
+		void setWindowTitle(Platform::String^ title); // can't use chstr, const is not supported in WinRT types
 		void refreshCursor();
 		void showVirtualKeyboard();
 		void hideVirtualKeyboard();
@@ -90,6 +91,7 @@ namespace april
 		int64_t startTime;
 		april::Key currentButton;
 		/// @brief This is required due to multi-threading issues, because InputPane cannot be called in a non-main thread
+		Platform::String^ windowTitleRequested;
 		bool refreshCursorRequested;
 		bool virtualKeyboardCurrentState;
 		bool virtualKeyboardRequestState;

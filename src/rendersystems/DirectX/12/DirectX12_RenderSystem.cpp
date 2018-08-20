@@ -924,7 +924,7 @@ namespace april
 		return new DirectX12_VertexShader();
 	}
 
-	void DirectX12_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
+	void DirectX12_RenderSystem::_deviceChangeResolution(int width, int height, bool fullscreen)
 	{
 		this->coreWindow = CoreWindow::GetForCurrentThread();
 		DisplayInformation^ displayInformation = DisplayInformation::GetForCurrentView();

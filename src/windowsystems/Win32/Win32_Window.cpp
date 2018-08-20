@@ -151,7 +151,6 @@ namespace april
 		UpdateWindow(this->hWnd);
 		SetCursor(windowClass.hCursor);
 		this->setCursorVisible(true);
-		this->fpsCounter = options.fpsCounter;
 #ifdef _EGL
 		april::egl->create();
 #endif
@@ -173,7 +172,7 @@ namespace april
 
 	void Win32_Window::setTitle(chstr title)
 	{
-		if (this->fpsCounter)
+		if (this->options.fpsCounter)
 		{
 			hstr newTitle = title + hsprintf(" [FPS: %d]", april::application->getFps());
 			// optimization to prevent setting title every frame
@@ -240,7 +239,7 @@ namespace april
 		}
 		// rendering
 		bool result = Window::update(timeDelta);
-		if (this->fpsCounter)
+		if (this->options.fpsCounter)
 		{
 			this->setTitle(this->title); // has to come after Window::updateOneFrame(), otherwise FPS value in title would be late one frame
 		}
