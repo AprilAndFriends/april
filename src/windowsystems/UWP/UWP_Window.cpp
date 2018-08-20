@@ -50,23 +50,49 @@ namespace april
 			options.minimized = false;
 			hlog::warn(logTag, "Option 'minimized' is not supported on window system: " + this->name);
 		}
-		Rect rect = CoreWindow::GetForCurrentThread()->Bounds;
-		width = (int)rect.Width;
-		height = (int)rect.Height;
-		// TODOuwp - implement
-		//ApplicationView::GetForCurrentView()->FullScreenSystemOverlayMode = Windows::UI::ViewManagement::ApplicationView::FullScreenSystemOverlayMode::TryEnterFullScreenMode();
-		//ApplicationView::GetForCurrentView()->IsFullScreenMode = fullscreen;
-		fullscreen = ApplicationView::GetForCurrentView()->IsFullScreenMode;
-		//ApplicationView::GetForCurrentView()->PreferredLaunchViewSize = Windows::Foundation::Size(width)
+		if (!options.resizable)
+		{
+			options.resizable = true;
+			hlog::warn(logTag, "Option 'resizable' cannot be turned off on window system: " + this->name);
+		}
+		ApplicationView^ view = ApplicationView::GetForCurrentView();
+		view->PreferredLaunchViewSize = Size((float)width, (float)height);
+		if (view->IsFullScreenMode != fullscreen)
+		{
+			if (fullscreen)
+			{
+				if (!view->TryEnterFullScreenMode())
+				{
+					hlog::error(logTag, "Could not enter fullscreen mode!");
+				}
+			}
+			else
+			{
+				view->ExitFullScreenMode();
+			}
+		}
+		else if (fullscreen)
+		{
+			view->PreferredLaunchWindowingMode = ApplicationViewWindowingMode::FullScreen;
+		}
+		else
+		{
+			view->PreferredLaunchWindowingMode = ApplicationViewWindowingMode::PreferredLaunchViewSize;
+		}
+		// UWP overrides the actual window size values
 		Window::_systemCreate(width, height, fullscreen, title, options);
-		this->width = width;
-		this->height = height;
+		Rect rect = CoreWindow::GetForCurrentThread()->Bounds;
+		this->width = (int)rect.Width;
+		this->height = (int)rect.Height;
 		this->backButtonSystemHandling = false;
 		this->cursorMappings.clear();
 		this->inputMode = InputMode::Touch;
 		this->backendId = reinterpret_cast<IUnknown*>(CoreWindow::GetForCurrentThread());
 		this->setCursorVisible(true);
-		this->queueSizeChange(width, height, fullscreen);
+		if (this->width != width || this->height != height)
+		{
+			this->queueSizeChange(this->width, this->height, fullscreen);
+		}
 		return;
 	}
 	
@@ -113,7 +139,7 @@ namespace april
 	{
 		this->width = width;
 		this->height = height;
-		this->fullscreen = this->fullscreen;
+		this->fullscreen = fullscreen;
 		this->_setRenderSystemResolution(this->width, this->height, this->fullscreen);
 	}
 

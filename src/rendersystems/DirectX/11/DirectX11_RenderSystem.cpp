@@ -577,7 +577,7 @@ namespace april
 			nullptr, _swapChain.GetAddressOf()), "Unable to create swap chain!");
 		_TRY_UNSAFE(_swapChain.As(&this->swapChain), "Could not cast swap chain!");
 		this->_configureSwapChain();
-		this->updateOrientation();
+		this->_updateOrientation();
 	}
 
 	void DirectX11_RenderSystem::_resizeSwapChain(int width, int height)
@@ -595,7 +595,7 @@ namespace april
 		}
 		_TRY_UNSAFE(this->swapChain->ResizeBuffers(this->_getBackbufferCount(), width, height, DXGI_FORMAT_B8G8R8A8_UNORM, flags), "Unable to resize swap chain buffers!");
 		this->_configureSwapChain();
-		this->updateOrientation();
+		this->_updateOrientation();
 	}
 
 	void DirectX11_RenderSystem::_configureSwapChain()
@@ -787,6 +787,21 @@ namespace april
 
 	void DirectX11_RenderSystem::_deviceChangeResolution(int w, int h, bool fullscreen)
 	{
+		ApplicationView^ view = ApplicationView::GetForCurrentView();
+		if (view->IsFullScreenMode != fullscreen)
+		{
+			if (fullscreen)
+			{
+				if (!view->TryEnterFullScreenMode())
+				{
+					hlog::error(logTag, "Could not enter fullscreen mode!");
+				}
+			}
+			else
+			{
+				view->ExitFullScreenMode();
+			}
+		}
 		if (this->swapChain != nullptr)
 		{
 			this->_resizeSwapChain(april::window->getWidth(), april::window->getHeight());
@@ -797,43 +812,50 @@ namespace april
 		}
 	}
 
-	void DirectX11_RenderSystem::_setDeviceViewport(cgrecti rect)
+	// TODOuwp - this doesn't seem to do anything, remove?
+	void DirectX11_RenderSystem::_updateOrientation()
 	{
-		grecti viewport = rect;
-		// this is needed on UWP because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
-		gvec2i resolution = april::getSystemInfo().displayResolution;
-		// TODOuwp - is this still needed in DX11?
-		int w = april::window->getWidth();
-		int h = april::window->getHeight();
-		if (viewport.x < 0)
+		DisplayOrientations orientation = DisplayInformation::GetForCurrentView()->CurrentOrientation;
+		DXGI_MODE_ROTATION rotation = DXGI_MODE_ROTATION_UNSPECIFIED;
+		if (orientation == DisplayOrientations::Landscape)
 		{
-			viewport.w += viewport.x;
-			viewport.x = 0;
+			rotation = DXGI_MODE_ROTATION_ROTATE90;
 		}
-		if (viewport.y < 0)
+		else if (orientation == DisplayOrientations::Portrait)
 		{
-			viewport.h += viewport.y;
-			viewport.y = 0;
+			rotation = DXGI_MODE_ROTATION_IDENTITY;
 		}
-		viewport.w = hclamp(viewport.w, 0, hmax(w - viewport.x, 0));
-		viewport.h = hclamp(viewport.h, 0, hmax(h - viewport.y, 0));
-		if (viewport.w > 0 && viewport.h > 0)
+		else if (orientation == DisplayOrientations::LandscapeFlipped)
 		{
-			viewport.x = hclamp(viewport.x, 0, w);
-			viewport.y = hclamp(viewport.y, 0, h);
+			rotation = DXGI_MODE_ROTATION_ROTATE270;
+		}
+		else if (orientation == DisplayOrientations::PortraitFlipped)
+		{
+			rotation = DXGI_MODE_ROTATION_ROTATE180;
 		}
 		else
 		{
-			viewport.set(w, h, 0, 0);
+			hlog::error(logTag, "Undefined screen orienation, using default landscape!");
+			rotation = DXGI_MODE_ROTATION_ROTATE90;
 		}
+	}
+
+	void DirectX11_RenderSystem::_updateDeviceReset()
+	{
+		hlog::error(logTag, "Device lost, recreating now...");
+		//this->
+	}
+
+	void DirectX11_RenderSystem::_setDeviceViewport(cgrecti rect)
+	{
 		// setting the system viewport
 		D3D11_VIEWPORT dx11Viewport;
 		dx11Viewport.MinDepth = D3D11_MIN_DEPTH;
 		dx11Viewport.MaxDepth = D3D11_MAX_DEPTH;
-		dx11Viewport.TopLeftX = (float)viewport.x;
-		dx11Viewport.TopLeftY = (float)viewport.y;
-		dx11Viewport.Width = (float)viewport.w;
-		dx11Viewport.Height = (float)viewport.h;
+		dx11Viewport.TopLeftX = (float)rect.x;
+		dx11Viewport.TopLeftY = (float)rect.y;
+		dx11Viewport.Width = (float)rect.w;
+		dx11Viewport.Height = (float)rect.h;
 		this->d3dDeviceContext->RSSetViewports(1, &dx11Viewport);
 	}
 
@@ -1149,7 +1171,15 @@ namespace april
 	void DirectX11_RenderSystem::_devicePresentFrame(bool systemEnabled)
 	{
 		RenderSystem::_devicePresentFrame(systemEnabled);
-		this->options.vSync ? this->swapChain->Present(1, 0) : this->swapChain->Present(0, DXGI_PRESENT_ALLOW_TEARING);
+		HRESULT hr = (this->options.vSync ? this->swapChain->Present(1, 0) : this->swapChain->Present(0, DXGI_PRESENT_ALLOW_TEARING));
+		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
+		{
+			this->_updateDeviceReset();
+		}
+		else if (FAILED(hr))
+		{
+			throw Exception(hsprintf("Present() call failed with HRESULT: 0x%8X", hr));
+		}
 		// has to use GetAddressOf(), because the parameter is a pointer to an array of render target views
 		if (!this->options.depthBuffer || !this->deviceState->depthBuffer || !this->deviceState->depthBufferWrite)
 		{
@@ -1158,34 +1188,6 @@ namespace april
 		else
 		{
 			this->d3dDeviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), this->depthBufferView.Get());
-		}
-	}
-
-	void DirectX11_RenderSystem::updateOrientation()
-	{
-		// TODOuwp - this doesn't seem to do anything, remove?
-		DisplayOrientations orientation = DisplayInformation::GetForCurrentView()->CurrentOrientation;
-		DXGI_MODE_ROTATION rotation = DXGI_MODE_ROTATION_UNSPECIFIED;
-		if (orientation == DisplayOrientations::Landscape)
-		{
-			rotation = DXGI_MODE_ROTATION_ROTATE90;
-		}
-		else if (orientation == DisplayOrientations::Portrait)
-		{
-			rotation = DXGI_MODE_ROTATION_IDENTITY;
-		}
-		else if (orientation == DisplayOrientations::LandscapeFlipped)
-		{
-			rotation = DXGI_MODE_ROTATION_ROTATE270;
-		}
-		else if (orientation == DisplayOrientations::PortraitFlipped)
-		{
-			rotation = DXGI_MODE_ROTATION_ROTATE180;
-		}
-		else
-		{
-			hlog::error(logTag, "Undefined screen orienation, using default landscape!");
-			rotation = DXGI_MODE_ROTATION_ROTATE90;
 		}
 	}
 

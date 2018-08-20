@@ -50,7 +50,11 @@ namespace april
 	
 	Window::Options::Options()
 	{
+#ifndef _UWP
 		this->resizable = false;
+#else // UWP has resizable turned on by default and cannot be turned off
+		this->resizable = true;
+#endif
 		this->fpsCounter = false;
 		this->hotkeyFullscreen = false;
 		this->minimized = false;

@@ -29,6 +29,7 @@
 using namespace concurrency;
 using namespace Windows::ApplicationModel;
 using namespace Windows::Foundation;
+using namespace Windows::System;
 using namespace Windows::UI::Core;
 using namespace Windows::UI::Input;
 using namespace Windows::UI::ViewManagement;
@@ -63,15 +64,15 @@ namespace april
 	void UWP_App::Initialize(Core::CoreApplicationView^ applicationView)
 	{
 		Windows::Globalization::ApplicationLanguages::PrimaryLanguageOverride = ref new Platform::String(L"");
-		// Register event handlers for app lifecycle. This example includes Activated, so that we
-		// can make the CoreWindow active and start rendering on the window.
 		applicationView->Activated += ref new TypedEventHandler<CoreApplicationView^, IActivatedEventArgs^>(this, &UWP_App::onActivated);
 		CoreApplication::Suspending += ref new EventHandler<SuspendingEventArgs^>(this, &UWP_App::onSuspending);
 		CoreApplication::Resuming += ref new EventHandler<Platform::Object^>(this, &UWP_App::onResuming);
+		CoreApplication::UnhandledErrorDetected += ref new EventHandler<UnhandledErrorDetectedEventArgs ^>(this, &UWP_App::onUnhandledErrorDetected);
 	}
 
 	void UWP_App::SetWindow(CoreWindow^ window)
 	{
+		// TODOuwp - implement a workaround for when portrait mode is used
 		DisplayInformation::AutoRotationPreferences = (DisplayOrientations::Landscape | DisplayOrientations::LandscapeFlipped);
 		window->Activated += ref new TypedEventHandler<CoreWindow^, WindowActivatedEventArgs^>(this, &UWP_App::onWindowFocusChanged);
 		window->SizeChanged += ref new TypedEventHandler<CoreWindow^, WindowSizeChangedEventArgs^>(this, &UWP_App::onWindowSizeChanged);
@@ -84,6 +85,7 @@ namespace april
 		window->KeyDown += ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(this, &UWP_App::onKeyDown);
 		window->KeyUp += ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(this, &UWP_App::onKeyUp);
 		window->CharacterReceived += ref new TypedEventHandler<CoreWindow^, CharacterReceivedEventArgs^>(this, &UWP_App::onCharacterReceived);
+		window->Dispatcher->AcceleratorKeyActivated += ref new TypedEventHandler<CoreDispatcher^, AcceleratorKeyEventArgs^>(this, &UWP_App::onAcceleratorKeyActivated);
 		InputPane^ inputPane = InputPane::GetForCurrentView();
 		inputPane->Showing += ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(this, &UWP_App::onVirtualKeyboardShow);
 		inputPane->Hiding += ref new TypedEventHandler<InputPane^, InputPaneVisibilityEventArgs^>(this, &UWP_App::onVirtualKeyboardHide);
@@ -95,8 +97,9 @@ namespace april
 		PointerVisualizationSettings^ pointerVisualizationSettings = PointerVisualizationSettings::GetForCurrentView();
 		pointerVisualizationSettings->IsContactFeedbackEnabled = false;
 		pointerVisualizationSettings->IsBarrelButtonFeedbackEnabled = false;
-		getSystemInfo(); // this call is required to setup the SystemInfo object from the proper thread
+		april::getSystemInfo(); // this call is required to setup the SystemInfo object from the proper thread
 		april::application->init();
+		april::application->updateInitializing();
 	}
 
 	void UWP_App::Load(Platform::String^ entryPoint)
@@ -107,7 +110,6 @@ namespace april
 	{
 		if (april::application != NULL)
 		{
-			april::application->updateInitializing();
 			april::application->enterMainLoop();
 			april::application->finish();
 			april::application->updateFinishing();
@@ -185,6 +187,12 @@ namespace april
 	}
 
 	// Application lifecycle events
+	void UWP_App::onUnhandledErrorDetected(Platform::Object^ sender, UnhandledErrorDetectedEventArgs^ args)
+	{
+		hlog::error("FATAL", _HL_PSTR_TO_HSTR(args->UnhandledError->ToString()));
+		args->UnhandledError->Propagate();
+	}
+
 	void UWP_App::onActivated(CoreApplicationView^ applicationView, IActivatedEventArgs^ args)
 	{
 		CoreWindow::GetForCurrentThread()->Activate();
@@ -491,6 +499,16 @@ namespace april
 			return;
 		}
 		april::window->queueKeyInput(KeyEvent::Type::Down, Key::None, args->KeyCode);
+	}
+
+	void UWP_App::onAcceleratorKeyActivated(_In_ CoreDispatcher^ sender, _In_ AcceleratorKeyEventArgs^ args)
+	{
+		if (april::window != NULL && args->EventType == CoreAcceleratorKeyEventType::SystemKeyDown &&
+			args->VirtualKey == VirtualKey::Enter && args->KeyStatus.IsMenuKeyDown && !args->KeyStatus.WasKeyDown)
+		{
+			args->Handled = true;
+			UWP_WINDOW->_systemToggleHotkeyFullscreen(); // this comes from the main thread so it can directly call the needed function
+		}
 	}
 
 	gvec2f UWP_App::_transformPosition(float x, float y)

@@ -7,7 +7,7 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifndef __ANDROID__
-	#ifndef _WINRT
+	#ifndef _UWP
 		#define RESOURCE_PATH "../../demos/media/"
 	#else
 		#define RESOURCE_PATH "media/"
@@ -192,7 +192,7 @@ void __aprilApplicationInit()
 	april::Window::Options windowOptions;
 	windowOptions.resizable = true;
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Hello World Demo", windowOptions);
-#ifdef _WINRT
+#ifdef _UWP
 	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
 #endif
 	april::window->setUpdateDelegate(updateDelegate);

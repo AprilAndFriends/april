@@ -60,9 +60,11 @@ namespace april
 		void onKeyDown(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void onKeyUp(_In_ CoreWindow^ sender, _In_ KeyEventArgs^ args);
 		void onCharacterReceived(_In_ CoreWindow^ sender, _In_ CharacterReceivedEventArgs^ args);
+		void onAcceleratorKeyActivated(_In_ CoreDispatcher^ sender, _In_ AcceleratorKeyEventArgs^ args);
 
 	protected:
 		// Application lifecycle events
+		void onUnhandledErrorDetected(Platform::Object^ sender, UnhandledErrorDetectedEventArgs^ args);
 		void onActivated(CoreApplicationView^ applicationView, IActivatedEventArgs^ args);
 		void onSuspending(Platform::Object^ sender, SuspendingEventArgs^ args);
 		void onResuming(Platform::Object^ sender, Platform::Object^ args);

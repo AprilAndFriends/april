@@ -74,8 +74,6 @@ namespace april
 		unsigned int getNativeColorUInt(const april::Color& color) const;
 		Image* takeScreenshot(Image::Format format);
 
-		void updateOrientation();
-
 		// TODOa - implement
 		Texture* getRenderTarget();
 		void setRenderTarget(Texture* source);
@@ -180,6 +178,8 @@ namespace april
 		VertexShader* _deviceCreateVertexShader();
 
 		void _deviceChangeResolution(int w, int h, bool fullscreen);
+		void _updateOrientation();
+		void _updateDeviceReset();
 
 		void _setDeviceViewport(cgrecti rect);
 		void _setDeviceModelviewMatrix(const gmat4& matrix);

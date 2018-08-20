@@ -7,7 +7,7 @@
 /// the terms of the BSD license: http://opensource.org/licenses/BSD-3-Clause
 
 #ifndef __ANDROID__
-	#ifndef _WINRT
+	#ifndef _UWP
 		#define RESOURCE_PATH "../../demos/media/"
 	#else
 		#define RESOURCE_PATH "media/"
@@ -117,7 +117,7 @@ public:
 		this->lineVertices[0].y = this->position.y; 
 		this->lineVertices[1].x = this->position.x + direction.x;
 		this->lineVertices[1].y = this->position.y + direction.y;
-		for (int i = 0, j = 0; i < CIRCLE_VERTEX_COUNT * 3; i += 3, j++)
+		for (int i = 0, j = 0; i < CIRCLE_VERTEX_COUNT * 3; i += 3, ++j)
 		{
 			circleVertices[i].x = this->lineVertices[1].x;
 			circleVertices[i].y = this->lineVertices[1].y;
@@ -360,14 +360,14 @@ void __aprilApplicationInit()
 	systemDelegate = new SystemDelegate();
 	mouseDelegate = new MouseDelegate();
 	keyDelegate = new KeyDelegate();
-#if defined(__ANDROID__) || defined(_IOS) || defined(_WINRT)
+#if defined(__ANDROID__) || defined(_IOS)
 	drawRect.setSize(april::getSystemInfo().displayResolution);
 #endif
 	// init
 	april::init(april::RenderSystemType::Default, april::WindowType::Default);
 	april::createRenderSystem();
 	april::createWindow((int)drawRect.w, (int)drawRect.h, false, "APRIL: Advanced Demo");
-#ifdef _WINRT
+#ifdef _UWP
 	april::window->setParam("cursor_mappings", "101 " RESOURCE_PATH "cursor\n102 " RESOURCE_PATH "simple");
 #endif
 	textures[0] = april::rendersys->createTextureFromResource(RESOURCE_PATH "jpt_final", april::Texture::Type::Managed);
