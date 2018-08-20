@@ -877,7 +877,7 @@ namespace april
 			}
 			this->touches[index] = position;
 		}
-		else if (type == MouseEvent::Type::Cancel) // canceling a particular pointer, required by specific systems (e.g. WinRT)
+		else if (type == MouseEvent::Type::Cancel) // canceling a particular pointer, required by specific systems (e.g. UWP)
 		{
 			if (index < this->touches.size())
 			{

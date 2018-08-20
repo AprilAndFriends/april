@@ -800,7 +800,7 @@ namespace april
 	void DirectX11_RenderSystem::_setDeviceViewport(cgrecti rect)
 	{
 		grecti viewport = rect;
-		// this is needed on WinRT because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
+		// this is needed on UWP because of a graphics driver bug on Windows RT and on WinP8 because of a completely different graphics driver bug on Windows Phone 8
 		gvec2i resolution = april::getSystemInfo().displayResolution;
 		// TODOuwp - is this still needed in DX11?
 		int w = april::window->getWidth();

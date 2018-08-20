@@ -62,9 +62,6 @@ namespace april
 		/// @var static const WindowType WindowType::Win32
 		/// @brief Use Win32 window system if available.
 		HL_ENUM_DECLARE(WindowType, Win32);
-		/// @var static const WindowType WindowType::WinRT
-		/// @brief Use WinRT window system if available.
-		HL_ENUM_DECLARE(WindowType, WinRT);
 		/// @var static const WindowType WindowType::UWP
 		/// @brief Use UWP window system if available.
 		HL_ENUM_DECLARE(WindowType, UWP);

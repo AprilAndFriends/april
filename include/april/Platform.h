@@ -162,7 +162,7 @@ namespace april
 	/// @brief Get current app's "package name".
 	/// @return Current app's "package name".
 	/// @note This is not available on all platforms.
-	/// @note "Package name" might be named differently on different OSes. e.g. Android names it "Package Name", iOS names it "Bundle ID", WinRT names it "Package Family Name".
+	/// @note "Package name" might be named differently on different OSes. e.g. Android names it "Package Name", iOS names it "Bundle ID", UWP names it "Package Family Name".
 	aprilFnExport hstr getPackageName();
 	/// @brief Get current OS's user directory path.
 	/// @return Current OS's user directory path.

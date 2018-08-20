@@ -191,7 +191,6 @@ namespace april
 	(
 		HL_ENUM_DEFINE(WindowType, Default);
 		HL_ENUM_DEFINE(WindowType, Win32);
-		HL_ENUM_DEFINE(WindowType, WinRT);
 		HL_ENUM_DEFINE(WindowType, UWP);
 		HL_ENUM_DEFINE(WindowType, SDL);
 		HL_ENUM_DEFINE(WindowType, Mac);
