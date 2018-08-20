@@ -56,12 +56,12 @@ namespace april
 #else
 		this->defaultCursor = nullptr;
 #endif
-		this->currentCursor = this->defaultCursor;
 		this->scrollHorizontal = false;
 		this->startTime = htickCount();
 		this->currentButton = Key::None;
 		this->virtualKeyboardCurrentState = false;
 		this->virtualKeyboardRequestState = false;
+		this->refreshCursorRequested = false;
 	}
 
 	void UWP_App::Initialize(Core::CoreApplicationView^ applicationView)
@@ -137,10 +137,27 @@ namespace april
 
 	void UWP_App::updateMainThread()
 	{
-		CoreWindow^ window = CoreWindow::GetForCurrentThread();
-		if (window->PointerCursor != UWP::app->currentCursor)
+		if (this->refreshCursorRequested)
 		{
-			window->PointerCursor = UWP::app->currentCursor;
+			if (april::window != NULL)
+			{
+				// do not change this code due to threading synchronization!
+				CoreCursor^ cursor = nullptr;
+				if (april::window->isCursorVisible())
+				{
+					Cursor* windowCursor = april::window->getCursor();
+					if (windowCursor != NULL)
+					{
+						cursor = ((UWP_Cursor*)windowCursor)->getCursor();
+					}
+					if (cursor == nullptr)
+					{
+						cursor = this->defaultCursor;
+					}
+				}
+				CoreWindow::GetForCurrentThread()->PointerCursor = cursor;
+			}
+			this->refreshCursorRequested = false;
 		}
 		if (this->virtualKeyboardCurrentState != this->virtualKeyboardRequestState)
 		{
@@ -156,6 +173,11 @@ namespace april
 		}
 	}
 
+	void UWP_App::refreshCursor()
+	{
+		this->refreshCursorRequested = true;
+	}
+
 	void UWP_App::showVirtualKeyboard()
 	{
 		this->virtualKeyboardRequestState = true;
@@ -164,28 +186,6 @@ namespace april
 	void UWP_App::hideVirtualKeyboard()
 	{
 		this->virtualKeyboardRequestState = false;
-	}
-
-	void UWP_App::refreshCursor()
-	{
-		if (april::window != NULL)
-		{
-			// do not change this code due to threading synchronization!
-			CoreCursor^ cursor = nullptr;
-			if (april::window->isCursorVisible())
-			{
-				Cursor* windowCursor = april::window->getCursor();
-				if (windowCursor != NULL)
-				{
-					cursor = ((UWP_Cursor*)windowCursor)->getCursor();
-				}
-				if (cursor == nullptr)
-				{
-					cursor = this->defaultCursor;
-				}
-			}
-			this->currentCursor = cursor;
-		}
 	}
 
 	// Application lifecycle events
@@ -243,14 +243,7 @@ namespace april
 	{
 		hlog::write(logTag, "UWP visibility change: " + hstr(args->Visible ? "true" : "false"));
 		args->Handled = true;
-		// TODOuwp - likely not needed
-		/*
-		if (this->visible != args->Visible)
-		{
-			this->visible = args->Visible;
-			this->_processWindowFocusChange(args->Visible);
-		}
-		*/
+		this->visible = args->Visible;
 		this->_resetTouches();
 	}
 

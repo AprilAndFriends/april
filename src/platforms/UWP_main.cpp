@@ -37,7 +37,7 @@ namespace april
 		april::application->setArgs(args);
 		IFrameworkViewSource^ frameworkViewSource = ref new april::UWP::FrameworkViewSource();
 		CoreApplication::Run(frameworkViewSource);
-		if (april::application != NULL)
+		if (april::application != NULL) // safe is safe
 		{
 			delete april::application;
 			april::application = NULL;

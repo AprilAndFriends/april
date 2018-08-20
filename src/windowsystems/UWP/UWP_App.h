@@ -46,9 +46,9 @@ namespace april
 
 		void updateMainThread();
 
+		void refreshCursor();
 		void showVirtualKeyboard();
 		void hideVirtualKeyboard();
-		void refreshCursor();
 
 		void onVirtualKeyboardShow(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
 		void onVirtualKeyboardHide(_In_ InputPane^ sender, _In_ InputPaneVisibilityEventArgs^ args);
@@ -83,15 +83,14 @@ namespace april
 		bool running;
 		bool visible;
 		CoreCursor^ defaultCursor;
-		CoreCursor^ currentCursor;
 		bool scrollHorizontal;
 		harray<unsigned int> pointerIds;
 		int64_t startTime;
 		april::Key currentButton;
 		/// @brief This is required due to multi-threading issues, because InputPane cannot be called in a non-main thread
+		bool refreshCursorRequested;
 		bool virtualKeyboardCurrentState;
 		bool virtualKeyboardRequestState;
-
 
 		gvec2f _transformPosition(float x, float y);
 		void _resetTouches();
