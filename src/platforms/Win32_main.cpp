@@ -43,7 +43,7 @@ namespace april
 		april::application->destroy();
 		delete april::application;
 		april::application = NULL;
-		return 0;
+		return april::getExitCode();
 	}
 	
 }

@@ -10,6 +10,7 @@
 #include "ApriliOSAppDelegate.h"
 
 #include "Application.h"
+#include "april.h"
 #include "main_base.h"
 
 namespace april
@@ -37,6 +38,10 @@ namespace april
 			appDelegateClassName = NSStringFromClass([ApriliOSAppDelegate class]);
 		}
 		int result = UIApplicationMain(argc, argv, nil, appDelegateClassName);
+		if (april::getExitCode() != 0)
+		{
+			result = april::getExitCode();
+		}
 		april::application->destroy();
 		delete april::application;
 		april::application = NULL;

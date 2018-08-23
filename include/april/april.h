@@ -210,6 +210,12 @@ namespace april
 	/// @param[in] value The max number of async textures concurrently loaded in RAM and waiting for upload.
 	/// @note A value of 0 or less indicates no limit.
 	aprilFnExport void setMaxWaitingAsyncTextures(int value);
+	/// @brief Gets the exit code that should be used when exiting the application.
+	/// @return The exit code that should be used when exiting the application.
+	aprilFnExport int getExitCode();
+	/// @brief Sets the exit code that should be used when exiting the application.
+	/// @param[in] value The exit code that should be used when exiting the application.
+	aprilFnExport void setExitCode(int value);
 	/// @brief Adds a new symbolic Color.
 	/// @param[in] symbolicName The name of the Color.
 	/// @param[in] color The Color object.

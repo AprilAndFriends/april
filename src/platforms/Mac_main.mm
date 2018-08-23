@@ -202,7 +202,7 @@ namespace april
 			delete april::application;
 			april::application = NULL;
 		}
-		return 0;
+		return april::getExitCode();
 	}
 	
 }

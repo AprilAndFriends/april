@@ -175,6 +175,7 @@ namespace april
 #else
 	static int maxWaitingAsyncTextures = 0;
 #endif
+	static int exitCode = 0;
 	hmap<hstr, april::Color> symbolicColors;
 
 	HL_ENUM_CLASS_DEFINE(RenderSystemType,
@@ -203,6 +204,7 @@ namespace april
 	{
 		hlog::write(logTag, "Initializing APRIL: " + version.toString());
 		hlog::writef(logTag, "Platform: %s %s, %d bit", APRIL_PLATFORM_NAME, APRIL_PLATFORM_ARCHITECTURE, APRIL_PLATFORM_ARCHITECTURE_BITS);
+		exitCode = 0;
 		// symbolic colors
 		resetSymbolicColors();
 #ifdef _EGL
@@ -480,6 +482,16 @@ namespace april
 	void setMaxWaitingAsyncTextures(int value)
 	{
 		maxWaitingAsyncTextures = value;
+	}
+
+	int getExitCode()
+	{
+		return exitCode;
+	}
+
+	void setExitCode(int value)
+	{
+		exitCode = value;
 	}
 
 	void addSymbolicColor(chstr symbolicName, const april::Color& color)

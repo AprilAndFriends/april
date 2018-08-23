@@ -12,6 +12,7 @@
 #include <hltypes/hstring.h>
 
 #include "Application.h"
+#include "april.h"
 #include "main_base.h"
 #include "RenderSystem.h"
 #include "Window.h"
@@ -44,7 +45,7 @@ namespace april
 		}
 		UWP::app = nullptr;
 #endif
-		return 0;
+		return april::getExitCode();
 	}
 	
 }
