@@ -15,6 +15,10 @@
     <Link>
       <AdditionalDependencies>d3d11.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(OutDir)*.cso" "$(OutDir)..\..\..\" /Y /V
+%(Command)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_DirectX12' or
                                   '$(Configuration)'=='DebugS_DirectX12' or
@@ -26,6 +30,10 @@
     <Link>
       <AdditionalDependencies>d3d12.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(OutDir)*.cso" "$(OutDir)..\..\..\" /Y /V
+%(Command)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_OpenGLES2' or
                                   '$(Configuration)'=='DebugS_OpenGLES2' or
