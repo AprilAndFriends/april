@@ -10,6 +10,7 @@
 /// 
 /// Defines an april view controller.
 
+#ifdef _IOS_WINDOW
 #import <UIKit/UIKit.h>
 
 @interface AprilViewController : UIViewController
@@ -17,3 +18,4 @@
 }
 - (void)removeImageView:(bool)fast;
 @end
+#endif

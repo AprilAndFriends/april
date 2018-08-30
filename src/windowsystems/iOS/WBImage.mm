@@ -2,6 +2,7 @@
 // WBImage.mm -- extra UIImage methods
 // by allen brunson  march 29 2009
 
+#ifdef _IOS_WINDOW
 #include "WBImage.h"
 
 static inline CGFloat degreesToRadians(CGFloat degrees)
@@ -178,3 +179,4 @@ static inline CGSize swapWidthAndHeight(CGSize size)
 }
 
 @end
+#endif

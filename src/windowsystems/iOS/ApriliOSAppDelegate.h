@@ -10,6 +10,7 @@
 /// 
 /// Defines an iOS app delegate.
 
+#ifdef _IOS_WINDOW
 #import <UIKit/UIKit.h>
 @class AprilViewController;
 
@@ -25,3 +26,4 @@
 @property (nonatomic, retain) UIWindow *uiwnd;
 @property (nonatomic, retain) AprilViewController *viewController;
 @end
+#endif

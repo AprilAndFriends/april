@@ -10,6 +10,7 @@
 /// 
 /// Defines an iOS window.
 
+#ifdef _IOS_WINDOW
 #ifndef APRIL_IOS_WINDOW_H
 #define APRIL_IOS_WINDOW_H
 
@@ -86,4 +87,5 @@ namespace april
 
 CGRect getScreenBounds();
 
+#endif
 #endif

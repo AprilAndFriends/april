@@ -44,7 +44,7 @@
 #ifdef __ANDROID__
 #include "AndroidJNI_Window.h"
 #endif
-#ifdef _IOS
+#ifdef _IOS_WINDOW
 #include "iOS_Window.h"
 #endif
 #ifdef _SDL_WINDOW
@@ -85,7 +85,9 @@
 		#ifdef _OPENGLES2
 			#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGLES2
 		#endif
-		#define WS_INTERNAL_DEFAULT WindowType::iOS
+		#ifdef _IOS_WINDOW
+			#define WS_INTERNAL_DEFAULT WindowType::iOS
+		#endif
 	#else
 		#define RS_INTERNAL_DEFAULT RenderSystemType::OpenGL1
 		#ifdef _SDL_WINDOW
@@ -302,7 +304,7 @@ namespace april
 			april::window = new Mac_Window();
 		}
 #endif
-#ifdef _IOS
+#ifdef _IOS_WINDOW
 		if (april::window == NULL && window == WindowType::iOS)
 		{
 			april::window = new iOS_Window();

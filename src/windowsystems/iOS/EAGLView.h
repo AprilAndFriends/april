@@ -10,6 +10,7 @@
 /// 
 /// Defines an EAGL view.
 
+#ifdef _IOS_WINDOW
 #import <CoreMotion/CMMotionManager.h>
 #import <UIKit/UIKit.h>
 #import <OpenGLES/EAGL.h>
@@ -67,3 +68,4 @@ Note that setting the view non-opaque will only work if the EAGL surface has an 
 - (void)updateSensors;
 
 @end
+#endif

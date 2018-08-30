@@ -10,6 +10,7 @@
 /// 
 /// Defines all functions used in aprilui.
 
+#ifdef _IOS_WINDOW
 #import <QuartzCore/QuartzCore.h>
 #import <OpenGLES/EAGLDrawable.h>
 
@@ -483,3 +484,4 @@
 }
 
 @end
+#endif

@@ -2,6 +2,7 @@
 // WBImage.h -- extra UIImage methods
 // by allen brunson  march 29 2009
 
+#ifdef _IOS_WINDOW
 #ifndef WBIMAGE_H
 #define WBIMAGE_H
 
@@ -22,5 +23,5 @@
 
 @end
 
-#endif  // WBIMAGE_H
-
+#endif
+#endif
