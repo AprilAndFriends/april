@@ -717,7 +717,7 @@
 		B45501821BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGLES_VertexShader.cpp; path = src/rendersystems/OpenGL/GLES/OpenGLES_VertexShader.cpp; sourceTree = "<group>"; };
 		B45501831BD7B6F200E75E43 /* OpenGLES_VertexShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES_VertexShader.h; path = src/rendersystems/OpenGL/GLES/OpenGLES_VertexShader.h; sourceTree = "<group>"; };
 		B45501FB1BD7C84700E75E43 /* OpenGLES_defaultShaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES_defaultShaders.h; path = src/rendersystems/OpenGL/GLES/OpenGLES_defaultShaders.h; sourceTree = "<group>"; };
-		B4A6FA3B2137D54F00EEB1FE /* libapril (iOS-noWindow OpenGLES2).a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libapril (iOS-noWindow OpenGLES2).a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4A6FA3B2137D54F00EEB1FE /* libapril.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libapril.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4DF80781E375F0200307767 /* ImageEtcx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageEtcx.cpp; path = src/images/ImageEtcx.cpp; sourceTree = "<group>"; };
 		B4DF80791E375F0200307767 /* ImagePvrz.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImagePvrz.cpp; path = src/images/ImagePvrz.cpp; sourceTree = "<group>"; };
 		B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Keys.cpp; path = src/Keys.cpp; sourceTree = "<group>"; };
@@ -936,7 +936,7 @@
 				D1AF66F3170B1E5900A43743 /* april.framework */,
 				D1534776178AD62A00151D1A /* libapril.a */,
 				B44FBDC51BE0E44A00DD8995 /* libapril.a */,
-				B4A6FA3B2137D54F00EEB1FE /* libapril (iOS-noWindow OpenGLES2).a */,
+				B4A6FA3B2137D54F00EEB1FE /* libapril.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1770,7 +1770,7 @@
 			);
 			name = "april (iOS-noWindow OpenGLES2)";
 			productName = "libapril-ios";
-			productReference = B4A6FA3B2137D54F00EEB1FE /* libapril (iOS-noWindow OpenGLES2).a */;
+			productReference = B4A6FA3B2137D54F00EEB1FE /* libapril.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		D153474D178AD62A00151D1A /* april (Mac Cocoa OpenGL) */ = {
@@ -2425,7 +2425,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = april;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -2443,7 +2443,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = april;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -2461,7 +2461,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = april;
 				SKIP_INSTALL = YES;
 			};
 			name = "App Store";
