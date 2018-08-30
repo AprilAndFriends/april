@@ -17,6 +17,7 @@ namespace april
 {
 	int __mainStandard(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)(), int argc, char** argv)
 	{	
+#ifdef _IOS_WINDOW
 		harray<hstr> args;
 		if (argv != NULL && argv[0] != NULL)
 		{
@@ -47,6 +48,9 @@ namespace april
 		april::application = NULL;
 		[pool drain];
 		return result;
+#else // using iOS_main without iOS_Window is not allowed
+		return 1;
+#endif
 	}
 	
 }
