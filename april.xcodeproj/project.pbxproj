@@ -331,6 +331,90 @@
 		B45501931BD7B6F200E75E43 /* OpenGLES_VertexShader.h in Headers */ = {isa = PBXBuildFile; fileRef = B45501831BD7B6F200E75E43 /* OpenGLES_VertexShader.h */; };
 		B45501FC1BD7C84700E75E43 /* OpenGLES_defaultShaders.h in Headers */ = {isa = PBXBuildFile; fileRef = B45501FB1BD7C84700E75E43 /* OpenGLES_defaultShaders.h */; };
 		B45501FD1BD7C84700E75E43 /* OpenGLES_defaultShaders.h in Headers */ = {isa = PBXBuildFile; fileRef = B45501FB1BD7C84700E75E43 /* OpenGLES_defaultShaders.h */; };
+		B4A6F9E32137D54F00EEB1FE /* TakeScreenshotCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B21008320F4CC6400E93558 /* TakeScreenshotCommand.cpp */; };
+		B4A6F9E42137D54F00EEB1FE /* RenderState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D136818D187BFB3E00E66E32 /* RenderState.cpp */; };
+		B4A6F9E52137D54F00EEB1FE /* CreateCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F91FF4EE5A003A0539 /* CreateCommand.cpp */; };
+		B4A6F9E62137D54F00EEB1FE /* InputMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D11FB8F21E6866D0001A7E9A /* InputMode.cpp */; };
+		B4A6F9E72137D54F00EEB1FE /* PresentFrameCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209031FF4EE5A003A0539 /* PresentFrameCommand.cpp */; };
+		B4A6F9E82137D54F00EEB1FE /* egl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B321ECDCA3C00F85550 /* egl.cpp */; };
+		B4A6F9E92137D54F00EEB1FE /* iOS_main.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873D19337483004674EB /* iOS_main.mm */; };
+		B4A6F9EA2137D54F00EEB1FE /* Keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */; };
+		B4A6F9EB2137D54F00EEB1FE /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522E12E4713600E958D8 /* Color.cpp */; };
+		B4A6F9EC2137D54F00EEB1FE /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F1B522F12E4713600E958D8 /* Texture.cpp */; };
+		B4A6F9ED2137D54F00EEB1FE /* OpenGLES_PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501801BD7B6F200E75E43 /* OpenGLES_PixelShader.cpp */; };
+		B4A6F9EE2137D54F00EEB1FE /* ControllerEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209AF1FF4EF76003A0539 /* ControllerEvent.cpp */; };
+		B4A6F9EF2137D54F00EEB1FE /* ClearCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F51FF4EE5A003A0539 /* ClearCommand.cpp */; };
+		B4A6F9F02137D54F00EEB1FE /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7F42F7AA11EB179A00B1C1DF /* RenderSystem.cpp */; };
+		B4A6F9F12137D54F00EEB1FE /* Window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7FA3ED2611F98BAE001D1DDD /* Window.cpp */; };
+		B4A6F9F22137D54F00EEB1FE /* AsyncCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208EE1FF4EE5A003A0539 /* AsyncCommand.cpp */; };
+		B4A6F9F32137D54F00EEB1FE /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B486861933737B004674EB /* EAGLView.mm */; };
+		B4A6F9F42137D54F00EEB1FE /* OpenGL1_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45500EB1BD7A7BA00E75E43 /* OpenGL1_Texture.cpp */; };
+		B4A6F9F52137D54F00EEB1FE /* PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F8A14BB106F005BD333 /* PixelShader.cpp */; };
+		B4A6F9F62137D54F00EEB1FE /* VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9C04F9214BB109B005BD333 /* VertexShader.cpp */; };
+		B4A6F9F72137D54F00EEB1FE /* iOS_Platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873E19337483004674EB /* iOS_Platform.mm */; };
+		B4A6F9F82137D54F00EEB1FE /* OpenGL_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501611BD7A86200E75E43 /* OpenGL_RenderSystem.cpp */; };
+		B4A6F9F92137D54F00EEB1FE /* StateUpdateCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209091FF4EE5A003A0539 /* StateUpdateCommand.cpp */; };
+		B4A6F9FA2137D54F00EEB1FE /* april.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C9E6097C150518B400EB077F /* april.cpp */; };
+		B4A6F9FB2137D54F00EEB1FE /* Platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF818158737A000D31573 /* Platform.cpp */; };
+		B4A6F9FC2137D54F00EEB1FE /* aprilUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D14BF96915875F3300D31573 /* aprilUtil.cpp */; };
+		B4A6F9FD2137D54F00EEB1FE /* EventDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204416D37C2300B9C9AD /* EventDelegate.cpp */; };
+		B4A6F9FE2137D54F00EEB1FE /* WBImage.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4868C1933737B004674EB /* WBImage.mm */; };
+		B4A6F9FF2137D54F00EEB1FE /* RenderHelperLayered2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B436D2DE1D05AE8800DA2C15 /* RenderHelperLayered2D.cpp */; };
+		B4A6FA002137D54F00EEB1FE /* OpenGL_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501651BD7A86200E75E43 /* OpenGL_Texture.cpp */; };
+		B4A6FA012137D54F00EEB1FE /* CreateWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FB1FF4EE5A003A0539 /* CreateWindowCommand.cpp */; };
+		B4A6FA022137D54F00EEB1FE /* OpenGLES2_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501271BD7A7DE00E75E43 /* OpenGLES2_RenderSystem.cpp */; };
+		B4A6FA032137D54F00EEB1FE /* DestroyCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FD1FF4EE5A003A0539 /* DestroyCommand.cpp */; };
+		B4A6FA042137D54F00EEB1FE /* RenderHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B436D2DD1D05AE8800DA2C15 /* RenderHelper.cpp */; };
+		B4A6FA052137D54F00EEB1FE /* ImagePvrz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF80791E375F0200307767 /* ImagePvrz.cpp */; };
+		B4A6FA062137D54F00EEB1FE /* InputDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204516D37C2300B9C9AD /* InputDelegate.cpp */; };
+		B4A6FA072137D54F00EEB1FE /* OpenGLES2_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501291BD7A7DE00E75E43 /* OpenGLES2_Texture.cpp */; };
+		B4A6FA082137D54F00EEB1FE /* ImagePvr.mm in Sources */ = {isa = PBXBuildFile; fileRef = D137B93C1A0A417900C4102E /* ImagePvr.mm */; };
+		B4A6FA092137D54F00EEB1FE /* AprilViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B486841933737B004674EB /* AprilViewController.mm */; };
+		B4A6FA0A2137D54F00EEB1FE /* KeyEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B11FF4EF76003A0539 /* KeyEvent.cpp */; };
+		B4A6FA0B2137D54F00EEB1FE /* zlibUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4046B341ECDCA3C00F85550 /* zlibUtil.cpp */; };
+		B4A6FA0C2137D54F00EEB1FE /* UnloadTextureCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A351FF66B62003A0539 /* UnloadTextureCommand.cpp */; };
+		B4A6FA0D2137D54F00EEB1FE /* Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432098A1FF4EEFF003A0539 /* Application.cpp */; };
+		B4A6FA0E2137D54F00EEB1FE /* UnassignWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432090D1FF4EE5A003A0539 /* UnassignWindowCommand.cpp */; };
+		B4A6FA0F2137D54F00EEB1FE /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1FED157192A3B5F00BE6A6D /* Cursor.cpp */; };
+		B4A6FA102137D54F00EEB1FE /* ImageEtcx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF80781E375F0200307767 /* ImageEtcx.cpp */; };
+		B4A6FA112137D54F00EEB1FE /* MouseEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B31FF4EF76003A0539 /* MouseEvent.cpp */; };
+		B4A6FA122137D54F00EEB1FE /* MotionEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B21FF4EF76003A0539 /* MotionEvent.cpp */; };
+		B4A6FA132137D54F00EEB1FE /* OpenGLES_VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501821BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp */; };
+		B4A6FA142137D54F00EEB1FE /* OpenGL1_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45500E91BD7A7BA00E75E43 /* OpenGL1_RenderSystem.cpp */; };
+		B4A6FA152137D54F00EEB1FE /* MotionDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8404CC151F951AB600272BF4 /* MotionDelegate.cpp */; };
+		B4A6FA162137D54F00EEB1FE /* MouseDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204716D37C2300B9C9AD /* MouseDelegate.cpp */; };
+		B4A6FA172137D54F00EEB1FE /* ClearColorCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F31FF4EE5A003A0539 /* ClearColorCommand.cpp */; };
+		B4A6FA182137D54F00EEB1FE /* DestroyTextureCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208FF1FF4EE5A003A0539 /* DestroyTextureCommand.cpp */; };
+		B4A6FA192137D54F00EEB1FE /* AssignWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208EB1FF4EE42003A0539 /* AssignWindowCommand.cpp */; };
+		B4A6FA1A2137D54F00EEB1FE /* SystemDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204816D37C2300B9C9AD /* SystemDelegate.cpp */; };
+		B4A6FA1B2137D54F00EEB1FE /* GenericEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B01FF4EF76003A0539 /* GenericEvent.cpp */; };
+		B4A6FA1C2137D54F00EEB1FE /* ResetCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209071FF4EE5A003A0539 /* ResetCommand.cpp */; };
+		B4A6FA1D2137D54F00EEB1FE /* RenderCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209051FF4EE5A003A0539 /* RenderCommand.cpp */; };
+		B4A6FA1E2137D54F00EEB1FE /* TouchDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204916D37C2300B9C9AD /* TouchDelegate.cpp */; };
+		B4A6FA1F2137D54F00EEB1FE /* ClearDepthCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F71FF4EE5A003A0539 /* ClearDepthCommand.cpp */; };
+		B4A6FA202137D54F00EEB1FE /* KeyDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84320A011FF4F19F003A0539 /* KeyDelegate.cpp */; };
+		B4A6FA212137D54F00EEB1FE /* DestroyWindowCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209011FF4EE5A003A0539 /* DestroyWindowCommand.cpp */; };
+		B4A6FA222137D54F00EEB1FE /* UpdateDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7204A16D37C2300B9C9AD /* UpdateDelegate.cpp */; };
+		B4A6FA232137D54F00EEB1FE /* OpenGLES_RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B455014D1BD7A80400E75E43 /* OpenGLES_RenderSystem.cpp */; };
+		B4A6FA242137D54F00EEB1FE /* OpenGLES2_PixelShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B45501251BD7A7DE00E75E43 /* OpenGLES2_PixelShader.cpp */; };
+		B4A6FA252137D54F00EEB1FE /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7206016D37C5600B9C9AD /* Image.cpp */; };
+		B4A6FA262137D54F00EEB1FE /* ImageJpg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7206116D37C5600B9C9AD /* ImageJpg.cpp */; };
+		B4A6FA272137D54F00EEB1FE /* ImageJpt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7206216D37C5600B9C9AD /* ImageJpt.cpp */; };
+		B4A6FA282137D54F00EEB1FE /* ApriliOSAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B486821933737B004674EB /* ApriliOSAppDelegate.mm */; };
+		B4A6FA292137D54F00EEB1FE /* ImagePng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7206316D37C5600B9C9AD /* ImagePng.cpp */; };
+		B4A6FA2A2137D54F00EEB1FE /* iOS_devices.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B4873C19337483004674EB /* iOS_devices.mm */; };
+		B4A6FA2B2137D54F00EEB1FE /* TouchEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B41FF4EF76003A0539 /* TouchEvent.cpp */; };
+		B4A6FA2C2137D54F00EEB1FE /* AsyncCommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843208F01FF4EE5A003A0539 /* AsyncCommandQueue.cpp */; };
+		B4A6FA2D2137D54F00EEB1FE /* TextureAsync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D102CFF419B7284500948584 /* TextureAsync.cpp */; };
+		B4A6FA2E2137D54F00EEB1FE /* TimerPosix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D1E7207316D37C7000B9C9AD /* TimerPosix.cpp */; };
+		B4A6FA2F2137D54F00EEB1FE /* VirtualKeyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D17F3E931D79D4F60045F39D /* VirtualKeyboard.cpp */; };
+		B4A6FA302137D54F00EEB1FE /* OpenGLES_Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B455014F1BD7A80400E75E43 /* OpenGLES_Texture.cpp */; };
+		B4A6FA312137D54F00EEB1FE /* iOS_Window.mm in Sources */ = {isa = PBXBuildFile; fileRef = D1B486881933737B004674EB /* iOS_Window.mm */; };
+		B4A6FA322137D54F00EEB1FE /* SuspendCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8432090B1FF4EE5A003A0539 /* SuspendCommand.cpp */; };
+		B4A6FA332137D54F00EEB1FE /* main_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D136818C187BFB3E00E66E32 /* main_base.cpp */; };
+		B4A6FA342137D54F00EEB1FE /* SetWindowResolutionCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B40778C320C95063001E1999 /* SetWindowResolutionCommand.cpp */; };
+		B4A6FA352137D54F00EEB1FE /* OpenGLES2_VertexShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B455012B1BD7A7DE00E75E43 /* OpenGLES2_VertexShader.cpp */; };
+		B4A6FA362137D54F00EEB1FE /* ControllerDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16AB63D16F1F8E000E971B0 /* ControllerDelegate.cpp */; };
 		B4DF807A1E375F0200307767 /* ImageEtcx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF80781E375F0200307767 /* ImageEtcx.cpp */; };
 		B4DF807B1E375F0200307767 /* ImagePvrz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF80791E375F0200307767 /* ImagePvrz.cpp */; };
 		B4DF807C1E375F0600307767 /* ImageEtcx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B4DF80781E375F0200307767 /* ImageEtcx.cpp */; };
@@ -633,6 +717,7 @@
 		B45501821BD7B6F200E75E43 /* OpenGLES_VertexShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenGLES_VertexShader.cpp; path = src/rendersystems/OpenGL/GLES/OpenGLES_VertexShader.cpp; sourceTree = "<group>"; };
 		B45501831BD7B6F200E75E43 /* OpenGLES_VertexShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES_VertexShader.h; path = src/rendersystems/OpenGL/GLES/OpenGLES_VertexShader.h; sourceTree = "<group>"; };
 		B45501FB1BD7C84700E75E43 /* OpenGLES_defaultShaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLES_defaultShaders.h; path = src/rendersystems/OpenGL/GLES/OpenGLES_defaultShaders.h; sourceTree = "<group>"; };
+		B4A6FA3B2137D54F00EEB1FE /* libapril (iOS-noWindow OpenGLES2).a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libapril (iOS-noWindow OpenGLES2).a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B4DF80781E375F0200307767 /* ImageEtcx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageEtcx.cpp; path = src/images/ImageEtcx.cpp; sourceTree = "<group>"; };
 		B4DF80791E375F0200307767 /* ImagePvrz.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImagePvrz.cpp; path = src/images/ImagePvrz.cpp; sourceTree = "<group>"; };
 		B4E4CE081E69A1CA00DB4C31 /* Keys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Keys.cpp; path = src/Keys.cpp; sourceTree = "<group>"; };
@@ -851,6 +936,7 @@
 				D1AF66F3170B1E5900A43743 /* april.framework */,
 				D1534776178AD62A00151D1A /* libapril.a */,
 				B44FBDC51BE0E44A00DD8995 /* libapril.a */,
+				B4A6FA3B2137D54F00EEB1FE /* libapril (iOS-noWindow OpenGLES2).a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1672,6 +1758,21 @@
 			productReference = B44FBDC51BE0E44A00DD8995 /* libapril.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		B4A6F9E12137D54F00EEB1FE /* april (iOS-noWindow OpenGLES2) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B4A6FA372137D54F00EEB1FE /* Build configuration list for PBXNativeTarget "april (iOS-noWindow OpenGLES2)" */;
+			buildPhases = (
+				B4A6F9E22137D54F00EEB1FE /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "april (iOS-noWindow OpenGLES2)";
+			productName = "libapril-ios";
+			productReference = B4A6FA3B2137D54F00EEB1FE /* libapril (iOS-noWindow OpenGLES2).a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		D153474D178AD62A00151D1A /* april (Mac Cocoa OpenGL) */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D1534770178AD62A00151D1A /* Build configuration list for PBXNativeTarget "april (Mac Cocoa OpenGL)" */;
@@ -1732,6 +1833,7 @@
 				8DC2EF4F0486A6940098B216 /* april (SDL OpenGL) */,
 				D153474D178AD62A00151D1A /* april (Mac Cocoa OpenGL) */,
 				B44FBD8B1BE0E44A00DD8995 /* april (iOS OpenGLES2) */,
+				B4A6F9E12137D54F00EEB1FE /* april (iOS-noWindow OpenGLES2) */,
 			);
 		};
 /* End PBXProject section */
@@ -1910,6 +2012,97 @@
 				B40778CA20C95074001E1999 /* SetWindowResolutionCommand.cpp in Sources */,
 				B44FBDBF1BE0E44A00DD8995 /* OpenGLES2_VertexShader.cpp in Sources */,
 				B44FBDC01BE0E44A00DD8995 /* ControllerDelegate.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B4A6F9E22137D54F00EEB1FE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B4A6F9E32137D54F00EEB1FE /* TakeScreenshotCommand.cpp in Sources */,
+				B4A6F9E42137D54F00EEB1FE /* RenderState.cpp in Sources */,
+				B4A6F9E52137D54F00EEB1FE /* CreateCommand.cpp in Sources */,
+				B4A6F9E62137D54F00EEB1FE /* InputMode.cpp in Sources */,
+				B4A6F9E72137D54F00EEB1FE /* PresentFrameCommand.cpp in Sources */,
+				B4A6F9E82137D54F00EEB1FE /* egl.cpp in Sources */,
+				B4A6F9E92137D54F00EEB1FE /* iOS_main.mm in Sources */,
+				B4A6F9EA2137D54F00EEB1FE /* Keys.cpp in Sources */,
+				B4A6F9EB2137D54F00EEB1FE /* Color.cpp in Sources */,
+				B4A6F9EC2137D54F00EEB1FE /* Texture.cpp in Sources */,
+				B4A6F9ED2137D54F00EEB1FE /* OpenGLES_PixelShader.cpp in Sources */,
+				B4A6F9EE2137D54F00EEB1FE /* ControllerEvent.cpp in Sources */,
+				B4A6F9EF2137D54F00EEB1FE /* ClearCommand.cpp in Sources */,
+				B4A6F9F02137D54F00EEB1FE /* RenderSystem.cpp in Sources */,
+				B4A6F9F12137D54F00EEB1FE /* Window.cpp in Sources */,
+				B4A6F9F22137D54F00EEB1FE /* AsyncCommand.cpp in Sources */,
+				B4A6F9F32137D54F00EEB1FE /* EAGLView.mm in Sources */,
+				B4A6F9F42137D54F00EEB1FE /* OpenGL1_Texture.cpp in Sources */,
+				B4A6F9F52137D54F00EEB1FE /* PixelShader.cpp in Sources */,
+				B4A6F9F62137D54F00EEB1FE /* VertexShader.cpp in Sources */,
+				B4A6F9F72137D54F00EEB1FE /* iOS_Platform.mm in Sources */,
+				B4A6F9F82137D54F00EEB1FE /* OpenGL_RenderSystem.cpp in Sources */,
+				B4A6F9F92137D54F00EEB1FE /* StateUpdateCommand.cpp in Sources */,
+				B4A6F9FA2137D54F00EEB1FE /* april.cpp in Sources */,
+				B4A6F9FB2137D54F00EEB1FE /* Platform.cpp in Sources */,
+				B4A6F9FC2137D54F00EEB1FE /* aprilUtil.cpp in Sources */,
+				B4A6F9FD2137D54F00EEB1FE /* EventDelegate.cpp in Sources */,
+				B4A6F9FE2137D54F00EEB1FE /* WBImage.mm in Sources */,
+				B4A6F9FF2137D54F00EEB1FE /* RenderHelperLayered2D.cpp in Sources */,
+				B4A6FA002137D54F00EEB1FE /* OpenGL_Texture.cpp in Sources */,
+				B4A6FA012137D54F00EEB1FE /* CreateWindowCommand.cpp in Sources */,
+				B4A6FA022137D54F00EEB1FE /* OpenGLES2_RenderSystem.cpp in Sources */,
+				B4A6FA032137D54F00EEB1FE /* DestroyCommand.cpp in Sources */,
+				B4A6FA042137D54F00EEB1FE /* RenderHelper.cpp in Sources */,
+				B4A6FA052137D54F00EEB1FE /* ImagePvrz.cpp in Sources */,
+				B4A6FA062137D54F00EEB1FE /* InputDelegate.cpp in Sources */,
+				B4A6FA072137D54F00EEB1FE /* OpenGLES2_Texture.cpp in Sources */,
+				B4A6FA082137D54F00EEB1FE /* ImagePvr.mm in Sources */,
+				B4A6FA092137D54F00EEB1FE /* AprilViewController.mm in Sources */,
+				B4A6FA0A2137D54F00EEB1FE /* KeyEvent.cpp in Sources */,
+				B4A6FA0B2137D54F00EEB1FE /* zlibUtil.cpp in Sources */,
+				B4A6FA0C2137D54F00EEB1FE /* UnloadTextureCommand.cpp in Sources */,
+				B4A6FA0D2137D54F00EEB1FE /* Application.cpp in Sources */,
+				B4A6FA0E2137D54F00EEB1FE /* UnassignWindowCommand.cpp in Sources */,
+				B4A6FA0F2137D54F00EEB1FE /* Cursor.cpp in Sources */,
+				B4A6FA102137D54F00EEB1FE /* ImageEtcx.cpp in Sources */,
+				B4A6FA112137D54F00EEB1FE /* MouseEvent.cpp in Sources */,
+				B4A6FA122137D54F00EEB1FE /* MotionEvent.cpp in Sources */,
+				B4A6FA132137D54F00EEB1FE /* OpenGLES_VertexShader.cpp in Sources */,
+				B4A6FA142137D54F00EEB1FE /* OpenGL1_RenderSystem.cpp in Sources */,
+				B4A6FA152137D54F00EEB1FE /* MotionDelegate.cpp in Sources */,
+				B4A6FA162137D54F00EEB1FE /* MouseDelegate.cpp in Sources */,
+				B4A6FA172137D54F00EEB1FE /* ClearColorCommand.cpp in Sources */,
+				B4A6FA182137D54F00EEB1FE /* DestroyTextureCommand.cpp in Sources */,
+				B4A6FA192137D54F00EEB1FE /* AssignWindowCommand.cpp in Sources */,
+				B4A6FA1A2137D54F00EEB1FE /* SystemDelegate.cpp in Sources */,
+				B4A6FA1B2137D54F00EEB1FE /* GenericEvent.cpp in Sources */,
+				B4A6FA1C2137D54F00EEB1FE /* ResetCommand.cpp in Sources */,
+				B4A6FA1D2137D54F00EEB1FE /* RenderCommand.cpp in Sources */,
+				B4A6FA1E2137D54F00EEB1FE /* TouchDelegate.cpp in Sources */,
+				B4A6FA1F2137D54F00EEB1FE /* ClearDepthCommand.cpp in Sources */,
+				B4A6FA202137D54F00EEB1FE /* KeyDelegate.cpp in Sources */,
+				B4A6FA212137D54F00EEB1FE /* DestroyWindowCommand.cpp in Sources */,
+				B4A6FA222137D54F00EEB1FE /* UpdateDelegate.cpp in Sources */,
+				B4A6FA232137D54F00EEB1FE /* OpenGLES_RenderSystem.cpp in Sources */,
+				B4A6FA242137D54F00EEB1FE /* OpenGLES2_PixelShader.cpp in Sources */,
+				B4A6FA252137D54F00EEB1FE /* Image.cpp in Sources */,
+				B4A6FA262137D54F00EEB1FE /* ImageJpg.cpp in Sources */,
+				B4A6FA272137D54F00EEB1FE /* ImageJpt.cpp in Sources */,
+				B4A6FA282137D54F00EEB1FE /* ApriliOSAppDelegate.mm in Sources */,
+				B4A6FA292137D54F00EEB1FE /* ImagePng.cpp in Sources */,
+				B4A6FA2A2137D54F00EEB1FE /* iOS_devices.mm in Sources */,
+				B4A6FA2B2137D54F00EEB1FE /* TouchEvent.cpp in Sources */,
+				B4A6FA2C2137D54F00EEB1FE /* AsyncCommandQueue.cpp in Sources */,
+				B4A6FA2D2137D54F00EEB1FE /* TextureAsync.cpp in Sources */,
+				B4A6FA2E2137D54F00EEB1FE /* TimerPosix.cpp in Sources */,
+				B4A6FA2F2137D54F00EEB1FE /* VirtualKeyboard.cpp in Sources */,
+				B4A6FA302137D54F00EEB1FE /* OpenGLES_Texture.cpp in Sources */,
+				B4A6FA312137D54F00EEB1FE /* iOS_Window.mm in Sources */,
+				B4A6FA322137D54F00EEB1FE /* SuspendCommand.cpp in Sources */,
+				B4A6FA332137D54F00EEB1FE /* main_base.cpp in Sources */,
+				B4A6FA342137D54F00EEB1FE /* SetWindowResolutionCommand.cpp in Sources */,
+				B4A6FA352137D54F00EEB1FE /* OpenGLES2_VertexShader.cpp in Sources */,
+				B4A6FA362137D54F00EEB1FE /* ControllerDelegate.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2172,6 +2365,7 @@
 					_IOS,
 					_ARM,
 					_IMAGE_PVR,
+					_IOS_WINDOW,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -2190,6 +2384,7 @@
 					_IOS,
 					_ARM,
 					_IMAGE_PVR,
+					_IOS_WINDOW,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
@@ -2208,10 +2403,65 @@
 					_IOS,
 					_ARM,
 					_IMAGE_PVR,
+					_IOS_WINDOW,
 					"$(inherited)",
 				);
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				PRODUCT_NAME = april;
+				SKIP_INSTALL = YES;
+			};
+			name = "App Store";
+		};
+		B4A6FA382137D54F00EEB1FE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_OPENGLES,
+					_OPENGLES2,
+					_IOS,
+					_ARM,
+					_IMAGE_PVR,
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		B4A6FA392137D54F00EEB1FE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_OPENGLES,
+					_OPENGLES2,
+					_IOS,
+					_ARM,
+					_IMAGE_PVR,
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		B4A6FA3A2137D54F00EEB1FE /* App Store */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1681BA618D768400088FC68 /* iOS.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_OPENGLES,
+					_OPENGLES2,
+					_IOS,
+					_ARM,
+					_IMAGE_PVR,
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
 			name = "App Store";
@@ -2515,6 +2765,16 @@
 				B44FBDC21BE0E44A00DD8995 /* Debug */,
 				B44FBDC31BE0E44A00DD8995 /* Release */,
 				B44FBDC41BE0E44A00DD8995 /* App Store */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B4A6FA372137D54F00EEB1FE /* Build configuration list for PBXNativeTarget "april (iOS-noWindow OpenGLES2)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B4A6FA382137D54F00EEB1FE /* Debug */,
+				B4A6FA392137D54F00EEB1FE /* Release */,
+				B4A6FA3A2137D54F00EEB1FE /* App Store */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
