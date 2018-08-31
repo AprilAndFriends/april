@@ -155,7 +155,7 @@ namespace april
 		double fpsResolution;
 		/// @brief Maximum allowed time-delta that are propagated into the UpdateDelegate.
 		/// @note Limiting this makes sense, because on weak hardware configurations it allows that large frameskips don't result in too large time skips.
-		float timeDeltaMaxLimit;
+		double timeDeltaMaxLimit;
 		/// @brief Queue for message box displays.
 		harray<MessageBoxData> messageBoxQueue;
 		/// @brief Whether OS message box is being displayed at this moment or not.

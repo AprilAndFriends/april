@@ -155,15 +155,18 @@ namespace april
 		this->_updateMessageBoxQueue();
 		TextureAsync::update();
 		april::window->checkEvents();
-		float timeDelta = (float)this->timer.diff(true);
+		double timeDelta = this->timer.diff();
 		if (!april::window->isFocused() && april::window->getOptions().suspendUpdateThread)
 		{
-			timeDelta = 0.0f;
+			timeDelta = 0.0;
 		}
-		this->fpsTimer += timeDelta;
-		if (this->timeDeltaMaxLimit > 0.0f)
+		else
 		{
-			timeDelta = hmin(timeDelta, this->timeDeltaMaxLimit);
+			this->fpsTimer += timeDelta;
+			if (this->timeDeltaMaxLimit > 0.0)
+			{
+				timeDelta = hmin(timeDelta, this->timeDeltaMaxLimit);
+			}
 		}
 		hmutex::ScopeLock lock(&this->timeDeltaMutex);
 		this->timeDelta += timeDelta;
