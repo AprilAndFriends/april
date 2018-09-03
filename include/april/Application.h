@@ -77,7 +77,7 @@ namespace april
 		HL_DEFINE_GETSET(double, fpsResolution, FpsResolution);
 		/// @brief The maximum allowed time-delta between frames.
 		/// @note Limiting this makes sense, because on weak hardware configurations it allows that large frameskips don't result in too large time skips.
-		HL_DEFINE_GETSET(float, timeDeltaMaxLimit, TimeDeltaMaxLimit);
+		HL_DEFINE_GETSET(double, timeDeltaMaxLimit, TimeDeltaMaxLimit);
 		/// @brief Checks whether any OS message boxes are queued for display.
 		bool isAnyMessageBoxQueued();
 
@@ -142,7 +142,7 @@ namespace april
 		/// @brief The Timer object used for general timing purposes.
 		Timer timer;
 		/// @brief The current time since the last frame.
-		float timeDelta;
+		double timeDelta;
 		/// @brief The Timer object used for timing frame rendering to adjust the update thread sleep time.
 		Timer frameTimer;
 		/// @brief FPS of the last mesaure.

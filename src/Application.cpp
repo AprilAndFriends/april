@@ -42,12 +42,12 @@ namespace april
 		state(State::Idle),
 		suspended(false),
 		updateSuspendQueued(false),
-		timeDelta(0.0f),
+		timeDelta(0.0),
 		fps(0),
 		fpsCount(0),
-		fpsTimer(0.0f),
-		fpsResolution(0.5f),
-		timeDeltaMaxLimit(0.1f),
+		fpsTimer(0.0),
+		fpsResolution(0.5),
+		timeDeltaMaxLimit(0.1),
 		displayingMessageBox(false),
 		updateThread(&_asyncUpdate, "APRIL Async Update")
 	{
@@ -124,7 +124,7 @@ namespace april
 	{
 		this->fps = 0;
 		this->fpsCount = 0;
-		this->fpsTimer = 0.0f;
+		this->fpsTimer = 0.0;
 		this->timer.update();
 		while (this->getState() == State::Running)
 		{
@@ -174,7 +174,7 @@ namespace april
 		lock.acquire(&this->frameTimerMutex);
 		this->frameTimer.update();
 		lock.release();
-		return april::rendersys->update(timeDelta);
+		return april::rendersys->update((float)timeDelta);
 	}
 
 	void Application::_updateMessageBoxQueue()
@@ -206,7 +206,7 @@ namespace april
 
 	void Application::_updateFps()
 	{
-		if (this->fpsTimer > 0.0f)
+		if (this->fpsTimer > 0.0)
 		{
 			++this->fpsCount;
 			if (this->fpsTimer >= this->fpsResolution)
@@ -276,7 +276,7 @@ namespace april
 			while (april::application->getState() == State::Running)
 			{
 				lockTimeDelta.acquire(&april::application->timeDeltaMutex);
-				timeDelta = april::application->timeDelta;
+				timeDelta = (float)april::application->timeDelta;
 				april::application->timeDelta = 0.0f;
 				lockTimeDelta.release();
 				if (!april::window->update(timeDelta))
