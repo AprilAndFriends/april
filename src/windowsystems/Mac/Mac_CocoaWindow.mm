@@ -551,18 +551,16 @@ NSString* translateInputForKeyDown(NSEvent* event)
 
 + (void) _showAlertView:(NSValue*) _params
 {
-	MessageBoxParams* p_params = (MessageBoxParams*)[_params pointerValue];
-	MessageBoxParams params = *p_params;
-	delete p_params;
+	MessageBoxParams* params = (MessageBoxParams*)[_params pointerValue];
 	dispatch_async(dispatch_get_main_queue(),
 	^{
-		NSString* title = [NSString stringWithUTF8String:params.title.cStr()];
-		NSString* text = [NSString stringWithUTF8String:params.text.cStr()];
-		NSString* button1 = [NSString stringWithUTF8String:params.button1.cStr()];
-		NSString* button2 = [NSString stringWithUTF8String:params.button2.cStr()];
-		NSString* button3 = [NSString stringWithUTF8String:params.button3.cStr()];
+		NSString* title = [NSString stringWithUTF8String:params->title.cStr()];
+		NSString* text = [NSString stringWithUTF8String:params->text.cStr()];
+		NSString* button1 = [NSString stringWithUTF8String:params->button1.cStr()];
+		NSString* button2 = [NSString stringWithUTF8String:params->button2.cStr()];
+		NSString* button3 = [NSString stringWithUTF8String:params->button3.cStr()];
 		int clicked = (int)NSRunAlertPanel(title, @"%@", button1, button2, button3, text);
-		if (params.callback != NULL)
+		if (params->callback != NULL)
 		{
 			switch (clicked)
 			{
@@ -576,8 +574,9 @@ NSString* translateInputForKeyDown(NSEvent* event)
 				clicked = 2;
 				break;
 			}
-			april::Application::messageBoxCallback(params.btnTypes[clicked]);
+			april::Application::messageBoxCallback(params->btnTypes[clicked]);
 		}
+		delete params;
 	});
 }
 
