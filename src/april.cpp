@@ -355,35 +355,35 @@ namespace april
 	}
 	
 	void init(RenderSystemType renderSystemType, WindowType windowType, RenderSystem::Options renderSystemOptions,
-		int w, int h, bool fullscreen, chstr title, Window::Options windowOptions)
+		int width, int height, bool fullscreen, chstr title, Window::Options windowOptions)
 	{
 		init(renderSystemType, windowType);
 		createRenderSystem(renderSystemOptions);
-		createWindow(w, h, fullscreen, title, windowOptions);
+		createWindow(width, height, fullscreen, title, windowOptions);
 	}
 	
 	void init(RenderSystem* customRenderSystem, WindowType windowType, RenderSystem::Options renderSystemOptions,
-		int w, int h, bool fullscreen, chstr title, Window::Options windowOptions)
+		int width, int height, bool fullscreen, chstr title, Window::Options windowOptions)
 	{
 		init(customRenderSystem, windowType);
 		createRenderSystem(renderSystemOptions);
-		createWindow(w, h, fullscreen, title, windowOptions);
+		createWindow(width, height, fullscreen, title, windowOptions);
 	}
 	
 	void init(RenderSystemType renderSystemType, Window* customWindow, RenderSystem::Options renderSystemOptions,
-		int w, int h, bool fullscreen, chstr title, Window::Options windowOptions)
+		int width, int height, bool fullscreen, chstr title, Window::Options windowOptions)
 	{
 		init(renderSystemType, customWindow);
 		createRenderSystem(renderSystemOptions);
-		createWindow(w, h, fullscreen, title, windowOptions);
+		createWindow(width, height, fullscreen, title, windowOptions);
 	}
 	
 	void init(RenderSystem* customRenderSystem, Window* customWindow, RenderSystem::Options renderSystemOptions,
-		int w, int h, bool fullscreen, chstr title, Window::Options windowOptions)
+		int width, int height, bool fullscreen, chstr title, Window::Options windowOptions)
 	{
 		init(customRenderSystem, customWindow);
 		createRenderSystem(renderSystemOptions);
-		createWindow(w, h, fullscreen, title, windowOptions);
+		createWindow(width, height, fullscreen, title, windowOptions);
 	}
 	
 	void createRenderSystem(RenderSystem::Options options)
@@ -392,13 +392,13 @@ namespace april
 		april::rendersys->waitForAsyncCommands(true);
 	}
 	
-	void createWindow(int w, int h, bool fullscreen, chstr title, Window::Options options)
+	void createWindow(int width, int height, bool fullscreen, chstr title, Window::Options options)
 	{
-		april::window->create(w, h, fullscreen, title, options);
+		april::window->create(width, height, fullscreen, title, options);
 		april::rendersys->assignWindow(april::window);
 		// one special hack for one special backend
 #ifdef _UWP
-		april::rendersys->setViewport(grectf(0.0f, 0.0f, (float)w, (float)h));
+		april::rendersys->setViewport(grecti(0, 0, width, height));
 #endif
 		april::rendersys->getCaps(); // calling getCaps() here is required here so it's initialized on certain platforms
 		april::rendersys->clear(); // make sure the backbuffer is clear after initialization
