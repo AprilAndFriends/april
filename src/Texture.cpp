@@ -660,7 +660,10 @@ namespace april
 
 	void Texture::waitForAsyncLoad(float timeout)
 	{
-		TextureAsync::prioritizeLoad(this);
+		if (!TextureAsync::prioritizeLoad(this))
+		{
+			return; // already done
+		}
 		float time = timeout;
 		hmutex::ScopeLock lock;
 		while (time > 0.0f || timeout <= 0.0f)
@@ -684,7 +687,10 @@ namespace april
 			return;
 		}
 		lock.release();
-		TextureAsync::prioritizeLoad(this);
+		if (!TextureAsync::prioritizeLoad(this))
+		{
+			return; // already done
+		}
 		while (true)
 		{
 			TextureAsync::update();
