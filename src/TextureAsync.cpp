@@ -39,18 +39,7 @@ namespace april
 		{
 			return;
 		}
-		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
-		if (TextureAsync::readerRunning && !TextureAsync::readerThread.isRunning())
-		{
-			TextureAsync::readerThread.join();
-			TextureAsync::readerRunning = false;
-		}
-		if (!TextureAsync::readerRunning && TextureAsync::textures.size() > 0) // new textures got queued in the meantime
-		{
-			TextureAsync::readerRunning = true;
-			TextureAsync::readerThread.start();
-		}
-		lock.release();
+		TextureAsync::_updateThreads();
 		// upload all ready textures to the GPU
 		int maxCount = april::getMaxAsyncTextureUploadsPerFrame();
 		int count = 0;
@@ -67,6 +56,32 @@ namespace april
 				}
 			}
 		}
+	}
+
+	void TextureAsync::updateSingleTexture(Texture* texture)
+	{
+		if (april::rendersys == NULL)
+		{
+			return;
+		}
+		TextureAsync::_updateThreads();
+		texture->_tryAsyncFinalUpload();
+	}
+
+	void TextureAsync::_updateThreads()
+	{
+		hmutex::ScopeLock lock(&TextureAsync::queueMutex);
+		if (TextureAsync::readerRunning && !TextureAsync::readerThread.isRunning())
+		{
+			TextureAsync::readerThread.join();
+			TextureAsync::readerRunning = false;
+		}
+		if (!TextureAsync::readerRunning && TextureAsync::textures.size() > 0) // new textures got queued in the meantime
+		{
+			TextureAsync::readerRunning = true;
+			TextureAsync::readerThread.start();
+		}
+		lock.release();
 	}
 
 	bool TextureAsync::queueLoad(Texture* texture)

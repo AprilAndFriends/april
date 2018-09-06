@@ -33,6 +33,7 @@ namespace april
 	{
 	public:
 		static void update();
+		static void updateSingleTexture(Texture* texture);
 		static bool queueLoad(Texture* texture);
 		static bool prioritizeLoad(Texture* texture);
 		static bool isRunning();
@@ -46,6 +47,8 @@ namespace april
 		static bool readerRunning;
 
 		static harray<hthread*> decoderThreads;
+
+		static void _updateThreads();
 
 		static void _read(hthread* thread);
 		static void _decode(hthread* thread);

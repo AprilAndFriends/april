@@ -450,16 +450,13 @@ namespace april
 		}
 		this->_loadMetaData();
 		this->asyncLoadDiscarded = false;
-		if (!this->asyncLoadQueued) // this check is down here to allow the upper error messages to be displayed
+		if (this->filename == "")
 		{
-			if (this->filename == "")
-			{
-				this->_assignFormat();
-			}
-			if (this->type != Type::RenderTarget)
-			{
-				this->asyncLoadQueued = TextureAsync::queueLoad(this);
-			}
+			this->_assignFormat();
+		}
+		else if (!this->asyncLoadQueued && this->type != Type::RenderTarget)
+		{
+			this->asyncLoadQueued = TextureAsync::queueLoad(this);
 		}
 		return this->asyncLoadQueued;
 	}
@@ -635,14 +632,15 @@ namespace april
 					}
 					this->data = currentData;
 				}
+				lock.release();
 			}
 			else
 			{
+				lock.release();
 				delete[] currentData;
 				// the used format will be the native format, because there is no intermediate data
 				this->format = april::rendersys->getNativeTextureFormat(this->format);
 			}
-			lock.release();
 		}
 		this->_tryUploadDataToGpu(); // upload any additional changes
 		lock.acquire(&this->asyncLoadMutex);
@@ -662,10 +660,7 @@ namespace april
 
 	void Texture::waitForAsyncLoad(float timeout)
 	{
-		if (!TextureAsync::prioritizeLoad(this))
-		{
-			return; // already done
-		}
+		TextureAsync::prioritizeLoad(this);
 		float time = timeout;
 		hmutex::ScopeLock lock;
 		while (time > 0.0f || timeout <= 0.0f)
@@ -689,13 +684,10 @@ namespace april
 			return;
 		}
 		lock.release();
-		if (!TextureAsync::prioritizeLoad(this))
-		{
-			return; // already done
-		}
+		TextureAsync::prioritizeLoad(this);
 		while (true)
 		{
-			TextureAsync::update();
+			TextureAsync::updateSingleTexture(this);
 			lock.acquire(&this->asyncLoadMutex);
 			if (!this->asyncLoadQueued && this->uploaded)
 			{
@@ -1042,6 +1034,11 @@ namespace april
 			hlog::warn(logTag, "Cannot write texture: " + this->_getInternalName());
 			return false;
 		}
+		return this->_rawWriteStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat);
+	}
+
+	bool Texture::_rawWriteStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
+	{
 		this->waitForAsyncLoad();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::writeStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format);
@@ -1078,6 +1075,11 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
+		return this->_rawBlit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat);
+	}
+
+	bool Texture::_rawBlit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
+	{
 		this->waitForAsyncLoad();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::blit(sx, sy, sw, sh, dx, dy, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format);
@@ -1114,6 +1116,11 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
+		return this->_rawBlitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat);
+	}
+
+	bool Texture::_rawBlitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha)
+	{
 		this->waitForAsyncLoad();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::blitStretch(sx, sy, sw, sh, dx, dy, dw, dh, srcData, srcWidth, srcHeight, srcFormat, this->data, this->width, this->height, this->format);
@@ -1150,6 +1157,11 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
+		return this->_rawRotateHue(x, y, w, h, degrees);
+	}
+
+	bool Texture::_rawRotateHue(int x, int y, int w, int h, float degrees)
+	{
 		this->waitForAsyncLoad();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::rotateHue(x, y, w, h, degrees, this->data, this->width, this->height, this->format);
@@ -1164,6 +1176,11 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
+		return this->_rawSaturate(x, y, w, h, factor);
+	}
+
+	bool Texture::_rawSaturate(int x, int y, int w, int h, float factor)
+	{
 		this->waitForAsyncLoad();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::saturate(x, y, w, h, factor, this->data, this->width, this->height, this->format);
@@ -1178,6 +1195,11 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
+		return this->_rawInvert(x, y, w, h);
+	}
+
+	bool Texture::_rawInvert(int x, int y, int w, int h)
+	{
 		this->waitForAsyncLoad();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::invert(x, y, w, h, this->data, this->width, this->height, this->format);
@@ -1192,6 +1214,11 @@ namespace april
 			hlog::warn(logTag, "Cannot alter texture: " + this->_getInternalName());
 			return false;
 		}
+		return this->_rawInsertAlphaMap(srcData, srcFormat, median, ambiguity);
+	}
+
+	bool Texture::_rawInsertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity)
+	{
 		this->waitForAsyncLoad();
 		hmutex::ScopeLock lock(&this->asyncDataMutex);
 		bool result = Image::insertAlphaMap(this->width, this->height, srcData, srcFormat, this->data, this->format, median, ambiguity);

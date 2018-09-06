@@ -886,6 +886,92 @@ namespace april
 		/// @return True if successful.
 		/// @note Pixels on the destination will be overwritten.
 		bool _rawWrite(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		/// @brief Writes image data directly onto the image while trying to stretch the pixels. Stretched pixels will be linearly interpolated. Used internally only.
+		/// @param[in] sx Source data X-coordinate.
+		/// @param[in] sy Source data Y-coordinate.
+		/// @param[in] sw Width of the area on the source to be copied.
+		/// @param[in] sh Height of the area on the source to be copied.
+		/// @param[in] dx Destination X-coordinate.
+		/// @param[in] dy Destination Y-coordinate.
+		/// @param[in] dw Width of the destination area.
+		/// @param[in] dh Height of the destination area.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @return True if successful.
+		/// @note Pixels on the destination will be overwritten.
+		bool _rawWriteStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat);
+		/// @brief Does an image data block transfer onto the texture. Used internally only.
+		/// @param[in] sx Source data X-coordinate.
+		/// @param[in] sy Source data Y-coordinate.
+		/// @param[in] sw Width of the area on the source to be copied.
+		/// @param[in] sh Height of the area on the source to be copied.
+		/// @param[in] dx Destination X-coordinate.
+		/// @param[in] dy Destination Y-coordinate.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in] alpha Alpha multiplier on the entire source image.
+		/// @return True if successful.
+		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
+		/// @note The parameter alpha is especially useful when blitting source images that don't have an alpha channel.
+		bool _rawBlit(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
+		/// @brief Does a stretched image data block transfer onto the texture. Used internally only.
+		/// @param[in] sx Source data X-coordinate.
+		/// @param[in] sy Source data Y-coordinate.
+		/// @param[in] sw Width of the area on the source to be copied.
+		/// @param[in] sh Height of the area on the source to be copied.
+		/// @param[in] dx Destination X-coordinate.
+		/// @param[in] dy Destination Y-coordinate.
+		/// @param[in] dw Width of the destination area.
+		/// @param[in] dh Height of the destination area.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcWidth The width of source raw image data.
+		/// @param[in] srcHeight The height of source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in] alpha Alpha multiplier on the entire source image.
+		/// @return True if successful.
+		/// @note Pixels on the destination will be overwritten will be blended with alpha-blending using the source pixels.
+		/// @note The parameter alpha is especially useful when blitting source images that don't have an alpha channel.
+		bool _rawBlitStretch(int sx, int sy, int sw, int sh, int dx, int dy, int dw, int dh, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat, unsigned char alpha = 255);
+		/// @brief Rotates the pixel hue of a rectangle area on the texture. Used internally only.
+		/// @param[in] x X-coordinate of the area to change.
+		/// @param[in] y Y-coordinate of the area to change.
+		/// @param[in] w Width of the area to change.
+		/// @param[in] h Height of the area to change.
+		/// @param[in] degrees By how many degrees the the should be rotated.
+		/// @return True if successful.
+		/// @note This is lossy operation.
+		/// @note This is an expensive operation and should be used sparingly.
+		bool _rawRotateHue(int x, int y, int w, int h, float degrees);
+		/// @brief Changes the saturation level of pixels of a rectangle area on the texture. Used internally only.
+		/// @param[in] x X-coordinate of the area to change.
+		/// @param[in] y Y-coordinate of the area to change.
+		/// @param[in] w Width of the area to change.
+		/// @param[in] h Height of the area to change.
+		/// @param[in] factor The saturation multiplier factor.
+		/// @return True if successful.
+		/// @note This is lossy operation.
+		/// @note This is an expensive operation and should be used sparingly.
+		bool _rawSaturate(int x, int y, int w, int h, float factor);
+		/// @brief Inverts the pixel colors of a rectangle area on the texture. Used internally only.
+		/// @param[in] x X-coordinate of the area to change.
+		/// @param[in] y Y-coordinate of the area to change.
+		/// @param[in] w Width of the area to change.
+		/// @param[in] h Height of the area to change.
+		/// @return True if successful.
+		bool _rawInvert(int x, int y, int w, int h);
+		/// @brief Inserts image data as alpha channel into this image. Used internally only.
+		/// @param[in] srcData The source raw image data.
+		/// @param[in] srcFormat The pixel format of source raw image data.
+		/// @param[in] median The median value for insertion.
+		/// @param[in] ambiguity How "hard" the alpha channel transition should be.
+		/// @return True if successful.
+		/// @note The image data in srcData must be the same width and height as the image.
+		/// @note This is an expensive operation and should be used sparingly.
+		bool _rawInsertAlphaMap(unsigned char* srcData, Image::Format srcFormat, unsigned char median, int ambiguity);
 
 		/// @brief Sets up dimensions and internal state of the texture to be power-of-two compliant.
 		/// @param[out] outWidth Power-of-two width.
