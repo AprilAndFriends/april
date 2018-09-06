@@ -206,17 +206,18 @@ namespace april
 
 	Texture::~Texture()
 	{
-		hmutex::ScopeLock lockData(&this->asyncDataMutex);
-		if (this->data != NULL)
-		{
-			delete[] this->data;
-		}
+		// this mutex order must remain the same, because of the order of locking in other places
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		this->asyncLoadQueued = false;
 		this->asyncLoadDiscarded = false;
 		if (this->dataAsync != NULL)
 		{
 			delete[] this->dataAsync;
+		}
+		hmutex::ScopeLock lockData(&this->asyncDataMutex);
+		if (this->data != NULL)
+		{
+			delete[] this->data;
 		}
 	}
 
@@ -466,12 +467,12 @@ namespace april
 	bool Texture::loadMetaData()
 	{
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
-		if (this->uploaded)
+		if (this->uploaded || this->dataAsync != NULL)
 		{
 			return true;
 		}
 		hmutex::ScopeLock lockData(&this->asyncDataMutex);
-		if (this->data != NULL || this->dataAsync != NULL)
+		if (this->data != NULL)
 		{
 			return true;
 		}
@@ -596,11 +597,12 @@ namespace april
 		bool result = this->_deviceCreateTexture(currentData, size);
 		if (!result)
 		{
-			// no lock required since it only checks for existence, not for manipulation of data
+			lock.acquire(&this->asyncDataMutex);
 			if (currentData != NULL && this->data != currentData)
 			{
 				delete[] currentData;
 			}
+			lock.release();
 			lock.acquire(&this->asyncLoadMutex);
 			this->dataAsync = NULL; // not needed anymore and makes isReadyForUpload() return false now
 			this->uploaded = result;
