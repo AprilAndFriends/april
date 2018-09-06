@@ -658,7 +658,7 @@ namespace april
 		{
 			if (loadMode == Texture::LoadMode::Async || loadMode == Texture::LoadMode::AsyncDeferredUpload)
 			{
-				result = (texture->filename == "" || texture->loadAsync());
+				result = texture->loadAsync();
 			}
 		}
 		if (!result)
@@ -685,10 +685,6 @@ namespace april
 		}
 		Texture* texture = this->_deviceCreateTexture(false);
 		bool result = texture->_create(width, height, data, format);
-		if (result)
-		{
-			texture->loadAsync(); // result should stay true here
-		}
 		if (!result)
 		{
 			delete texture;
@@ -708,10 +704,6 @@ namespace april
 		}
 		Texture* texture = this->_deviceCreateTexture(false);
 		bool result = texture->_create(width, height, color, format);
-		if (result)
-		{
-			texture->loadAsync(); // result should stay true here
-		}
 		if (!result)
 		{
 			delete texture;

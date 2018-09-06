@@ -444,17 +444,13 @@ namespace april
 
 	bool Texture::_loadAsync()
 	{
-		if (this->dataAsync != NULL || this->uploaded)
+		if (this->dataAsync != NULL || this->uploaded || this->filename == "")
 		{
 			return false;
 		}
 		this->_loadMetaData();
 		this->asyncLoadDiscarded = false;
-		if (this->filename == "")
-		{
-			this->_assignFormat();
-		}
-		else if (!this->asyncLoadQueued && this->type != Type::RenderTarget)
+		if (!this->asyncLoadQueued && this->type != Type::RenderTarget)
 		{
 			this->asyncLoadQueued = TextureAsync::queueLoad(this);
 		}
