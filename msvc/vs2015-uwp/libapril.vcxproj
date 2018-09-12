@@ -723,14 +723,6 @@
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\hltypes\msvc\vs2015-uwp\libhltypes.vcxproj">
-      <Project>{e4d373bf-e227-48b9-99e6-84987e8674ec}</Project>
-      <Private>false</Private>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
     <ProjectReference Include="..\..\lib\jpeg\msvc\vs2015-uwp\libjpeg.vcxproj">
       <Project>{019dbd2a-273d-4ba4-bf86-b5efe2ed76b1}</Project>
       <Private>false</Private>
