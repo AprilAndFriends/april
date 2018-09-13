@@ -57,13 +57,15 @@ namespace april
 	static _RegisterTouchWindow _registerTouchWindow = NULL;
 	bool _touchEnabled = true;
 
-	Win32_Window::Win32_Window() : Window()
+	Win32_Window::Win32_Window() :
+		Window()
 	{
 		this->name = april::WindowType::Win32.getName();
 		this->hWnd = NULL;
 		this->width = 0;
 		this->height = 0;
 		this->defaultCursor = LoadCursor(0, IDC_ARROW);
+		this->refreshCursorRequested = false;
 		this->cursorExtensions += ".ani";
 		this->cursorExtensions += ".cur";
 #ifdef _WIN32_XINPUT
@@ -197,19 +199,7 @@ namespace april
 	
 	void Win32_Window::_refreshCursor()
 	{
-		HCURSOR cursor = NULL;
-		if (this->isCursorVisible())
-		{
-			if (this->cursor != NULL)
-			{
-				cursor = ((Win32_Cursor*)this->cursor)->getCursor();
-			}
-			if (cursor == NULL)
-			{
-				cursor = this->defaultCursor;
-			}
-		}
-		SetCursor(cursor);
+		this->refreshCursorRequested = true;
 	}
 
 	void Win32_Window::_updateCursorPosition()
@@ -321,6 +311,24 @@ namespace april
 	
 	void Win32_Window::checkEvents()
 	{
+		// this is called from the main thread so this code is put here
+		if (this->refreshCursorRequested)
+		{
+			HCURSOR cursor = NULL;
+			if (this->isCursorVisible())
+			{
+				if (this->cursor != NULL)
+				{
+					cursor = ((Win32_Cursor*)this->cursor)->getCursor();
+				}
+				if (cursor == NULL)
+				{
+					cursor = this->defaultCursor;
+				}
+			}
+			SetCursor(cursor);
+			this->refreshCursorRequested = false;
+		}
 		MSG message;
 		// limiting to 100 events per frame just to be safe
 		for_iter (i, 0, 100)
