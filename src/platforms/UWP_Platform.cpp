@@ -62,24 +62,15 @@ namespace april
 		}
 #ifdef _UWP_WINDOW
 		// display resolution
-		float dpiRatio = UWP::getDpiRatio();
-		CoreWindow^ window = CoreWindow::GetForCurrentThread();
-		int width = hround(window->Bounds.Width * dpiRatio);
-		int height = hround(window->Bounds.Height * dpiRatio);
+		int width = displayInfo->ScreenWidthInRawPixels;
+		int height = displayInfo->ScreenHeightInRawPixels;
 		// these orientations are not supported in APRIL, but Windows allows them anyway even if the manifest says that they aren't supported
-		if (displayInfo->CurrentOrientation == DisplayOrientations::Portrait ||
-			displayInfo->CurrentOrientation == DisplayOrientations::PortraitFlipped)
+		if (height > width && (displayInfo->CurrentOrientation == DisplayOrientations::Portrait ||
+			displayInfo->CurrentOrientation == DisplayOrientations::PortraitFlipped))
 		{
 			hswap(width, height);
 		}
-		if (info.displayResolution.y == 0)
-		{
-			info.displayResolution.set(width, height);
-		}
-		else
-		{
-			info.displayResolution.x = hmax(width, info.displayResolution.x);
-		}
+		info.displayResolution.set(width, height);
 #endif
 	}
 
