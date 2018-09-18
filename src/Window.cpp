@@ -208,15 +208,16 @@ namespace april
 	{
 	}
 
-	void Window::setInputMode(InputMode value)
+	void Window::setInputMode(const InputMode& value)
 	{
-		if (this->inputModeTranslations.hasKey(value))
+		InputMode finalValue = value;
+		if (this->inputModeTranslations.hasKey(finalValue))
 		{
-			value = this->inputModeTranslations[value];
+			finalValue = this->inputModeTranslations[finalValue];
 		}
-		if (this->inputMode != value)
+		if (this->inputMode != finalValue)
 		{
-			this->inputMode = value;
+			this->inputMode = finalValue;
 			hlog::write(logTag, "Changing Input Mode to: " + this->inputMode.getName());
 			if (this->inputMode == InputMode::Controller)
 			{
@@ -225,7 +226,7 @@ namespace april
 		}
 	}
 
-	void Window::setInputModeTranslations(hmap<InputMode, InputMode> value)
+	void Window::setInputModeTranslations(const hmap<InputMode, InputMode>& value)
 	{
 		this->inputModeTranslations = value;
 		if (this->inputModeTranslations.hasKey(this->inputMode))
@@ -280,7 +281,7 @@ namespace april
 		return grectf(0.0f, 0.0f, this->getSize()).isPointInside(this->getCursorPosition());
 	}
 
-	void Window::setFullscreen(bool value)
+	void Window::setFullscreen(const bool& value)
 	{
 		int width = this->getWidth();
 		int height = this->getHeight();

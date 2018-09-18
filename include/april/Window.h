@@ -119,7 +119,7 @@ namespace april
 		HL_DEFINE_IS(fullscreen, Fullscreen);
 		/// @brief Sets the Window fullscreen display.
 		/// @param[in] value Whether the Window should switch to fullscreen (true) or windowed (false).
-		void setFullscreen(bool value);
+		void setFullscreen(const bool& value);
 		/// @brief Whether the Window is focused.
 		HL_DEFINE_IS(focused, Focused);
 		/// @brief Whether presentFrame() will do proper processing.
@@ -136,12 +136,12 @@ namespace april
 		HL_DEFINE_GET(InputMode, inputMode, InputMode);
 		/// @brief Sets the input mode.
 		/// @param[in] value The new input mode.
-		void setInputMode(InputMode value);
+		void setInputMode(const InputMode& value);
 		/// @brief Gets the input mode translation map.
 		HL_DEFINE_GET2(hmap, InputMode, InputMode, inputModeTranslations, InputModeTranslations);
 		/// @brief Sets the input mode translation map.
 		/// @param[in] value The new input mode translation map.
-		void setInputModeTranslations(hmap<InputMode, InputMode> value);
+		void setInputModeTranslations(const hmap<InputMode, InputMode>& value);
 		/// @brief Gets the Window size.
 		/// @return The Window size.
 		gvec2i getSize() const;
