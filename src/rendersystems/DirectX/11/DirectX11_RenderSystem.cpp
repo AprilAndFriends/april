@@ -197,7 +197,6 @@ namespace april
 
 	bool DirectX11_RenderSystem::_deviceCreate(Options options)
 	{
-		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_deviceCreate()");
 		this->setViewport(grecti(0, 0, april::getSystemInfo().displayResolution));
 		return true;
 	}
@@ -238,7 +237,6 @@ namespace april
 		_HL_TRY_DELETE(this->shaderColoredTexturedLerp);
 		_HL_TRY_DELETE(this->shaderColoredTexturedDesaturate);
 		_HL_TRY_DELETE(this->shaderColoredTexturedSepia);
-		hlog::write(logTag, "april::getSystemInfo() in DirectX11_RenderSystem::_deviceDestroy()");
 		this->setViewport(grecti(0, 0, april::getSystemInfo().displayResolution));
 		return true;
 	}
