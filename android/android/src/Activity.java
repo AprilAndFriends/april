@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import com.april.DialogFactory;
 
+import java.lang.Thread;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -438,6 +439,15 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		});
 		while (this.waiting)
 		{
+			// required Thread.sleep here, otherwise can freeze on some devices for no reason
+			try
+			{
+				Thread.sleep(1);
+			}
+			catch (Exception e)
+			{
+				break;
+			}
 		}
 		// do not change the order of these!
 		NativeInterface.destroy();
