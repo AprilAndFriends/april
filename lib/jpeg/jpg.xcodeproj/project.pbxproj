@@ -842,6 +842,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681B8218D763C50088FC68 /* Mac.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/libjpg.dst;
@@ -856,6 +857,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681B8218D763C50088FC68 /* Mac.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/libjpg.dst;
@@ -870,6 +872,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D1681B8218D763C50088FC68 /* Mac.xcconfig */;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DSTROOT = /tmp/libjpg.dst;
