@@ -221,16 +221,22 @@ namespace april
 	/// @param[in] color The Color object.
 	/// @note If a symbolic Color with the same name already exists, it will be overwritten.
 	aprilFnExport void addSymbolicColor(chstr symbolicName, const april::Color& color);
+	/// @brief Removes new symbolic Color.
+	/// @param[in] symbolicName The name of the Color.
+	/// @return True if symbolic Color existed and was removed.
+	aprilFnExport bool removeSymbolicColor(chstr symbolicName);
 	/// @brief Loads a list of symbolic Color instances from a formatted file.
 	/// @param[in] filename The filename.
+	/// @return The names of all registerd symbolic Color instances.
 	/// @note If a symbolic Color with the same name already exists, it will be overwritten.
 	/// @note The format is "color:name", one entry per line. Lines starting with # are regarded as comments and will be ignored.
-	aprilFnExport void loadSymbolicColorsFromFile(chstr filename);
+	aprilFnExport harray<hstr> loadSymbolicColorsFromFile(chstr filename);
 	/// @brief Loads a list of symbolic Color instances from a formatted resource file.
 	/// @param[in] filename The filename.
+	/// @return The names of all registerd symbolic Color instances.
 	/// @note If a symbolic Color with the same name already exists, it will be overwritten.
 	/// @note The format is "color:name", one entry per line. Lines starting with # are regarded as comments and will be ignored.
-	aprilFnExport void loadSymbolicColorsFromResource(chstr filename);
+	aprilFnExport harray<hstr> loadSymbolicColorsFromResource(chstr filename);
 	/// @brief Finds the Color with the given symbolic name.
 	/// @param[in] symbolicName The name of the Color.
 	/// @param[out] color The output Color object.

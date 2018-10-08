@@ -501,8 +501,14 @@ namespace april
 		symbolicColors[symbolicName] = color;
 	}
 
-	static void _loadSymbolicColors(chstr stream)
+	bool removeSymbolicColor(chstr symbolicName)
 	{
+		return symbolicColors.removeKey(symbolicName);
+	}
+
+	static harray<hstr> _loadSymbolicColors(chstr stream)
+	{
+		harray<hstr> result;
 		harray<hstr> lines = stream.replaced("\r\n", "\n").split('\n', -1, true);
 		harray<hstr> data;
 		foreach (hstr, it, lines)
@@ -513,19 +519,21 @@ namespace april
 				if (data.size() == 2)
 				{
 					symbolicColors[data[1]] = data[0];
+					result += data[1];
 				}
 			}
 		}
+		return result;
 	}
 
-	void loadSymbolicColorsFromFile(chstr filename)
+	harray<hstr> loadSymbolicColorsFromFile(chstr filename)
 	{
-		_loadSymbolicColors(hfile::hread(filename));
+		return _loadSymbolicColors(hfile::hread(filename));
 	}
 	
-	void loadSymbolicColorsFromResource(chstr filename)
+	harray<hstr> loadSymbolicColorsFromResource(chstr filename)
 	{
-		_loadSymbolicColors(hresource::hread(filename));
+		return _loadSymbolicColors(hresource::hread(filename));
 	}
 
 	bool findSymbolicColor(chstr symbolicName, april::Color& color)
