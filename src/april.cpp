@@ -518,6 +518,7 @@ namespace april
 				data = (*it).split(':', 1, true);
 				if (data.size() == 2)
 				{
+					// using inverted logic of XXXXXX:name to make formatting prettier
 					symbolicColors[data[1]] = data[0];
 					result += data[1];
 				}
