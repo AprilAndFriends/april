@@ -220,8 +220,7 @@ public class NativeInterface
 			public void run()
 			{
 				View view = NativeInterface.aprilActivity.getView();
-				NativeInterface._getInputMethodManager().hideSoftInputFromWindow(view.getWindowToken(), 0,
-					NativeInterface.keyboardResultReceiver);
+				NativeInterface._getInputMethodManager().hideSoftInputFromWindow(view.getWindowToken(), 0, NativeInterface.keyboardResultReceiver);
 			}
 		});
 	}
