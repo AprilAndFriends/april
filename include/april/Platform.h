@@ -48,7 +48,7 @@ namespace april
 		float displayDpi;
 		/// @brief scaling factor for retina displays. eg retina macs have 2, iPhone8+ has 3, most have 1
 		float displayScaleFactor;
-		/// @brief Locale code as per ISO 639
+		/// @brief Locale code as per ISO 639-1
 		hstr locale;
 		/// @brief Locale script and region codes as per ISO 15924 (for scripts) and ISO 3166 (for regions).
 		/// @note If available, the "script" (ISO 15924) will always be first and the region (ISO 3166) will always be second. In that case they are separated by a "-" (dash) character.
