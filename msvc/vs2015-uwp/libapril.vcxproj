@@ -529,85 +529,85 @@
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_AlphaMap.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Desaturate.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Lerp.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Multiply.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_Sepia.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedDesaturate.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedLerp.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedMultiply.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\PixelShader_TexturedSepia.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Colored.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_ColoredTextured.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Plain.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\11\default-shaders\VertexShader_Textured.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\11\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX11'))">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
@@ -621,85 +621,85 @@
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_AlphaMap.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Desaturate.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Lerp.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Multiply.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_Sepia.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedAlphaMap.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedDesaturate.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedLerp.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedMultiply.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\PixelShader_TexturedSepia.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Pixel</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Colored.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_ColoredTextured.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Plain.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="..\..\src\rendersystems\DirectX\12\default-shaders\VertexShader_Textured.hlsl">
       <AdditionalIncludeDirectories>..\..\src\rendersystems\DirectX\12\default-shaders;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShaderType>Vertex</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
+      <ShaderModel>4.0</ShaderModel>
       <ExcludedFromBuild Condition="!$(Configuration.EndsWith('_DirectX12'))">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
