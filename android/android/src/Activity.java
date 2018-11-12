@@ -72,6 +72,7 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	public List<ICallback1<Void, Intent>> callbacksOnNewIntent = null;
 	public List<ICallback<Boolean>> callbacksOnBackPressed = null;
 	public List<ICallback1<Void, Configuration>> callbacksOnConfigurationChanged = null;
+	public List<ICallback3<Boolean, Integer, String[], Integer[]>> callbacksOnRequestPermissionsResult = null;
 	
 	public Activity()
 	{
@@ -95,6 +96,7 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		this.callbacksOnNewIntent = new ArrayList<ICallback1<Void, Intent>>();
 		this.callbacksOnBackPressed = new ArrayList<ICallback<Boolean>>();
 		this.callbacksOnConfigurationChanged = new ArrayList<ICallback1<Void, Configuration>>();
+		this.callbacksOnRequestPermissionsResult = new ArrayList<ICallback3<Boolean, Integer, String[], Integer[]>>();
 	}
 	
 	public void registerOnCreate(ICallback1<Void, Bundle> callback)
@@ -150,6 +152,11 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	public void registerOnConfigurationChanged(ICallback1<Void, Configuration> callback)
 	{
 		this.callbacksOnConfigurationChanged.add(callback);
+	}
+	
+	public void registerOnRequestPermissionsResult(ICallback3<Boolean, Integer, String[], Integer[]> callback)
+	{
+		this.callbacksOnRequestPermissionsResult.add(callback);
 	}
 	
 	public View getView()
@@ -535,6 +542,24 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		}
 	}
 	
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+	{
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		Integer[] boxedGrantResults = new Integer[grantResults.length];
+		for (int i = 0; i < grantResults.length; ++i)
+		{
+			boxedGrantResults[i] = Integer.valueOf(grantResults[i]);
+		}
+		for (int i = 0; i < this.callbacksOnRequestPermissionsResult.size(); ++i)
+		{
+			if (this.callbacksOnRequestPermissionsResult.get(i).execute(requestCode, permissions, boxedGrantResults))
+			{
+				return;
+			}
+		}
+	}
+
 	@Override
 	public void onLowMemory()
 	{

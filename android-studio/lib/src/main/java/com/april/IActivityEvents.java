@@ -19,5 +19,6 @@ public interface IActivityEvents
 	public void registerOnNewIntent(ICallback1<Void, Intent> callback);
 	public void registerOnBackPressed(ICallback<Boolean> ICallback);
 	public void registerOnConfigurationChanged(ICallback1<Void, Configuration> callback);
+	public void registerOnRequestPermissionsResult(ICallback3<Boolean, Integer, String[], Integer[]> callback);
 	
 }
