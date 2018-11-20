@@ -48,7 +48,12 @@ namespace april
 	
 	grecti _getNotchedRect_platform(bool landscape)
 	{
-		return grecti(0, 0, info.displayResolution);
+		gvec2i size = info.displayResolution;
+		if (!landscape)
+		{
+			hswap(size.x, size.y);
+		}
+		return grecti(0, 0, size);
 	}
 
 	bool _openUrl_platform(chstr url)

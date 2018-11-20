@@ -165,6 +165,10 @@ namespace april
 			size.y -= notchMargin * 2;
 			return grecti(0, notchMargin, size);
 		}
+		if (!landscape)
+		{
+			hswap(size.x, size.y);
+		}
 		return grecti(0, 0, size);
 	}
 
