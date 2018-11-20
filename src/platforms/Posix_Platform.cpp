@@ -46,6 +46,11 @@ namespace april
 		return 0LL;
 	}
 	
+	grecti _getNotchedRect_platform(bool landscape)
+	{
+		return grecti(0, 0, info.displayResolution);
+	}
+
 	bool _openUrl_platform(chstr url)
 	{
 		hlog::warn(logTag, "Cannot use openUrl() on this platform.");

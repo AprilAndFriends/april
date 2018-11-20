@@ -36,6 +36,8 @@
 
 namespace april
 {
+	extern SystemInfo info;
+	
 	static hversion _getMaxOsVersion()
 	{
 #ifdef _DEBUG
@@ -176,6 +178,11 @@ namespace april
 		return 0LL;
 	}	
 	
+	grecti _getNotchedRect_platform(bool landscape)
+	{
+		return grecti(0, 0, info.displayResolution);
+	}
+
 	bool _openUrl_platform(chstr url)
 	{
 		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]]];

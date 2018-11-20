@@ -31,6 +31,8 @@
 
 namespace april
 {
+	extern SystemInfo info;
+
 	static hstr _getWindowsName()
 	{
 		OSVERSIONINFOEX osVersionInfo;
@@ -134,6 +136,11 @@ namespace april
 		return result;
 	}
 	
+	grecti _getNotchedRect_platform(bool landscape)
+	{
+		return grecti(0, 0, info.displayResolution);
+	}
+
 	bool _openUrl_platform(chstr url)
 	{
 		ShellExecuteW(NULL, L"open", url.wStr().c_str(), NULL, NULL, SW_SHOWNORMAL);
