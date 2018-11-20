@@ -354,7 +354,8 @@ namespace april
 	/// @param[in] vector The gtypes::Vector2 to convert.
 	/// @return A string.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport inline hstr gvec2fToHstr(cgvec2f vector)
+	template <typename T>
+	inline hstr gvec2ToHstr(const gvec2<T>& vector)
 	{
 		return hsprintf("%s%c%s", hstr(vector.x).cStr(), APRIL_HSTR_SEPARATOR, hstr(vector.y).cStr());
 	}
@@ -362,7 +363,8 @@ namespace april
 	/// @param[in] vector The gtypes::Vector3 to convert.
 	/// @return A string.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport inline hstr gvec3fToHstr(cgvec3f vector)
+	template <typename T>
+	inline hstr gvec3ToHstr(const gvec3<T>& vector)
 	{
 		return hsprintf("%s%c%s%c%s", hstr(vector.x).cStr(), APRIL_HSTR_SEPARATOR, hstr(vector.y).cStr(), APRIL_HSTR_SEPARATOR, hstr(vector.z).cStr());
 	}
@@ -370,7 +372,8 @@ namespace april
 	/// @param[in] rect The gtypes::Rectangle to convert.
 	/// @return A string.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport inline hstr grectfToHstr(cgrectf rect)
+	template <typename T>
+	inline hstr grectToHstr(const grect<T>& rect)
 	{
 		return hsprintf("%s%c%s%c%s%c%s", hstr(rect.x).cStr(), APRIL_HSTR_SEPARATOR, hstr(rect.y).cStr(), APRIL_HSTR_SEPARATOR, hstr(rect.w).cStr(), APRIL_HSTR_SEPARATOR, hstr(rect.h).cStr());
 	}
@@ -378,41 +381,59 @@ namespace april
 	/// @param[in] string The string to use for conversion.
 	/// @return A gtypes::Vector2.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport inline gvec2f hstrToGvec2f(chstr string)
+	template <typename T>
+	inline gvec2<T> hstrToGvec2(chstr string)
 	{
 		harray<hstr> data = string.split(APRIL_HSTR_SEPARATOR);
 		if (data.size() != 2)
 		{
 			throw Exception("Cannot convert string '" + string + "' to gtypes::Vector2.");
 		}
-		return gvec2f(data[0].trimmed(), data[1].trimmed());
+		return gvec2<T>(data[0].trimmed(), data[1].trimmed());
 	}
 	/// @brief Creates gtypes::Vector3 from a string representation.
 	/// @param[in] string The string to use for conversion.
 	/// @return A gtypes::Vector3.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport inline gvec3f hstrToGvec3f(chstr string)
+	template <typename T>
+	inline gvec3<T> hstrToGvec3(chstr string)
 	{
 		harray<hstr> data = string.split(APRIL_HSTR_SEPARATOR);
 		if (data.size() != 3)
 		{
 			throw Exception("Cannot convert string '" + string + "' to gtypes::Vector3.");
 		}
-		return gvec3f(data[0].trimmed(), data[1].trimmed(), data[2].trimmed());
+		return gvec3<T>(data[0].trimmed(), data[1].trimmed(), data[2].trimmed());
 	}
 	/// @brief Creates gtypes::Rectangle from a string representation.
 	/// @param[in] string The string to use for conversion.
 	/// @return A gtypes::Rectangle.
 	/// @note The proper format is: integers or floats separated by ',' (comma) characters
-	aprilFnExport inline grectf hstrToGrectf(chstr string)
+	template <typename T>
+	inline grect<T> hstrToGrect(chstr string)
 	{
 		harray<hstr> data = string.split(APRIL_HSTR_SEPARATOR);
 		if (data.size() != 4)
 		{
 			throw Exception("Cannot convert string '" + string + "' to gtypes::Rectangle.");
 		}
-		return grectf(data[0].trimmed(), data[1].trimmed(), data[2].trimmed(), data[3].trimmed());
+		return grect<T>(data[0].trimmed(), data[1].trimmed(), data[2].trimmed(), data[3].trimmed());
 	}
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+	HL_DEPRECATED("Deprecated API. Use april::gvec2ToHstr() instead." )
+	aprilFnExport inline hstr gvec2fToHstr(cgvec2f vector) { return gvec2ToHstr<float>(vector); }
+	HL_DEPRECATED("Deprecated API. Use april::gvec3ToHstr() instead.")
+	aprilFnExport inline hstr gvec3fToHstr(cgvec3f vector) { return gvec3ToHstr<float>(vector); }
+	HL_DEPRECATED("Deprecated API. Use april::grectToHstr() instead.")
+	aprilFnExport inline hstr grectfToHstr(cgrectf rect) { return grectToHstr<float>(rect); }
+	HL_DEPRECATED("Deprecated API. Use april::hstrToGvec2() instead.")
+	aprilFnExport inline gvec2f hstrToGvec2f(chstr string) { return hstrToGvec2<float>(string); }
+	HL_DEPRECATED("Deprecated API. Use april::hstrToGvec3() instead.")
+	aprilFnExport inline gvec3f hstrToGvec3f(chstr string) { return hstrToGvec3<float>(string); }
+	HL_DEPRECATED("Deprecated API. Use april::hstrToGrect() instead.")
+	aprilFnExport inline grectf hstrToGrectf(chstr string) { return hstrToGrect<float>(string); }
+#endif
 
 }
 #endif
