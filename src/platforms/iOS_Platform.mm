@@ -148,6 +148,26 @@ namespace april
 		return 0LL;
 	}	
 	
+	grecti _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
+	{
+		if (info.startsWidth("iPhone X"))
+		{
+			int notchMargin = 132; // Apple's 44pt @3x
+			if (landscape)
+			{
+				int homeButtonMargin = 69; // Apple's 23pt @3x
+				topLeft.set(notchMargin, 0);
+				bottomRight.set(notchMargin, homeButtonMargin);
+				return;
+			}
+			topLeft.set(0, notchMargin);
+			bottomRight.set(0, notchMargin);
+			return;
+		}
+		topLeft.set(0, 0);
+		bottomRight.set(0, 0);
+	}
+	
 	grecti _getNotchedRect_platform(bool landscape)
 	{
 		gvec2i size = info.displayResolution;

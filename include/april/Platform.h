@@ -170,10 +170,11 @@ namespace april
 	/// @return Current process' RAM consumption.
 	/// @note This is the RAM consumed by the entire process.
 	aprilFnExport int64_t getRamConsumption();
-	/// @brief Gets rect defined by notches on screen.
+	/// @brief Gets offsets defined by notches on screen.
+	/// @param[out] topLeft The offset from the topLeft part of the screen.
+	/// @param[out] bottomRight The offset from the bottomRight part of the screen.
 	/// @param[in] landscape Whether landscape or portrait rect should be calculated. Depending on the device, different results may be presented.
-	/// @return Rect defined by notches on screen.
-	aprilFnExport grecti getNotchedRect(bool landscape = true);
+	aprilFnExport void getNotchOffsets(gvec2i& topLeft, gvec2i& bottomRight, bool landscape = true);
 	/// @brief Opens a URL.
 	/// @param[in] url The URL to open.
 	/// @return True if the system call was successful.

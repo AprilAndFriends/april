@@ -79,7 +79,7 @@ namespace april
 	extern hstr _getPackageName_platform();
 	extern hstr _getUserDataPath_platform();
 	extern int64_t _getRamConsumption_platform();
-	extern grecti _getNotchedRect_platform(bool landscape = true);
+	extern void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape = true);
 	extern bool _openUrl_platform(chstr url);
 	extern void _showMessageBox_platform(const MessageBoxData&);
 
@@ -87,7 +87,7 @@ namespace april
 	hstr (*_getPackageName)() = &_getPackageName_platform;
 	hstr (*_getUserDataPath)() = &_getUserDataPath_platform;
 	int64_t (*_getRamConsumption)() = &_getRamConsumption_platform;
-	grecti (*_getNotchedRect)(bool) = &_getNotchedRect_platform;
+	void (*_getNotchOffsets)(gvec2i&, gvec2i&, bool) = &_getNotchOffsets_platform;
 	bool (*_openUrl)(chstr) = &_openUrl_platform;
 	void (*_showMessageBox)(const MessageBoxData&) = &_showMessageBox_platform;
 
@@ -187,18 +187,15 @@ namespace april
 		return 0LL;
 	}
 
-	grecti getNotchedRect(bool landscape)
+	void getNotchOffsets(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
 	{
-		if (_getNotchedRect != NULL)
+		if (_getNotchOffsets != NULL)
 		{
-			return (*_getNotchedRect)(landscape);
+			(*_getNotchOffsets)(topLeft, bottomRight, landscape);
+			return;
 		}
-		gvec2i size = info.displayResolution;
-		if (!landscape)
-		{
-			hswap(size.x, size.y);
-		}
-		return grecti(0, 0, size);
+		topLeft.set(0, 0);
+		bottomRight.set(0, 0);
 	}
 
 	bool openUrl(chstr url)

@@ -136,14 +136,10 @@ namespace april
 		return result;
 	}
 	
-	grecti _getNotchedRect_platform(bool landscape)
+	void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
 	{
-		gvec2i size = info.displayResolution;
-		if (!landscape)
-		{
-			hswap(size.x, size.y);
-		}
-		return grecti(0, 0, size);
+		topLeft.set(0, 0);
+		bottomRight.set(0, 0);
 	}
 
 	bool _openUrl_platform(chstr url)
