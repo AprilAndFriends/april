@@ -41,15 +41,10 @@ namespace april
 	{
 		DisplayInformation^ displayInfo = DisplayInformation::GetForCurrentView();
 		// display DPI
-		info.displayDpi = displayInfo->RawDpiY;
+		info.displayDpi = displayInfo->LogicalDpi;
 		if (info.displayDpi < 0.01f)
 		{
 			static bool displayDpiLogged = false;
-			if (!displayDpiLogged)
-			{
-				hlog::warn(logTag, "Cannot get raw display DPI, trying logical DPI.");
-			}
-			info.displayDpi = displayInfo->LogicalDpi;
 			if (info.displayDpi < 0.01f)
 			{
 				if (!displayDpiLogged)
