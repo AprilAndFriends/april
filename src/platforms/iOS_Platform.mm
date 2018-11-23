@@ -148,9 +148,9 @@ namespace april
 		return 0LL;
 	}	
 	
-	grecti _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
+	void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
 	{
-		if (info.startsWidth("iPhone X"))
+		if (info.name.startsWith("iPhone X"))
 		{
 			int notchMargin = 132; // Apple's 44pt @3x
 			if (landscape)
@@ -166,30 +166,6 @@ namespace april
 		}
 		topLeft.set(0, 0);
 		bottomRight.set(0, 0);
-	}
-	
-	grecti _getNotchedRect_platform(bool landscape)
-	{
-		gvec2i size = info.displayResolution;
-		if (info.startsWidth("iPhone X"))
-		{
-			int notchMargin = 132; // Apple's 44pt @3x
-			if (landscape)
-			{
-				int homeButtonMargin = 69; // Apple's 23pt @3x
-				size.x -= notchMargin * 2;
-				size.y -= homeButtonMargin;
-				return grecti(notchMargin, 0, size);
-			}
-			hswap(size.x, size.y);
-			size.y -= notchMargin * 2;
-			return grecti(0, notchMargin, size);
-		}
-		if (!landscape)
-		{
-			hswap(size.x, size.y);
-		}
-		return grecti(0, 0, size);
 	}
 
 	bool _openUrl_platform(chstr url)
