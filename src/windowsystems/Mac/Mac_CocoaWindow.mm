@@ -38,6 +38,11 @@ namespace april
 
 @implementation AprilCocoaWindow
 
+- (BOOL)acceptsFirstResponder
+{
+	return YES;
+}
+
 - (void) timerEvent:(NSTimer*) t
 {
 	static int runningState = 0;
@@ -179,7 +184,7 @@ namespace april
 {
 	MAC_WINDOW->setFullscreenFlag(true);
 	NSRect prevFrame = [self frame];
-	[self setStyleMask:NSBorderlessWindowMask];
+//	[self setStyleMask:NSBorderlessWindowMask];
 	[self setFrame: [[NSScreen mainScreen] frame] display:YES];
 	if (isPreLion()) // 10.7+ is set in willUseFullScreenPresentationOptions
 	{
@@ -522,11 +527,6 @@ NSString* translateInputForKeyDown(NSEvent* event)
 }
 
 - (BOOL) canBecomeKeyWindow
-{
-	return YES;
-}
-
-- (BOOL) acceptsFirstResponder
 {
 	return YES;
 }
