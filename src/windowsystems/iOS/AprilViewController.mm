@@ -259,6 +259,23 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 	mImageView.layer.zPosition = 1;
 }
 
+// it's a nice idea, but the status color doesn't automatically adapt without hacking in some weird additional view
+/*
+-(BOOL)prefersStatusBarHidden
+{
+	// turn on status bar on iOS 11+ and iPhone X*
+	if ([[[UIDevice currentDevice] systemVersion] compare:@"11.0" options:NSNumericSearch] == NSOrderedDescending)// && [uiwnd respondsToSelector: @selector(safeAreaInsets)])
+	{
+		UIEdgeInsets insets = [[[UIApplication sharedApplication] window] safeAreaInsets];
+		if (insets.left != 0.0f || insets.right != 0.0f || insets.top != 0.0f || insets.bottom != 0.0f)
+		{
+			return NO;
+		}
+	}
+	return [super prefersStatusBarHidden];
+}
+ */
+
 -(void)animationWillStart:(NSString*)animationID context:(void*)context
 {
 }
