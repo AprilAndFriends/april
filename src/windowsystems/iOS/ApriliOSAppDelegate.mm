@@ -84,14 +84,7 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 	uiwnd.autoresizesSubviews = YES;
 	// viewcontroller will automatically add imageview
 	viewController = [[AprilViewController alloc] init];
-	if ([uiwnd respondsToSelector: @selector(rootViewController)])
-	{
-		uiwnd.rootViewController = viewController; // only available on iOS4+, required on iOS6+
-	}
-	else
-	{
-		[uiwnd addSubview:viewController.view];
-	}
+	uiwnd.rootViewController = viewController;
 	// set window color
 	[uiwnd setBackgroundColor:[UIColor blackColor]];
 	april::Window::handleLaunchCallback(viewController);
@@ -126,7 +119,7 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 		return;
 	}
 	april::window->queueFocusChange(false);
-	for (EAGLView *glview in [viewController.view subviews])
+	for (EAGLView* glview in [viewController.view subviews])
 	{
 		if ([glview isKindOfClass:[EAGLView class]]) 
 		{
@@ -143,7 +136,7 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 	return gSupportedOrientations;
 }
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+- (BOOL)application:(UIApplication*)application openURL:(NSURL*)url sourceApplication:(NSString*)sourceApplication annotation:(id)annotation
 {
 	NSString* str = [url absoluteString];
 	hstr urlstr = [str UTF8String], srcAppStr = [sourceApplication UTF8String];
