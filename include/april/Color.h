@@ -121,6 +121,7 @@ namespace april
 		/// @note Can be RRGGBB or RRGGBBAA. The 0x prefix is optional.
 		inline void set(chstr hex)
 		{
+			// not using Color::isColor(), because of performance reasons
 			hstr value = (hex.startsWith("0x") ? hex(2, -1) : hex);
 			int size = value.size();
 			if ((size != 6 && size != 8) || !value.isHex())
@@ -130,7 +131,7 @@ namespace april
 			this->r = (unsigned char)value(0, 2).unhex();
 			this->g = (unsigned char)value(2, 2).unhex();
 			this->b = (unsigned char)value(4, 2).unhex();
-			this->a = (value.size() == 8 ? (unsigned char)value(6, 2).unhex() : 255);
+			this->a = (size == 8 ? (unsigned char)value(6, 2).unhex() : 255);
 		}
 		/// @brief Sets the Color's values.
 		/// @param[in] hex The hex values of the color.
@@ -322,6 +323,16 @@ namespace april
 			this->b = (unsigned char)hclamp((int)(this->b * val), 0, 255);
 			this->a = (unsigned char)hclamp((int)(this->a * val), 0, 255);
 			return (*this);
+		}
+
+		/// @brief Checks if string is valid color value.
+		/// @param[in] hex The string to check.
+		/// @return True if string is valid color value.
+		inline static bool isColor(chstr hex)
+		{
+			hstr value = (hex.startsWith("0x") ? hex(2, -1) : hex);
+			int size = value.size();
+			return ((size == 6 || size == 8) && value.isHex());
 		}
 
 		/// @brief Provides a commonly used white Color.
