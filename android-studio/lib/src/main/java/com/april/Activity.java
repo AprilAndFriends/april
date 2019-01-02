@@ -545,7 +545,6 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
 	{
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		Integer[] boxedGrantResults = new Integer[grantResults.length];
 		for (int i = 0; i < grantResults.length; ++i)
 		{
