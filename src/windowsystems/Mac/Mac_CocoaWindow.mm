@@ -296,7 +296,10 @@ namespace april
 - (void) mouseDown:(NSEvent*) event
 {
 	gvec2f position = [self transformCocoaPoint:[event locationInWindow]];
-	april::window->queueMouseInput(april::MouseEvent::Type::Down, position * MAC_WINDOW->scalingFactor, [self getMouseButtonCode:event]);
+	if (april::window != NULL)
+	{
+		april::window->queueMouseInput(april::MouseEvent::Type::Down, position * MAC_WINDOW->scalingFactor, [self getMouseButtonCode:event]);
+	}
 }
 
 - (void) rightMouseDown:(NSEvent*) event
@@ -312,7 +315,10 @@ namespace april
 - (void) mouseUp:(NSEvent*) event
 {
 	gvec2f position = [self transformCocoaPoint:[event locationInWindow]];
-	april::window->queueMouseInput(april::MouseEvent::Type::Up, position * MAC_WINDOW->scalingFactor, [self getMouseButtonCode:event]);
+	if (april::window != NULL)
+	{
+		april::window->queueMouseInput(april::MouseEvent::Type::Up, position * MAC_WINDOW->scalingFactor, [self getMouseButtonCode:event]);
+	}
 }
 
 - (void) rightMouseUp:(NSEvent*) event
@@ -328,6 +334,10 @@ namespace april
 - (void) mouseMoved:(NSEvent*) event
 {
 	gvec2f position = [self transformCocoaPoint:[event locationInWindow]];
+	if (april::window == NULL)
+	{
+		return;
+	}
 	april::window->queueMouseInput(april::MouseEvent::Type::Move, position * MAC_WINDOW->scalingFactor, april::Key::None);
 	// Hack for Lion fullscreen bug, when the user moves the cursor quickly to and from the dock area,
 	// the cursor gets reset to the default arrow, this hack counters that.
