@@ -31,6 +31,8 @@
 
 namespace april
 {
+	extern SystemInfo info;
+
 	static hstr _getWindowsName()
 	{
 		OSVERSIONINFOEX osVersionInfo;
@@ -134,6 +136,12 @@ namespace april
 		return result;
 	}
 	
+	void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
+	{
+		topLeft.set(0, 0);
+		bottomRight.set(0, 0);
+	}
+
 	bool _openUrl_platform(chstr url)
 	{
 		ShellExecuteW(NULL, L"open", url.wStr().c_str(), NULL, NULL, SW_SHOWNORMAL);

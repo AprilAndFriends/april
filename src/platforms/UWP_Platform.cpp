@@ -41,15 +41,10 @@ namespace april
 	{
 		DisplayInformation^ displayInfo = DisplayInformation::GetForCurrentView();
 		// display DPI
-		info.displayDpi = displayInfo->RawDpiY;
+		info.displayDpi = displayInfo->LogicalDpi;
 		if (info.displayDpi < 0.01f)
 		{
 			static bool displayDpiLogged = false;
-			if (!displayDpiLogged)
-			{
-				hlog::warn(logTag, "Cannot get raw display DPI, trying logical DPI.");
-			}
-			info.displayDpi = displayInfo->LogicalDpi;
 			if (info.displayDpi < 0.01f)
 			{
 				if (!displayDpiLogged)
@@ -149,6 +144,12 @@ namespace april
 		return 0LL;
 	}	
 	
+	void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
+	{
+		topLeft.set(0, 0);
+		bottomRight.set(0, 0);
+	}
+
 	bool _openUrl_platform(chstr url)
 	{
 		hlog::write(logTag, "Opening URL: " + url);

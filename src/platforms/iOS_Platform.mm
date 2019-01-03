@@ -32,6 +32,8 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 
 namespace april
 {
+	extern SystemInfo info;
+	
 	void _setupSystemInfo_platform(SystemInfo& info)
 	{
 		if (info.locale == "")
@@ -146,6 +148,26 @@ namespace april
 		return 0LL;
 	}	
 	
+	void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
+	{
+		if (info.name.startsWith("iPhone X"))
+		{
+			int notchMargin = 132; // Apple's 44pt @3x
+			if (landscape)
+			{
+				int homeButtonMargin = 69; // Apple's 23pt @3x
+				topLeft.set(notchMargin, 0);
+				bottomRight.set(notchMargin, homeButtonMargin);
+				return;
+			}
+			topLeft.set(0, notchMargin);
+			bottomRight.set(0, notchMargin);
+			return;
+		}
+		topLeft.set(0, 0);
+		bottomRight.set(0, 0);
+	}
+
 	bool _openUrl_platform(chstr url)
 	{
 		if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]]])

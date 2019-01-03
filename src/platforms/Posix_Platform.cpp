@@ -46,6 +46,12 @@ namespace april
 		return 0LL;
 	}
 	
+	void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
+	{
+		topLeft.set(0, 0);
+		bottomRight.set(0, 0);
+	}
+
 	bool _openUrl_platform(chstr url)
 	{
 		hlog::warn(logTag, "Cannot use openUrl() on this platform.");

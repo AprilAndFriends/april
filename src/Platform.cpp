@@ -79,6 +79,7 @@ namespace april
 	extern hstr _getPackageName_platform();
 	extern hstr _getUserDataPath_platform();
 	extern int64_t _getRamConsumption_platform();
+	extern void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape = true);
 	extern bool _openUrl_platform(chstr url);
 	extern void _showMessageBox_platform(const MessageBoxData&);
 
@@ -86,6 +87,7 @@ namespace april
 	hstr (*_getPackageName)() = &_getPackageName_platform;
 	hstr (*_getUserDataPath)() = &_getUserDataPath_platform;
 	int64_t (*_getRamConsumption)() = &_getRamConsumption_platform;
+	void (*_getNotchOffsets)(gvec2i&, gvec2i&, bool) = &_getNotchOffsets_platform;
 	bool (*_openUrl)(chstr) = &_openUrl_platform;
 	void (*_showMessageBox)(const MessageBoxData&) = &_showMessageBox_platform;
 
@@ -115,9 +117,27 @@ namespace april
 		this->locale = "";
 	}
 	
-	SystemInfo::~SystemInfo()
+	/*
+	grecti SystemInfo::getNotchedRect(bool landscape) const
 	{
+		if (this->name == "iPhone X")
+		{
+			gvec2i size = this->displayResolution;
+			int notchMargin = 132; // Apple's 44pt @3x
+			if (landscape)
+			{
+				int homeButtonMargin = 69; // Apple's 23pt @3x
+				size.x -= notchMargin * 2;
+				size.y -= homeButtonMargin;
+				return grecti(notchMargin, 0, size);
+			}
+			hswap(size.x, size.y);
+			size.y -= notchMargin * 2;
+			return grecti(0, notchMargin, size);
+		}
+		return grecti(0, 0, this->displayResolution);
 	}
+	*/
 
 	harray<hstr> getArgs()
 	{
@@ -165,6 +185,17 @@ namespace april
 		}
 		hlog::warn(logTag, "Cannot use getRamConsumption() on this platform.");
 		return 0LL;
+	}
+
+	void getNotchOffsets(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
+	{
+		if (_getNotchOffsets != NULL)
+		{
+			(*_getNotchOffsets)(topLeft, bottomRight, landscape);
+			return;
+		}
+		topLeft.set(0, 0);
+		bottomRight.set(0, 0);
 	}
 
 	bool openUrl(chstr url)

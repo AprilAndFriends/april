@@ -23,6 +23,7 @@
 
 namespace april
 {
+	extern SystemInfo info;
 	extern void (*dialogCallback)(const MessageBoxButton&);
 	
 	void _setupSystemInfo_platform(SystemInfo& info)
@@ -99,6 +100,12 @@ namespace april
 		return result;
 	}
 	
+	void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
+	{
+		topLeft.set(0, 0);
+		bottomRight.set(0, 0);
+	}
+
 	bool _openUrl_platform(chstr url)
 	{
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodOpenUrl, "openUrl", _JARGS(_JVOID, _JSTR));

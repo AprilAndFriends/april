@@ -36,6 +36,8 @@
 
 namespace april
 {
+	extern SystemInfo info;
+	
 	static hversion _getMaxOsVersion()
 	{
 #ifdef _DEBUG
@@ -176,6 +178,12 @@ namespace april
 		return 0LL;
 	}	
 	
+	void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
+	{
+		topLeft.set(0, 0);
+		bottomRight.set(0, 0);
+	}
+
 	bool _openUrl_platform(chstr url)
 	{
 		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]]];

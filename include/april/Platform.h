@@ -13,6 +13,7 @@
 #ifndef APRIL_PLATFORM_H
 #define APRIL_PLATFORM_H
 
+#include <gtypes/Rectangle.h>
 #include <gtypes/Vector2.h>
 #include <hltypes/harray.h>
 #include <hltypes/henum.h>
@@ -46,7 +47,7 @@ namespace april
 		gvec2i displayResolution;
 		/// @brief Current screen DPI.
 		float displayDpi;
-		/// @brief scaling factor for retina displays. eg retina macs have 2, iPhone8+ has 3, most have 1
+		/// @brief Scaling factor for retina displays. eg retina macs have 2, iPhone8+ has 3, most have 1
 		float displayScaleFactor;
 		/// @brief Locale code as per ISO 639-1
 		hstr locale;
@@ -56,8 +57,6 @@ namespace april
 
 		/// @note Basic constructor.
 		SystemInfo();
-		/// @note Destructor.
-		~SystemInfo();
 		
 	};
 	
@@ -171,6 +170,11 @@ namespace april
 	/// @return Current process' RAM consumption.
 	/// @note This is the RAM consumed by the entire process.
 	aprilFnExport int64_t getRamConsumption();
+	/// @brief Gets offsets defined by notches on screen.
+	/// @param[out] topLeft The offset from the topLeft part of the screen.
+	/// @param[out] bottomRight The offset from the bottomRight part of the screen.
+	/// @param[in] landscape Whether landscape or portrait rect should be calculated. Depending on the device, different results may be presented.
+	aprilFnExport void getNotchOffsets(gvec2i& topLeft, gvec2i& bottomRight, bool landscape = true);
 	/// @brief Opens a URL.
 	/// @param[in] url The URL to open.
 	/// @return True if the system call was successful.

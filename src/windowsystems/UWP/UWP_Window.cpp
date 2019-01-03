@@ -61,8 +61,9 @@ namespace april
 		view->PreferredLaunchViewSize = Size((float)width, (float)height);
 		Window::_systemCreate(width, height, fullscreen, title, options);
 		Rect rect = CoreWindow::GetForCurrentThread()->Bounds;
-		this->width = (int)rect.Width;
-		this->height = (int)rect.Height;
+		float dpiRatio = UWP::getDpiRatio();
+		this->width = (int)(rect.Width * dpiRatio);
+		this->height = (int)(rect.Height * dpiRatio);
 		this->backButtonSystemHandling = false;
 		this->cursorMappings.clear();
 		this->inputMode = InputMode::Touch;

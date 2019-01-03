@@ -18,13 +18,13 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 	
 	if (name.startsWith("iPad"))
 	{
-		if (name.startsWith("iPad1"))
+		if (name.startsWith("iPad1,"))
 		{
 			info.name = "iPad 1";
 			info.ram = 256;
 			info.displayDpi = 132;
 		}
-		else if (name.startsWith("iPad2"))
+		else if (name.startsWith("iPad2,"))
 		{
 			info.name = "iPad 2";
 			info.ram = 512;
@@ -39,7 +39,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 				info.displayDpi = 132;
 			}
 		}
-		else if (name.startsWith("iPad3"))
+		else if (name.startsWith("iPad3,"))
 		{
 			if (name == "iPad3,4" || name == "iPad3,5" || name == "iPad3,6") // iPad4
 			{
@@ -53,7 +53,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.cpuCores = 2;
 			info.displayDpi = 264;
 		}
-		else if (name.startsWith("iPad4"))
+		else if (name.startsWith("iPad4,"))
 		{
 			info.ram = 1024;
 			info.cpuCores = 2;
@@ -73,7 +73,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 				info.displayDpi = 264;
 			}
 		}
-		else if (name.startsWith("iPad5"))
+		else if (name.startsWith("iPad5,"))
 		{
 			info.ram = 2048;
 			if (name == "iPad5,1" || name == "iPad5,2") // iPad Mini 4
@@ -89,25 +89,50 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 				info.displayDpi = 264;
 			}
 		}
-		else if (name.startsWith("iPad6"))
+		else if (name.startsWith("iPad6,"))
 		{
 			info.name = "iPad Pro";
 			info.cpuCores = 2;
 			info.displayDpi = 264;
-			if (name == "iPad6,7" || name == "iPad6,8") // 12.9"
+			info.ram = 4096;
+			if (name == "iPad6,11" || name == "iPad6,12") // 9.7"
+			{
+				info.name = "iPad 5";
+				info.ram = 2048;
+			}
+		}
+		else if (name.startsWith("iPad7,"))
+		{
+			info.name = "iPad Pro";
+			info.cpuCores = 6;
+			info.ram = 4096;
+			info.displayDpi = 264;
+			if (name == "iPad7,5" || name == "iPad7,6") // 9.7"
+			{
+				info.name = "iPad 6";
+				info.cpuCores = 4;
+				info.ram = 2048;
+			}
+		}
+		else if (name.startsWith("iPad8,"))
+		{
+			info.name = "iPad Pro";
+			info.cpuCores = 8;
+			info.displayDpi = 264;
+			if (name == "iPad8,1" || name == "iPad8,2" || name == "iPad8,3" || name == "iPad8,4") // 12.9"
+			{
+				info.ram = 6144;
+			}
+			else // 11"
 			{
 				info.ram = 4096;
-			}
-			else // 9.7"
-			{
-				info.ram = 2048;
 			}
 		}
 		else
 		{
-			info.name = "iPad?";
-			info.ram = 1024;
-			info.cpuCores = 2;
+			info.name = "iPad ???";
+			info.ram = 4096;
+			info.cpuCores = 4;
 			info.displayDpi = 264;
 		}
 	}
@@ -131,20 +156,20 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			info.ram = 256;
 			info.displayDpi = 163;
 		}
-		else if (name.startsWith("iPhone3"))
+		else if (name.startsWith("iPhone3,"))
 		{
 			info.name = "iPhone 4";
 			info.ram = 512;
 			info.displayDpi = 326;
 		}
-		else if (name.startsWith("iPhone4"))
+		else if (name.startsWith("iPhone4,"))
 		{
 			info.name = "iPhone 4S";
 			info.cpuCores = 2;
 			info.ram = 512;
 			info.displayDpi = 326;
 		}
-		else if (name.startsWith("iPhone5"))
+		else if (name.startsWith("iPhone5,"))
 		{
 			info.cpuCores = 2;
 			info.ram = 1024;
@@ -158,83 +183,83 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 				info.name = "iPhone 5C";
 			}
 		}
-		else if (name.startsWith("iPhone6"))
+		else if (name.startsWith("iPhone6,"))
 		{
 			info.name = "iPhone 5S";
 			info.cpuCores = 2;
 			info.ram = 1024;
 			info.displayDpi = 326;
 		}
-		else if (name.startsWith("iPhone7,1"))
+		else if (name.startsWith("iPhone7,"))
 		{
-			// iPhone 6+ has a resolution of 2208x1242 but is downscaled to 1920x1080
-			// The physical DPI is 401, but because of this, it is better to use the upscaled equivalent DPI of 461
-			// we also need to account for possible zoomed mode. there can be 2 zoomed modes, one for compatibility upscaling iPhone 5 resolution
-			// and one as a feature, upscaling iPhone 6 resolution
-			info.name = "iPhone 6+";
 			info.cpuCores = 2;
 			info.ram = 1024;
-			info.displayDpi = 461;
-			if (w == 1704)
+			if (name.startsWith("iPhone7,2"))
 			{
-				info.name += " Zoomed_4inch";
-				info.displayDpi = 355;
+				info.name = "iPhone 6";
+				info.displayDpi = 326;
+				if ([[UIScreen mainScreen] nativeScale] != 2)
+				{
+					info.name += " Zoomed_4inch";
+					info.displayDpi = 316;
+				}
 			}
-			else if (w == 2001)
+			else
 			{
-				info.name += " Zoomed_4.7inch";
-				info.displayDpi = 417;
-			}
-		}
-		else if (name.startsWith("iPhone7,2"))
-		{
-			info.name = "iPhone 6";
-			info.cpuCores = 2;
-			info.ram = 1024;
-			info.displayDpi = 326;
-			if ([[UIScreen mainScreen] nativeScale] != 2)
-			{
-				info.name += " Zoomed_4inch";
-				info.displayDpi = 316;
-			}
-		}
-		else if (name.startsWith("iPhone8,1"))
-		{
-			info.name = "iPhone 6S";
-			info.cpuCores = 2;
-			info.ram = 2048;
-			info.displayDpi = 326;
-			if ([[UIScreen mainScreen] nativeScale] != 2)
-			{
-				info.name += " Zoomed_4inch";
-				info.displayDpi = 316;
+				// iPhone 6+ has a resolution of 2208x1242 but is downscaled to 1920x1080
+				// The physical DPI is 401, but because of this, it is better to use the upscaled equivalent DPI of 461
+				// we also need to account for possible zoomed mode. there can be 2 zoomed modes, one for compatibility upscaling iPhone 5 resolution
+				// and one as a feature, upscaling iPhone 6 resolution
+				info.name = "iPhone 6+";
+				info.displayDpi = 461;
+				if (w == 1704)
+				{
+					info.name += " Zoomed_4inch";
+					info.displayDpi = 355;
+				}
+				else if (w == 2001)
+				{
+					info.name += " Zoomed_4.7inch";
+					info.displayDpi = 417;
+				}
 			}
 		}
-		else if (name.startsWith("iPhone8,2"))
+		else if (name.startsWith("iPhone8,"))
 		{
-			info.name = "iPhone 6S+";
 			info.cpuCores = 2;
 			info.ram = 2048;
-			info.displayDpi = 461;
-			if (w == 1704)
+			if (name.startsWith("iPhone8,1"))
 			{
-				info.name += " Zoomed_4inch";
-				info.displayDpi = 355;
+				info.name = "iPhone 6S";
+				info.displayDpi = 326;
+				if ([[UIScreen mainScreen] nativeScale] != 2)
+				{
+					info.name += " Zoomed_4inch";
+					info.displayDpi = 316;
+				}
 			}
-			else if (w == 2001)
+			else if (name.startsWith("iPhone8,2"))
 			{
-				info.name += " Zoomed_4.7inch";
-				info.displayDpi = 417;
+				info.name = "iPhone 6S+";
+				info.displayDpi = 461;
+				if (w == 1704)
+				{
+					info.name += " Zoomed_4inch";
+					info.displayDpi = 355;
+				}
+				else if (w == 2001)
+				{
+					info.name += " Zoomed_4.7inch";
+					info.displayDpi = 417;
+				}
+			}
+			else
+			{
+				info.name = "iPhone SE";
+				info.displayDpi = 326;
 			}
 		}
-		else if (name.startsWith("iPhone8,4"))
-		{
-			info.name = "iPhone SE";
-			info.cpuCores = 2;
-			info.ram = 2048;
-			info.displayDpi = 326;
-		}
-		else if (name.startsWith("iPhone9"))
+		else if (name.startsWith("iPhone9,"))
 		{
 			info.cpuCores = 2;
 			if (name == "iPhone9,1" || name == "iPhone9,3")
@@ -263,6 +288,50 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 					info.name += " Zoomed_4.7inch";
 					info.displayDpi = 417;
 				}
+			}
+		}
+		else if (name.startsWith("iPhone10,"))
+		{
+			info.cpuCores = 6;
+			if (name == "iPhone10,1" || name == "iPhone10,4")
+			{
+				info.name = "iPhone 8";
+				info.ram = 2048;
+				info.displayDpi = 326;
+			}
+			else if (name == "iPhone10,2" || name == "iPhone10,5")
+			{
+				info.name = "iPhone 8+";
+				info.ram = 3072;
+				info.displayDpi = 461;
+			}
+			else
+			{
+				info.name = "iPhone X";
+				info.ram = 3072;
+				info.displayDpi = 458;
+			}
+		}
+		else if (name.startsWith("iPhone11,"))
+		{
+			info.cpuCores = 6;
+			if (name == "iPhone11,8")
+			{
+				info.name = "iPhone XR";
+				info.ram = 2048;
+				info.displayDpi = 326;
+			}
+			else if (name == "iPhone11,2")
+			{
+				info.name = "iPhone XS";
+				info.ram = 2048;
+				info.displayDpi = 458;
+			}
+			else
+			{
+				info.name = "iPhone XS MAX";
+				info.ram = 3072;
+				info.displayDpi = 458;
 			}
 		}
 		else
@@ -378,6 +447,13 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 				info.cpuCores = 2;
 				info.ram = 1024;
 				info.displayDpi = 417;
+			}
+			else if (w == 2436)
+			{
+				info.name = "iPhone X";
+				info.cpuCores = 6;
+				info.ram = 3072;
+				info.displayDpi = 458;
 			}
 		}
 		else
