@@ -184,7 +184,7 @@ namespace april
 {
 	MAC_WINDOW->setFullscreenFlag(true);
 	NSRect prevFrame = [self frame];
-//	[self setStyleMask:NSBorderlessWindowMask];
+	[self setStyleMask:NSWindowStyleMaskFullScreen];
 	[self setFrame: [[NSScreen mainScreen] frame] display:YES];
 	if (isPreLion()) // 10.7+ is set in willUseFullScreenPresentationOptions
 	{
