@@ -238,17 +238,12 @@ namespace april
 		if (this->state == State::Stopping)
 		{
 			this->state = State::Stopped;
-#ifndef _MAC
 			while (this->state == State::Stopped)
 			{
 				lock.release();
 				hthread::sleep(0.001f);
 				lock.acquire(&this->stateMutex);
 			}
-#else
-			// kspes@20190103 - had to do this, the app wouldn't quit and I don't know why, so fuck it, why the hell not just call exit()
-			exit(0);
-#endif
 		}
 	}
 

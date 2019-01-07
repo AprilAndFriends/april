@@ -31,6 +31,7 @@ static bool gFullscreenToggleRequest = false;
 
 namespace april
 {
+	bool g_mac_terminate_in_progress = false;
 	AprilCocoaWindow* macCocoaWindow = nil;
 	
 	bool hasDisplayLinkThreadStarted();
@@ -615,6 +616,7 @@ NSString* translateInputForKeyDown(NSEvent* event)
 
 - (void) _terminateMainLoop:(void*) param
 {
+	april::g_mac_terminate_in_progress = true;
 	[[NSApplication sharedApplication] terminate:nil];
 }
 
