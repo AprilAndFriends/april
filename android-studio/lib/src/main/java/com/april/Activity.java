@@ -465,6 +465,7 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		super.onDestroy();
 		if (this.useHardExit)
 		{
+			// TODO - deprecated, find new solution
 			System.runFinalizersOnExit(true);
 			System.exit(0);
 		}
@@ -581,13 +582,15 @@ public class Activity extends android.app.Activity implements IActivityEvents
 			this.hideNavigationBar();
 		}
 	}
-	
+
+	// TODO - deprecated, implement new solution
 	@Override
 	protected Dialog onCreateDialog(int id)
 	{
 		return DialogFactory.show();
 	}
-	
+
+	// TODO - deprecated, implement new solution
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle bundle)
 	{
