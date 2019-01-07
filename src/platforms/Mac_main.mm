@@ -52,12 +52,13 @@ namespace april
 
 - (void)terminate:(id)sender
 {
+	self.appRunning = false;
 	if (april::g_mac_terminate_in_progress)
 	{
+		[super terminate:sender];
 		// kspes@20190107 - when _terminateMainLoop() is called, this is called again and it shouldn't be, so hacking it this way, sigh...
 		return;
 	}
-	self.appRunning = false;
 #ifdef _SDL
 	gAprilShouldInvokeQuitCallback = 1;
 #else
