@@ -66,7 +66,9 @@ static NSString* getLocalizedString(NSString* key, NSString* fallback)
 	{
 		// kspes@20190103 - setting canQuit to false since this code is running on the main thread
 		// when Cmd+Q is pressed, so just fuck it, have the game quit without a prompt, don't care, doesn't matter.
+		hmutex::ScopeLock lock(&MAC_WINDOW->renderThreadSyncMutex);
 		result = april::window->handleQuitRequest(false);
+		lock.release();
 	}
 	if (result)
 	{
