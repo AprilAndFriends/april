@@ -22,7 +22,6 @@ extern EAGLView* glview;
 static UIImageView* mImageView = NULL;
 
 @implementation AprilViewController
-bool g_wnd_rotating = 0;
 
 UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLandscape;
 
@@ -309,24 +308,6 @@ UIInterfaceOrientationMask gSupportedOrientations = UIInterfaceOrientationMaskLa
 -(void)viewDidLoad
 {
 	[super viewDidLoad];
-}
-
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-	hlog::write(april::logTag, "Window started rotating");
-	g_wnd_rotating = 1;
-}
-
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-	hlog::write(april::logTag, "Window finished rotating");
-	g_wnd_rotating = 0;
-}
-
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation // used in iOS versions older than iOS6
-{
-    return (gSupportedOrientations & (1 << interfaceOrientation)) != 0;
 }
 
 -(NSUInteger)supportedInterfaceOrientations // used in iOS6+ only

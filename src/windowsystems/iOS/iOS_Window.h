@@ -45,7 +45,6 @@ namespace april
 		void keyboardWasShown(float kbSize);
 		void keyboardWasHidden();
 		
-		bool isRotating() const;
 		hstr getParam(chstr param);
 		void setParam(chstr param, chstr value);
 		

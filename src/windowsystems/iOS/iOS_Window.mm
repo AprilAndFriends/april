@@ -28,8 +28,6 @@ static UIWindow* uiwindow = NULL;
 EAGLView* glview = NULL;
 static AprilViewController* viewcontroller = NULL;
 
-extern bool g_wnd_rotating;
-
 namespace april
 {
 	// TODOx - convert to gvec2f so it can be included in the class
@@ -194,12 +192,6 @@ namespace april
 		this->_setCursorPosition(touch.x * scale, touch.y * scale);
 		*/
 		Window::_processEvents();
-	}
-	
-	bool iOS_Window::isRotating() const
-	{
-		// TODOx - should be a member
-		return g_wnd_rotating;
 	}
 	
 	hstr iOS_Window::getParam(chstr param)

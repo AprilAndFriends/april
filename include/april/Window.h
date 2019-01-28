@@ -253,11 +253,6 @@ namespace april
 		/// @param[in] cursor The cursor to be destroyed.
 		void destroyCursor(Cursor* cursor);
 
-		/// @brief Gets the screen rotation flag.
-		/// @return The screen rotation flag.
-		/// @note This is mostly used internally.
-		// TODOa - this doesn't seem to be used anywhere, maybe it should be removed
-		virtual inline bool isRotating() const { return false; } // iOS/Android devices for example
 		/// @brief Gets an internal system parameter.
 		/// @param[in] parameter Name of the parameter.
 		/// @return Internal system parameter.
