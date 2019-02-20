@@ -28,8 +28,39 @@ namespace april
 	/// @brief Provides system information.
 	struct aprilExport SystemInfo
 	{
+		/// @class OsType
+		/// @brief Defines the OS type.
+		HL_ENUM_CLASS_PREFIX_DECLARE(aprilExport, OsType,
+		(
+			/// @var static const OsType OsType::Win32
+			/// @brief Windows standard.
+			HL_ENUM_DECLARE(OsType, Windows);
+			/// @var static const OsType OsType::Posix
+			/// @brief Posix standard.
+			HL_ENUM_DECLARE(OsType, Posix);
+			/// @var static const OsType OsType::Mac
+			/// @brief Mac OS X standard.
+			HL_ENUM_DECLARE(OsType, Mac);
+			/// @var static const OsType OsType::Android
+			/// @brief Android OS standard.
+			HL_ENUM_DECLARE(OsType, Android);
+			/// @var static const OsType OsType::iOS
+			/// @brief iOS standard.
+			HL_ENUM_DECLARE(OsType, iOS);
+			/// @var static const OsType OsType::UWP
+			/// @brief Windows standard UWP.
+			/// @note This is considered a separate platform from Win32 due to many important system differences.
+			HL_ENUM_DECLARE(OsType, UWP);
+			/// @var static const OsType OsType::Unknown
+			/// @brief Default value for new OSes until implemented.
+			HL_ENUM_DECLARE(OsType, Unknown);
+
+		));
+
 		/// @brief Name of the OS.
 		hstr name;
+		/// @brief Type of the OS.
+		OsType osType;
 		/// @brief Device name
 		hstr deviceName;
 		/// @brief CPU architecture.

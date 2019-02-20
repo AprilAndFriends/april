@@ -73,6 +73,7 @@ namespace april
 			info.cpuCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
 			// RAM
 			info.name = "mac";
+			info.osType = SystemInfo::OsType::Mac;
 			info.deviceName = "unnamedMacDevice";
 			info.osVersion = _getMaxOsVersion();
 			float scalingFactor = 1.0f;

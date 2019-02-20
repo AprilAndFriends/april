@@ -76,6 +76,7 @@ namespace april
 		if (info.locale == "")
 		{
 			info.name = "Windows" + _getWindowsName();
+			info.osType = SystemInfo::OsType::Windows;
 			info.deviceName = "WindowsDevice";
 			info.architecture = "x86";
 			// number of CPU cores

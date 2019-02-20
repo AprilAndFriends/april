@@ -64,12 +64,10 @@ namespace april
 			char cname[256] = {'\0'};
 			sysctlbyname("hw.machine", cname, &size, NULL, 0);
 			hstr name = cname;
-			
 			info.name = name; // defaults for unknown devices
-			
+			info.osType = SystemInfo::OsType::iOS;
 			info.deviceName = [[[UIDevice currentDevice] name] UTF8String];
 			info.displayDpi = 0;
-
 			UIScreen* mainScreen = [UIScreen mainScreen];
 			float scale = [mainScreen scale];
 			float nativeScale;

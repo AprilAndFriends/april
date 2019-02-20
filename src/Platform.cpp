@@ -21,6 +21,42 @@
 
 namespace april
 {
+	HL_ENUM_CLASS_DEFINE(SystemInfo::OsType,
+	(
+		HL_ENUM_DEFINE(SystemInfo::OsType, Windows);
+		HL_ENUM_DEFINE(SystemInfo::OsType, Posix);
+		HL_ENUM_DEFINE(SystemInfo::OsType, Mac);
+		HL_ENUM_DEFINE(SystemInfo::OsType, Android);
+		HL_ENUM_DEFINE(SystemInfo::OsType, iOS);
+		HL_ENUM_DEFINE(SystemInfo::OsType, UWP);
+		HL_ENUM_DEFINE(SystemInfo::OsType, Unknown);
+
+	));
+
+	SystemInfo::SystemInfo()
+	{
+		this->name = "";
+		this->osType = OsType::Unknown;
+#ifdef _ARM
+		this->architecture = "ARM";
+#else
+		this->architecture = "x86";
+#endif
+		// __LP64__ - apple specific, applies to both iOS and Mac
+		// _X64     - manual override for other platforms
+#if defined(__LP64__) || defined(_X64)
+		this->architectureBits = 64;
+#else
+		this->architectureBits = 32;
+#endif
+		this->osVersion.set(1);
+		this->cpuCores = 1;
+		this->ram = 256;
+		this->displayDpi = 0.0f;
+		this->displayScaleFactor = 1.0f;
+		this->locale = "";
+	}
+	
 	HL_ENUM_CLASS_DEFINE(MessageBoxButton,
 	(
 		HL_ENUM_DEFINE(MessageBoxButton, Ok);
@@ -93,51 +129,6 @@ namespace april
 
 	SystemInfo info;
 	harray<hstr> args;
-
-	SystemInfo::SystemInfo()
-	{
-		this->name = "";
-#ifdef _ARM
-		this->architecture = "ARM";
-#else
-		this->architecture = "x86";
-#endif
-		// __LP64__ - apple specific, applies to both iOS and Mac
-		// _X64     - manual override for other platforms
-#if defined(__LP64__) || defined(_X64)
-		this->architectureBits = 64;
-#else
-		this->architectureBits = 32;
-#endif
-		this->osVersion.set(1);
-		this->cpuCores = 1;
-		this->ram = 256;
-		this->displayDpi = 0.0f;
-		this->displayScaleFactor = 1.0f;
-		this->locale = "";
-	}
-	
-	/*
-	grecti SystemInfo::getNotchedRect(bool landscape) const
-	{
-		if (this->name == "iPhone X")
-		{
-			gvec2i size = this->displayResolution;
-			int notchMargin = 132; // Apple's 44pt @3x
-			if (landscape)
-			{
-				int homeButtonMargin = 69; // Apple's 23pt @3x
-				size.x -= notchMargin * 2;
-				size.y -= homeButtonMargin;
-				return grecti(notchMargin, 0, size);
-			}
-			hswap(size.x, size.y);
-			size.y -= notchMargin * 2;
-			return grecti(0, notchMargin, size);
-		}
-		return grecti(0, 0, this->displayResolution);
-	}
-	*/
 
 	harray<hstr> getArgs()
 	{
