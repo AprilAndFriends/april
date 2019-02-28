@@ -194,6 +194,7 @@ namespace april
 		this->mouseEvents.clear();
 		this->keyEvents.clear();
 		this->touchEvents.clear();
+		this->touchesEvents.clear();
 		this->controllerEvents.clear();
 		this->touches.clear();
 		this->controllerEmulationKeys.clear();
@@ -386,12 +387,14 @@ namespace april
 		harray<MouseEvent> mouseEvents = this->mouseEvents;
 		harray<KeyEvent> keyEvents = this->keyEvents;
 		harray<TouchEvent> touchEvents = this->touchEvents;
+		harray<TouchesEvent> touchesEvents = this->touchesEvents;
 		harray<ControllerEvent> controllerEvents = this->controllerEvents;
 		harray<MotionEvent> motionEvents = this->motionEvents;
 		this->genericEvents.clear();
 		this->mouseEvents.clear();
 		this->keyEvents.clear();
 		this->touchEvents.clear();
+		this->touchesEvents.clear();
 		this->controllerEvents.clear();
 		this->motionEvents.clear();
 		lock.release();
@@ -474,7 +477,20 @@ namespace april
 		}
 		for_iter (i, 0, touchEvents.size())
 		{
-			this->handleTouchInput(touchEvents[i].touches);
+			if (touchEvents[i].type != TouchEvent::Type::Cancel)
+			{
+				this->touchPositions[touchEvents[i].index] = touchEvents[i].position;
+			}
+			// if not a move event at all or final move event or next event is not a move event (because of merging)
+			if (touchEvents[i].type != TouchEvent::Type::Move || (touchEvents[i].type == TouchEvent::Type::Move &&
+				(i == touchEvents.size() - 1 || touchEvents[i + 1].type != TouchEvent::Type::Move || touchEvents[i + 1].index != touchEvents[i].index)))
+			{
+				this->handleTouchInput(touchEvents[i].type, touchEvents[i].index, touchEvents[i].position);
+			}
+		}
+		for_iter (i, 0, touchesEvents.size())
+		{
+			this->handleTouchesInput(touchesEvents[i].touches);
 		}
 		for_iter (i, 0, controllerEvents.size())
 		{
@@ -711,7 +727,7 @@ namespace april
 				if (button == Button::AxisLX || button == Button::AxisLY || button == Button::AxisRX || button == Button::AxisRY)
 				{
 					this->handleControllerInput(ControllerEvent::Type::Axis, 0, button, (type == KeyEvent::Type::Down ? -1.0f : 0.0f));
-					// processed = true; -- commenting out since value is not used further in this function
+					// processed = true; // commenting out since value is not used further in this function
 				}
 			}
 		}
@@ -725,7 +741,29 @@ namespace april
 		}
 	}
 
-	void Window::handleTouchInput(const harray<gvec2f>& touches)
+	void Window::handleTouchInput(TouchEvent::Type type, int index, cgvec2f position)
+	{
+		if (this->touchDelegate != NULL)
+		{
+			hmap<int, gvec2f> currentIndexedTouches = this->touchDelegate->getCurrentIndexedTouches();
+			currentIndexedTouches[index] = position;
+			this->touchDelegate->setCurrentIndexedTouches(currentIndexedTouches);
+			if (type == TouchEvent::Type::Down)
+			{
+				this->touchDelegate->onTouchDown(index);
+			}
+			else if (type == TouchEvent::Type::Up)
+			{
+				this->touchDelegate->onTouchUp(index);
+			}
+			else if (type == TouchEvent::Type::Move)
+			{
+				this->touchDelegate->onTouchMove(index);
+			}
+		}
+	}
+
+	void Window::handleTouchesInput(const harray<gvec2f>& touches)
 	{
 		if (this->touchDelegate != NULL)
 		{
@@ -854,40 +892,44 @@ namespace april
 		this->keyEvents += KeyEvent(type, keyCode, charCode);
 	}
 
-	void Window::queueTouchInput(MouseEvent::Type type, cgvec2f position, int index)
+	void Window::queueTouchInput(TouchEvent::Type type, int index, cgvec2f position)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
 		harray<gvec2f> previousTouches = this->touches;
-		if (type == MouseEvent::Type::Down)
+		if (type == TouchEvent::Type::Down)
 		{
-			if (index < this->touches.size()) // DOWN event of an already indexed touch, never happened so far
+			if (this->indexedTouches.hasKey(index)) // DOWN event of an already indexed touch, never happened so far
 			{
 				return;
 			}
+			this->indexedTouches[index] = position;
 			this->touches += position;
 		}
-		else if (type == MouseEvent::Type::Up)
+		else if (type == TouchEvent::Type::Up)
 		{
-			if (index >= this->touches.size()) // redundant UP event, can happen
+			if (!this->indexedTouches.hasKey(index)) // redundant UP event, can happen
 			{
 				return;
 			}
+			this->indexedTouches.removeKey(index);
 			this->touches.removeAt(index);
 		}
-		else if (type == MouseEvent::Type::Move)
+		else if (type == TouchEvent::Type::Move)
 		{
 			if (index >= this->touches.size()) // MOVE event of an unindexed touch, never happened so far
 			{
 				return;
 			}
+			this->indexedTouches[index] = position;
 			this->touches[index] = position;
 		}
-		else if (type == MouseEvent::Type::Cancel) // canceling a particular pointer, required by specific systems (e.g. UWP)
+		else if (type == TouchEvent::Type::Cancel) // canceling a particular pointer, required by specific systems (e.g. UWP)
 		{
 			if (index < this->touches.size())
 			{
+				this->indexedTouches.removeKey(index);
 				this->touches.removeAt(index);
-				if (this->touches.size() == 0)
+				if (this->indexedTouches.size() == 0)
 				{
 					this->multiTouchActive = false;
 				}
@@ -905,10 +947,10 @@ namespace april
 		}
 		else
 		{
-			this->mouseEvents += MouseEvent(type, position, Key::MouseL);
+			this->mouseEvents += MouseEvent(MouseEvent::Type::fromName(type.getName()), position, Key::MouseL);
 		}
-		this->touchEvents.clear();
-		this->touchEvents += TouchEvent(this->touches);
+		this->touchesEvents.clear();
+		this->touchesEvents += TouchesEvent(this->touches);
 	}
 
 	void Window::queueControllerInput(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)

@@ -10,9 +10,19 @@
 
 namespace april
 {
-	TouchEvent::TouchEvent(const harray<gvec2f>& touches)
+	HL_ENUM_CLASS_DEFINE(TouchEvent::Type,
+	(
+		HL_ENUM_DEFINE(TouchEvent::Type, Down);
+		HL_ENUM_DEFINE(TouchEvent::Type, Up);
+		HL_ENUM_DEFINE(TouchEvent::Type, Cancel);
+		HL_ENUM_DEFINE(TouchEvent::Type, Move);
+	));
+
+	TouchEvent::TouchEvent(Type type, int index, cgvec2f position)
 	{
-		this->touches = touches;
+		this->type = type;
+		this->index = index;
+		this->position = position;
 	}
 
 }

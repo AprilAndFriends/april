@@ -312,7 +312,7 @@ namespace april
 	{
 		for_iter_r (i, this->pointerIds.size(), 0)
 		{
-			april::window->queueTouchInput(MouseEvent::Type::Cancel, gvec2f(), i);
+			april::window->queueTouchInput(TouchEvent::Type::Cancel, i, gvec2f());
 		}
 		this->pointerIds.clear();
 	}
@@ -374,7 +374,7 @@ namespace april
 				index = this->pointerIds.size();
 				this->pointerIds += id;
 			}
-			april::window->queueTouchInput(MouseEvent::Type::Down, position, index);
+			april::window->queueTouchInput(TouchEvent::Type::Down, index, position);
 			break;
 		}
 	}
@@ -408,7 +408,7 @@ namespace april
 			{
 				this->pointerIds.removeAt(index);
 			}
-			april::window->queueTouchInput(MouseEvent::Type::Up, position, index);
+			april::window->queueTouchInput(TouchEvent::Type::Up, index, position);
 			break;
 		}
 		this->currentButton = Key::None;
@@ -439,7 +439,7 @@ namespace april
 			{
 				index = this->pointerIds.size();
 			}
-			april::window->queueTouchInput(MouseEvent::Type::Move, position, index);
+			april::window->queueTouchInput(TouchEvent::Type::Move, index, position);
 			break;
 		}
 	}

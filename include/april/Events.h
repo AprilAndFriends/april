@@ -19,5 +19,6 @@
 #include "MotionEvent.h"
 #include "MouseEvent.h"
 #include "TouchEvent.h"
+#include "TouchesEvent.h"
 
 #endif

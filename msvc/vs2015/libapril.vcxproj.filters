@@ -398,6 +398,9 @@
     <ClCompile Include="..\..\src\async\TakeScreenshotCommand.cpp">
       <Filter>Source Files\async</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\events\TouchesEvent.cpp">
+      <Filter>Source Files\events</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -678,6 +681,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\async\TakeScreenshotCommand.h">
       <Filter>Header Files\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\april\TouchesEvent.h">
+      <Filter>Header Files\events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

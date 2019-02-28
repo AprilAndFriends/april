@@ -101,16 +101,16 @@ namespace april
 		}
 	}
 
-	void AndroidJNI_Window::queueTouchInput(const MouseEvent::Type& type, cgvec2f position, int index)
+	void AndroidJNI_Window::queueTouchInput(TouchEvent::Type type, int index, cgvec2f position)
 	{
-		if (type == MouseEvent::Type::Down || type == MouseEvent::Type::Up)
+		if (type == TouchEvent::Type::Down || type == TouchEvent::Type::Up)
 		{
 			this->queueInputModeChange(InputMode::Touch);
 		}
-		Window::queueTouchInput(type, position, index);
+		Window::queueTouchInput(type, index, position);
 	}
 
-	void AndroidJNI_Window::queueControllerInput(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue)
+	void AndroidJNI_Window::queueControllerInput(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)
 	{
 		this->queueInputModeChange(InputMode::Controller);
 		Window::queueControllerInput(type, controllerIndex, buttonCode, axisValue);

@@ -449,6 +449,7 @@
     <ClCompile Include="..\..\src\events\KeyEvent.cpp" />
     <ClCompile Include="..\..\src\events\MotionEvent.cpp" />
     <ClCompile Include="..\..\src\events\MouseEvent.cpp" />
+    <ClCompile Include="..\..\src\events\TouchesEvent.cpp" />
     <ClCompile Include="..\..\src\events\TouchEvent.cpp" />
     <ClCompile Include="..\..\src\platforms\AndroidJNI_Platform.cpp" />
     <ClCompile Include="..\..\src\platforms\Android_main.cpp" />
@@ -553,6 +554,7 @@
     <ClInclude Include="..\..\include\april\Texture.h" />
     <ClInclude Include="..\..\include\april\Timer.h" />
     <ClInclude Include="..\..\include\april\TouchDelegate.h" />
+    <ClInclude Include="..\..\include\april\TouchesEvent.h" />
     <ClInclude Include="..\..\include\april\TouchEvent.h" />
     <ClInclude Include="..\..\include\april\UpdateDelegate.h" />
     <ClInclude Include="..\..\include\april\VertexShader.h" />

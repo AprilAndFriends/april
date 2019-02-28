@@ -22,6 +22,26 @@ namespace april
 	{
 	}
 
+	void TouchDelegate::onTouchDown(int index)
+	{
+		hlog::debug(logTag, "Event onTouchDown() was not implemented.");
+	}
+
+	void TouchDelegate::onTouchUp(int index)
+	{
+		hlog::debug(logTag, "Event onTouchUp() was not implemented.");
+	}
+
+	void TouchDelegate::onTouchMove(int index)
+	{
+		hlog::debug(logTag, "Event onTouchMove() was not implemented.");
+	}
+
+	void TouchDelegate::onTouchCancel(int index)
+	{
+		hlog::debug(logTag, "Event onTouchCancel() was not implemented.");
+	}
+
 	void TouchDelegate::onTouch(const harray<gvec2f>& touches)
 	{
 		hlog::debug(logTag, "Event onTouch() was not implemented.");

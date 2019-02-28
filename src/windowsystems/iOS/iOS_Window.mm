@@ -266,7 +266,7 @@ namespace april
 		for_iter (i, 0, touches.size())
 		{
 			point = [touches[i] locationInView:glview];
-			this->queueTouchInput(MouseEvent::Type::Down, gvec2f(point.x * scale, point.y * scale), previousSize + i);
+			this->queueTouchInput(TouchEvent::Type::Down, previousSize + i, gvec2f(point.x * scale, point.y * scale));
 		}
 	}
 
@@ -287,7 +287,7 @@ namespace april
 		for_iter (i, 0, touches.size())
 		{
 			point = [touches[i] locationInView:glview];
-			this->queueTouchInput(MouseEvent::Type::Up, gvec2f(point.x * scale, point.y * scale), indices[i]);
+			this->queueTouchInput(TouchEvent::Type::Up, indices[i], gvec2f(point.x * scale, point.y * scale));
 		}
 	}
 	
@@ -313,7 +313,7 @@ namespace april
 		for_iter (i, 0, touches.size())
 		{
 			point = [touches[i] locationInView:glview];
-			this->queueTouchInput(MouseEvent::Type::Move, gvec2f(point.x * scale, point.y * scale), indices[i]);
+			this->queueTouchInput(TouchEvent::Type::Move, indices[i], gvec2f(point.x * scale, point.y * scale));
 		}
 	}
 	

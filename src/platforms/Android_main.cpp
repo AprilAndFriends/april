@@ -155,9 +155,9 @@ namespace april
 		PROTECTED_WINDOW_CALL(queueKeyInput(KeyEvent::Type::Down, april::Key::None, (unsigned int)charCode));
 	}
 
-	void JNICALL _JNI_onTouch(JNIEnv* env, jclass classe, jint type, jfloat x, jfloat y, jint index)
+	void JNICALL _JNI_onTouch(JNIEnv* env, jclass classe, jint type, jint index, jfloat x, jfloat y)
 	{
-		PROTECTED_WINDOW_CALL(queueTouchInput(MouseEvent::Type::fromInt((int)type), gvec2f((float)x, (float)y), (int)index));
+		PROTECTED_WINDOW_CALL(queueTouchInput(TouchEvent::Type::fromInt((int)type), (int)index, gvec2f((float)x, (float)y)));
 	}
 
 	void JNICALL _JNI_onScroll(JNIEnv* env, jclass classe, jfloat x, jfloat y)
@@ -327,7 +327,7 @@ namespace april
 		{"onKeyDown",							_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onKeyDown					},
 		{"onKeyUp",								_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onKeyUp						},
 		{"onChar",								_JARGS(_JVOID, _JINT),							(bool*)&april::_JNI_onChar						},
-		{"onTouch",								_JARGS(_JVOID, _JINT _JFLOAT _JFLOAT _JINT),	(void*)&april::_JNI_onTouch						},
+		{"onTouch",								_JARGS(_JVOID, _JINT _JINT _JFLOAT _JFLOAT),	(void*)&april::_JNI_onTouch						},
 		{"onScroll",							_JARGS(_JVOID, _JFLOAT _JFLOAT),				(void*)&april::_JNI_onScroll					},
 		{"onButtonDown",						_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onButtonDown				},
 		{"onButtonUp",							_JARGS(_JVOID, _JINT _JINT),					(bool*)&april::_JNI_onButtonUp					},

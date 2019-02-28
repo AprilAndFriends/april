@@ -29,9 +29,29 @@ namespace april
 		/// @brief Destructor.
 		virtual ~TouchDelegate();
 
+		/// @brief The cursor position in the current callback.
+		HL_DEFINE_GETSET2(hmap, int, gvec2f, currentIndexedTouches, CurrentIndexedTouches);
+
+		/// @brief Called when an indexed touch-down event happens.
+		/// @param[in] index Index of the touch.
+		virtual void onTouchDown(int index);
+		/// @brief Called when an indexed touch-up event happens.
+		/// @param[in] index Index of the touch.
+		virtual void onTouchUp(int index);
+		/// @brief Called when an indexed touch-move event happens.
+		/// @param[in] index Index of the touch.
+		virtual void onTouchMove(int index);
+		/// @brief Called when an indexed touch-cancel event happens.
+		/// @param[in] index Index of the touch.
+		virtual void onTouchCancel(int index);
 		/// @brief Called when the number of touches or their position changes.
 		/// @param[in] touches A list of touch coordinates.
+		/// @note This method isn't as reliable as other methods for processing touches, but it will remain available for legacy reasons.
 		virtual void onTouch(const harray<gvec2f>& touches);
+
+	protected:
+		/// @brief The cursor position in the current callback.
+		hmap<int, gvec2f> currentIndexedTouches;
 
 	};
 

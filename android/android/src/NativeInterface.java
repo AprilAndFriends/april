@@ -72,7 +72,7 @@ public class NativeInterface
 	public static native void onKeyDown(int keyCode, int charCode);
 	public static native void onKeyUp(int keyCode);
 	public static native void onChar(int charCode);
-	public static native void onTouch(int type, float x, float y, int index);
+	public static native void onTouch(int type, int index, float x, float y);
 	public static native void onScroll(float x, float y);
 	public static native void onButtonDown(int controllerIndex, int buttonCode);
 	public static native void onButtonUp(int controllerIndex, int buttonCode);

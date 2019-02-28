@@ -97,7 +97,7 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		{
 			for (int i = 0; i < event.getPointerCount(); i++)
 			{
-				NativeInterface.onTouch(type, event.getX(i), event.getY(i), i);
+				NativeInterface.onTouch(type, i, event.getX(i), event.getY(i));
 			}
 			return true;
 		}

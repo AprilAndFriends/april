@@ -40,8 +40,8 @@ namespace april
 		
 		bool update(float timeDelta);
 		
-		void queueTouchInput(const MouseEvent::Type& type, cgvec2f position, int index);
-		void queueControllerInput(const ControllerEvent::Type& type, int controllerIndex, const Button& buttonCode, float axisValue);
+		void queueTouchInput(TouchEvent::Type type, int index, cgvec2f position);
+		void queueControllerInput(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue);
 
 		void showVirtualKeyboard();
 		void hideVirtualKeyboard();

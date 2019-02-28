@@ -303,8 +303,13 @@ namespace april
 		/// @param[in] charCode The character Unicode value.
 		virtual void handleKeyInput(KeyEvent::Type type, Key keyCode, unsigned int charCode);
 		/// @brief Handles a touch event and propagates it to the delegate.
+		/// @param[in] type The event type.
+		/// @param[in] index The touch index.
+		/// @param[in] position The touch position.
+		virtual void handleTouchInput(TouchEvent::Type type, int index, cgvec2f position);
+		/// @brief Handles an indiscriminate touches event and propagates it to the delegate.
 		/// @param[in] touches Active touch pointers.
-		virtual void handleTouchInput(const harray<gvec2f>& touches);
+		virtual void handleTouchesInput(const harray<gvec2f>& touches);
 		/// @brief Handles a controller event and propagates it to the delegate.
 		/// @param[in] type The event type.
 		/// @param[in] controllerIndex Index of the controller.
@@ -373,10 +378,10 @@ namespace april
 		virtual void queueKeyInput(KeyEvent::Type type, Key keyCode, unsigned int charCode);
 		/// @brief Queues a touch event for processing before the start of the next frame.
 		/// @param[in] type The event type.
-		/// @param[in] position The pointer position.
 		/// @param[in] index The pointer index.
+		/// @param[in] position The pointer position.
 		/// @note This is mostly used internally, but it can also be used to simulate input.
-		virtual void queueTouchInput(MouseEvent::Type type, cgvec2f position, int index);
+		virtual void queueTouchInput(TouchEvent::Type type, int index, cgvec2f position);
 		/// @brief Queues a controller event for processing before the start of the next frame.
 		/// @param[in] type The event type.
 		/// @param[in] controllerIndex Index of the controller.
@@ -401,17 +406,6 @@ namespace april
 		// iOS early initialization process. When april will be refactored this needs to be changed --kspes
 		static inline void setLaunchCallback(void (*callback)(void*)) { msLaunchCallback = callback; }
 		static void handleLaunchCallback(void* args);
-
-		HL_DEPRECATED("Deprecated API. Use createCursorFromResource() instead.")
-			inline Cursor* createCursor(chstr filename) { return this->createCursorFromResource(filename); }
-		HL_DEPRECATED("Deprecated API. Use getInputMode() instead.")
-			inline bool isTouchEnabled() { return (this->inputMode == InputMode::Touch); }
-		HL_DEPRECATED("Deprecated API. Use isVirtualKeyboardVisible() instead.")
-			inline bool isVirtualKeyboardActive() { return this->isVirtualKeyboardVisible(); }
-		HL_DEPRECATED("Deprecated API. Use showVirtualKeyboard() instead.")
-			inline void beginKeyboardHandling() { this->showVirtualKeyboard(); }
-		HL_DEPRECATED("Deprecated API. Use hideVirtualKeyboard() instead.")
-			inline void terminateKeyboardHandling() { this->hideVirtualKeyboard(); }
 #endif
 
 	protected:
@@ -440,6 +434,8 @@ namespace april
 		int lastHeight;
 		/// @brief Current cursor position.
 		gvec2f cursorPosition;
+		/// @brief Current touch positions.
+		hmap<int, gvec2f> touchPositions;
 		/// @brief Current system cursor.
 		Cursor* cursor;
 		/// @brief Whether the system cursor is visible.
@@ -458,6 +454,8 @@ namespace april
 		hmutex eventMutex;
 		/// @brief Whether multi-touch mode is currently active.
 		bool multiTouchActive;
+		/// @brief The current active indexed touches.
+		hmap<int, gvec2f> indexedTouches;
 		/// @brief The current active touch pointers.
 		harray<gvec2f> touches;
 		/// @brief Queued mouse events.
@@ -466,6 +464,8 @@ namespace april
 		harray<KeyEvent> keyEvents;
 		/// @brief Queued touch events.
 		harray<TouchEvent> touchEvents;
+		/// @brief Queued touch events.
+		harray<TouchesEvent> touchesEvents;
 		/// @brief Queued controller events.
 		harray<ControllerEvent> controllerEvents;
 		/// @brief Queued motion events.
