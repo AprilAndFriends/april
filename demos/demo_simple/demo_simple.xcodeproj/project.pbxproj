@@ -607,10 +607,8 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				Base,
 				English,
-				Japanese,
-				French,
-				German,
 			);
 			mainGroup = 7F42FB3111EB34D600B1C1DF;
 			productRefGroup = 7F42FB4C11EB352D00B1C1DF /* Products */;

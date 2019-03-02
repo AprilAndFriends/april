@@ -337,7 +337,8 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
-				en,
+				Base,
+				English,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* png */;
 			productRefGroup = 034768DDFF38A45A11DB9C8B /* Products */;
