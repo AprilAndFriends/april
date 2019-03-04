@@ -14,12 +14,19 @@
 
 namespace april
 {
+	static const gvec2f _unusedPosition(-10000.0f, 10000.0f);
+
 	TouchDelegate::TouchDelegate()
 	{
 	}
 
 	TouchDelegate::~TouchDelegate()
 	{
+	}
+
+	gvec2f TouchDelegate::getCurrentTouch(int index) const
+	{
+		return this->currentTouches.tryGet(index, _unusedPosition);
 	}
 
 	void TouchDelegate::onTouchDown(int index)

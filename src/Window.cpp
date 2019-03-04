@@ -196,7 +196,6 @@ namespace april
 		this->touchEvents.clear();
 		this->touchesEvents.clear();
 		this->controllerEvents.clear();
-		this->touches.clear();
 		this->controllerEmulationKeys.clear();
 	}
 
@@ -477,10 +476,7 @@ namespace april
 		}
 		for_iter (i, 0, touchEvents.size())
 		{
-			if (touchEvents[i].type != TouchEvent::Type::Cancel)
-			{
-				this->touchPositions[touchEvents[i].index] = touchEvents[i].position;
-			}
+			this->touchPositions[touchEvents[i].index] = touchEvents[i].position;
 			// if not a move event at all or final move event or next event is not a move event (because of merging)
 			if (touchEvents[i].type != TouchEvent::Type::Move || (touchEvents[i].type == TouchEvent::Type::Move &&
 				(i == touchEvents.size() - 1 || touchEvents[i + 1].type != TouchEvent::Type::Move || touchEvents[i + 1].index != touchEvents[i].index)))
@@ -745,9 +741,9 @@ namespace april
 	{
 		if (this->touchDelegate != NULL)
 		{
-			hmap<int, gvec2f> currentIndexedTouches = this->touchDelegate->getCurrentIndexedTouches();
-			currentIndexedTouches[index] = position;
-			this->touchDelegate->setCurrentIndexedTouches(currentIndexedTouches);
+			hmap<int, gvec2f> currentTouches = this->touchDelegate->getCurrentTouches();
+			currentTouches[index] = position;
+			this->touchDelegate->setCurrentTouches(currentTouches);
 			if (type == TouchEvent::Type::Down)
 			{
 				this->touchDelegate->onTouchDown(index);
@@ -895,7 +891,9 @@ namespace april
 	void Window::queueTouchInput(TouchEvent::Type type, int index, cgvec2f position)
 	{
 		hmutex::ScopeLock lock(&this->eventMutex);
-		harray<gvec2f> previousTouches = this->touches;
+		harray<int> indices = this->indexedTouches.keys();
+		indices.sort();
+		harray<gvec2f> previousTouches = this->indexedTouches.values(indices);
 		if (type == TouchEvent::Type::Down)
 		{
 			if (this->indexedTouches.hasKey(index)) // DOWN event of an already indexed touch, never happened so far
@@ -903,7 +901,6 @@ namespace april
 				return;
 			}
 			this->indexedTouches[index] = position;
-			this->touches += position;
 		}
 		else if (type == TouchEvent::Type::Up)
 		{
@@ -912,23 +909,20 @@ namespace april
 				return;
 			}
 			this->indexedTouches.removeKey(index);
-			this->touches.removeAt(index);
 		}
 		else if (type == TouchEvent::Type::Move)
 		{
-			if (index >= this->touches.size()) // MOVE event of an unindexed touch, never happened so far
+			if (!this->indexedTouches.hasKey(index)) // MOVE event of an unindexed touch, never happened so far
 			{
 				return;
 			}
 			this->indexedTouches[index] = position;
-			this->touches[index] = position;
 		}
 		else if (type == TouchEvent::Type::Cancel) // canceling a particular pointer, required by specific systems (e.g. UWP)
 		{
-			if (index < this->touches.size())
+			if (this->indexedTouches.hasKey(index))
 			{
 				this->indexedTouches.removeKey(index);
-				this->touches.removeAt(index);
 				if (this->indexedTouches.size() == 0)
 				{
 					this->multiTouchActive = false;
@@ -936,21 +930,25 @@ namespace april
 			}
 			return;
 		}
-		if (this->multiTouchActive || this->touches.size() > 1)
+		indices = this->indexedTouches.keys();
+		indices.sort();
+		harray<gvec2f> currentTouches = this->indexedTouches.values(indices);
+		if (this->multiTouchActive || currentTouches.size() > 1)
 		{
 			if (!this->multiTouchActive && previousTouches.size() == 1)
 			{
 				// cancel (notify the app) that the previously called mouse-down event is canceled so multi-touch can be properly processed
 				this->mouseEvents += MouseEvent(MouseEvent::Type::Cancel, previousTouches.first(), Key::MouseL);
 			}
-			this->multiTouchActive = (this->touches.size() > 0);
+			this->multiTouchActive = (currentTouches.size() > 0);
 		}
 		else
 		{
 			this->mouseEvents += MouseEvent(MouseEvent::Type::fromName(type.getName()), position, Key::MouseL);
 		}
+		this->touchEvents += TouchEvent(type, index, position);
 		this->touchesEvents.clear();
-		this->touchesEvents += TouchesEvent(this->touches);
+		this->touchesEvents += TouchesEvent(currentTouches);
 	}
 
 	void Window::queueControllerInput(ControllerEvent::Type type, int controllerIndex, Button buttonCode, float axisValue)

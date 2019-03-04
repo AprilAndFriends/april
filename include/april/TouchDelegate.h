@@ -29,8 +29,13 @@ namespace april
 		/// @brief Destructor.
 		virtual ~TouchDelegate();
 
-		/// @brief The cursor position in the current callback.
-		HL_DEFINE_GETSET2(hmap, int, gvec2f, currentIndexedTouches, CurrentIndexedTouches);
+		/// @brief The indexed touch positions in the current callback.
+		HL_DEFINE_GETSET2(hmap, int, gvec2f, currentTouches, CurrentTouches);
+
+		/// @brief Get specific touch position.
+		/// @param[in] index The index of the touch.
+		/// @return The touch position.
+		gvec2f getCurrentTouch(int index) const;
 
 		/// @brief Called when an indexed touch-down event happens.
 		/// @param[in] index Index of the touch.
@@ -51,7 +56,7 @@ namespace april
 
 	protected:
 		/// @brief The cursor position in the current callback.
-		hmap<int, gvec2f> currentIndexedTouches;
+		hmap<int, gvec2f> currentTouches;
 
 	};
 

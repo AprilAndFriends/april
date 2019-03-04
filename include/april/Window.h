@@ -128,6 +128,8 @@ namespace april
 		HL_DEFINE_GET(Cursor*, cursor, Cursor);
 		/// @brief The cursor position.
 		HL_DEFINE_GET(gvec2f, cursorPosition, CursorPosition);
+		/// @brief The touch positions.
+		HL_DEFINE_GET2(hmap, int, gvec2f, touchPositions, TouchPositions);
 		/// @brief Whether the virtual keyboard is visible.
 		HL_DEFINE_IS(virtualKeyboardVisible, VirtualKeyboardVisible);
 		/// @brief The ratio of how much height of the Window the virtual keyboard takes up.
@@ -456,8 +458,6 @@ namespace april
 		bool multiTouchActive;
 		/// @brief The current active indexed touches.
 		hmap<int, gvec2f> indexedTouches;
-		/// @brief The current active touch pointers.
-		harray<gvec2f> touches;
 		/// @brief Queued mouse events.
 		harray<MouseEvent> mouseEvents;
 		/// @brief Queued keyboard events.

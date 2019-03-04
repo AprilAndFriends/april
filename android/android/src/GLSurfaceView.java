@@ -76,7 +76,6 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 	@Override
 	public boolean onTouchEvent(final MotionEvent event)
 	{
-		// Java is broken. "final MotionEvent event" can still be modified after this method finished and hence queuing into the GLThread can cause a crash.
 		final int action = event.getAction();
 		int type = -1;
 		switch (action & MotionEvent.ACTION_MASK)
@@ -89,15 +88,23 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		case MotionEvent.ACTION_POINTER_UP: // handles non-primary touches
 			type = MOUSE_UP;
 			break;
-		case MotionEvent.ACTION_MOVE: // Android batches multi-touch move events into a single move event
+		case MotionEvent.ACTION_MOVE:
 			type = MOUSE_MOVE;
 			break;
 		}
 		if (type >= 0)
 		{
-			for (int i = 0; i < event.getPointerCount(); i++)
+			if (type == MOUSE_MOVE) // Android batches multi-touch move events into a single move event
 			{
-				NativeInterface.onTouch(type, i, event.getX(i), event.getY(i));
+				for (int i = 0; i < event.getPointerCount(); ++i)
+				{
+					NativeInterface.onTouch(type, event.getPointerId(i), event.getX(i), event.getY(i));
+				}
+			}
+			else
+			{
+				final int index = event.getActionIndex();
+				NativeInterface.onTouch(type, event.getPointerId(index), event.getX(index), event.getY(index));
 			}
 			return true;
 		}
