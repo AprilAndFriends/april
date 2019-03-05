@@ -668,6 +668,7 @@ namespace april
 		static bool _altKeyDown = false;
 		static TOUCHINPUT touches[1000];
 		static POINT _systemCursorPosition;
+		static gvec2f position;
 		switch (message)
 		{
 		case WM_TOUCH: // (Win7+ only)
@@ -687,7 +688,7 @@ namespace april
 						{
 							SetCapture((HWND)april::window->getBackendId());
 						}
-						april::window->queueMouseInput(MouseEvent::Type::Down, april::window->getCursorPosition(), Key::MouseL);
+						april::window->queueTouchInput(TouchEvent::Type::Down, 0, april::window->getCursorPosition());
 					}
 					else if ((touches[0].dwFlags & TOUCHEVENTF_UP) == TOUCHEVENTF_UP)
 					{
@@ -695,11 +696,11 @@ namespace april
 						{
 							ReleaseCapture();
 						}
-						april::window->queueMouseInput(MouseEvent::Type::Up, april::window->getCursorPosition(), Key::MouseL);
+						april::window->queueTouchInput(TouchEvent::Type::Up, 0, april::window->getCursorPosition());
 					}
 					else if ((touches[0].dwFlags & TOUCHEVENTF_MOVE) == TOUCHEVENTF_MOVE)
 					{
-						april::window->queueMouseInput(MouseEvent::Type::Move, april::window->getCursorPosition(), Key::None);
+						april::window->queueTouchInput(TouchEvent::Type::Move, 0, april::window->getCursorPosition());
 					}
 				}
 				_closeTouchInputHandle((HTOUCHINPUT)lParam);
@@ -757,12 +758,16 @@ namespace april
 					SetCapture((HWND)april::window->getBackendId());
 				}
 				april::window->queueInputModeChange(InputMode::Mouse);
-				// some sort of touch simulation going on, update cursor position
-				if (april::window->getInputMode() == InputMode::Touch)
+				position.set((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam));
+				if (april::window->getInputMode() != InputMode::Touch)
+				{
+					april::window->queueMouseInput(MouseEvent::Type::Down, position, _getKeyFromMessage(message));
+				}
+				else // touch simulation is used, update cursor position and create a touch event
 				{
 					WIN32_WINDOW->_updateCursorPosition();
+					april::window->queueTouchInput(TouchEvent::Type::Down, 0, position);
 				}
-				april::window->queueMouseInput(MouseEvent::Type::Down, gvec2f((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), _getKeyFromMessage(message));
 			}
 			break;
 		case WM_LBUTTONUP:
@@ -776,12 +781,16 @@ namespace april
 					ReleaseCapture();
 				}
 				april::window->queueInputModeChange(InputMode::Mouse);
-				// some sort of touch simulation going on, update cursor position
-				if (april::window->getInputMode() == InputMode::Touch)
+				position.set((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam));
+				if (april::window->getInputMode() != InputMode::Touch)
+				{
+					april::window->queueMouseInput(MouseEvent::Type::Up, position, _getKeyFromMessage(message));
+				}
+				else // touch simulation is used, update cursor position and create a touch event
 				{
 					WIN32_WINDOW->_updateCursorPosition();
+					april::window->queueTouchInput(TouchEvent::Type::Up, 0, position);
 				}
-				april::window->queueMouseInput(MouseEvent::Type::Up, gvec2f((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), _getKeyFromMessage(message));
 			}
 			break;
 		case WM_MOUSEMOVE:
@@ -794,12 +803,16 @@ namespace april
 				if (WIN32_WINDOW->_mouseMessages == 0)
 				{
 					april::window->queueInputModeChange(InputMode::Mouse);
-					// some sort of touch simulation going on, update cursor position
-					if (april::window->getInputMode() == InputMode::Mouse)
+					position.set((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam));
+					if (april::window->getInputMode() != InputMode::Touch)
+					{
+						april::window->queueMouseInput(MouseEvent::Type::Move, position, Key::None);
+					}
+					else // touch simulation is used, update cursor position and create a touch event
 					{
 						WIN32_WINDOW->_updateCursorPosition();
+						april::window->queueTouchInput(TouchEvent::Type::Move, 0, position);
 					}
-					april::window->queueMouseInput(MouseEvent::Type::Move, gvec2f((float)GET_X_LPARAM(lParam), (float)GET_Y_LPARAM(lParam)), Key::None);
 				}
 			}
 			break;
