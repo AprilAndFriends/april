@@ -30,30 +30,26 @@ static AprilViewController* viewcontroller = NULL;
 
 namespace april
 {
-	// TODOx - convert to gvec2f so it can be included in the class
-	static harray<UITouch*> g_touches;
-	
-	// TODOx - probably not needed anymore
-	void updateCursorPosition(gvec2f touch)
+	// TODOx - possibly not needed anymore
+	static inline void updateCursorPosition(gvec2f touch)
 	{
 		float scale = ((iOS_Window*) window)->_getTouchScale();
 		// return value stored in cursorX and cursorY		
 		//For "primary" landscape orientation, this is how we calc it
 		//hlog::errorf("OK", "%4.0f %4.0f", touch.x * scale, touch.y * scale);	// for debugging
-		((iOS_Window*) window)->_setCursorPosition(touch.x * scale, touch.y * scale);
+		((iOS_Window*)window)->_setCursorPosition(touch.x * scale, touch.y * scale);
 	}
 	
-	static harray<UITouch*> _convertTouchesToCoordinates(void* nssetTouches)
+	static inline harray<UITouch*> _convertTouches(void* nssetTouches)
 	{
 		// return value stored in cursorX and cursorY
-		harray<UITouch*> coordinates;
+		harray<UITouch*> result;
 		NSSet* touches = (NSSet*)nssetTouches;
-		UITouch* touch;
-		for (touch in touches)
+		for (UITouch* touch in touches)
 		{
-			coordinates += touch;
+			result += touch;
 		}
-		return coordinates;
+		return result;
 	}
 
 	iOS_Window::iOS_Window() :
@@ -106,7 +102,7 @@ namespace april
 	{
 		bool visible = this->isVirtualKeyboardVisible();
 		this->virtualKeyboardVisible = visible;
-		if (this->keyboardRequest != 0 && g_touches.size() == 0) // only process keyboard when there is no interaction with the screen
+		if (this->keyboardRequest != 0 && this->osTouches.size() == 0) // only process keyboard when there is no interaction with the screen
 		{
 			if (visible && this->keyboardRequest == -1)
 			{
@@ -250,7 +246,7 @@ namespace april
 			}
 			else
 			{
-				scale = 1.0f; // prior to ios 3.2
+				scale = 1.0f; // safe is safe
 			}
 		}
 		return scale;
@@ -258,62 +254,65 @@ namespace april
 	
 	void iOS_Window::touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		harray<UITouch*> touches = _convertTouchesToCoordinates(nssetTouches);
-		int previousSize = g_touches.size();
-		g_touches += touches;
+		harray<UITouch*> touches = this->osTouches.keys().cast<UITouch*>() / _convertTouches(nssetTouches);
+		int index = 0;
+		foreach_map (void*, int, it, this->osTouches)
+		{
+			index = hmax(index, it->second + 1);
+		}
 		CGPoint point;
+		gvec2f position;
 		float scale = this->_getTouchScale();
 		for_iter (i, 0, touches.size())
 		{
+			this->osTouches[touches[i]] = index + i;
 			point = [touches[i] locationInView:glview];
-			this->queueTouchInput(TouchEvent::Type::Down, previousSize + i, gvec2f(point.x * scale, point.y * scale));
+			position.set(point.x * scale, point.y * scale);
+			this->queueTouchInput(TouchEvent::Type::Down, index + i, position);
 		}
 	}
 
 	void iOS_Window::touchesEnded_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		harray<UITouch*> touches = _convertTouchesToCoordinates(nssetTouches);
-		harray<int> indices;
-		for_iter (i, 0, g_touches.size())
-		{
-			if (touches.has(g_touches[i]))
-			{
-				indices += i;
-			}
-		}
-		g_touches /= touches;
+		harray<UITouch*> touches = _convertTouches(nssetTouches) / this->osTouches.keys().cast<UITouch*>();
 		CGPoint point;
+		gvec2f position;
 		float scale = this->_getTouchScale();
 		for_iter (i, 0, touches.size())
 		{
 			point = [touches[i] locationInView:glview];
-			this->queueTouchInput(TouchEvent::Type::Up, indices[i], gvec2f(point.x * scale, point.y * scale));
+			position.set(point.x * scale, point.y * scale);
+			this->queueTouchInput(TouchEvent::Type::Up, this->osTouches[touches[i]], position);
+			this->osTouches.removeKey(touches[i]);
 		}
 	}
 	
 	void iOS_Window::touchesCancelled_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		// TODOx - still needs to be implemented properly
-		this->touchesEnded_withEvent_(nssetTouches, uieventEvent);
-	}
-	
-	void iOS_Window::touchesMoved_withEvent_(void* nssetTouches, void* uieventEvent)
-	{
-		harray<UITouch*> touches = _convertTouchesToCoordinates(nssetTouches);
-		harray<int> indices;
-		for_iter (i, 0, g_touches.size())
-		{
-			if (touches.has(g_touches[i]))
-			{
-				indices += i;
-			}
-		}
+		harray<UITouch*> touches = _convertTouches(nssetTouches) / this->osTouches.keys().cast<UITouch*>();
 		CGPoint point;
+		gvec2f position;
 		float scale = this->_getTouchScale();
 		for_iter (i, 0, touches.size())
 		{
 			point = [touches[i] locationInView:glview];
-			this->queueTouchInput(TouchEvent::Type::Move, indices[i], gvec2f(point.x * scale, point.y * scale));
+			position.set(point.x * scale, point.y * scale);
+			this->queueTouchInput(TouchEvent::Type::Cancel, this->osTouches[touches[i]], position);
+			this->osTouches.removeKey(touches[i]);
+		}
+	}
+	
+	void iOS_Window::touchesMoved_withEvent_(void* nssetTouches, void* uieventEvent)
+	{
+		harray<UITouch*> touches = _convertTouches(nssetTouches) / this->osTouches.keys().cast<UITouch*>();
+		CGPoint point;
+		gvec2f position;
+		float scale = this->_getTouchScale();
+		for_iter (i, 0, touches.size())
+		{
+			point = [touches[i] locationInView:glview];
+			position.set(point.x * scale, point.y * scale);
+			this->queueTouchInput(TouchEvent::Type::Move, this->osTouches[touches[i]], position);
 		}
 	}
 	

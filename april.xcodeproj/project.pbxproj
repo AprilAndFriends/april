@@ -33,6 +33,9 @@
 		8404CC191F951AC800272BF4 /* MotionDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8404CC151F951AB600272BF4 /* MotionDelegate.cpp */; };
 		8404CC1B1F951AEB00272BF4 /* MotionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 8404CC1A1F951AEB00272BF4 /* MotionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8404CC1C1F951B1400272BF4 /* MotionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 8404CC1A1F951AEB00272BF4 /* MotionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		84236BBA223A685400EC03BE /* TouchesEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84236BB9223A685400EC03BE /* TouchesEvent.cpp */; };
+		84236BBB223A685400EC03BE /* TouchesEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84236BB9223A685400EC03BE /* TouchesEvent.cpp */; };
+		84236BBC223A685400EC03BE /* TouchesEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84236BB9223A685400EC03BE /* TouchesEvent.cpp */; };
 		843209101FF4EE5A003A0539 /* AssignWindowCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208ED1FF4EE5A003A0539 /* AssignWindowCommand.h */; };
 		843209121FF4EE5A003A0539 /* AsyncCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208EF1FF4EE5A003A0539 /* AsyncCommand.h */; };
 		843209141FF4EE5A003A0539 /* AsyncCommandQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 843208F11FF4EE5A003A0539 /* AsyncCommandQueue.h */; };
@@ -152,7 +155,6 @@
 		8432099F1FF4EF27003A0539 /* MotionEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209951FF4EF27003A0539 /* MotionEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		843209A01FF4EF27003A0539 /* MouseEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209961FF4EF27003A0539 /* MouseEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		843209A11FF4EF27003A0539 /* TouchEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209971FF4EF27003A0539 /* TouchEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		843209A21FF4EF27003A0539 /* WinUWP_main.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209981FF4EF27003A0539 /* WinUWP_main.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		843209A31FF4EF2C003A0539 /* Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 8432098F1FF4EF27003A0539 /* Application.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		843209A41FF4EF2C003A0539 /* ControllerEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209901FF4EF27003A0539 /* ControllerEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		843209A51FF4EF2C003A0539 /* Events.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209911FF4EF27003A0539 /* Events.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -162,7 +164,6 @@
 		843209A91FF4EF2C003A0539 /* MotionEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209951FF4EF27003A0539 /* MotionEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		843209AA1FF4EF2C003A0539 /* MouseEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209961FF4EF27003A0539 /* MouseEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		843209AB1FF4EF2C003A0539 /* TouchEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209971FF4EF27003A0539 /* TouchEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		843209AC1FF4EF2C003A0539 /* WinUWP_main.h in Headers */ = {isa = PBXBuildFile; fileRef = 843209981FF4EF27003A0539 /* WinUWP_main.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		843209B51FF4EF76003A0539 /* ControllerEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209AF1FF4EF76003A0539 /* ControllerEvent.cpp */; };
 		843209B61FF4EF76003A0539 /* GenericEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B01FF4EF76003A0539 /* GenericEvent.cpp */; };
 		843209B71FF4EF76003A0539 /* KeyEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 843209B11FF4EF76003A0539 /* KeyEvent.cpp */; };
@@ -623,6 +624,8 @@
 		7FC8FA28122FA58F0092964C /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Timer.h; path = include/april/Timer.h; sourceTree = "<group>"; };
 		8404CC151F951AB600272BF4 /* MotionDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MotionDelegate.cpp; path = src/delegates/MotionDelegate.cpp; sourceTree = "<group>"; };
 		8404CC1A1F951AEB00272BF4 /* MotionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MotionDelegate.h; path = include/april/MotionDelegate.h; sourceTree = "<group>"; };
+		84236BB8223A683F00EC03BE /* TouchesEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchesEvent.h; path = include/april/TouchesEvent.h; sourceTree = "<group>"; };
+		84236BB9223A685400EC03BE /* TouchesEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TouchesEvent.cpp; path = src/events/TouchesEvent.cpp; sourceTree = "<group>"; };
 		843208EB1FF4EE42003A0539 /* AssignWindowCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AssignWindowCommand.cpp; path = src/async/AssignWindowCommand.cpp; sourceTree = "<group>"; };
 		843208ED1FF4EE5A003A0539 /* AssignWindowCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AssignWindowCommand.h; path = src/async/AssignWindowCommand.h; sourceTree = "<group>"; };
 		843208EE1FF4EE5A003A0539 /* AsyncCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AsyncCommand.cpp; path = src/async/AsyncCommand.cpp; sourceTree = "<group>"; };
@@ -669,7 +672,6 @@
 		843209951FF4EF27003A0539 /* MotionEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MotionEvent.h; path = include/april/MotionEvent.h; sourceTree = "<group>"; };
 		843209961FF4EF27003A0539 /* MouseEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MouseEvent.h; path = include/april/MouseEvent.h; sourceTree = "<group>"; };
 		843209971FF4EF27003A0539 /* TouchEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchEvent.h; path = include/april/TouchEvent.h; sourceTree = "<group>"; };
-		843209981FF4EF27003A0539 /* WinUWP_main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WinUWP_main.h; path = include/april/WinUWP_main.h; sourceTree = "<group>"; };
 		843209AF1FF4EF76003A0539 /* ControllerEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControllerEvent.cpp; path = src/events/ControllerEvent.cpp; sourceTree = "<group>"; };
 		843209B01FF4EF76003A0539 /* GenericEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GenericEvent.cpp; path = src/events/GenericEvent.cpp; sourceTree = "<group>"; };
 		843209B11FF4EF76003A0539 /* KeyEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KeyEvent.cpp; path = src/events/KeyEvent.cpp; sourceTree = "<group>"; };
@@ -1062,7 +1064,6 @@
 				D13681A1187BFB6600E66E32 /* Win32_main.h */,
 				7FA3ED1711F9817A001D1DDD /* Window.h */,
 				D13681A2187BFB6600E66E32 /* WinRT_main.h */,
-				843209981FF4EF27003A0539 /* WinUWP_main.h */,
 			);
 			name = include;
 			sourceTree = "<group>";
@@ -1150,6 +1151,7 @@
 		843209AD1FF4EF39003A0539 /* events */ = {
 			isa = PBXGroup;
 			children = (
+				84236BB8223A683F00EC03BE /* TouchesEvent.h */,
 				843209901FF4EF27003A0539 /* ControllerEvent.h */,
 				843209911FF4EF27003A0539 /* Events.h */,
 				843209921FF4EF27003A0539 /* GenericEvent.h */,
@@ -1165,6 +1167,7 @@
 		843209AE1FF4EF66003A0539 /* events */ = {
 			isa = PBXGroup;
 			children = (
+				84236BB9223A685400EC03BE /* TouchesEvent.cpp */,
 				843209AF1FF4EF76003A0539 /* ControllerEvent.cpp */,
 				843209B01FF4EF76003A0539 /* GenericEvent.cpp */,
 				843209B11FF4EF76003A0539 /* KeyEvent.cpp */,
@@ -1596,7 +1599,6 @@
 				D1B486CA19337393004674EB /* SDL_Window.h in Headers */,
 				B45500FC1BD7A7BA00E75E43 /* OpenGL1_Texture.h in Headers */,
 				B455017E1BD7A86200E75E43 /* OpenGL_Texture.h in Headers */,
-				843209AC1FF4EF2C003A0539 /* WinUWP_main.h in Headers */,
 				D1E7203D16D37B2700B9C9AD /* MouseDelegate.h in Headers */,
 				843209651FF4EEAB003A0539 /* SuspendCommand.h in Headers */,
 				D1E7203E16D37B2700B9C9AD /* SystemDelegate.h in Headers */,
@@ -1663,7 +1665,6 @@
 				D1AF66C8170B1E5900A43743 /* VertexShader.h in Headers */,
 				D1AF66CA170B1E5900A43743 /* aprilExport.h in Headers */,
 				D1AF66CB170B1E5900A43743 /* aprilUtil.h in Headers */,
-				843209A21FF4EF27003A0539 /* WinUWP_main.h in Headers */,
 				B45501571BD7A80400E75E43 /* OpenGLES_RenderSystem.h in Headers */,
 				D1AF66CD170B1E5900A43743 /* EventDelegate.h in Headers */,
 				D1AF66CE170B1E5900A43743 /* Image.h in Headers */,
@@ -1955,6 +1956,7 @@
 				B44FBD9C1BE0E44A00DD8995 /* Platform.cpp in Sources */,
 				B44FBD9D1BE0E44A00DD8995 /* aprilUtil.cpp in Sources */,
 				B44FBD9E1BE0E44A00DD8995 /* EventDelegate.cpp in Sources */,
+				84236BBB223A685400EC03BE /* TouchesEvent.cpp in Sources */,
 				B44FBD9F1BE0E44A00DD8995 /* WBImage.mm in Sources */,
 				B436D2EA1D05AE9300DA2C15 /* RenderHelperLayered2D.cpp in Sources */,
 				B44FBDA01BE0E44A00DD8995 /* OpenGL_Texture.cpp in Sources */,
@@ -2046,6 +2048,7 @@
 				B4A6F9FB2137D54F00EEB1FE /* Platform.cpp in Sources */,
 				B4A6F9FC2137D54F00EEB1FE /* aprilUtil.cpp in Sources */,
 				B4A6F9FD2137D54F00EEB1FE /* EventDelegate.cpp in Sources */,
+				84236BBC223A685400EC03BE /* TouchesEvent.cpp in Sources */,
 				B4A6F9FE2137D54F00EEB1FE /* WBImage.mm in Sources */,
 				B4A6F9FF2137D54F00EEB1FE /* RenderHelperLayered2D.cpp in Sources */,
 				B4A6FA002137D54F00EEB1FE /* OpenGL_Texture.cpp in Sources */,
@@ -2137,6 +2140,7 @@
 				D1534756178AD62A00151D1A /* VertexShader.cpp in Sources */,
 				B436D2E31D05AE9100DA2C15 /* RenderHelper.cpp in Sources */,
 				843209411FF4EE71003A0539 /* SuspendCommand.cpp in Sources */,
+				84236BBA223A685400EC03BE /* TouchesEvent.cpp in Sources */,
 				D1534757178AD62A00151D1A /* april.cpp in Sources */,
 				D1B486B519337389004674EB /* Mac_Keys.mm in Sources */,
 				843209C21FF4EF7A003A0539 /* GenericEvent.cpp in Sources */,

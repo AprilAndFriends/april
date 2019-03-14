@@ -72,6 +72,7 @@ namespace april
 		bool firstFrameDrawn;
 		bool inputEventsMutex;
 		bool retainLoadingOverlay;
+		hmap<void*, int> osTouches;
 		void (*exitFunction)(int);
 		
 		void _systemCreate(int width, int height, bool fullscreen, chstr title, Window::Options options);
