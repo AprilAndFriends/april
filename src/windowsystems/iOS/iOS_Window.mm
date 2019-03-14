@@ -102,7 +102,7 @@ namespace april
 	{
 		bool visible = this->isVirtualKeyboardVisible();
 		this->virtualKeyboardVisible = visible;
-		if (this->keyboardRequest != 0 && this->osTouches.size() == 0) // only process keyboard when there is no interaction with the screen
+		if (this->keyboardRequest != 0 && this->osTouchIndices.size() == 0) // only process keyboard when there is no interaction with the screen
 		{
 			if (visible && this->keyboardRequest == -1)
 			{
@@ -254,57 +254,57 @@ namespace april
 	
 	void iOS_Window::touchesBegan_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		harray<UITouch*> touches = this->osTouches.keys().cast<UITouch*>() / _convertTouches(nssetTouches);
+		harray<UITouch*> touches = _convertTouches(nssetTouches);
+		hmap<void*, int> touchIndices = this->osTouchIndices;
 		int index = 0;
-		foreach_map (void*, int, it, this->osTouches)
+		for_iter (i, 0, touches.size())
 		{
-			index = hmax(index, it->second + 1);
+			while (touchIndices.hasValue(index))
+			{
+				touchIndices.removeValue(index);
+				++index;
+			}
+			this->osTouchIndices[touches[i]] = index;
+			this->osTouchPositions[touches[i]] = gvec2f();
+			++index;
 		}
 		CGPoint point;
 		gvec2f position;
 		float scale = this->_getTouchScale();
 		for_iter (i, 0, touches.size())
 		{
-			this->osTouches[touches[i]] = index + i;
 			point = [touches[i] locationInView:glview];
 			position.set(point.x * scale, point.y * scale);
-			this->queueTouchInput(TouchEvent::Type::Down, index + i, position);
+			this->osTouchPositions[touches[i]] = position;
+			this->queueTouchInput(TouchEvent::Type::Down, this->osTouchIndices[touches[i]], position);
 		}
 	}
 
 	void iOS_Window::touchesEnded_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		harray<UITouch*> touches = _convertTouches(nssetTouches) / this->osTouches.keys().cast<UITouch*>();
-		CGPoint point;
-		gvec2f position;
-		float scale = this->_getTouchScale();
+		harray<UITouch*> touches = _convertTouches(nssetTouches);
 		for_iter (i, 0, touches.size())
 		{
-			point = [touches[i] locationInView:glview];
-			position.set(point.x * scale, point.y * scale);
-			this->queueTouchInput(TouchEvent::Type::Up, this->osTouches[touches[i]], position);
-			this->osTouches.removeKey(touches[i]);
+			this->queueTouchInput(TouchEvent::Type::Up, this->osTouchIndices[touches[i]], this->osTouchPositions[touches[i]]);
+			this->osTouchIndices.removeKey(touches[i]);
+			this->osTouchPositions.removeKey(touches[i]);
 		}
 	}
 	
 	void iOS_Window::touchesCancelled_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		harray<UITouch*> touches = _convertTouches(nssetTouches) / this->osTouches.keys().cast<UITouch*>();
-		CGPoint point;
-		gvec2f position;
-		float scale = this->_getTouchScale();
+		harray<UITouch*> touches = _convertTouches(nssetTouches);
 		for_iter (i, 0, touches.size())
 		{
-			point = [touches[i] locationInView:glview];
-			position.set(point.x * scale, point.y * scale);
-			this->queueTouchInput(TouchEvent::Type::Cancel, this->osTouches[touches[i]], position);
-			this->osTouches.removeKey(touches[i]);
+			this->queueTouchInput(TouchEvent::Type::Cancel, this->osTouchIndices[touches[i]], this->osTouchPositions[touches[i]]);
+			this->osTouchIndices.removeKey(touches[i]);
+			this->osTouchPositions.removeKey(touches[i]);
 		}
 	}
 	
 	void iOS_Window::touchesMoved_withEvent_(void* nssetTouches, void* uieventEvent)
 	{
-		harray<UITouch*> touches = _convertTouches(nssetTouches) / this->osTouches.keys().cast<UITouch*>();
+		harray<UITouch*> touches = _convertTouches(nssetTouches);
 		CGPoint point;
 		gvec2f position;
 		float scale = this->_getTouchScale();
@@ -312,7 +312,11 @@ namespace april
 		{
 			point = [touches[i] locationInView:glview];
 			position.set(point.x * scale, point.y * scale);
-			this->queueTouchInput(TouchEvent::Type::Move, this->osTouches[touches[i]], position);
+			if (this->osTouchPositions[touches[i]] != position)
+			{
+				this->osTouchPositions[touches[i]] = position;
+				this->queueTouchInput(TouchEvent::Type::Move, this->osTouchIndices[touches[i]], position);
+			}
 		}
 	}
 	
