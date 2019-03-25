@@ -35,17 +35,6 @@
 
 namespace april
 {
-	// TODO - refactor or remove entirely
-	void (*Window::msLaunchCallback)(void*) = NULL;
-	void Window::handleLaunchCallback(void* args)
-	{
-		if (msLaunchCallback != NULL)
-		{
-			(*msLaunchCallback)(args);
-		}
-	}
-	//////////////////
-
 	Window* window = NULL;
 	
 	Window::Options::Options()
@@ -920,15 +909,11 @@ namespace april
 		}
 		else if (type == TouchEvent::Type::Cancel) // canceling a particular pointer, required by specific systems (e.g. UWP)
 		{
-			if (this->indexedTouches.hasKey(index))
+			if (!this->indexedTouches.hasKey(index))
 			{
-				this->indexedTouches.removeKey(index);
-				if (this->indexedTouches.size() == 0)
-				{
-					this->multiTouchActive = false;
-				}
+				return;
 			}
-			return;
+			this->indexedTouches.removeKey(index);
 		}
 		indices = this->indexedTouches.keys();
 		indices.sort();

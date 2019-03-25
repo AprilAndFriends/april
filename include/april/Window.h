@@ -402,14 +402,6 @@ namespace april
 		/// @note This is usually called internally in some implementations, but it's possible to call it manually if a custom april::__mainStandard implementation is used.
 		virtual bool performUpdate(float timeDelta);
 		
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-		// TODOaa - refactor or maybe even remove this
-		// the following functions should be temporary, it was added because I needed access to
-		// iOS early initialization process. When april will be refactored this needs to be changed --kspes
-		static inline void setLaunchCallback(void (*callback)(void*)) { msLaunchCallback = callback; }
-		static void handleLaunchCallback(void* args);
-#endif
-
 	protected:
 		/// @brief Whether the Window was created.
 		bool created;
@@ -562,12 +554,6 @@ namespace april
 		/// @param[in] systemEnabled Whether the system call is enabled.
 		virtual void _presentFrame(bool systemEnabled);
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-		// TODOaa - refactor or maybe even remove this
-		// the following functions should be temporary, it was added because I needed access to
-		// iOS early initialization process. When april will be refactored this needs to be changed --kspes
-		static void(*msLaunchCallback)(void*);
-#endif
 	};
 
 	/// @brief The global Window instance.

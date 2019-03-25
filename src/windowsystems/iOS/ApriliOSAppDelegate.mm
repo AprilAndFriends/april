@@ -87,7 +87,6 @@ extern UIInterfaceOrientationMask gSupportedOrientations;
 	uiwnd.rootViewController = viewController;
 	// set window color
 	[uiwnd setBackgroundColor:[UIColor blackColor]];
-	april::Window::handleLaunchCallback(viewController);
 	// display the window
 	[uiwnd makeKeyAndVisible];
 	//////////
