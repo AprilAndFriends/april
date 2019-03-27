@@ -11,7 +11,9 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.view.inputmethod.InputMethodManager;
 import android.view.Display;
+import android.view.DisplayCutout;
 import android.view.View;
+import android.view.WindowInsets;
 import android.util.DisplayMetrics;
 
 import com.april.DialogFragment;
@@ -36,7 +38,6 @@ public class NativeInterface
 	public static String versionName = "";
 	public static String apkPath = "";
 	
-	private static boolean htcKeyboardHack = false;
 	private static class KeyboardResultReceiver extends ResultReceiver
 	{
 		public KeyboardResultReceiver()
@@ -51,14 +52,6 @@ public class NativeInterface
 			if (resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN || resultCode == InputMethodManager.RESULT_HIDDEN)
 			{
 				keyboardVisible = false;
-			}
-			if (keyboardVisible && NativeInterface.htcKeyboardHack)
-			{
-				NativeInterface.htcKeyboardHack = false;
-				InputMethodManager inputMethodManager = NativeInterface._getInputMethodManager();
-				View view = NativeInterface.aprilActivity.getView();
-				inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0, NativeInterface.keyboardResultReceiver);
-				inputMethodManager.showSoftInput(view, 0, NativeInterface.keyboardResultReceiver);
 			}
 		}
 		
@@ -196,6 +189,27 @@ public class NativeInterface
 		return ((long)info.getTotalPrivateDirty() * 1024L); // because getTotalPrivateDirty() is in kB
 	}
 	
+	public static Object getNotchOffsets()
+	{
+		int[] result = {0, 0, 0, 0};
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+		{
+			WindowInsets insets = NativeInterface.activity.getWindow().getDecorView().getRootWindowInsets();
+			if (insets != null)
+			{
+				DisplayCutout displayCutout = insets.getDisplayCutout();
+				if (displayCutout != null)
+				{
+					result[0] = displayCutout.getSafeInsetLeft();
+					result[1] = displayCutout.getSafeInsetTop();
+					result[2] = displayCutout.getSafeInsetRight();
+					result[3] = displayCutout.getSafeInsetBottom();
+				}
+			}
+		}
+		return result;
+	}
+	
 	public static void openUrl(String url)
 	{
 		NativeInterface.activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
@@ -223,17 +237,6 @@ public class NativeInterface
 				NativeInterface._getInputMethodManager().hideSoftInputFromWindow(view.getWindowToken(), 0, NativeInterface.keyboardResultReceiver);
 			}
 		});
-	}
-	
-	public static void updateKeyboard()
-	{
-		if (Build.BOARD.equals("mecha") ||		// Thunderbolt
-			Build.BOARD.equals("marvel") ||		// Wildfire S
-			Build.BOARD.equals("marvelc") ||	// Wildfire S
-			Build.BOARD.equals("inc"))			// Droid Incredible
-		{
-			htcKeyboardHack = true;
-		}
 	}
 	
 	private static InputMethodManager _getInputMethodManager()

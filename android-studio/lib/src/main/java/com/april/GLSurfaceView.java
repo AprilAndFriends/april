@@ -61,7 +61,6 @@ public class GLSurfaceView extends android.opengl.GLSurfaceView
 		{
 			this.requestFocus();
 			this.requestFocusFromTouch();
-			NativeInterface.updateKeyboard();
 		}
 		// native call is queued into render thread, MUST NOT be called directly from this thread
 		NativeInterface.aprilActivity.glView.queueEvent(new Runnable()
