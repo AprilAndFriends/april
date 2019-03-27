@@ -103,6 +103,7 @@ namespace april
 	
 	void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
 	{
+		// landscape is unused here, because Android handles it automatically
 		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodGetNotchOffsets, "getNotchOffsets", _JARGS(_JOBJ, ));
 		jintArray jNotchOffsets = (jintArray)env->CallStaticObjectMethod(classNativeInterface, methodGetNotchOffsets);
 		jint offsets[4] = { 0, 0, 0, 0 };
