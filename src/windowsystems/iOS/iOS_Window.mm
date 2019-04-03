@@ -23,26 +23,20 @@
 #include "iOS_Window.h"
 #include "RenderSystem.h"
 
-static ApriliOSAppDelegate* appDelegate;
+static ApriliOSAppDelegate* appDelegate = NULL;
 static UIWindow* uiwindow = NULL;
 EAGLView* glview = NULL;
 static AprilViewController* viewcontroller = NULL;
 
+CGRect getScreenBounds()
+{
+	return [[UIScreen mainScreen] bounds];
+}
+
 namespace april
 {
-	// TODOx - possibly not needed anymore
-	static inline void updateCursorPosition(gvec2f touch)
-	{
-		float scale = ((iOS_Window*) window)->_getTouchScale();
-		// return value stored in cursorX and cursorY		
-		//For "primary" landscape orientation, this is how we calc it
-		//hlog::errorf("OK", "%4.0f %4.0f", touch.x * scale, touch.y * scale);	// for debugging
-		((iOS_Window*)window)->_setCursorPosition(touch.x * scale, touch.y * scale);
-	}
-	
 	static inline harray<UITouch*> _convertTouches(void* nssetTouches)
 	{
-		// return value stored in cursorX and cursorY
 		harray<UITouch*> result;
 		NSSet* touches = (NSSet*)nssetTouches;
 		for (UITouch* touch in touches)
@@ -182,7 +176,7 @@ namespace april
 
 	void iOS_Window::_processEvents()
 	{
-		// TODOx - implement proper cursor update
+		// TODOx - implement proper cursor update?
 		/*
 		float scale = this->_getTouchScale();
 		this->_setCursorPosition(touch.x * scale, touch.y * scale);
@@ -194,7 +188,7 @@ namespace april
 	{
 		if (param == "retain_loading_overlay")
 		{
-			return this->retainLoadingOverlay ? "1" : "0";
+			return (this->retainLoadingOverlay ? "1" : "0");
 		}
 		return Window::getParam(param);
 	}
@@ -203,9 +197,9 @@ namespace april
 	{
 		if (param == "retain_loading_overlay")
 		{
-			bool prev = this->retainLoadingOverlay;
+			bool previousValue = this->retainLoadingOverlay;
 			this->retainLoadingOverlay = (value == "1"); // TODO - should use true/false
-			if (!this->retainLoadingOverlay && prev)// && this->firstFrameDrawn)
+			if (!this->retainLoadingOverlay && previousValue)// && this->firstFrameDrawn)
 			{
 				[viewcontroller removeImageView:(value == "0" ? false : true)];
 			}
@@ -228,7 +222,7 @@ namespace april
 	
 	void iOS_Window::handleFocusChange(bool focused)
 	{
-		if (this->focused != focused) // this can happen on iOS
+		if (this->focused != focused) // guards against consecutive focus events on iOS
 		{
 			Window::handleFocusChange(focused);
 		}
@@ -320,7 +314,7 @@ namespace april
 		}
 	}
 	
-	// TODOx - maybe this should be handled here and instead the Window superclass should keep handling this like in other implementations
+	// TODOx - maybe this shouldn't be handled here and instead the Window superclass should keep handling this like in other implementations
 	bool iOS_Window::isVirtualKeyboardVisible() const
 	{
 		return [glview isVirtualKeyboardVisible];
@@ -372,12 +366,8 @@ namespace april
 		if (!this->firstFrameDrawn)
 		{
 			hlog::warn(logTag, "iOS Window: received app suspend request before first frame was drawn");
-			// commenting this code, not relevant on iOS4.3+
-			//hlog::write(logTag, "iOS Window: received app suspend request before first frame was drawn, quitting app.");
-			//this->destroy();
-			//exit(0);
 		}
-		// TODOx - is this "if" required?
+		// TODOaa - is this "if" required?
 		//if (this->focused)
 		{
 			april::application->suspend();
@@ -388,7 +378,7 @@ namespace april
 	
 	void iOS_Window::applicationDidBecomeActive()
 	{
-		// TODOx - is this "if" required?
+		// TODOaa - is this "if" required?
 		//if (!this->focused)
 		{
 			april::application->resume();
@@ -403,30 +393,16 @@ namespace april
 	void iOS_Window::terminateMainLoop()
 	{
 		// TODOx - should be removed completely probably
-		// apple doesn't approve apps exiting via exit() so we have to camoufluage it if we want to use it
+		// Apple doesn't approve apps exiting via exit() so we have to camoufluage it if we want to use it
 		if (this->exitFunction)
 		{
 			this->exitFunction(0);
 		}
 		else
 		{
-			hlog::write(logTag, "april's iOS_Window doesn't have the 'exitFunction' property set, you need to set it if you want to manually exit the app. Be warned though, apple strongly discourages this behaviour.");
+			hlog::write(logTag, this->name + " doesn't have the 'exitFunction' property set, you need to set it if you want to manually exit the app. Be warned though, Apple strongly discourages this behaviour.");
 		}
 		exit(0);
 	}
-}
-
-CGRect getScreenBounds()
-{
-	CGRect frame = [[UIScreen mainScreen] bounds];
-/*	if ([[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] != NSOrderedAscending)
-	{
-		// iOS8 has inverted logic for landscape, so counter it...
-		float temp = frame.size.width;
-		frame.size.width = frame.size.height;
-		frame.size.height = temp;
-	}
-*/
-	return frame;
 }
 #endif
