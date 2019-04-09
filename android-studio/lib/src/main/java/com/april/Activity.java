@@ -17,9 +17,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.view.DisplayCutout;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import com.april.DialogFactory;
 
@@ -243,16 +246,23 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		android.util.Log.i(LOG_TAG, "Creating APRIL Activity class.");
 		android.util.Log.i(LOG_TAG, "Android device: '" + Build.MANUFACTURER + "' / '" + Build.MODEL + "'");
 		this.hideNavigationBar();
+		Window window = this.getWindow();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+		{
+			WindowManager.LayoutParams attributes = window.getAttributes();
+			attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+			window.setAttributes(attributes);
+		}
 		super.onCreate(savedInstanceState);
 		ActivityManager manager = (ActivityManager)this.getSystemService(Context.ACTIVITY_SERVICE);
 		int glesVersion = manager.getDeviceConfigurationInfo().reqGlEsVersion;
 		if (glesVersion < 0x20000)
 		{
-			android.util.Log.w(LOG_TAG, "Minimum GLES version is " + glesVersion + ", but it should be 0x00020000! Unpredictable behavior possible!");
+			android.util.Log.e(LOG_TAG, "Minimum GLES version is " + glesVersion + ", but it should be 0x00020000! Unpredictable behavior possible!");
 		}
 		this.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.ACCELEROMETER_ROTATION), true, this.systemSettingsObserver);
 		this.systemSettingsObserver.onChange(true);
-		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		NativeInterface.packageName = this.getPackageName();
 		try
 		{
@@ -271,10 +281,11 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		// focusing this view allows proper input processing
 		this.glView.requestFocus();
 		this.glView.requestFocusFromTouch();
+		View decorView = window.getDecorView();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
 		{
 			// hide navigation bar
-			this.getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
+			decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
 			{
 				@Override
 				public void onSystemUiVisibilityChange(int visibility)
@@ -283,17 +294,11 @@ public class Activity extends android.app.Activity implements IActivityEvents
 				}
 			});
 		}
-		else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+		else
 		{
-			this.getWindow().getDecorView().setSystemUiVisibility(
+			decorView.setSystemUiVisibility(
 				View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
 				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-				View.SYSTEM_UI_FLAG_FULLSCREEN | 
-				View.SYSTEM_UI_FLAG_LOW_PROFILE);
-		}
-		else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-		{
-			this.getWindow().getDecorView().setSystemUiVisibility(
 				View.SYSTEM_UI_FLAG_FULLSCREEN | 
 				View.SYSTEM_UI_FLAG_LOW_PROFILE);
 		}
@@ -306,16 +311,18 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	
 	protected void hideNavigationBar()
 	{
+		View decorView = this.getWindow().getDecorView();
+		int systemUiVisibility =
+			View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+			View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+			View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+			View.SYSTEM_UI_FLAG_FULLSCREEN |
+			View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
 		if (this.isEnabledNavigationBarHiding())
 		{
-			this.getWindow().getDecorView().setSystemUiVisibility(
-				View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-				View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-				View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-				View.SYSTEM_UI_FLAG_FULLSCREEN |
-				View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-				View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+			systemUiVisibility |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
 		}
+		decorView.setSystemUiVisibility(systemUiVisibility);
 	}
 	
 	protected void registerSensorEventListener()
@@ -465,6 +472,7 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		super.onDestroy();
 		if (this.useHardExit)
 		{
+			// TODO - deprecated, find new solution
 			System.runFinalizersOnExit(true);
 			System.exit(0);
 		}
@@ -545,7 +553,6 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
 	{
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		Integer[] boxedGrantResults = new Integer[grantResults.length];
 		for (int i = 0; i < grantResults.length; ++i)
 		{
@@ -582,13 +589,15 @@ public class Activity extends android.app.Activity implements IActivityEvents
 			this.hideNavigationBar();
 		}
 	}
-	
+
+	// TODO - deprecated, implement new solution
 	@Override
 	protected Dialog onCreateDialog(int id)
 	{
 		return DialogFactory.show();
 	}
-	
+
+	// TODO - deprecated, implement new solution
 	@Override
 	protected Dialog onCreateDialog(int id, Bundle bundle)
 	{

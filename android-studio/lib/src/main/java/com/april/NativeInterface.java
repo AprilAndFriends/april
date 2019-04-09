@@ -11,7 +11,9 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.view.inputmethod.InputMethodManager;
 import android.view.Display;
+import android.view.DisplayCutout;
 import android.view.View;
+import android.view.WindowInsets;
 import android.util.DisplayMetrics;
 
 import com.april.DialogFragment;
@@ -194,6 +196,27 @@ public class NativeInterface
 		android.os.Debug.MemoryInfo info = new android.os.Debug.MemoryInfo();
 		android.os.Debug.getMemoryInfo(info);
 		return ((long)info.getTotalPrivateDirty() * 1024L); // because getTotalPrivateDirty() is in kB
+	}
+	
+	public static Object getNotchOffsets()
+	{
+		int[] result = {0, 0, 0, 0};
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+		{
+			WindowInsets insets = NativeInterface.activity.getWindow().getDecorView().getRootWindowInsets();
+			if (insets != null)
+			{
+				DisplayCutout displayCutout = insets.getDisplayCutout();
+				if (displayCutout != null)
+				{
+					result[0] = displayCutout.getSafeInsetLeft();
+					result[1] = displayCutout.getSafeInsetTop();
+					result[2] = displayCutout.getSafeInsetRight();
+					result[3] = displayCutout.getSafeInsetBottom();
+				}
+			}
+		}
+		return result;
 	}
 	
 	public static void openUrl(String url)

@@ -102,8 +102,14 @@ namespace april
 	
 	void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
 	{
-		topLeft.set(0, 0);
-		bottomRight.set(0, 0);
+		// landscape is unused here, because Android handles it automatically
+		APRIL_GET_NATIVE_INTERFACE_METHOD(classNativeInterface, methodGetNotchOffsets, "getNotchOffsets", _JARGS(_JOBJ, ));
+		jintArray jNotchOffsets = (jintArray)env->CallStaticObjectMethod(classNativeInterface, methodGetNotchOffsets);
+		jint offsets[4] = { 0, 0, 0, 0 };
+		env->GetIntArrayRegion(jNotchOffsets, 0, 4, offsets);
+		topLeft.set(offsets[0], offsets[1]);
+		bottomRight.set(offsets[2], offsets[3]);
+		env->PopLocalFrame(NULL);
 	}
 
 	bool _openUrl_platform(chstr url)
