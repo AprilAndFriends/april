@@ -128,13 +128,7 @@ namespace april
 	void (*_showMessageBox)(const MessageBoxData&) = &_showMessageBox_platform;
 
 	SystemInfo info;
-	harray<hstr> args;
-
-	harray<hstr> getArgs()
-	{
-		return args;
-	}
-
+	
 	SystemInfo getSystemInfo()
 	{
 		if (_setupSystemInfo != NULL)

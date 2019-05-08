@@ -186,9 +186,6 @@ namespace april
 	/// @brief Get current OS's info.
 	/// @return Current OS's info.
 	aprilFnExport SystemInfo getSystemInfo();
-	/// @brief Get arguments with which the app was started.
-	/// @return Arguments with which the app was started.
-	aprilFnExport harray<hstr> getArgs();
 	/// @brief Get current app's "package name".
 	/// @return Current app's "package name".
 	/// @note This is not available on all platforms.
