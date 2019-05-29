@@ -127,7 +127,7 @@ namespace april
 
 	int64_t _getRamConsumption_platform()
 	{
-		int64_t result = 0LL;
+		int64_t result = (int64_t)0;
 		PROCESS_MEMORY_COUNTERS counters;
 		if (GetProcessMemoryInfo(GetCurrentProcess(), &counters, sizeof(counters)))
 		{

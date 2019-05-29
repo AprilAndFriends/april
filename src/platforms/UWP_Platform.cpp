@@ -141,7 +141,7 @@ namespace april
 	{
 		// TODOuwp - implement this
 		hlog::warn(logTag, "Cannot use getRamConsumption() on this platform.");
-		return 0LL;
+		return (int64_t)0;
 	}	
 	
 	void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)

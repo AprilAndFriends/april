@@ -417,7 +417,7 @@ namespace april
 
 	int64_t RenderSystem::getVRamConsumption()
 	{
-		int64_t result = 0LL;
+		int64_t result = (int64_t)0;
 		harray<Texture*> textures = this->getTextures();
 		foreach (Texture*, it, textures)
 		{
@@ -428,7 +428,7 @@ namespace april
 
 	int64_t RenderSystem::getRamConsumption()
 	{
-		int64_t result = 0LL;
+		int64_t result = (int64_t)0;
 		harray<Texture*> textures = this->getTextures();
 		foreach (Texture*, it, textures)
 		{
@@ -439,7 +439,7 @@ namespace april
 
 	int64_t RenderSystem::getAsyncRamConsumption()
 	{
-		int64_t result = 0LL;
+		int64_t result = (int64_t)0;
 		harray<Texture*> textures = this->getTextures();
 		foreach (Texture*, it, textures)
 		{

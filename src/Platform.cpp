@@ -173,7 +173,7 @@ namespace april
 			return (*_getRamConsumption)();
 		}
 		hlog::warn(logTag, "Cannot use getRamConsumption() on this platform.");
-		return 0LL;
+		return (int64_t)0;
 	}
 
 	bool openUrl(chstr url)

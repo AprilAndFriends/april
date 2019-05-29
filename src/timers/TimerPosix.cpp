@@ -50,7 +50,7 @@ namespace april
 		uint64_t result = mach_absolute_time();
 		result *= info.numer;
 		result /= info.denom;
-		return (result / 1000LL);
+		return (result / (int64_t)1000);
 #else
 #ifdef _MAC
 		SInt32 minor;
@@ -66,9 +66,9 @@ namespace april
 				// cast first, because if we multiply by 1000 before casting we could get an overflow on 32 bit systems
 				int64_t tv_sec = (int64_t)(now.tv_sec - bootTime.tv_sec);
 				int64_t tv_usec = (int64_t)(now.tv_usec - bootTime.tv_usec);
-				return (tv_sec * 1000000LL + tv_usec);
+				return (tv_sec * (int64_t)1000000 + tv_usec);
 			}
-			return 0LL;
+			return (int64_t)0;
 		}
 #endif
 		struct timespec ts;
@@ -77,9 +77,9 @@ namespace april
 			// cast first, because if we multiply by 1000 before casting we could get an overflow on 32 bit systems
 			int64_t tv_sec = (int64_t)ts.tv_sec;
 			int64_t tv_nsec = (int64_t)ts.tv_nsec;
-			return (tv_sec * 1000000LL + tv_nsec / 1000LL);
+			return (tv_sec * (int64_t)1000000 + tv_nsec / (int64_t)1000);
 		}
-		return 0LL;
+		return (int64_t)0;
 #endif
 	}
 	
@@ -87,7 +87,7 @@ namespace april
 	{
 		this->difference = 0.0;
 		this->td2 = 0.0;
-		this->frequency = 1000LL;
+		this->frequency = (int64_t)1000;
 		this->resolution = 0.000001;
 		this->start = _currentMicroTime();
 		this->td1 = this->start;

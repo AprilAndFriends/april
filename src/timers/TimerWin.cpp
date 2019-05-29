@@ -22,9 +22,9 @@ namespace april
 	{
 		this->difference = 0.0;
 		this->td2 = 0.0;
-		this->frequency = 0LL;
+		this->frequency = (int64_t)0;
 		this->resolution = 0;
-		this->start = 0LL;
+		this->start = (int64_t)0;
 		this->performanceTimer = false;
 		this->performanceTimerStart = 0;
 		this->performanceTimerElapsed = 0;
@@ -33,7 +33,7 @@ namespace april
 			hlog::warn(logTag, "Performance timer not available, multimedia timer will be used instead!");
 			this->start = htickCount();
 			this->resolution = 0.001;
-			this->frequency = 1000LL;
+			this->frequency = (int64_t)1000;
 		}
 		else
 		{
