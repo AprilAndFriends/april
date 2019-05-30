@@ -38,7 +38,6 @@ public class NativeInterface
 	public static String versionName = "";
 	public static String apkPath = "";
 	
-	private static boolean htcKeyboardHack = false;
 	private static class KeyboardResultReceiver extends ResultReceiver
 	{
 		public KeyboardResultReceiver()
@@ -53,14 +52,6 @@ public class NativeInterface
 			if (resultCode == InputMethodManager.RESULT_UNCHANGED_HIDDEN || resultCode == InputMethodManager.RESULT_HIDDEN)
 			{
 				keyboardVisible = false;
-			}
-			if (keyboardVisible && NativeInterface.htcKeyboardHack)
-			{
-				NativeInterface.htcKeyboardHack = false;
-				InputMethodManager inputMethodManager = NativeInterface._getInputMethodManager();
-				View view = NativeInterface.aprilActivity.getView();
-				inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0, NativeInterface.keyboardResultReceiver);
-				inputMethodManager.showSoftInput(view, 0, NativeInterface.keyboardResultReceiver);
 			}
 		}
 		
@@ -246,17 +237,6 @@ public class NativeInterface
 				NativeInterface._getInputMethodManager().hideSoftInputFromWindow(view.getWindowToken(), 0, NativeInterface.keyboardResultReceiver);
 			}
 		});
-	}
-	
-	public static void updateKeyboard()
-	{
-		if (Build.BOARD.equals("mecha") ||		// Thunderbolt
-			Build.BOARD.equals("marvel") ||		// Wildfire S
-			Build.BOARD.equals("marvelc") ||	// Wildfire S
-			Build.BOARD.equals("inc"))			// Droid Incredible
-		{
-			htcKeyboardHack = true;
-		}
 	}
 	
 	private static InputMethodManager _getInputMethodManager()

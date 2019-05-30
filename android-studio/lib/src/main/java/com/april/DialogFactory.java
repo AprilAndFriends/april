@@ -71,8 +71,9 @@ public class DialogFactory
 			{
 				public void run()
 				{
+					// TODO - deprecated, implement new solution
 					NativeInterface.activity.showDialog(DialogFactory.dialogIndex);
-					DialogFactory.dialogIndex++;
+					++DialogFactory.dialogIndex;
 				}
 			});
 		}
