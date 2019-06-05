@@ -422,7 +422,7 @@ namespace april
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 	HL_DEPRECATED("Deprecated API. Use april::gvec2ToHstr() instead." )
-	aprilFnExport inline hstr gvec2fToHstr(cgvec2f vector) { return gvec2ToHstr<float>(vector); }
+	aprilFnExport inline hstr gvec2ToHstr(cgvec2f vector) { return gvec2ToHstr<float>(vector); }
 	HL_DEPRECATED("Deprecated API. Use april::gvec3ToHstr() instead.")
 	aprilFnExport inline hstr gvec3fToHstr(cgvec3f vector) { return gvec3ToHstr<float>(vector); }
 	HL_DEPRECATED("Deprecated API. Use april::grectToHstr() instead.")
