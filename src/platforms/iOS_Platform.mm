@@ -168,17 +168,20 @@ namespace april
 
 	bool _openUrl_platform(chstr url)
 	{
-		if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]]])
-		{
-			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]]];
-			return true;
-		}
-		return false;
+		NSURL* nsUrl = [NSURL URLWithString:[NSString stringWithUTF8String:url.cStr()]];
+		dispatch_async(dispatch_get_main_queue(),
+		^{
+			if ([[UIApplication sharedApplication] canOpenURL:nsUrl])
+			{
+				[[UIApplication sharedApplication] openURL:nsUrl];
+			}
+		});
+		return true; // assumes always success, because it can't get the result otherwise
 	}
 	
 	void _showMessageBox_platform(const MessageBoxData& data)
 	{
-		NSString* nsButtons[] = {@"OK", nil, nil}; // set all buttons to nil, at first, except default one, just in case
+		NSString* nsButtons[] = {@"OK", nil, nil}; // set all buttons to nil at first, except default one, just in case
 		MessageBoxButton buttonTypes[3] = {MessageBoxButton::Ok, MessageBoxButton::Ok, MessageBoxButton::Ok};
 		int i0 = 0;
 		int i1 = 1;
