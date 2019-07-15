@@ -14,6 +14,7 @@
 #ifndef APRIL_OPENGLES_TEXTURE_H
 #define APRIL_OPENGLES_TEXTURE_H
 
+#include "Application.h"
 #include "OpenGL_Texture.h"
 
 namespace april
@@ -26,7 +27,6 @@ namespace april
 		friend class OpenGLES_RenderSystem;
 
 		OpenGLES_Texture(bool fromResource);
-		~OpenGLES_Texture();
 
 	protected:
 		unsigned int framebufferId;

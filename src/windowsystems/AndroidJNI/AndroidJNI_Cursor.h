@@ -24,7 +24,6 @@ namespace april
 	{
 	public:
 		AndroidJNI_Cursor(bool fromResource);
-		~AndroidJNI_Cursor();
 
 	};
 	

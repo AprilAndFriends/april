@@ -241,6 +241,10 @@ namespace april
 		/// @brief Gets a list of all supported display modes.
 		/// @return A list of all supported display modes.
 		harray<DisplayMode> getDisplayModes();
+		/// @brief Whether low-level graphics API calls are allowed.
+		/// @return True if low-level graphics API calls are allowed.
+		/// @note This is used on some OS's that don't allow API calls to be made after the app is suspended (e.g. Android).
+		virtual bool canUseLowLevelCalls() const;
 		/// @return The current video RAM consumption.
 		/// @note This is calculated based on loaded textures and may not be 100% accurate. The actual consumption could be higher.
 		int64_t getVRamConsumption();

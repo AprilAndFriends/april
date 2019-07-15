@@ -15,6 +15,7 @@
 #include <hltypes/hltypesUtil.h>
 #include <hltypes/hstring.h>
 
+#include "Application.h"
 #include "april.h"
 #ifdef _EGL
 #include "egl.h"
@@ -74,7 +75,7 @@ namespace april
 
 	OpenGLES_RenderSystem::ShaderProgram::~ShaderProgram()
 	{
-		if (this->glShaderProgram != 0)
+		if (this->glShaderProgram != 0 && april::rendersys->canUseLowLevelCalls())
 		{
 			glDeleteProgram(this->glShaderProgram);
 		}
@@ -82,6 +83,10 @@ namespace april
 
 	bool OpenGLES_RenderSystem::ShaderProgram::load(unsigned int pixelShaderId, unsigned int vertexShaderId)
 	{
+		if (!april::rendersys->canUseLowLevelCalls())
+		{
+			return false;
+		}
 		if (this->glShaderProgram != 0)
 		{
 			hlog::error(logTag, "Shader program already created!");
@@ -131,10 +136,6 @@ namespace april
 		this->etc1Supported = false;
 #endif
 		this->caps.renderTarget = true;
-	}
-
-	OpenGLES_RenderSystem::~OpenGLES_RenderSystem()
-	{
 	}
 
 	void OpenGLES_RenderSystem::_deviceInit()
@@ -453,6 +454,11 @@ namespace april
 	{
 		OpenGL_RenderSystem::_updateDeviceState(state, forceUpdate);
 		this->_updateShader(forceUpdate);
+	}
+
+	bool OpenGLES_RenderSystem::canUseLowLevelCalls() const
+	{
+		return (!april::application->isSuspended());
 	}
 
 	void OpenGLES_RenderSystem::_setDeviceModelviewMatrix(const gmat4& matrix)

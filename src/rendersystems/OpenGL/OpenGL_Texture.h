@@ -49,7 +49,6 @@ namespace april
 		friend class OpenGLES_RenderSystem;
 
 		OpenGL_Texture(bool fromResource);
-		~OpenGL_Texture();
 
 	protected:
 		unsigned int textureId;

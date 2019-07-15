@@ -35,7 +35,7 @@ namespace april
 
 	void TextureAsync::update()
 	{
-		if (april::rendersys == NULL)
+		if (april::rendersys == NULL || !april::rendersys->canUseLowLevelCalls())
 		{
 			return;
 		}
@@ -60,7 +60,7 @@ namespace april
 
 	void TextureAsync::updateSingleTexture(Texture* texture)
 	{
-		if (april::rendersys == NULL)
+		if (april::rendersys == NULL || !april::rendersys->canUseLowLevelCalls())
 		{
 			return;
 		}

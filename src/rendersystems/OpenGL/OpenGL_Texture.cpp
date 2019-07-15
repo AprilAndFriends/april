@@ -33,12 +33,12 @@ namespace april
 	{
 	}
 
-	OpenGL_Texture::~OpenGL_Texture()
-	{
-	}
-
 	bool OpenGL_Texture::_deviceCreateTexture(unsigned char* data, int size)
 	{
+		if (!april::rendersys->canUseLowLevelCalls())
+		{
+			return false;
+		}
 		GL_SAFE_CALL(glGenTextures, (1, &this->textureId));
 		this->firstUpload = true;
 		return (this->textureId != 0);
@@ -48,7 +48,10 @@ namespace april
 	{
 		if (this->textureId != 0)
 		{
-			glDeleteTextures(1, &this->textureId);
+			if (april::rendersys->canUseLowLevelCalls())
+			{
+				glDeleteTextures(1, &this->textureId);
+			}
 			this->textureId = 0;
 			this->firstUpload = true;
 			return true;

@@ -16,9 +16,5 @@ namespace april
 	{
 	}
 
-	OpenGLES2_Texture::~OpenGLES2_Texture()
-	{
-	}
-
 }
 #endif

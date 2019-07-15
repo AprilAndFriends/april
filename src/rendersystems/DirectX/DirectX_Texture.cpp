@@ -16,10 +16,6 @@ namespace april
 	{
 	}
 
-	DirectX_Texture::~DirectX_Texture()
-	{
-	}
-
 	bool DirectX_Texture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
 		Lock lock = this->_tryLockSystem(dx, dy, sw, sh);

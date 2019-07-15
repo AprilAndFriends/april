@@ -25,7 +25,7 @@ namespace april
 
 	OpenGLES_PixelShader::~OpenGLES_PixelShader()
 	{
-		if (this->glShader != 0)
+		if (this->glShader != 0 && april::rendersys->canUseLowLevelCalls())
 		{
 			glDeleteShader(this->glShader);
 		}
@@ -38,7 +38,11 @@ namespace april
 
 	bool OpenGLES_PixelShader::_createShader(chstr filename, const hstream& stream)
 	{
-		this->glShader = glCreateShader(GL_FRAGMENT_SHADER);
+		if (!april::rendersys->canUseLowLevelCalls())
+		{
+			return false;
+		}
+		GL_SAFE_CALL(this->glShader = glCreateShader, (GL_FRAGMENT_SHADER));
 		if (this->glShader == 0)
 		{
 			hlog::error(logTag, "Shader could not be created!");

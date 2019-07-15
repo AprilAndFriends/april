@@ -36,22 +36,22 @@
 #include "Win32_Window.h"
 #endif
 
-#define MAX_VERTEX_COUNT 65535
 #ifdef __ANDROID__
 #define _SEGMENTED_RENDERING
 #endif
+#define MAX_VERTEX_COUNT 65535
 
 namespace april
 {
 	// translation from abstract render ops to gl's render ops
 	int OpenGL_RenderSystem::_glRenderOperations[] =
 	{
-		GL_TRIANGLES,		// RO_TRIANGLE_LIST
-		GL_TRIANGLE_STRIP,	// RO_TRIANGLE_STRIP
-		GL_LINES,			// RO_LINE_LIST
-		GL_LINE_STRIP,		// RO_LINE_STRIP
-		GL_POINTS,			// RO_POINT_LIST
-		GL_TRIANGLE_FAN,	// RO_TRIANGLE_FAN
+		GL_TRIANGLES,
+		GL_TRIANGLE_STRIP,
+		GL_LINES,
+		GL_LINE_STRIP,
+		GL_POINTS,
+		GL_TRIANGLE_FAN,
 	};
 
 	OpenGL_RenderSystem::OpenGL_RenderSystem() :
@@ -73,10 +73,6 @@ namespace april
 		this->hWnd = 0;
 		this->hDC = 0;
 #endif
-	}
-
-	OpenGL_RenderSystem::~OpenGL_RenderSystem()
-	{
 	}
 
 	void OpenGL_RenderSystem::_deviceInit()

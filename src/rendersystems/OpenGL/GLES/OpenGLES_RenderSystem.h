@@ -43,7 +43,10 @@ namespace april
 		};
 
 		OpenGLES_RenderSystem();
-		~OpenGLES_RenderSystem();
+
+#ifdef __ANDROID__
+		bool canUseLowLevelCalls() const;
+#endif
 
 	protected:
 		OpenGLES_VertexShader* vertexShaderPlain;

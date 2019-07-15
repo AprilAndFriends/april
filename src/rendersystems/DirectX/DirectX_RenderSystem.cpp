@@ -17,9 +17,5 @@ namespace april
 	{
 	}
 
-	DirectX_RenderSystem::~DirectX_RenderSystem()
-	{
-	}
-
 }
 #endif

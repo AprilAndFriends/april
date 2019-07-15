@@ -25,7 +25,7 @@ namespace april
 
 	OpenGLES_VertexShader::~OpenGLES_VertexShader()
 	{
-		if (this->glShader != 0)
+		if (this->glShader != 0 && april::rendersys->canUseLowLevelCalls())
 		{
 			glDeleteShader(this->glShader);
 		}
@@ -38,6 +38,10 @@ namespace april
 
 	bool OpenGLES_VertexShader::_createShader(chstr filename, const hstream& stream)
 	{
+		if (!april::rendersys->canUseLowLevelCalls())
+		{
+			return false;
+		}
 		GL_SAFE_CALL(this->glShader = glCreateShader, (GL_VERTEX_SHADER));
 		if (this->glShader == 0)
 		{

@@ -17,8 +17,4 @@ namespace april
 	{
 	}
 
-	EventDelegate::~EventDelegate()
-	{
-	}
-
 }

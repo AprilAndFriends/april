@@ -29,7 +29,6 @@ namespace april
 		friend class DirectX9_RenderSystem;
 
 		DirectX9_Texture(bool fromResource);
-		~DirectX9_Texture();
 		
 	protected:
 		IDirect3DSurface9* d3dSurface;

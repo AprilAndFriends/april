@@ -30,10 +30,6 @@ namespace april
 	{
 	}
 
-	DirectX9_Texture::~DirectX9_Texture()
-	{
-	}
-
 	bool DirectX9_Texture::_deviceCreateTexture(unsigned char* data, int size)
 	{
 		this->d3dPool = D3DPOOL_DEFAULT;

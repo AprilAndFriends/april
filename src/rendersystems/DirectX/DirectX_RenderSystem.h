@@ -22,7 +22,6 @@ namespace april
 	{
 	public:
 		DirectX_RenderSystem();
-		~DirectX_RenderSystem();
 
 	};
 

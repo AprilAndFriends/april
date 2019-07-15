@@ -25,7 +25,6 @@ namespace april
 	{
 	public:
 		OpenGLES2_Texture(bool fromResource);
-		~OpenGLES2_Texture();
 
 	};
 

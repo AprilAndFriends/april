@@ -507,6 +507,10 @@ namespace april
 
 	bool Texture::_tryAsyncFinalUpload()
 	{
+		if (!april::rendersys->canUseLowLevelCalls())
+		{
+			return false;
+		}
 		hmutex::ScopeLock lock(&this->asyncLoadMutex);
 		if (!this->_isAsyncUploadQueued())
 		{
@@ -518,6 +522,10 @@ namespace april
 
 	bool Texture::_upload(hmutex::ScopeLock& lock)
 	{
+		if (!april::rendersys->canUseLowLevelCalls())
+		{
+			return false;
+		}
 		this->asyncLoadDiscarded = false; // a possible previous unload call must be canceled
 		int size = 0;
 		unsigned char* currentData = NULL;

@@ -26,7 +26,6 @@ namespace april
 		friend class OpenGL1_RenderSystem;
 
 		OpenGL1_Texture(bool fromResource);
-		~OpenGL1_Texture();
 
 	};
 

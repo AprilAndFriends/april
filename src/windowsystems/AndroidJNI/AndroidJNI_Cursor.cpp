@@ -16,9 +16,5 @@ namespace april
 	{
 	}
 
-	AndroidJNI_Cursor::~AndroidJNI_Cursor()
-	{
-	}
-
 }
 #endif

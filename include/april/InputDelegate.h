@@ -29,8 +29,6 @@ namespace april
 	public:
 		/// @brief Basic constructor.
 		InputDelegate();
-		/// @brief Destructor.
-		~InputDelegate();
 
 	};
 

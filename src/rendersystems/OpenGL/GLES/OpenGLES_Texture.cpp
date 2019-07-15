@@ -28,10 +28,6 @@ namespace april
 #endif
 	}
 
-	OpenGLES_Texture::~OpenGLES_Texture()
-	{
-	}
-
 	bool OpenGLES_Texture::_deviceCreateTexture(unsigned char* data, int size)
 	{
 		if (!OpenGL_Texture::_deviceCreateTexture(data, size))
@@ -110,13 +106,19 @@ namespace april
 	{
 		if (this->framebufferId != 0)
 		{
-			glDeleteFramebuffers(1, &this->framebufferId);
+			if (april::rendersys->canUseLowLevelCalls())
+			{
+				glDeleteFramebuffers(1, &this->framebufferId);
+			}
 			this->framebufferId = 0;
 		}
 #ifdef __ANDROID__
 		if (this->alphaTextureId != 0)
 		{
-			glDeleteTextures(1, &this->alphaTextureId);
+			if (april::rendersys->canUseLowLevelCalls())
+			{
+				glDeleteTextures(1, &this->alphaTextureId);
+			}
 			this->alphaTextureId = 0;
 		}
 #endif

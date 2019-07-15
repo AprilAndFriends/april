@@ -26,8 +26,6 @@ namespace april
 	public:
 		/// @brief Basic constructor.
 		EventDelegate();
-		/// @brief Destructor.
-		~EventDelegate();
 
 	};
 

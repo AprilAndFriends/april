@@ -85,7 +85,6 @@ namespace april
 		friend class OpenGL_Texture;
 
 		OpenGL_RenderSystem();
-		~OpenGL_RenderSystem();
 
 		int getVRam() const;
 

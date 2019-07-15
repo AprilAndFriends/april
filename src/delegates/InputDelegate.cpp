@@ -19,8 +19,4 @@ namespace april
 	{
 	}
 
-	InputDelegate::~InputDelegate()
-	{
-	}
-
 }

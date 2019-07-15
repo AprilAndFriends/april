@@ -28,7 +28,6 @@ namespace april
 		friend class OpenGLES2_RenderSystem;
 
 		OpenGLES2_PixelShader();
-		~OpenGLES2_PixelShader();
 
 	};
 

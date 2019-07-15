@@ -415,6 +415,11 @@ namespace april
 		return this->displayModes;
 	}
 
+	bool RenderSystem::canUseLowLevelCalls() const
+	{
+		return true;
+	}
+
 	int64_t RenderSystem::getVRamConsumption()
 	{
 		int64_t result = 0LL;
