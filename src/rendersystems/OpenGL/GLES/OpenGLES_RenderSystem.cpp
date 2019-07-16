@@ -456,10 +456,13 @@ namespace april
 		this->_updateShader(forceUpdate);
 	}
 
+	
+#ifdef __ANDORID__
 	bool OpenGLES_RenderSystem::canUseLowLevelCalls() const
 	{
 		return (!april::application->isSuspended());
 	}
+#endif
 
 	void OpenGLES_RenderSystem::_setDeviceModelviewMatrix(const gmat4& matrix)
 	{
