@@ -455,7 +455,6 @@ namespace april
 		OpenGL_RenderSystem::_updateDeviceState(state, forceUpdate);
 		this->_updateShader(forceUpdate);
 	}
-
 	
 #ifdef __ANDROID__
 	bool OpenGLES_RenderSystem::canUseLowLevelCalls() const
