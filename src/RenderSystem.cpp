@@ -1543,7 +1543,7 @@ namespace april
 				// creating the texture the first time
 				if (this->_currentIntermediateRenderTexture == NULL)
 				{
-					if (!this->_tryCreateIntermediateRenderTextures(width, height))
+					if (!this->_tryCreateIntermediateRenderTextures(width, height) && this->canUseLowLevelCalls())
 					{
 						throw Exception("Couldn't create intermediate render texture!");
 					}
