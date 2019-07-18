@@ -457,7 +457,7 @@ namespace april
 	}
 
 	
-#ifdef __ANDORID__
+#ifdef __ANDROID__
 	bool OpenGLES_RenderSystem::canUseLowLevelCalls() const
 	{
 		return (!april::application->isSuspended());
