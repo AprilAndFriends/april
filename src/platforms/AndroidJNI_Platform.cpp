@@ -26,8 +26,12 @@ namespace april
 
 	hstr _jstringToHstr(JNIEnv* env, jstring string)
 	{
+		if (string == NULL)
+		{
+			return "";
+		}
 		const char* chars = env->GetStringUTFChars(string, NULL);
-		hstr result(chars);
+		hstr result(chars != NULL ? chars : "");
 		env->ReleaseStringUTFChars(string, chars);
 		return result;
 	}
