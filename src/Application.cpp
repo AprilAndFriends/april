@@ -55,10 +55,6 @@ namespace april
 		this->aprilApplicationDestroy = aprilApplicationDestroy;
 	}
 	
-	Application::~Application()
-	{
-	}
-
 	Application::State Application::getState()
 	{
 		hmutex::ScopeLock lock(&this->stateMutex);

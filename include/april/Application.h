@@ -62,8 +62,6 @@ namespace april
 		/// @param[in] aprilApplicationInit Initialization callback.
 		/// @param[in] aprilApplicationDestroy Destruction callback.
 		Application(void (*aprilApplicationInit)(), void (*aprilApplicationDestroy)());
-		/// @brief Destructor.
-		~Application();
 
 		/// @brief Get/Set launch arguments.
 		HL_DEFINE_GETSET(harray<hstr>, args, Args);
