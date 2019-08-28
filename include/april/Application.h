@@ -121,6 +121,9 @@ namespace april
 		void queueMessageBox(const MessageBoxData& data);
 		/// @brief Waits until all OS message boxes have finished displaying.
 		void waitForMessageBoxes();
+		/// @brief Forces a time-delta of 0 for the next frame update.
+		/// @note Useful to prevent stutters if the current frame is doing lots of work.
+		void forceNoTimeDeltaNextFrame();
 
 		static void messageBoxCallback(const MessageBoxButton& button);
 
@@ -154,6 +157,8 @@ namespace april
 		/// @brief Maximum allowed time-delta that are propagated into the UpdateDelegate.
 		/// @note Limiting this makes sense, because on weak hardware configurations it allows that large frameskips don't result in too large time skips.
 		double timeDeltaMaxLimit;
+		/// @brief Whether to force a time-delta of 0 for the next frame update.
+		bool noTimeDeltaNextFrame;
 		/// @brief Queue for message box displays.
 		harray<MessageBoxData> messageBoxQueue;
 		/// @brief Whether OS message box is being displayed at this moment or not.

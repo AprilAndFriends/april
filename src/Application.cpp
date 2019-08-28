@@ -48,6 +48,7 @@ namespace april
 		fpsTimer(0.0),
 		fpsResolution(0.5),
 		timeDeltaMaxLimit(0.1),
+		noTimeDeltaNextFrame(false),
 		displayingMessageBox(false),
 		updateThread(&_asyncUpdate, "APRIL Async Update")
 	{
@@ -273,6 +274,11 @@ namespace april
 			{
 				lockTimeDelta.acquire(&april::application->timeDeltaMutex);
 				timeDelta = (float)april::application->timeDelta;
+				if (april::application->noTimeDeltaNextFrame)
+				{
+					timeDelta = 0.0f;
+					april::application->noTimeDeltaNextFrame = false;
+				}
 				april::application->timeDelta = 0.0f;
 				lockTimeDelta.release();
 				if (!april::window->update(timeDelta))
@@ -410,6 +416,11 @@ namespace april
 			lock.acquire(&this->messageBoxMutex);
 		}
 #endif
+	}
+
+	void Application::forceNoTimeDeltaNextFrame()
+	{
+		this->noTimeDeltaNextFrame = true;
 	}
 
 	void Application::messageBoxCallback(const MessageBoxButton& button)
