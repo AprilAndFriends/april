@@ -17,38 +17,6 @@
       <Configuration>ReleaseS</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|Android">
-      <Configuration>Debug</Configuration>
-      <Platform>Android</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugS|Android">
-      <Configuration>DebugS</Configuration>
-      <Platform>Android</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Android">
-      <Configuration>Release</Configuration>
-      <Platform>Android</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseS|Android">
-      <Configuration>ReleaseS</Configuration>
-      <Platform>Android</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|Android-x86">
-      <Configuration>Debug</Configuration>
-      <Platform>Android-x86</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugS|Android-x86">
-      <Configuration>DebugS</Configuration>
-      <Platform>Android-x86</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Android-x86">
-      <Configuration>Release</Configuration>
-      <Platform>Android-x86</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseS|Android-x86">
-      <Configuration>ReleaseS</Configuration>
-      <Platform>Android-x86</Platform>
-    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{115121E1-2F6F-48FF-89EF-6B530A6D59ED}</ProjectGuid>
@@ -69,34 +37,6 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS|Win32'">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Android'">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS|Android'">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Android'">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS|Android'">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Android-x86'">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='DebugS|Android-x86'">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Android-x86'">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='ReleaseS|Android-x86'">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
@@ -184,18 +124,14 @@
     <ClCompile Include="..\..\src\dsp\dec_mips32.c" />
     <ClCompile Include="..\..\src\dsp\dec_mips_dsp_r2.c" />
     <ClCompile Include="..\..\src\dsp\dec_msa.c" />
-    <ClCompile Include="..\..\src\dsp\dec_neon.c">
-      <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
-    </ClCompile>
+    <ClCompile Include="..\..\src\dsp\dec_neon.c" />
     <ClCompile Include="..\..\src\dsp\dec_sse2.c" />
     <ClCompile Include="..\..\src\dsp\dec_sse41.c" />
     <ClCompile Include="..\..\src\dsp\enc.c" />
     <ClCompile Include="..\..\src\dsp\enc_avx2.c" />
     <ClCompile Include="..\..\src\dsp\enc_mips32.c" />
     <ClCompile Include="..\..\src\dsp\enc_mips_dsp_r2.c" />
-    <ClCompile Include="..\..\src\dsp\enc_neon.c">
-      <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
-    </ClCompile>
+    <ClCompile Include="..\..\src\dsp\enc_neon.c" />
     <ClCompile Include="..\..\src\dsp\enc_sse2.c" />
     <ClCompile Include="..\..\src\dsp\enc_sse41.c" />
     <ClCompile Include="..\..\src\dsp\filters.c" />
@@ -205,164 +141,123 @@
     <ClCompile Include="..\..\src\dsp\lossless_enc.c" />
     <ClCompile Include="..\..\src\dsp\lossless_enc_mips32.c" />
     <ClCompile Include="..\..\src\dsp\lossless_enc_mips_dsp_r2.c" />
-    <ClCompile Include="..\..\src\dsp\lossless_enc_neon.c">
-      <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
-    </ClCompile>
+    <ClCompile Include="..\..\src\dsp\lossless_enc_neon.c" />
     <ClCompile Include="..\..\src\dsp\lossless_enc_sse2.c" />
     <ClCompile Include="..\..\src\dsp\lossless_enc_sse41.c" />
     <ClCompile Include="..\..\src\dsp\lossless_mips_dsp_r2.c" />
-    <ClCompile Include="..\..\src\dsp\lossless_neon.c">
-      <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
-    </ClCompile>
+    <ClCompile Include="..\..\src\dsp\lossless_neon.c" />
     <ClCompile Include="..\..\src\dsp\lossless_sse2.c" />
     <ClCompile Include="..\..\src\dsp\rescaler.c" />
     <ClCompile Include="..\..\src\dsp\rescaler_mips32.c" />
     <ClCompile Include="..\..\src\dsp\rescaler_mips_dsp_r2.c" />
-    <ClCompile Include="..\..\src\dsp\rescaler_neon.c">
-      <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
-    </ClCompile>
+    <ClCompile Include="..\..\src\dsp\rescaler_neon.c" />
     <ClCompile Include="..\..\src\dsp\rescaler_sse2.c" />
     <ClCompile Include="..\..\src\dsp\upsampling.c" />
     <ClCompile Include="..\..\src\dsp\upsampling_mips_dsp_r2.c" />
-    <ClCompile Include="..\..\src\dsp\upsampling_neon.c">
-      <ArmFloatingPointHardware Condition="'$(Platform)'=='Android'">neon</ArmFloatingPointHardware>
-    </ClCompile>
+    <ClCompile Include="..\..\src\dsp\upsampling_neon.c" />
     <ClCompile Include="..\..\src\dsp\upsampling_sse2.c" />
     <ClCompile Include="..\..\src\dsp\yuv.c" />
     <ClCompile Include="..\..\src\dsp\yuv_mips32.c" />
     <ClCompile Include="..\..\src\dsp\yuv_mips_dsp_r2.c" />
     <ClCompile Include="..\..\src\dsp\yuv_sse2.c" />
     <ClCompile Include="..\..\src\enc\alpha.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\analysis.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\backward_references.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\config.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\cost.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\filter.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\frame.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\histogram.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\iterator.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\near_lossless.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\picture.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\picture_csp.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\picture_psnr.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\picture_rescale.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\picture_tools.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\quant.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\syntax.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\token.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\tree.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\vp8l.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\enc\webpenc.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)enc_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)enc_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)enc_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\bit_reader.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\bit_writer.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\color_cache.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\filters.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\huffman.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\huffman_encode.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\quant_levels.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\quant_levels_dec.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\random.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\rescaler.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\thread.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\utils\utils.c">
-      <ObjectFileName Condition="'$(Platform)'=='Win32'">$(IntDir)utils_%(Filename).obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">$(IntDir)utils_%(Filename).o</ObjectFileName>
+      <ObjectFileName>$(IntDir)utils_%(Filename).obj</ObjectFileName>
     </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

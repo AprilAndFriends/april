@@ -4,23 +4,15 @@
     <IncludePath>$(IncludePath);$(DXSDK_DIR)Include</IncludePath>
     <LibraryPath>$(LibraryPath);$(DXSDK_DIR)Lib\x86</LibraryPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='ReleaseS_OpenKODE' or '$(Configuration)'=='DebugS_OpenKODE'">
-    <TargetName>$(ProjectName)-kd</TargetName>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+  <ItemDefinitionGroup>
     <Link>
       <AdditionalDependencies>libhltypes.lib;libgtypes.lib;libpng.lib;libjpeg.lib;zlib1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Platform)'=='Android' or '$(Platform)'=='Android-x86'">
-    <Link>
-      <AdditionalDependencies>-lhltypes;-lgtypes;-lpng;-lbinjpeg;-lzlib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9|Win32' or
-                                  '$(Configuration)|$(Platform)'=='DebugS_DirectX9|Win32' or
-                                  '$(Configuration)|$(Platform)'=='Release_DirectX9|Win32' or
-                                  '$(Configuration)|$(Platform)'=='ReleaseS_DirectX9|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_DirectX9' or
+                                  '$(Configuration)'=='DebugS_DirectX9' or
+                                  '$(Configuration)'=='Release_DirectX9' or
+                                  '$(Configuration)'=='ReleaseS_DirectX9'">
     <ClCompile>
       <PreprocessorDefinitions>_DIRECTX;_DIRECTX9;_WIN32_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -28,10 +20,10 @@
       <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DirectX9_XInput|Win32' or
-                                  '$(Configuration)|$(Platform)'=='DebugS_DirectX9_XInput|Win32' or
-                                  '$(Configuration)|$(Platform)'=='Release_DirectX9_XInput|Win32' or
-                                  '$(Configuration)|$(Platform)'=='ReleaseS_DirectX9_XInput|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_DirectX9_XInput' or
+                                  '$(Configuration)'=='DebugS_DirectX9_XInput' or
+                                  '$(Configuration)'=='Release_DirectX9_XInput' or
+                                  '$(Configuration)'=='ReleaseS_DirectX9_XInput'">
     <ClCompile>
       <PreprocessorDefinitions>_DIRECTX;_DIRECTX9;_WIN32_WINDOW;_WIN32_XINPUT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -39,10 +31,10 @@
       <AdditionalDependencies>d3d9.lib;XInput9_1_0.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGL1|Win32' or
-                                  '$(Configuration)|$(Platform)'=='DebugS_OpenGL1|Win32' or
-                                  '$(Configuration)|$(Platform)'=='Release_OpenGL1|Win32' or
-                                  '$(Configuration)|$(Platform)'=='ReleaseS_OpenGL1|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_OpenGL1' or
+                                  '$(Configuration)'=='DebugS_OpenGL1' or
+                                  '$(Configuration)'=='Release_OpenGL1' or
+                                  '$(Configuration)'=='ReleaseS_OpenGL1'">
     <ClCompile>
       <PreprocessorDefinitions>_OPENGL;_OPENGL1;_WIN32_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -50,27 +42,15 @@
       <AdditionalDependencies>OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES2|Win32' or
-                                  '$(Configuration)|$(Platform)'=='DebugS_OpenGLES2|Win32' or
-                                  '$(Configuration)|$(Platform)'=='Release_OpenGLES2|Win32' or
-                                  '$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES2|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug_OpenGLES2' or
+                                  '$(Configuration)'=='DebugS_OpenGLES2' or
+                                  '$(Configuration)'=='Release_OpenGLES2' or
+                                  '$(Configuration)'=='ReleaseS_OpenGLES2'">
     <ClCompile>
       <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES2;_EGL;_WIN32_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_OpenGLES2|Android' or
-                                  '$(Configuration)|$(Platform)'=='DebugS_OpenGLES2|Android' or
-                                  '$(Configuration)|$(Platform)'=='Release_OpenGLES2|Android' or
-                                  '$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES2|Android' or
-                                  '$(Configuration)|$(Platform)'=='Debug_OpenGLES2|Android-x86' or
-                                  '$(Configuration)|$(Platform)'=='DebugS_OpenGLES2|Android-x86' or
-                                  '$(Configuration)|$(Platform)'=='Release_OpenGLES2|Android-x86' or
-                                  '$(Configuration)|$(Platform)'=='ReleaseS_OpenGLES2|Android-x86'">
-    <ClCompile>
-      <PreprocessorDefinitions>_OPENGL;_OPENGLES;_OPENGLES2;_ANDROIDJNI_WINDOW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
   </ItemDefinitionGroup>
 </Project>
