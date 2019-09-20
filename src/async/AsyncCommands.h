@@ -20,6 +20,7 @@
 #include "ClearColorCommand.h"
 #include "CreateCommand.h"
 #include "CreateWindowCommand.h"
+#include "CustomCommand.h"
 #include "DestroyCommand.h"
 #include "DestroyTextureCommand.h"
 #include "DestroyWindowCommand.h"

@@ -64,8 +64,8 @@
 		} \
 	}
 
-#define _SELECT_SHADER(useTexture, useColor, type) \
-	(useTexture ? (useColor ? this->shaderColoredTextured ## type : this->shaderTextured ## type) : (useColor ? this->shaderColored ## type : this->shader ## type));
+#define _SELECT_SHADER(useTexture, texture, useColor, type) \
+	(useTexture ? (texture->getType() != Texture::Type::External ? (useColor ? this->shaderColoredTextured ## type : this->shaderTextured ## type) : (useColor ? this->shaderColoredExTextured ## type : this->shaderExTextured ## type)) : (useColor ? this->shaderColored ## type : this->shader ## type));
 
 namespace april
 {
@@ -155,6 +155,11 @@ namespace april
 		this->pixelShaderTexturedLerp = NULL;
 		this->pixelShaderTexturedDesaturate = NULL;
 		this->pixelShaderTexturedSepia = NULL;
+		this->pixelShaderExTexturedMultiply = NULL;
+		this->pixelShaderExTexturedAlphaMap = NULL;
+		this->pixelShaderExTexturedLerp = NULL;
+		this->pixelShaderExTexturedDesaturate = NULL;
+		this->pixelShaderExTexturedSepia = NULL;
 		this->pixelShaderColoredMultiply = NULL;
 		this->pixelShaderColoredAlphaMap = NULL;
 		this->pixelShaderColoredLerp = NULL;
@@ -165,15 +170,28 @@ namespace april
 		this->pixelShaderColoredTexturedLerp = NULL;
 		this->pixelShaderColoredTexturedDesaturate = NULL;
 		this->pixelShaderColoredTexturedSepia = NULL;
+		this->pixelShaderColoredExTexturedMultiply = NULL;
+		this->pixelShaderColoredExTexturedAlphaMap = NULL;
+		this->pixelShaderColoredExTexturedLerp = NULL;
+		this->pixelShaderColoredExTexturedDesaturate = NULL;
+		this->pixelShaderColoredExTexturedSepia = NULL;
 #ifdef __ANDROID__
 		this->pixelShaderTexturedMultiply_AlphaHack = NULL;
 		this->pixelShaderTexturedLerp_AlphaHack = NULL;
 		this->pixelShaderTexturedDesaturate_AlphaHack = NULL;
 		this->pixelShaderTexturedSepia_AlphaHack = NULL;
+		this->pixelShaderExTexturedMultiply_AlphaHack = NULL;
+		this->pixelShaderExTexturedLerp_AlphaHack = NULL;
+		this->pixelShaderExTexturedDesaturate_AlphaHack = NULL;
+		this->pixelShaderExTexturedSepia_AlphaHack = NULL;
 		this->pixelShaderColoredTexturedMultiply_AlphaHack = NULL;
 		this->pixelShaderColoredTexturedLerp_AlphaHack = NULL;
 		this->pixelShaderColoredTexturedDesaturate_AlphaHack = NULL;
 		this->pixelShaderColoredTexturedSepia_AlphaHack = NULL;
+		this->pixelShaderColoredExTexturedMultiply_AlphaHack = NULL;
+		this->pixelShaderColoredExTexturedLerp_AlphaHack = NULL;
+		this->pixelShaderColoredExTexturedDesaturate_AlphaHack = NULL;
+		this->pixelShaderColoredExTexturedSepia_AlphaHack = NULL;
 #endif
 		this->shaderMultiply = NULL;
 		this->shaderAlphaMap = NULL;
@@ -185,6 +203,11 @@ namespace april
 		this->shaderTexturedLerp = NULL;
 		this->shaderTexturedDesaturate = NULL;
 		this->shaderTexturedSepia = NULL;
+		this->shaderExTexturedMultiply = NULL;
+		this->shaderExTexturedAlphaMap = NULL;
+		this->shaderExTexturedLerp = NULL;
+		this->shaderExTexturedDesaturate = NULL;
+		this->shaderExTexturedSepia = NULL;
 		this->shaderColoredMultiply = NULL;
 		this->shaderColoredAlphaMap = NULL;
 		this->shaderColoredLerp = NULL;
@@ -195,21 +218,39 @@ namespace april
 		this->shaderColoredTexturedLerp = NULL;
 		this->shaderColoredTexturedDesaturate = NULL;
 		this->shaderColoredTexturedSepia = NULL;
+		this->shaderColoredExTexturedMultiply = NULL;
+		this->shaderColoredExTexturedAlphaMap = NULL;
+		this->shaderColoredExTexturedLerp = NULL;
+		this->shaderColoredExTexturedDesaturate = NULL;
+		this->shaderColoredExTexturedSepia = NULL;
 #ifdef __ANDROID__
 		this->shaderTexturedMultiply_AlphaHack = NULL;
 		this->shaderTexturedLerp_AlphaHack = NULL;
 		this->shaderTexturedDesaturate_AlphaHack = NULL;
 		this->shaderTexturedSepia_AlphaHack = NULL;
+		this->shaderExTexturedMultiply_AlphaHack = NULL;
+		this->shaderExTexturedLerp_AlphaHack = NULL;
+		this->shaderExTexturedDesaturate_AlphaHack = NULL;
+		this->shaderExTexturedSepia_AlphaHack = NULL;
 		this->shaderColoredTexturedMultiply_AlphaHack = NULL;
 		this->shaderColoredTexturedLerp_AlphaHack = NULL;
 		this->shaderColoredTexturedDesaturate_AlphaHack = NULL;
 		this->shaderColoredTexturedSepia_AlphaHack = NULL;
+		this->shaderColoredExTexturedMultiply_AlphaHack = NULL;
+		this->shaderColoredExTexturedLerp_AlphaHack = NULL;
+		this->shaderColoredExTexturedDesaturate_AlphaHack = NULL;
+		this->shaderColoredExTexturedSepia_AlphaHack = NULL;
 #endif
 		this->deviceState_matrixChanged = true;
 		this->deviceState_systemColorChanged = true;
 		this->deviceState_colorModeFactorChanged = true;
 		this->deviceState_shader = NULL;
 		this->renderTarget = NULL;
+	}
+
+	bool OpenGLES_RenderSystem::_isSupportedExternalTextures() const
+	{
+		return true;
 	}
 
 	bool OpenGLES_RenderSystem::_deviceCreate(RenderSystem::Options options)
@@ -325,30 +366,48 @@ namespace april
 		LOAD_PIXEL_SHADER(this->pixelShaderLerp, Lerp, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderDesaturate, Desaturate, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderSepia, Sepia, data);
-		LOAD_PIXEL_SHADER(this->pixelShaderColoredMultiply, ColoredMultiply, data);
-		LOAD_PIXEL_SHADER(this->pixelShaderColoredAlphaMap, ColoredAlphaMap, data);
-		LOAD_PIXEL_SHADER(this->pixelShaderColoredLerp, ColoredLerp, data);
-		LOAD_PIXEL_SHADER(this->pixelShaderColoredDesaturate, ColoredDesaturate, data);
-		LOAD_PIXEL_SHADER(this->pixelShaderColoredSepia, ColoredSepia, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderTexturedMultiply, TexturedMultiply, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderTexturedAlphaMap, TexturedAlphaMap, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderTexturedLerp, TexturedLerp, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderTexturedDesaturate, TexturedDesaturate, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderTexturedSepia, TexturedSepia, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderExTexturedMultiply, ExTexturedMultiply, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderExTexturedAlphaMap, ExTexturedAlphaMap, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderExTexturedLerp, ExTexturedLerp, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderExTexturedDesaturate, ExTexturedDesaturate, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderExTexturedSepia, ExTexturedSepia, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredMultiply, ColoredMultiply, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredAlphaMap, ColoredAlphaMap, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredLerp, ColoredLerp, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredDesaturate, ColoredDesaturate, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredSepia, ColoredSepia, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedMultiply, ColoredTexturedMultiply, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedAlphaMap, ColoredTexturedAlphaMap, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedLerp, ColoredTexturedLerp, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedDesaturate, ColoredTexturedDesaturate, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedSepia, ColoredTexturedSepia, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredExTexturedMultiply, ColoredExTexturedMultiply, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredExTexturedAlphaMap, ColoredExTexturedAlphaMap, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredExTexturedLerp, ColoredExTexturedLerp, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredExTexturedDesaturate, ColoredExTexturedDesaturate, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredExTexturedSepia, ColoredExTexturedSepia, data);
 #ifdef __ANDROID__
 		LOAD_PIXEL_SHADER(this->pixelShaderTexturedMultiply_AlphaHack, TexturedMultiply_AlphaHack, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderTexturedLerp_AlphaHack, TexturedLerp_AlphaHack, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderTexturedDesaturate_AlphaHack, TexturedDesaturate_AlphaHack, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderTexturedSepia_AlphaHack, TexturedSepia_AlphaHack, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderExTexturedMultiply_AlphaHack, ExTexturedMultiply_AlphaHack, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderExTexturedLerp_AlphaHack, ExTexturedLerp_AlphaHack, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderExTexturedDesaturate_AlphaHack, ExTexturedDesaturate_AlphaHack, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderExTexturedSepia_AlphaHack, ExTexturedSepia_AlphaHack, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedMultiply_AlphaHack, ColoredTexturedMultiply_AlphaHack, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedLerp_AlphaHack, ColoredTexturedLerp_AlphaHack, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedDesaturate_AlphaHack, ColoredTexturedDesaturate_AlphaHack, data);
 		LOAD_PIXEL_SHADER(this->pixelShaderColoredTexturedSepia_AlphaHack, ColoredTexturedSepia_AlphaHack, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredExTexturedMultiply_AlphaHack, ColoredExTexturedMultiply_AlphaHack, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredExTexturedLerp_AlphaHack, ColoredExTexturedLerp_AlphaHack, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredExTexturedDesaturate_AlphaHack, ColoredExTexturedDesaturate_AlphaHack, data);
+		LOAD_PIXEL_SHADER(this->pixelShaderColoredExTexturedSepia_AlphaHack, ColoredExTexturedSepia_AlphaHack, data);
 #endif
 		LOAD_PROGRAM(this->shaderMultiply, this->pixelShaderMultiply, this->vertexShaderPlain);
 		LOAD_PROGRAM(this->shaderAlphaMap, this->pixelShaderAlphaMap, this->vertexShaderPlain);
@@ -360,6 +419,11 @@ namespace april
 		LOAD_PROGRAM(this->shaderTexturedLerp, this->pixelShaderTexturedLerp, this->vertexShaderTextured);
 		LOAD_PROGRAM(this->shaderTexturedDesaturate, this->pixelShaderTexturedDesaturate, this->vertexShaderTextured);
 		LOAD_PROGRAM(this->shaderTexturedSepia, this->pixelShaderTexturedSepia, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderExTexturedMultiply, this->pixelShaderExTexturedMultiply, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderExTexturedAlphaMap, this->pixelShaderExTexturedAlphaMap, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderExTexturedLerp, this->pixelShaderExTexturedLerp, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderExTexturedDesaturate, this->pixelShaderExTexturedDesaturate, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderExTexturedSepia, this->pixelShaderExTexturedSepia, this->vertexShaderTextured);
 		LOAD_PROGRAM(this->shaderColoredMultiply, this->pixelShaderColoredMultiply, this->vertexShaderColored);
 		LOAD_PROGRAM(this->shaderColoredAlphaMap, this->pixelShaderColoredAlphaMap, this->vertexShaderColored);
 		LOAD_PROGRAM(this->shaderColoredLerp, this->pixelShaderColoredLerp, this->vertexShaderColored);
@@ -370,15 +434,28 @@ namespace april
 		LOAD_PROGRAM(this->shaderColoredTexturedLerp, this->pixelShaderColoredTexturedLerp, this->vertexShaderColoredTextured);
 		LOAD_PROGRAM(this->shaderColoredTexturedDesaturate, this->pixelShaderColoredTexturedDesaturate, this->vertexShaderColoredTextured);
 		LOAD_PROGRAM(this->shaderColoredTexturedSepia, this->pixelShaderColoredTexturedSepia, this->vertexShaderColoredTextured);
+		LOAD_PROGRAM(this->shaderColoredExTexturedMultiply, this->pixelShaderColoredExTexturedMultiply, this->vertexShaderColoredTextured);
+		LOAD_PROGRAM(this->shaderColoredExTexturedAlphaMap, this->pixelShaderColoredExTexturedAlphaMap, this->vertexShaderColoredTextured);
+		LOAD_PROGRAM(this->shaderColoredExTexturedLerp, this->pixelShaderColoredExTexturedLerp, this->vertexShaderColoredTextured);
+		LOAD_PROGRAM(this->shaderColoredExTexturedDesaturate, this->pixelShaderColoredExTexturedDesaturate, this->vertexShaderColoredTextured);
+		LOAD_PROGRAM(this->shaderColoredExTexturedSepia, this->pixelShaderColoredExTexturedSepia, this->vertexShaderColoredTextured);
 #ifdef __ANDROID__
 		LOAD_PROGRAM(this->shaderTexturedMultiply_AlphaHack, this->pixelShaderTexturedMultiply_AlphaHack, this->vertexShaderTextured);
 		LOAD_PROGRAM(this->shaderTexturedLerp_AlphaHack, this->pixelShaderTexturedLerp_AlphaHack, this->vertexShaderTextured);
 		LOAD_PROGRAM(this->shaderTexturedDesaturate_AlphaHack, this->pixelShaderTexturedDesaturate_AlphaHack, this->vertexShaderTextured);
 		LOAD_PROGRAM(this->shaderTexturedSepia_AlphaHack, this->pixelShaderTexturedSepia_AlphaHack, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderExTexturedMultiply_AlphaHack, this->pixelShaderExTexturedMultiply_AlphaHack, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderExTexturedLerp_AlphaHack, this->pixelShaderExTexturedLerp_AlphaHack, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderExTexturedDesaturate_AlphaHack, this->pixelShaderExTexturedDesaturate_AlphaHack, this->vertexShaderTextured);
+		LOAD_PROGRAM(this->shaderExTexturedSepia_AlphaHack, this->pixelShaderExTexturedSepia_AlphaHack, this->vertexShaderTextured);
 		LOAD_PROGRAM(this->shaderColoredTexturedMultiply_AlphaHack, this->pixelShaderColoredTexturedMultiply_AlphaHack, this->vertexShaderColoredTextured);
 		LOAD_PROGRAM(this->shaderColoredTexturedLerp_AlphaHack, this->pixelShaderColoredTexturedLerp_AlphaHack, this->vertexShaderColoredTextured);
 		LOAD_PROGRAM(this->shaderColoredTexturedDesaturate_AlphaHack, this->pixelShaderColoredTexturedDesaturate_AlphaHack, this->vertexShaderColoredTextured);
 		LOAD_PROGRAM(this->shaderColoredTexturedSepia_AlphaHack, this->pixelShaderColoredTexturedSepia_AlphaHack, this->vertexShaderColoredTextured);
+		LOAD_PROGRAM(this->shaderColoredExTexturedMultiply_AlphaHack, this->pixelShaderColoredExTexturedMultiply_AlphaHack, this->vertexShaderColoredTextured);
+		LOAD_PROGRAM(this->shaderColoredExTexturedLerp_AlphaHack, this->pixelShaderColoredExTexturedLerp_AlphaHack, this->vertexShaderColoredTextured);
+		LOAD_PROGRAM(this->shaderColoredExTexturedDesaturate_AlphaHack, this->pixelShaderColoredExTexturedDesaturate_AlphaHack, this->vertexShaderColoredTextured);
+		LOAD_PROGRAM(this->shaderColoredExTexturedSepia_AlphaHack, this->pixelShaderColoredExTexturedSepia_AlphaHack, this->vertexShaderColoredTextured);
 #endif
 	}
 
@@ -393,60 +470,96 @@ namespace april
 		DELETE_PIXEL_SHADER(this->pixelShaderLerp);
 		DELETE_PIXEL_SHADER(this->pixelShaderDesaturate);
 		DELETE_PIXEL_SHADER(this->pixelShaderSepia);
-		DELETE_PIXEL_SHADER(this->pixelShaderColoredMultiply);
-		DELETE_PIXEL_SHADER(this->pixelShaderColoredAlphaMap);
-		DELETE_PIXEL_SHADER(this->pixelShaderColoredLerp);
-		DELETE_PIXEL_SHADER(this->pixelShaderColoredDesaturate);
-		DELETE_PIXEL_SHADER(this->pixelShaderColoredSepia);
 		DELETE_PIXEL_SHADER(this->pixelShaderTexturedMultiply);
 		DELETE_PIXEL_SHADER(this->pixelShaderTexturedAlphaMap);
 		DELETE_PIXEL_SHADER(this->pixelShaderTexturedLerp);
 		DELETE_PIXEL_SHADER(this->pixelShaderTexturedDesaturate);
 		DELETE_PIXEL_SHADER(this->pixelShaderTexturedSepia);
+		DELETE_PIXEL_SHADER(this->pixelShaderExTexturedMultiply);
+		DELETE_PIXEL_SHADER(this->pixelShaderExTexturedAlphaMap);
+		DELETE_PIXEL_SHADER(this->pixelShaderExTexturedLerp);
+		DELETE_PIXEL_SHADER(this->pixelShaderExTexturedDesaturate);
+		DELETE_PIXEL_SHADER(this->pixelShaderExTexturedSepia);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredMultiply);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredAlphaMap);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredLerp);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredDesaturate);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredSepia);
 		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedMultiply);
 		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedAlphaMap);
 		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedLerp);
 		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedDesaturate);
 		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedSepia);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredExTexturedMultiply);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredExTexturedAlphaMap);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredExTexturedLerp);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredExTexturedDesaturate);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredExTexturedSepia);
 #ifdef __ANDROID__
 		DELETE_PIXEL_SHADER(this->pixelShaderTexturedMultiply_AlphaHack);
 		DELETE_PIXEL_SHADER(this->pixelShaderTexturedLerp_AlphaHack);
 		DELETE_PIXEL_SHADER(this->pixelShaderTexturedDesaturate_AlphaHack);
 		DELETE_PIXEL_SHADER(this->pixelShaderTexturedSepia_AlphaHack);
+		DELETE_PIXEL_SHADER(this->pixelShaderExTexturedMultiply_AlphaHack);
+		DELETE_PIXEL_SHADER(this->pixelShaderExTexturedLerp_AlphaHack);
+		DELETE_PIXEL_SHADER(this->pixelShaderExTexturedDesaturate_AlphaHack);
+		DELETE_PIXEL_SHADER(this->pixelShaderExTexturedSepia_AlphaHack);
 		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedMultiply_AlphaHack);
 		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedLerp_AlphaHack);
 		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedDesaturate_AlphaHack);
 		DELETE_PIXEL_SHADER(this->pixelShaderColoredTexturedSepia_AlphaHack);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredExTexturedMultiply_AlphaHack);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredExTexturedLerp_AlphaHack);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredExTexturedDesaturate_AlphaHack);
+		DELETE_PIXEL_SHADER(this->pixelShaderColoredExTexturedSepia_AlphaHack);
 #endif
 		_HL_TRY_DELETE(this->shaderMultiply);
 		_HL_TRY_DELETE(this->shaderAlphaMap);
 		_HL_TRY_DELETE(this->shaderLerp);
 		_HL_TRY_DELETE(this->shaderDesaturate);
 		_HL_TRY_DELETE(this->shaderSepia);
-		_HL_TRY_DELETE(this->shaderColoredMultiply);
-		_HL_TRY_DELETE(this->shaderColoredAlphaMap);
-		_HL_TRY_DELETE(this->shaderColoredLerp);
-		_HL_TRY_DELETE(this->shaderColoredDesaturate);
-		_HL_TRY_DELETE(this->shaderColoredSepia);
 		_HL_TRY_DELETE(this->shaderTexturedMultiply);
 		_HL_TRY_DELETE(this->shaderTexturedAlphaMap);
 		_HL_TRY_DELETE(this->shaderTexturedLerp);
 		_HL_TRY_DELETE(this->shaderTexturedDesaturate);
 		_HL_TRY_DELETE(this->shaderTexturedSepia);
+		_HL_TRY_DELETE(this->shaderExTexturedMultiply);
+		_HL_TRY_DELETE(this->shaderExTexturedAlphaMap);
+		_HL_TRY_DELETE(this->shaderExTexturedLerp);
+		_HL_TRY_DELETE(this->shaderExTexturedDesaturate);
+		_HL_TRY_DELETE(this->shaderExTexturedSepia);
+		_HL_TRY_DELETE(this->shaderColoredMultiply);
+		_HL_TRY_DELETE(this->shaderColoredAlphaMap);
+		_HL_TRY_DELETE(this->shaderColoredLerp);
+		_HL_TRY_DELETE(this->shaderColoredDesaturate);
+		_HL_TRY_DELETE(this->shaderColoredSepia);
 		_HL_TRY_DELETE(this->shaderColoredTexturedMultiply);
 		_HL_TRY_DELETE(this->shaderColoredTexturedAlphaMap);
 		_HL_TRY_DELETE(this->shaderColoredTexturedLerp);
 		_HL_TRY_DELETE(this->shaderColoredTexturedDesaturate);
 		_HL_TRY_DELETE(this->shaderColoredTexturedSepia);
+		_HL_TRY_DELETE(this->shaderColoredExTexturedMultiply);
+		_HL_TRY_DELETE(this->shaderColoredExTexturedAlphaMap);
+		_HL_TRY_DELETE(this->shaderColoredExTexturedLerp);
+		_HL_TRY_DELETE(this->shaderColoredExTexturedDesaturate);
+		_HL_TRY_DELETE(this->shaderColoredExTexturedSepia);
 #ifdef __ANDROID__
 		_HL_TRY_DELETE(this->shaderTexturedMultiply_AlphaHack);
 		_HL_TRY_DELETE(this->shaderTexturedLerp_AlphaHack);
 		_HL_TRY_DELETE(this->shaderTexturedDesaturate_AlphaHack);
 		_HL_TRY_DELETE(this->shaderTexturedSepia_AlphaHack);
+		_HL_TRY_DELETE(this->shaderExTexturedMultiply_AlphaHack);
+		_HL_TRY_DELETE(this->shaderExTexturedLerp_AlphaHack);
+		_HL_TRY_DELETE(this->shaderExTexturedDesaturate_AlphaHack);
+		_HL_TRY_DELETE(this->shaderExTexturedSepia_AlphaHack);
 		_HL_TRY_DELETE(this->shaderColoredTexturedMultiply_AlphaHack);
 		_HL_TRY_DELETE(this->shaderColoredTexturedLerp_AlphaHack);
 		_HL_TRY_DELETE(this->shaderColoredTexturedDesaturate_AlphaHack);
 		_HL_TRY_DELETE(this->shaderColoredTexturedSepia_AlphaHack);
+		_HL_TRY_DELETE(this->shaderColoredExTexturedMultiply_AlphaHack);
+		_HL_TRY_DELETE(this->shaderColoredExTexturedLerp_AlphaHack);
+		_HL_TRY_DELETE(this->shaderColoredExTexturedDesaturate_AlphaHack);
+		_HL_TRY_DELETE(this->shaderColoredExTexturedSepia_AlphaHack);
 #endif
 	}
 
@@ -517,15 +630,25 @@ namespace april
 		if (texture != NULL)
 		{
 			OpenGLES_Texture* currentTexture = (OpenGLES_Texture*)texture;
+			int otherType = (currentTexture->internalType != GL_TEXTURE_2D ? GL_TEXTURE_2D : GL_TEXTURE_EXTERNAL_OES);
 			if (currentTexture->alphaTextureId != 0)
 			{
 				GL_SAFE_CALL(glActiveTexture, (GL_TEXTURE1));
-				GL_SAFE_CALL(glBindTexture, (GL_TEXTURE_2D, currentTexture->alphaTextureId));
+				GL_SAFE_CALL(glBindTexture, (currentTexture->internalType, currentTexture->alphaTextureId));
+				GL_SAFE_CALL(glBindTexture, (otherType, 0));
 				GL_SAFE_CALL(glActiveTexture, (GL_TEXTURE0));
 			}
+			GL_SAFE_CALL(glBindTexture, (currentTexture->internalType, ((OpenGL_Texture*)texture)->textureId));
+			GL_SAFE_CALL(glBindTexture, (otherType, 0));
 		}
-#endif
+		else
+		{
+			GL_SAFE_CALL(glBindTexture, (GL_TEXTURE_2D, 0));
+			GL_SAFE_CALL(glBindTexture, (GL_TEXTURE_EXTERNAL_OES, 0));
+		}
+#else
 		OpenGL_RenderSystem::_setDeviceTexture(texture);
+#endif
 	}
 
 	void OpenGLES_RenderSystem::_setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor)
@@ -545,23 +668,23 @@ namespace april
 		ShaderProgram* shader = NULL;
 		if (this->deviceState->colorMode == ColorMode::Multiply)
 		{
-			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Multiply);
+			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->texture, this->deviceState->useColor, Multiply);
 		}
 		else if (this->deviceState->colorMode == ColorMode::AlphaMap)
 		{
-			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, AlphaMap);
+			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->texture, this->deviceState->useColor, AlphaMap);
 		}
 		else if (this->deviceState->colorMode == ColorMode::Lerp)
 		{
-			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Lerp);
+			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->texture, this->deviceState->useColor, Lerp);
 		}
 		else if (this->deviceState->colorMode == ColorMode::Desaturate)
 		{
-			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Desaturate);
+			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->texture, this->deviceState->useColor, Desaturate);
 		}
 		else if (this->deviceState->colorMode == ColorMode::Sepia)
 		{
-			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->useColor, Sepia);
+			shader = _SELECT_SHADER(this->deviceState->useTexture, this->deviceState->texture, this->deviceState->useColor, Sepia);
 		}
 		else
 		{
@@ -588,6 +711,22 @@ namespace april
 			{
 				shader = this->shaderTexturedSepia_AlphaHack;
 			}
+			else if (shader == this->shaderExTexturedMultiply)
+			{
+				shader = this->shaderExTexturedMultiply_AlphaHack;
+			}
+			else if (shader == this->shaderExTexturedLerp)
+			{
+				shader = this->shaderExTexturedLerp_AlphaHack;
+			}
+			else if (shader == this->shaderExTexturedDesaturate)
+			{
+				shader = this->shaderExTexturedDesaturate_AlphaHack;
+			}
+			else if (shader == this->shaderExTexturedSepia)
+			{
+				shader = this->shaderTexturedSepia_AlphaHack;
+			}
 			else if (shader == this->shaderColoredTexturedMultiply)
 			{
 				shader = this->shaderColoredTexturedMultiply_AlphaHack;
@@ -603,6 +742,22 @@ namespace april
 			else if (shader == this->shaderColoredTexturedSepia)
 			{
 				shader = this->shaderColoredTexturedSepia_AlphaHack;
+			}
+			else if (shader == this->shaderColoredExTexturedMultiply)
+			{
+				shader = this->shaderColoredExTexturedMultiply_AlphaHack;
+			}
+			else if (shader == this->shaderColoredExTexturedLerp)
+			{
+				shader = this->shaderColoredExTexturedLerp_AlphaHack;
+			}
+			else if (shader == this->shaderColoredExTexturedDesaturate)
+			{
+				shader = this->shaderColoredExTexturedDesaturate_AlphaHack;
+			}
+			else if (shader == this->shaderColoredExTexturedSepia)
+			{
+				shader = this->shaderColoredExTexturedSepia_AlphaHack;
 			}
 		}
 #endif

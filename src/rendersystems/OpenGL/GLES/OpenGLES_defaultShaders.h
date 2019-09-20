@@ -63,6 +63,10 @@
 "
 
 // pixel header defines
+#define SHADER_START_ExTextured "\
+	#extension GL_OES_EGL_image_external : require\n\
+"
+
 #define SHADER_PIXEL_Plain_Include "\
 	uniform highp vec4 systemColor; \n\
 "
@@ -71,12 +75,23 @@
 	uniform highp vec4 systemColor; \n\
 	uniform sampler2D sampler2d; \n\
 "
+#define SHADER_PIXEL_ExTextured_Include "\
+" SHADER_START_ExTextured "\
+" SHADER_Textured_Include "\
+	uniform highp vec4 systemColor; \n\
+	uniform samplerExternalOES sampler2d; \n\
+"
 #define SHADER_PIXEL_Colored_Include "\
 " SHADER_Colored_Include "\
 "
 #define SHADER_PIXEL_ColoredTextured_Include "\
 " SHADER_ColoredTextured_Include "\
 	uniform sampler2D sampler2d; \n\
+"
+#define SHADER_PIXEL_ColoredExTextured_Include "\
+" SHADER_START_ExTextured "\
+" SHADER_ColoredTextured_Include "\
+	uniform samplerExternalOES sampler2d; \n\
 "
 
 // pixel header defines (ALPHA-HACK)
@@ -86,10 +101,23 @@
 	uniform sampler2D sampler2d; \n\
 	uniform sampler2D sampler2dAlpha; \n\
 "
+#define SHADER_PIXEL_ExTextured_AlphaHack_Include "\
+" SHADER_START_ExTextured "\
+" SHADER_Textured_Include "\
+	uniform highp vec4 systemColor; \n\
+	uniform samplerExternalOES sampler2d; \n\
+	uniform samplerExternalOES sampler2dAlpha; \n\
+"
 #define SHADER_PIXEL_ColoredTextured_AlphaHack_Include "\
 " SHADER_ColoredTextured_Include "\
 	uniform sampler2D sampler2d; \n\
 	uniform sampler2D sampler2dAlpha; \n\
+"
+#define SHADER_PIXEL_ColoredExTextured_AlphaHack_Include "\
+" SHADER_START_ExTextured "\
+" SHADER_ColoredTextured_Include "\
+	uniform samplerExternalOES sampler2d; \n\
+	uniform samplerExternalOES sampler2dAlpha; \n\
 "
 
 // vertex shaders
@@ -196,6 +224,44 @@
 	} \n\
 "
 
+#define SHADER_PixelExTexturedMultiply SHADER_PIXEL_ExTextured_Include "\
+	void main(void) \n\
+	{ \n\
+		gl_FragColor = texture2D(sampler2d, texFrag) * systemColor; \n\
+	} \n\
+"
+#define SHADER_PixelExTexturedAlphaMap SHADER_PIXEL_ExTextured_Include "\
+	void main(void) \n\
+	{ \n\
+		gl_FragColor = vec4(systemColor.rgb, texture2D(sampler2d, texFrag).r * systemColor.a); \n\
+	} \n\
+"
+#define SHADER_PixelExTexturedLerp SHADER_PIXEL_ExTextured_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		gl_FragColor = vec4(mix(tex.rgb, systemColor.rgb, lerpAlpha), tex.a * systemColor.a); \n\
+	} \n\
+"
+#define SHADER_PixelExTexturedDesaturate SHADER_PIXEL_ExTextured_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		highp float value = " MAKE_DESATURATE(tex) "; \n\
+		gl_FragColor = vec4(value * systemColor.r, value * systemColor.g, value * systemColor.b, tex.a * systemColor.a); \n\
+	} \n\
+"
+#define SHADER_PixelExTexturedSepia SHADER_PIXEL_ExTextured_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		gl_FragColor = vec4(" MAKE_SEPIA(tex) " * systemColor.rgb, tex.a * systemColor.a); \n\
+	} \n\
+"
+
 #define SHADER_PixelColoredMultiply SHADER_PIXEL_Colored_Include "\
 	void main(void) \n\
 	{ \n\
@@ -268,6 +334,44 @@
 	} \n\
 "
 
+#define SHADER_PixelColoredExTexturedMultiply SHADER_PIXEL_ColoredExTextured_Include "\
+	void main(void) \n\
+	{ \n\
+		gl_FragColor = texture2D(sampler2d, texFrag) * colorFrag; \n\
+	} \n\
+"
+#define SHADER_PixelColoredExTexturedAlphaMap SHADER_PIXEL_ColoredExTextured_Include "\
+	void main(void) \n\
+	{ \n\
+		gl_FragColor = vec4(colorFrag.rgb, texture2D(sampler2d, texFrag).r * colorFrag.a); \n\
+	} \n\
+"
+#define SHADER_PixelColoredExTexturedLerp SHADER_PIXEL_ColoredExTextured_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		gl_FragColor = vec4(mix(tex.rgb, colorFrag.rgb, lerpAlpha), tex.a * colorFrag.a); \n\
+	} \n\
+"
+#define SHADER_PixelColoredExTexturedDesaturate SHADER_PIXEL_ColoredExTextured_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		highp float value = " MAKE_DESATURATE(tex) "; \n\
+		gl_FragColor = vec4(value * colorFrag.r, value * colorFrag.g, value * colorFrag.b, tex.a * colorFrag.a); \n\
+	} \n\
+"
+#define SHADER_PixelColoredExTexturedSepia SHADER_PIXEL_ColoredExTextured_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		gl_FragColor = vec4(" MAKE_SEPIA(tex) " * colorFrag.rgb, tex.a * colorFrag.a); \n\
+	} \n\
+"
+
 // pixel shaders (ALPHA-HACK)
 #define SHADER_PixelTexturedMultiply_AlphaHack SHADER_PIXEL_Textured_AlphaHack_Include "\
 	void main(void) \n\
@@ -320,6 +424,57 @@
 	} \n\
 "
 
+#define SHADER_PixelExTexturedMultiply_AlphaHack SHADER_PIXEL_ExTextured_AlphaHack_Include "\
+	void main(void) \n\
+	{ \n\
+		highp vec4 newColor = vec4(texture2D(sampler2d, texFrag).rgb, texture2D(sampler2dAlpha, texFrag).r) * systemColor; \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
+	} \n\
+"
+#define SHADER_PixelExTexturedLerp_AlphaHack SHADER_PIXEL_ExTextured_AlphaHack_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 newColor = vec4(mix(texture2D(sampler2d, texFrag).rgb, systemColor.rgb, lerpAlpha), texture2D(sampler2dAlpha, texFrag).r * systemColor.a); \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
+	} \n\
+"
+#define SHADER_PixelExTexturedDesaturate_AlphaHack SHADER_PIXEL_ExTextured_AlphaHack_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		highp float value = " MAKE_DESATURATE(tex) "; \n\
+		highp vec4 newColor = vec4(value * systemColor.r, value * systemColor.g, value * systemColor.b, texture2D(sampler2dAlpha, texFrag).r * systemColor.a); \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
+	} \n\
+"
+#define SHADER_PixelExTexturedSepia_AlphaHack SHADER_PIXEL_ExTextured_AlphaHack_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		highp vec4 newColor = vec4(" MAKE_SEPIA(tex) " * systemColor.rgb, texture2D(sampler2dAlpha, texFrag).r * systemColor.a); \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
+	} \n\
+"
+
 #define SHADER_PixelColoredTexturedMultiply_AlphaHack SHADER_PIXEL_ColoredTextured_AlphaHack_Include "\
 	void main(void) \n\
 	{ \n\
@@ -358,6 +513,57 @@
 	} \n\
 "
 #define SHADER_PixelColoredTexturedSepia_AlphaHack SHADER_PIXEL_ColoredTextured_AlphaHack_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		highp vec4 newColor = vec4(" MAKE_SEPIA(tex) " * colorFrag.rgb, texture2D(sampler2dAlpha, texFrag).r * colorFrag.a); \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
+	} \n\
+"
+
+#define SHADER_PixelColoredExTexturedMultiply_AlphaHack SHADER_PIXEL_ColoredExTextured_AlphaHack_Include "\
+	void main(void) \n\
+	{ \n\
+		highp vec4 newColor = vec4(texture2D(sampler2d, texFrag).rgb, texture2D(sampler2dAlpha, texFrag).r) * colorFrag; \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
+	} \n\
+"
+#define SHADER_PixelColoredExTexturedLerp_AlphaHack SHADER_PIXEL_ColoredExTextured_AlphaHack_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 newColor = vec4(mix(texture2D(sampler2d, texFrag).rgb, colorFrag.rgb, lerpAlpha), texture2D(sampler2dAlpha, texFrag).r * colorFrag.a); \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
+	} \n\
+"
+#define SHADER_PixelColoredExTexturedDesaturate_AlphaHack SHADER_PIXEL_ColoredExTextured_AlphaHack_Include "\
+	uniform highp float lerpAlpha; \n\
+	void main(void) \n\
+	{ \n\
+		highp vec4 tex = texture2D(sampler2d, texFrag); \n\
+		highp float value = " MAKE_DESATURATE(tex) "; \n\
+		highp vec4 newColor = vec4(value * colorFrag.r, value * colorFrag.g, value * colorFrag.b, texture2D(sampler2dAlpha, texFrag).r * colorFrag.a); \n\
+		if (newColor.a < " SHADER_AlphaHack_ALPHA_THRESHOLD ") \n\
+		{ \n\
+			discard; \n\
+		} \n\
+		gl_FragColor = newColor; \n\
+	} \n\
+"
+#define SHADER_PixelColoredExTexturedSepia_AlphaHack SHADER_PIXEL_ColoredExTextured_AlphaHack_Include "\
 	uniform highp float lerpAlpha; \n\
 	void main(void) \n\
 	{ \n\

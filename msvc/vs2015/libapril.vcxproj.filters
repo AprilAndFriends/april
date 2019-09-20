@@ -401,6 +401,9 @@
     <ClCompile Include="..\..\src\events\TouchesEvent.cpp">
       <Filter>Source Files\events</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\async\CustomCommand.cpp">
+      <Filter>Source Files\async</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\april\aprilExport.h">
@@ -684,6 +687,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\april\TouchesEvent.h">
       <Filter>Header Files\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\async\CustomCommand.h">
+      <Filter>Header Files\async</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

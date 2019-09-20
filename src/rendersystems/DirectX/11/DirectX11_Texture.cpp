@@ -27,8 +27,9 @@ namespace april
 		this->d3dRenderTargetView = nullptr;
 	}
 
-	DirectX11_Texture::~DirectX11_Texture()
+	void* DirectX11_Texture::getBackendId() const
 	{
+		return (void*)this->d3dTexture.Get();
 	}
 
 	bool DirectX11_Texture::_deviceCreateTexture(unsigned char* data, int size)

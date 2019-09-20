@@ -76,6 +76,7 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	public List<ICallback<Boolean>> callbacksOnBackPressed = null;
 	public List<ICallback1<Void, Configuration>> callbacksOnConfigurationChanged = null;
 	public List<ICallback3<Boolean, Integer, String[], Integer[]>> callbacksOnRequestPermissionsResult = null;
+	public List<ICallback<Void>> callbacksOnDrawFrame = null;
 	
 	public Activity()
 	{
@@ -100,6 +101,7 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		this.callbacksOnBackPressed = new ArrayList<ICallback<Boolean>>();
 		this.callbacksOnConfigurationChanged = new ArrayList<ICallback1<Void, Configuration>>();
 		this.callbacksOnRequestPermissionsResult = new ArrayList<ICallback3<Boolean, Integer, String[], Integer[]>>();
+		this.callbacksOnDrawFrame = new ArrayList<ICallback<Void>>();
 	}
 	
 	public void registerOnCreate(ICallback1<Void, Bundle> callback)
@@ -107,34 +109,34 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		this.callbacksOnCreate.add(callback);
 	}
 	
-	public void registerOnStart(ICallback<Void> ICallback)
+	public void registerOnStart(ICallback<Void> callback)
 	{
-		this.callbacksOnStart.add(ICallback);
+		this.callbacksOnStart.add(callback);
 	}
 	
-	public void registerOnResume(ICallback<Void> ICallback)
+	public void registerOnResume(ICallback<Void> callback)
 	{
-		this.callbacksOnResume.add(ICallback);
+		this.callbacksOnResume.add(callback);
 	}
 	
-	public void registerOnPause(ICallback<Void> ICallback)
+	public void registerOnPause(ICallback<Void> callback)
 	{
-		this.callbacksOnPause.add(ICallback);
+		this.callbacksOnPause.add(callback);
 	}
 	
-	public void registerOnStop(ICallback<Void> ICallback)
+	public void registerOnStop(ICallback<Void> callback)
 	{
-		this.callbacksOnStop.add(ICallback);
+		this.callbacksOnStop.add(callback);
 	}
 	
-	public void registerOnDestroy(ICallback<Void> ICallback)
+	public void registerOnDestroy(ICallback<Void> callback)
 	{
-		this.callbacksOnDestroy.add(ICallback);
+		this.callbacksOnDestroy.add(callback);
 	}
 	
-	public void registerOnRestart(ICallback<Void> ICallback)
+	public void registerOnRestart(ICallback<Void> callback)
 	{
-		this.callbacksOnRestart.add(ICallback);
+		this.callbacksOnRestart.add(callback);
 	}
 	
 	public void registerOnActivityResult(ICallback3<Boolean, Integer, Integer, Intent> callback)
@@ -147,9 +149,9 @@ public class Activity extends android.app.Activity implements IActivityEvents
 		this.callbacksOnNewIntent.add(callback);
 	}
 	
-	public void registerOnBackPressed(ICallback<Boolean> ICallback)
+	public void registerOnBackPressed(ICallback<Boolean> callback)
 	{
-		this.callbacksOnBackPressed.add(ICallback);
+		this.callbacksOnBackPressed.add(callback);
 	}
 	
 	public void registerOnConfigurationChanged(ICallback1<Void, Configuration> callback)
@@ -160,6 +162,11 @@ public class Activity extends android.app.Activity implements IActivityEvents
 	public void registerOnRequestPermissionsResult(ICallback3<Boolean, Integer, String[], Integer[]> callback)
 	{
 		this.callbacksOnRequestPermissionsResult.add(callback);
+	}
+	
+	public void registerOnDrawFrame(ICallback<Void> callback)
+	{
+		this.callbacksOnDrawFrame.add(callback);
 	}
 	
 	public View getView()

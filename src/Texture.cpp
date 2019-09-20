@@ -27,6 +27,7 @@ namespace april
 	(
 		HL_ENUM_DEFINE(Texture::Type, Immutable);
 		HL_ENUM_DEFINE(Texture::Type, Managed);
+		HL_ENUM_DEFINE(Texture::Type, External);
 		HL_ENUM_DEFINE(Texture::Type, RenderTarget);
 	));
 
@@ -133,14 +134,13 @@ namespace april
 	{
 		this->filename = filename;
 		this->type = type;
-		this->type = type;
 		this->loadMode = loadMode;
 		this->format = format;
 		hlog::write(logTag, "Registering texture: " + this->_getInternalName());
 		return true;
 	}
 
-	bool Texture::_create(int width, int height, unsigned char* data, Image::Format format)
+	bool Texture::_create(int width, int height, unsigned char* data, Image::Format format, Type type)
 	{
 		if (width <= 0 || height <= 0)
 		{
@@ -149,7 +149,7 @@ namespace april
 		}
 		this->width = width;
 		this->height = height;
-		this->type = Type::Managed;
+		this->type = type;
 		this->format = format;
 		this->data = new unsigned char[this->getByteSize()];
 		hlog::write(logTag, "Registering manual texture: " + this->_getInternalName()); // print here because type and format need to be assigned first
@@ -159,7 +159,7 @@ namespace april
 		return true;
 	}
 
-	bool Texture::_create(int width, int height, const Color& color, Image::Format format)
+	bool Texture::_create(int width, int height, const Color& color, Image::Format format, Type type)
 	{
 		if (width <= 0 || height <= 0)
 		{
@@ -168,7 +168,7 @@ namespace april
 		}
 		this->width = width;
 		this->height = height;
-		this->type = Type::Managed;
+		this->type = type;
 		this->format = format;
 		this->data = new unsigned char[this->getByteSize()];
 		hlog::write(logTag, "Registering manual texture: " + this->_getInternalName()); // print here because type and format need to be assigned first
@@ -386,7 +386,7 @@ namespace april
 
 	bool Texture::_isWritable() const
 	{
-		return (this->type != Type::Immutable && this->type != Type::RenderTarget);
+		return (this->type == Type::Managed);
 	}
 
 	bool Texture::_isAlterable() const

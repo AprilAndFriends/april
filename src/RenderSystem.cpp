@@ -504,6 +504,11 @@ namespace april
 		this->state->projectionMatrixChanged = true;
 	}
 	
+	bool RenderSystem::_isSupportedExternalTextures() const
+	{
+		return false;
+	}
+
 	bool RenderSystem::update(float timeDelta)
 	{
 		bool result = false;
@@ -647,6 +652,10 @@ namespace april
 
 	Texture* RenderSystem::_createTextureFromSource(bool fromResource, chstr filename, Texture::Type type, Texture::LoadMode loadMode, Image::Format format)
 	{
+		if (!this->_isSupportedExternalTextures() && type == Texture::Type::External)
+		{
+			type = Texture::Type::Managed;
+		}
 		if (format != Image::Format::Invalid && !this->getCaps().textureFormats.has(format))
 		{
 			hlog::errorf(logTag, "Cannot create texture '%s', the texture format '%s' is not supported!", filename.cStr(), format.getName().cStr());
@@ -676,8 +685,12 @@ namespace april
 		return texture;
 	}
 
-	Texture* RenderSystem::createTexture(int width, int height, unsigned char* data, Image::Format format)
+	Texture* RenderSystem::createTexture(int width, int height, unsigned char* data, Image::Format format, Texture::Type type)
 	{
+		if (!this->_isSupportedExternalTextures() && type == Texture::Type::External)
+		{
+			type = Texture::Type::Managed;
+		}
 		if (format != Image::Format::Invalid && !this->getCaps().textureFormats.has(format))
 		{
 #if defined(_WIN32) && !defined(_UWP)
@@ -689,7 +702,7 @@ namespace april
 			return NULL;
 		}
 		Texture* texture = this->_deviceCreateTexture(false);
-		bool result = texture->_create(width, height, data, format);
+		bool result = texture->_create(width, height, data, format, type);
 		if (!result)
 		{
 			delete texture;
@@ -700,15 +713,19 @@ namespace april
 		return texture;
 	}
 
-	Texture* RenderSystem::createTexture(int width, int height, Color color, Image::Format format)
+	Texture* RenderSystem::createTexture(int width, int height, Color color, Image::Format format, Texture::Type type)
 	{
+		if (!this->_isSupportedExternalTextures() && type == Texture::Type::External)
+		{
+			type = Texture::Type::Managed;
+		}
 		if (format != Image::Format::Invalid && !this->getCaps().textureFormats.has(format))
 		{
 			hlog::errorf(logTag, "Cannot create texture with color '%s', the texture format '%s' is not supported!", color.hex().cStr(), format.getName().cStr());
 			return NULL;
 		}
 		Texture* texture = this->_deviceCreateTexture(false);
-		bool result = texture->_create(width, height, color, format);
+		bool result = texture->_create(width, height, color, format, type);
 		if (!result)
 		{
 			delete texture;
@@ -1379,6 +1396,11 @@ namespace april
 		{
 			this->statCurrentFrameLineCount += this->_numPrimitives(renderOperation, count);
 		}
+	}
+
+	void RenderSystem::executeCustomCommand(void (*function)(const harray<void*>& args), const harray<void*>& args)
+	{
+		this->_addAsyncCommand(new CustomCommand(function, args));
 	}
 
 	hstr RenderSystem::findTextureResource(chstr filename) const

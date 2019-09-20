@@ -30,10 +30,11 @@ namespace april
 	{
 	public:
 		friend class DirectX12_RenderSystem;
+		
+		void* getBackendId() const;
 
 	protected:
 		DirectX12_Texture(bool fromResource);
-		~DirectX12_Texture();
 		
 		ComPtr<ID3D12Resource> d3dTexture;
 		ComPtr<ID3D12Resource> uploadHeap;

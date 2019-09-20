@@ -206,7 +206,7 @@ namespace april
 	{
 		if (texture != NULL)
 		{
-			GL_SAFE_CALL(glBindTexture, (GL_TEXTURE_2D, ((OpenGL_Texture*)texture)->textureId));
+			GL_SAFE_CALL(glBindTexture, (((OpenGL_Texture*)texture)->internalType, ((OpenGL_Texture*)texture)->textureId));
 		}
 		else
 		{
@@ -216,15 +216,16 @@ namespace april
 
 	void OpenGL_RenderSystem::_setDeviceTextureFilter(const Texture::Filter& textureFilter)
 	{
+		int type = (this->deviceState->texture != NULL ? ((OpenGL_Texture*)this->deviceState->texture)->internalType : GL_TEXTURE_2D);
 		if (textureFilter == Texture::Filter::Linear)
 		{
-			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+			GL_SAFE_CALL(glTexParameteri, (type, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+			GL_SAFE_CALL(glTexParameteri, (type, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 		}
 		else if (textureFilter == Texture::Filter::Nearest)
 		{
-			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+			GL_SAFE_CALL(glTexParameteri, (type, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+			GL_SAFE_CALL(glTexParameteri, (type, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
 		}
 		else
 		{
@@ -234,15 +235,16 @@ namespace april
 
 	void OpenGL_RenderSystem::_setDeviceTextureAddressMode(const Texture::AddressMode& textureAddressMode)
 	{
+		int type = (this->deviceState->texture != NULL ? ((OpenGL_Texture*)this->deviceState->texture)->internalType : GL_TEXTURE_2D);
 		if (textureAddressMode == Texture::AddressMode::Wrap)
 		{
-			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+			GL_SAFE_CALL(glTexParameteri, (type, GL_TEXTURE_WRAP_S, GL_REPEAT));
+			GL_SAFE_CALL(glTexParameteri, (type, GL_TEXTURE_WRAP_T, GL_REPEAT));
 		}
 		else if (textureAddressMode == Texture::AddressMode::Clamp)
 		{
-			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-			GL_SAFE_CALL(glTexParameteri, (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+			GL_SAFE_CALL(glTexParameteri, (type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+			GL_SAFE_CALL(glTexParameteri, (type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 		}
 		else
 		{

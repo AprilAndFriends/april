@@ -47,7 +47,7 @@ namespace april
 			unsigned int previousFramebufferId = 0;
 			glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&previousFramebufferId);
 			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, this->framebufferId));
-			GL_SAFE_CALL(glFramebufferTexture2D, (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, this->textureId, 0));
+			GL_SAFE_CALL(glFramebufferTexture2D, (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, this->internalType, this->textureId, 0));
 			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, previousFramebufferId));
 		}
 		// data has to be uploaded right away if compressed texture
@@ -55,9 +55,9 @@ namespace april
 		if (this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG || this->dataFormat == GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG)
 		{
 			this->_setCurrentTexture();
-			glCompressedTexImage2D(GL_TEXTURE_2D, 0, this->dataFormat, this->width, this->height, 0, size, data);
+			glCompressedTexImage2D(this->internalType, 0, this->dataFormat, this->width, this->height, 0, size, data);
 			GLenum glError = glGetError();
-			SAFE_TEXTURE_UPLOAD_CHECK(glError, glCompressedTexImage2D(GL_TEXTURE_2D, 0, this->dataFormat, this->width, this->height, 0, size, data));
+			SAFE_TEXTURE_UPLOAD_CHECK(glError, glCompressedTexImage2D(this->internalType, 0, this->dataFormat, this->width, this->height, 0, size, data));
 			this->firstUpload = false;
 		}
 #endif
@@ -85,17 +85,17 @@ namespace april
 					this->textureId = this->alphaTextureId;
 					this->alphaTextureId = 0;
 					this->_setCurrentTexture();
-					glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, &data[size]);
+					glCompressedTexImage2D(this->internalType, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, &data[size]);
 					glError = glGetError();
-					SAFE_TEXTURE_UPLOAD_CHECK(glError, glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, &data[size]));
+					SAFE_TEXTURE_UPLOAD_CHECK(glError, glCompressedTexImage2D(this->internalType, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, &data[size]));
 					this->alphaTextureId = this->textureId;
 					this->textureId = originalTextureId;
 				}
 			}
 			this->_setCurrentTexture();
-			glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, data);
+			glCompressedTexImage2D(this->internalType, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, data);
 			glError = glGetError();
-			SAFE_TEXTURE_UPLOAD_CHECK(glError, glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, data));
+			SAFE_TEXTURE_UPLOAD_CHECK(glError, glCompressedTexImage2D(this->internalType, 0, GL_ETC1_RGB8_OES, this->width, this->height, 0, size, data));
 			this->firstUpload = false;
 		}
 #endif
@@ -123,6 +123,15 @@ namespace april
 		}
 #endif
 		return OpenGL_Texture::_deviceDestroyTexture();
+	}
+
+	void OpenGLES_Texture::_assignFormat()
+	{
+		if (this->type == Type::External)
+		{
+			this->internalType = GL_TEXTURE_EXTERNAL_OES;
+		}
+		OpenGL_Texture::_assignFormat();
 	}
 
 }

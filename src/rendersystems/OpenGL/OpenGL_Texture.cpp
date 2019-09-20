@@ -29,8 +29,15 @@ namespace april
 		Texture(fromResource),
 		textureId(0),
 		glFormat(0),
-		internalFormat(0)
+		internalFormat(0),
+		internalType(GL_TEXTURE_2D)
 	{
+	}
+
+	void* OpenGL_Texture::getBackendId() const
+	{
+		// using size_t cast first here to avoid compiler errors when casting between 64-bit pointer and 32-bit int
+		return (void*)(size_t)this->textureId;
 	}
 
 	bool OpenGL_Texture::_deviceCreateTexture(unsigned char* data, int size)
@@ -144,7 +151,7 @@ namespace april
 		}
 		if (update)
 		{
-			if (this->format != Image::Format::Compressed && this->format != Image::Format::Palette)
+			if (this->format != Image::Format::Compressed && this->format != Image::Format::Palette && this->type != Type::External)
 			{
 				this->_setCurrentTexture();
 				if (this->width == lock.w && this->height == lock.h)
@@ -157,7 +164,7 @@ namespace april
 					{
 						this->_uploadPotSafeClearData();
 					}
-					GL_SAFE_CALL(glTexSubImage2D, (GL_TEXTURE_2D, 0, lock.dx, lock.dy, lock.w, lock.h, this->glFormat, GL_UNSIGNED_BYTE, lock.data));
+					GL_SAFE_CALL(glTexSubImage2D, (this->internalType, 0, lock.dx, lock.dy, lock.w, lock.h, this->glFormat, GL_UNSIGNED_BYTE, lock.data));
 				}
 				this->firstUpload = false;
 			}
@@ -168,7 +175,7 @@ namespace april
 
 	bool OpenGL_Texture::_uploadToGpu(int sx, int sy, int sw, int sh, int dx, int dy, unsigned char* srcData, int srcWidth, int srcHeight, Image::Format srcFormat)
 	{
-		if (this->format == Image::Format::Compressed || this->format == Image::Format::Palette)
+		if (this->format == Image::Format::Compressed || this->format == Image::Format::Palette || this->type == Type::External)
 		{
 			return false;
 		}
@@ -186,13 +193,13 @@ namespace april
 			int srcBpp = srcFormat.getBpp();
 			if (sx == 0 && dx == 0 && sw == this->width && srcWidth == this->width)
 			{
-				GL_SAFE_CALL(glTexSubImage2D, (GL_TEXTURE_2D, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + sy * srcWidth) * srcBpp]));
+				GL_SAFE_CALL(glTexSubImage2D, (this->internalType, 0, dx, dy, sw, sh, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + sy * srcWidth) * srcBpp]));
 			}
 			else
 			{
 				for_iter (j, 0, sh)
 				{
-					GL_SAFE_CALL(glTexSubImage2D, (GL_TEXTURE_2D, 0, dx, (dy + j), sw, 1, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + (sy + j) * srcWidth) * srcBpp]));
+					GL_SAFE_CALL(glTexSubImage2D, (this->internalType, 0, dx, (dy + j), sw, 1, this->glFormat, GL_UNSIGNED_BYTE, &srcData[(sx + (sy + j) * srcWidth) * srcBpp]));
 				}
 			}
 		}
@@ -202,9 +209,9 @@ namespace april
 
 	void OpenGL_Texture::_uploadPotSafeData(unsigned char* data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(this->internalType, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, data);
 		GLenum glError = glGetError();
-		SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, data));
+		SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(this->internalType, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, data));
 		RenderSystem::Caps caps = april::rendersys->getCaps();
 		if (glError == GL_INVALID_VALUE && !caps.npotTexturesLimited && !caps.npotTextures)
 		{
@@ -212,9 +219,9 @@ namespace april
 			int h = this->height;
 			unsigned char* newData = this->_createPotData(w, h, data);
 			this->_setCurrentTexture(); // has to call this again after _createPotData(), because some internal properties could have changed
-			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, w, h, 0, this->glFormat, GL_UNSIGNED_BYTE, newData);
+			glTexImage2D(this->internalType, 0, this->internalFormat, w, h, 0, this->glFormat, GL_UNSIGNED_BYTE, newData);
 			glError = glGetError();
-			SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, w, h, 0, this->glFormat, GL_UNSIGNED_BYTE, newData));
+			SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(this->internalType, 0, this->internalFormat, w, h, 0, this->glFormat, GL_UNSIGNED_BYTE, newData));
 			delete[] newData;
 		}
 	}
@@ -224,9 +231,9 @@ namespace april
 		int size = this->getByteSize();
 		unsigned char* clearColor = new unsigned char[size];
 		memset(clearColor, 0, size);
-		glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
+		glTexImage2D(this->internalType, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
 		GLenum glError = glGetError();
-		SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor));
+		SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(this->internalType, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor));
 		delete[] clearColor;
 		RenderSystem::Caps caps = april::rendersys->getCaps();
 		if (glError == GL_INVALID_VALUE && !caps.npotTexturesLimited && !caps.npotTextures)
@@ -235,9 +242,9 @@ namespace april
 			int h = this->height;
 			clearColor = this->_createPotClearData(w, h); // can create POT sized data
 			this->_setCurrentTexture(); // has to call this again after _createPotData(), because some internal properties could have changed
-			glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
+			glTexImage2D(this->internalType, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor);
 			glError = glGetError();
-			SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(GL_TEXTURE_2D, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor));
+			SAFE_TEXTURE_UPLOAD_CHECK(glError, glTexImage2D(this->internalType, 0, this->internalFormat, this->width, this->height, 0, this->glFormat, GL_UNSIGNED_BYTE, clearColor));
 			delete[] clearColor;
 		}
 	}

@@ -52,6 +52,10 @@ public class Renderer implements android.opengl.GLSurfaceView.Renderer
 	
 	public void onDrawFrame(GL10 unused)
 	{
+		for (int i = 0; i < NativeInterface.aprilActivity.callbacksOnDrawFrame.size(); ++i)
+		{
+			NativeInterface.aprilActivity.callbacksOnDrawFrame.get(i).execute();
+		}
 		if (!NativeInterface.update())
 		{
 			NativeInterface.activity.finish();

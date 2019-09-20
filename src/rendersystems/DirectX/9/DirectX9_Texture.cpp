@@ -30,6 +30,11 @@ namespace april
 	{
 	}
 
+	void* DirectX9_Texture::getBackendId() const
+	{
+		return (void*)this->d3dTexture;
+	}
+
 	bool DirectX9_Texture::_deviceCreateTexture(unsigned char* data, int size)
 	{
 		this->d3dPool = D3DPOOL_DEFAULT;

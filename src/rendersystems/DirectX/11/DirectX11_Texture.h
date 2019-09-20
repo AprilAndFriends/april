@@ -30,10 +30,11 @@ namespace april
 	{
 	public:
 		friend class DirectX11_RenderSystem;
+		
+		void* getBackendId() const;
 
 	protected:
 		DirectX11_Texture(bool fromResource);
-		~DirectX11_Texture();
 		
 		ComPtr<ID3D11Texture2D> d3dTexture;
 		ComPtr<ID3D11ShaderResourceView> d3dView;

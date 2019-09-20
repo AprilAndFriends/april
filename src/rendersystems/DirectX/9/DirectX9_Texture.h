@@ -29,6 +29,8 @@ namespace april
 		friend class DirectX9_RenderSystem;
 
 		DirectX9_Texture(bool fromResource);
+
+		void* getBackendId() const;
 		
 	protected:
 		IDirect3DSurface9* d3dSurface;

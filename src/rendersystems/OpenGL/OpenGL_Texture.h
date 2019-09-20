@@ -50,10 +50,13 @@ namespace april
 
 		OpenGL_Texture(bool fromResource);
 
+		void* getBackendId() const;
+		
 	protected:
 		unsigned int textureId;
 		int glFormat;
 		int internalFormat;
+		int internalType;
 
 		void _setCurrentTexture();
 

@@ -51,8 +51,10 @@ namespace april
 	protected:
 		OpenGLES_VertexShader* vertexShaderPlain;
 		OpenGLES_VertexShader* vertexShaderTextured;
+		OpenGLES_VertexShader* vertexShaderExTextured;
 		OpenGLES_VertexShader* vertexShaderColored;
 		OpenGLES_VertexShader* vertexShaderColoredTextured;
+		OpenGLES_VertexShader* vertexShaderColoredExTextured;
 		OpenGLES_PixelShader* pixelShaderMultiply;
 		OpenGLES_PixelShader* pixelShaderAlphaMap;
 		OpenGLES_PixelShader* pixelShaderLerp;
@@ -63,6 +65,11 @@ namespace april
 		OpenGLES_PixelShader* pixelShaderTexturedLerp;
 		OpenGLES_PixelShader* pixelShaderTexturedDesaturate;
 		OpenGLES_PixelShader* pixelShaderTexturedSepia;
+		OpenGLES_PixelShader* pixelShaderExTexturedMultiply;
+		OpenGLES_PixelShader* pixelShaderExTexturedAlphaMap;
+		OpenGLES_PixelShader* pixelShaderExTexturedLerp;
+		OpenGLES_PixelShader* pixelShaderExTexturedDesaturate;
+		OpenGLES_PixelShader* pixelShaderExTexturedSepia;
 		OpenGLES_PixelShader* pixelShaderColoredMultiply;
 		OpenGLES_PixelShader* pixelShaderColoredAlphaMap;
 		OpenGLES_PixelShader* pixelShaderColoredLerp;
@@ -73,15 +80,28 @@ namespace april
 		OpenGLES_PixelShader* pixelShaderColoredTexturedLerp;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedDesaturate;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedSepia;
+		OpenGLES_PixelShader* pixelShaderColoredExTexturedMultiply;
+		OpenGLES_PixelShader* pixelShaderColoredExTexturedAlphaMap;
+		OpenGLES_PixelShader* pixelShaderColoredExTexturedLerp;
+		OpenGLES_PixelShader* pixelShaderColoredExTexturedDesaturate;
+		OpenGLES_PixelShader* pixelShaderColoredExTexturedSepia;
 #ifdef __ANDROID__
 		OpenGLES_PixelShader* pixelShaderTexturedMultiply_AlphaHack;
 		OpenGLES_PixelShader* pixelShaderTexturedLerp_AlphaHack;
 		OpenGLES_PixelShader* pixelShaderTexturedDesaturate_AlphaHack;
 		OpenGLES_PixelShader* pixelShaderTexturedSepia_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderExTexturedMultiply_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderExTexturedLerp_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderExTexturedDesaturate_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderExTexturedSepia_AlphaHack;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedMultiply_AlphaHack;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedLerp_AlphaHack;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedDesaturate_AlphaHack;
 		OpenGLES_PixelShader* pixelShaderColoredTexturedSepia_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderColoredExTexturedMultiply_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderColoredExTexturedLerp_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderColoredExTexturedDesaturate_AlphaHack;
+		OpenGLES_PixelShader* pixelShaderColoredExTexturedSepia_AlphaHack;
 #endif
 		ShaderProgram* shaderMultiply;
 		ShaderProgram* shaderAlphaMap;
@@ -93,6 +113,11 @@ namespace april
 		ShaderProgram* shaderTexturedLerp;
 		ShaderProgram* shaderTexturedDesaturate;
 		ShaderProgram* shaderTexturedSepia;
+		ShaderProgram* shaderExTexturedMultiply;
+		ShaderProgram* shaderExTexturedAlphaMap;
+		ShaderProgram* shaderExTexturedLerp;
+		ShaderProgram* shaderExTexturedDesaturate;
+		ShaderProgram* shaderExTexturedSepia;
 		ShaderProgram* shaderColoredMultiply;
 		ShaderProgram* shaderColoredAlphaMap;
 		ShaderProgram* shaderColoredLerp;
@@ -103,15 +128,28 @@ namespace april
 		ShaderProgram* shaderColoredTexturedLerp;
 		ShaderProgram* shaderColoredTexturedDesaturate;
 		ShaderProgram* shaderColoredTexturedSepia;
+		ShaderProgram* shaderColoredExTexturedMultiply;
+		ShaderProgram* shaderColoredExTexturedAlphaMap;
+		ShaderProgram* shaderColoredExTexturedLerp;
+		ShaderProgram* shaderColoredExTexturedDesaturate;
+		ShaderProgram* shaderColoredExTexturedSepia;
 #ifdef __ANDROID__
 		ShaderProgram* shaderTexturedMultiply_AlphaHack;
 		ShaderProgram* shaderTexturedLerp_AlphaHack;
 		ShaderProgram* shaderTexturedDesaturate_AlphaHack;
 		ShaderProgram* shaderTexturedSepia_AlphaHack;
+		ShaderProgram* shaderExTexturedMultiply_AlphaHack;
+		ShaderProgram* shaderExTexturedLerp_AlphaHack;
+		ShaderProgram* shaderExTexturedDesaturate_AlphaHack;
+		ShaderProgram* shaderExTexturedSepia_AlphaHack;
 		ShaderProgram* shaderColoredTexturedMultiply_AlphaHack;
 		ShaderProgram* shaderColoredTexturedLerp_AlphaHack;
 		ShaderProgram* shaderColoredTexturedDesaturate_AlphaHack;
 		ShaderProgram* shaderColoredTexturedSepia_AlphaHack;
+		ShaderProgram* shaderColoredExTexturedMultiply_AlphaHack;
+		ShaderProgram* shaderColoredExTexturedLerp_AlphaHack;
+		ShaderProgram* shaderColoredExTexturedDesaturate_AlphaHack;
+		ShaderProgram* shaderColoredExTexturedSepia_AlphaHack;
 		bool etc1Supported;
 #endif
 
@@ -123,6 +161,8 @@ namespace april
 		// TODOa - these need to be refactored
 		OpenGLES_Texture* renderTarget;
 		ShaderProgram* deviceState_shader;
+
+		bool _isSupportedExternalTextures() const;
 
 		void _deviceInit();
 		bool _deviceCreate(Options options);

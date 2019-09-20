@@ -55,6 +55,10 @@ namespace april
 			/// @var static const Type Type::Managed
 			/// @brief Resides in RAM and on GPU, can be modified. Best used for manually created textures or loaded from files which will be modified.
 			HL_ENUM_DECLARE(Type, Managed);
+			/// @var static const Type Type::External
+			/// @brief Special external texture, usually used for external feeds of data.
+			/// @note Only supported on certain render systems. When support is not available, will default to Managed.
+			HL_ENUM_DECLARE(Type, External);
 			/// @var static const Type Type::RenderTarget
 			/// @brief Used as render target.
 			HL_ENUM_DECLARE(Type, RenderTarget);
@@ -167,6 +171,9 @@ namespace april
 		/// @see isReadyForUpload()
 		/// @see isAsyncLoadQueued()
 		bool isUnloaded();
+		/// @brief Gets the Texture's internal backend ID.
+		/// @return The Texture's internal backend ID.
+		virtual void* getBackendId() const = 0;
 
 		/// @brief Loads the texture asynchronously.
 		/// @return True if queueing was successful.
@@ -762,14 +769,14 @@ namespace april
 		/// @param[in] data The raw image data.
 		/// @param[in] format The pixel format of the raw image data.
 		/// @return True if successful.
-		virtual bool _create(int width, int height, unsigned char* data, Image::Format format);
+		virtual bool _create(int width, int height, unsigned char* data, Image::Format format, Type type);
 		/// @brief Creates and sets up all of the texture's internal data and fills it with the given Color.
 		/// @param[in] width Width of the raw image data.
 		/// @param[in] height Height of the raw image data.
 		/// @param[in] color The color to be filled.
 		/// @param[in] format The pixel format of the raw image data.
 		/// @return True if successful.
-		virtual bool _create(int width, int height, const Color& color, Image::Format format);
+		virtual bool _create(int width, int height, const Color& color, Image::Format format, Type type);
 		/// @brief Creates and sets up all of the texture's internal data for render target usage.
 		/// @param[in] width Width of the raw image data.
 		/// @param[in] height Height of the raw image data.

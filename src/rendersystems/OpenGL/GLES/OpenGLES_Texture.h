@@ -36,6 +36,7 @@ namespace april
 
 		bool _deviceCreateTexture(unsigned char* data, int size);
 		bool _deviceDestroyTexture();
+		void _assignFormat();
 
 	};
 

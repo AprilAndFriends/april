@@ -330,15 +330,19 @@ namespace april
 		/// @param[in] h Height of the image data.
 		/// @param[in] data The raw image data.
 		/// @param[in] format The format of the provided image data.
+		/// @param[in] type The Texture type that should be created.
 		/// @return The created Texture object or NULL if failed.
-		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format);
+		/// @note Only Managed and External are supported. Will be forced to Managed if RenderSystem does not support external textures.
+		Texture* createTexture(int w, int h, unsigned char* data, Image::Format format, Texture::Type type = Texture::Type::Managed);
 		/// @brief Creates a Texture object completely filled with a specific color.
 		/// @param[in] w Width of the image data.
 		/// @param[in] h Height of the image data.
 		/// @param[in] color The color used for filling the texture.
 		/// @param[in] format The format of the provided image data.
+		/// @param[in] type The Texture type that should be created.
 		/// @return The created Texture object or NULL if failed.
-		Texture* createTexture(int w, int h, Color color, Image::Format format);
+		/// @note Only Managed and External are supported. Will be forced to Managed if RenderSystem does not support external textures.
+		Texture* createTexture(int w, int h, Color color, Image::Format format, Texture::Type type = Texture::Type::Managed);
 		/// @brief Destroys a Texture object.
 		/// @param[in] texture The Texture that should be destroyed.
 		/// @note After this call the Texture pointer becomes invalid.
@@ -550,6 +554,10 @@ namespace april
 		/// @see setTexture
 		void drawTexturedRect(cgrectf rect, cgrectf src, const Color& color);
 
+		/// @brief Executes a custom command into the render-queue.
+		/// @param[in] function The function to call.
+		/// @param[in] args Arguments for the function.
+		void executeCustomCommand(void (*function)(const harray<void*>& args), const harray<void*>& args = harray<void*>());
 		/// @brief Finds the actual filename of a texture resource file.
 		/// @param[in] filename Resource filename without the extension.
 		/// @return The detected resource filename or an empty string if no resource file could be found.
@@ -663,6 +671,9 @@ namespace april
 		int statCurrentFrameLineCount;
 		/// @brief How many lines were rendered during the last frame.
 		int statLastFrameLineCount;
+
+		/// @brief Whether External texture type is supported.
+		virtual bool _isSupportedExternalTextures() const;
 
 		/// @brief Registers a created Texture in the system.
 		/// @param[in] texture The Texture to be registered.

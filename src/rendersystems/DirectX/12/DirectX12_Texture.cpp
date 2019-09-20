@@ -45,9 +45,10 @@ namespace april
 		this->d3dTexture = nullptr;
 		this->uploadHeap = nullptr;
 	}
-
-	DirectX12_Texture::~DirectX12_Texture()
+	
+	void* DirectX12_Texture::getBackendId() const
 	{
+		return (void*)this->d3dTexture.Get();
 	}
 
 	bool DirectX12_Texture::_deviceCreateTexture(unsigned char* data, int size)
