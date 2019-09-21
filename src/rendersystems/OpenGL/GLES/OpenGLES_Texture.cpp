@@ -127,10 +127,12 @@ namespace april
 
 	void OpenGLES_Texture::_assignFormat()
 	{
+#ifdef __ANDROID__
 		if (this->type == Type::External)
 		{
 			this->internalType = GL_TEXTURE_EXTERNAL_OES;
 		}
+#endif
 		OpenGL_Texture::_assignFormat();
 	}
 

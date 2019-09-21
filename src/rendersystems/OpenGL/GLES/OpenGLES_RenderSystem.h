@@ -162,8 +162,6 @@ namespace april
 		OpenGLES_Texture* renderTarget;
 		ShaderProgram* deviceState_shader;
 
-		bool _isSupportedExternalTextures() const;
-
 		void _deviceInit();
 		bool _deviceCreate(Options options);
 		bool _deviceDestroy();

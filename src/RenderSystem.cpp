@@ -504,11 +504,6 @@ namespace april
 		this->state->projectionMatrixChanged = true;
 	}
 	
-	bool RenderSystem::_isSupportedExternalTextures() const
-	{
-		return false;
-	}
-
 	bool RenderSystem::update(float timeDelta)
 	{
 		bool result = false;
@@ -652,7 +647,7 @@ namespace april
 
 	Texture* RenderSystem::_createTextureFromSource(bool fromResource, chstr filename, Texture::Type type, Texture::LoadMode loadMode, Image::Format format)
 	{
-		if (!this->_isSupportedExternalTextures() && type == Texture::Type::External)
+		if (!this->caps.externalTextures && type == Texture::Type::External)
 		{
 			type = Texture::Type::Managed;
 		}
@@ -687,7 +682,7 @@ namespace april
 
 	Texture* RenderSystem::createTexture(int width, int height, unsigned char* data, Image::Format format, Texture::Type type)
 	{
-		if (!this->_isSupportedExternalTextures() && type == Texture::Type::External)
+		if (!this->caps.externalTextures && type == Texture::Type::External)
 		{
 			type = Texture::Type::Managed;
 		}
@@ -715,7 +710,7 @@ namespace april
 
 	Texture* RenderSystem::createTexture(int width, int height, Color color, Image::Format format, Texture::Type type)
 	{
-		if (!this->_isSupportedExternalTextures() && type == Texture::Type::External)
+		if (!this->caps.externalTextures && type == Texture::Type::External)
 		{
 			type = Texture::Type::Managed;
 		}

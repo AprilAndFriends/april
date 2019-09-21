@@ -161,6 +161,8 @@ namespace april
 			bool npotTexturesLimited;
 			/// @brief Whether the full implementation of non-power-of-two textures is supported.
 			bool npotTextures;
+			/// @brief Whether External texture type is supported.
+			bool externalTextures;
 			/// @brief Supported texture pixel formats.
 			harray<Image::Format> textureFormats;
 			/// @brief Whether render targets are supported properly. Also 
@@ -671,9 +673,6 @@ namespace april
 		int statCurrentFrameLineCount;
 		/// @brief How many lines were rendered during the last frame.
 		int statLastFrameLineCount;
-
-		/// @brief Whether External texture type is supported.
-		virtual bool _isSupportedExternalTextures() const;
 
 		/// @brief Registers a created Texture in the system.
 		/// @param[in] texture The Texture to be registered.
