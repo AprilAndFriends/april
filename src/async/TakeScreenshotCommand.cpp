@@ -11,15 +11,20 @@
 
 namespace april
 {
-	TakeScreenshotCommand::TakeScreenshotCommand(Image::Format format) :
-		AsyncCommand()
+	TakeScreenshotCommand::TakeScreenshotCommand(const RenderState& state, Image::Format format, bool backBufferOnly) :
+		StateUpdateCommand(state)
 	{
 		this->format = format;
+		this->backBufferOnly = backBufferOnly;
 	}
 	
 	void TakeScreenshotCommand::execute()
 	{
-		april::rendersys->_deviceTakeScreenshot(this->format);
+		if (!this->backBufferOnly)
+		{
+			StateUpdateCommand::execute();
+		}
+		april::rendersys->_deviceTakeScreenshot(this->format, this->backBufferOnly);
 	}
 	
 }

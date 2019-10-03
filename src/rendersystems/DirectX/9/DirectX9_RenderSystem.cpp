@@ -56,8 +56,7 @@ namespace april
 		d3dDevice(NULL),
 		d3dpp(NULL),
 		backBuffer(NULL),
-		childHWnd(0),
-		renderTarget(NULL)
+		childHWnd(0)
 	{
 		this->name = april::RenderSystemType::DirectX9.getName();
 		this->pixelOffset = 0.5f;
@@ -78,7 +77,6 @@ namespace april
 		this->d3dpp = NULL;
 		this->backBuffer = NULL;
 		this->childHWnd = 0;
-		this->renderTarget = NULL;
 	}
 
 	bool DirectX9_RenderSystem::_deviceCreate(RenderSystem::Options options)
@@ -177,7 +175,6 @@ namespace april
 			}
 		}
 		// device config
-		this->renderTarget = NULL;
 		this->d3dDevice->GetRenderTarget(0, &this->backBuffer);
 		this->_deviceClear(false);
 		this->d3dDevice->BeginScene();
@@ -701,6 +698,42 @@ namespace april
 		}
 	}
 
+	void DirectX9_RenderSystem::_setDeviceRenderTarget(Texture* texture)
+	{
+		if (this->deviceState->renderTarget != NULL)
+		{
+			this->d3dDevice->EndScene();
+		}
+		static bool setOnce = false;
+		if (texture != NULL)
+		{
+			setOnce = true;
+		}
+		if (texture == NULL && setOnce)
+		{
+			int a = 0;
+		}
+		if (texture == NULL)
+		{
+			if (this->_currentIntermediateRenderTexture != NULL)
+			{
+				this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_currentIntermediateRenderTexture)->_getSurface());
+			}
+			else
+			{
+				this->d3dDevice->SetRenderTarget(0, this->backBuffer);
+			}
+		}
+		else
+		{
+			this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)texture)->_getSurface());
+		}
+		if (this->deviceState->renderTarget != NULL)
+		{
+			this->d3dDevice->BeginScene();
+		}
+	}
+
 	void DirectX9_RenderSystem::_deviceClear(bool depth)
 	{
 		DWORD flags = D3DCLEAR_TARGET;
@@ -885,10 +918,19 @@ namespace april
 		dx9Destination->_unlockSystem(destinationLock, true);
 	}
 
-	void DirectX9_RenderSystem::_deviceTakeScreenshot(Image::Format format)
+	void DirectX9_RenderSystem::_deviceTakeScreenshot(Image::Format format, bool backBufferOnly)
 	{
+		IDirect3DSurface9* surface = this->backBuffer;
+		if (this->_currentIntermediateRenderTexture != NULL)
+		{
+			surface = ((DirectX9_Texture*)this->_currentIntermediateRenderTexture)->_getSurface();
+		}
+		if (!backBufferOnly && this->deviceState->renderTarget != NULL)
+		{
+			surface = ((DirectX9_Texture*)this->deviceState->renderTarget)->_getSurface();
+		}
 		D3DSURFACE_DESC desc;
-		this->backBuffer->GetDesc(&desc);
+		surface->GetDesc(&desc);
 		if (desc.Format != D3DFMT_X8R8G8B8)
 		{
 			hlog::error(logTag, "Failed to grab screenshot, backbuffer format not supported, expected X8R8G8B8, got: " + hstr(desc.Format));
@@ -901,7 +943,7 @@ namespace april
 			hlog::error(logTag, "Failed to grab screenshot, CreateOffscreenPlainSurface() call failed.");
 			return;
 		}
-		hr = this->d3dDevice->GetRenderTargetData(this->backBuffer, buffer);
+		hr = this->d3dDevice->GetRenderTargetData(surface, buffer);
 		if (FAILED(hr))
 		{
 			hlog::error(logTag, "Failed to grab screenshot, GetRenderTargetData() call failed.");
@@ -924,40 +966,6 @@ namespace april
 		}
 		buffer->UnlockRect();
 		buffer->Release();
-	}
-
-	Texture* DirectX9_RenderSystem::getRenderTarget()
-	{
-		return this->renderTarget;
-	}
-
-	void DirectX9_RenderSystem::setRenderTarget(Texture* source)
-	{
-		if (this->renderTarget != NULL)
-		{
-			this->d3dDevice->EndScene();
-		}
-		DirectX9_Texture* texture = (DirectX9_Texture*)source;
-		if (texture == NULL)
-		{
-			if (this->_currentIntermediateRenderTexture != NULL)
-			{
-				this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_currentIntermediateRenderTexture)->_getSurface());
-			}
-			else
-			{
-				this->d3dDevice->SetRenderTarget(0, NULL);
-			}
-		}
-		else
-		{
-			this->d3dDevice->SetRenderTarget(0, texture->_getSurface());
-		}
-		this->renderTarget = texture;
-		if (this->renderTarget != NULL)
-		{
-			this->d3dDevice->BeginScene();
-		}
 	}
 
 	void DirectX9_RenderSystem::setPixelShader(PixelShader* pixelShader)

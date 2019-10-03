@@ -180,20 +180,18 @@ namespace april
 		void _setDeviceBlendMode(const BlendMode& blendMode);
 		void _setDeviceTexture(Texture* texture);
 		void _setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
+		void _setDeviceRenderTarget(Texture* texture);
 		void _updateShader(bool forceUpdate);
 
 		void _devicePresentFrame(bool systemEnabled);
 		void _deviceCopyRenderTargetData(Texture* source, Texture* destination);
+		void _deviceTakeScreenshot(Image::Format format, bool backBufferOnly);
 
 		void _setGlTextureEnabled(bool enabled);
 		void _setGlColorEnabled(bool enabled);
 		void _setGlVertexPointer(int stride, const void* pointer);
 		void _setGlTexturePointer(int stride, const void* pointer);
 		void _setGlColorPointer(int stride, const void* pointer);
-
-		// TODOa - these need to be refactored, they can't be called directly like this
-		Texture* _getRenderTarget();
-		void _deviceSetRenderTarget(Texture* source);
 
 	};
 	

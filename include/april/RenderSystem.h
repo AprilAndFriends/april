@@ -345,6 +345,11 @@ namespace april
 		/// @return The created Texture object or NULL if failed.
 		/// @note Only Managed and External are supported. Will be forced to Managed if RenderSystem does not support external textures.
 		Texture* createTexture(int w, int h, Color color, Image::Format format, Texture::Type type = Texture::Type::Managed);
+		/// @brief Creates a Texture object as a render target.
+		/// @param[in] w Width of the image data.
+		/// @param[in] h Height of the image data.
+		/// @return The created Texture object or NULL if failed.
+		Texture* createRenderTarget(int w, int h);
 		/// @brief Destroys a Texture object.
 		/// @param[in] texture The Texture that should be destroyed.
 		/// @note After this call the Texture pointer becomes invalid.
@@ -417,13 +422,13 @@ namespace april
 		/// @param[in] colorModeFactor The additioanl color mode factor.
 		/// @note The parameter colorModeFactor is only used when the color mode is LERP.
 		void setColorMode(const ColorMode& colorMode, float colorModeFactor = 1.0f);
-
 		/// @brief Gets the Texture render target.
 		/// @return The Texture render target.
-		virtual Texture* getRenderTarget();
+		Texture* getRenderTarget();
 		/// @brief Sets the Texture render target.
 		/// @param[in] texture The new Texture render target.
-		virtual void setRenderTarget(Texture* texture);
+		void setRenderTarget(Texture* texture);
+
 		/// @brief Sets the current pixel shader Texture render target.
 		/// @param[in] pixelShader The new pixel shader.
 		virtual void setPixelShader(PixelShader* pixelShader);
@@ -592,7 +597,8 @@ namespace april
 		virtual void flushFrame(bool updateStats = false);
 		/// @brief Takes a screenshot a.k.a. captures the image data of the backbuffer.
 		/// @param[in] format The format to which the screenshot should be converted.
-		void takeScreenshot(Image::Format format);
+		/// @param[in] backBufferOnly Whether only the backbuffer data should be used and nothing else.
+		void takeScreenshot(Image::Format format, bool backBufferOnly = true);
 		/// @brief Flushes the currently rendered data to the backbuffer for display.
 		/// @note Usually this doesn't need to be called manually. Calls flushFrame().
 		/// @see flushFrame
@@ -797,6 +803,9 @@ namespace april
 		/// @param[in] useColor Whether the vertices support separate color values.
 		/// @param[in] systemColor The global color for all vertices if useColor is set to false.
 		virtual void _setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor) = 0;
+		/// @brief Sets the device render target.
+		/// @param[in] texture The current render target.
+		virtual void _setDeviceRenderTarget(Texture* texture) = 0;
 
 		/// @brief Renders an array of vertices to the backbuffer.
 		/// @param[in] renderOperation The RenderOperation that should be used to render the vertices.
@@ -914,7 +923,8 @@ namespace april
 		virtual void _deviceCopyRenderTargetData(Texture* source, Texture* destination);
 		/// @brief Takes a screenshot a.k.a. captures the image data of the backbuffer.
 		/// @param[in] format The format to which the screenshot should be converted.
-		virtual void _deviceTakeScreenshot(Image::Format format);
+		/// @param[in] backBufferOnly Whether only the backbuffer data should be used and nothing else.
+		virtual void _deviceTakeScreenshot(Image::Format format, bool backBufferOnly);
 		/// @brief Updates the intermediate render textures.
 		void _updateIntermediateRenderTextures();
 		/// @brief Creates the intermediate render textures.

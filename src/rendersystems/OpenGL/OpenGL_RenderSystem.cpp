@@ -414,7 +414,7 @@ namespace april
 		}
 	}
 
-	void OpenGL_RenderSystem::_deviceTakeScreenshot(Image::Format format)
+	void OpenGL_RenderSystem::_deviceTakeScreenshot(Image::Format format, bool backBufferOnly)
 	{
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();

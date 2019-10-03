@@ -41,6 +41,7 @@ namespace april
 		this->colorMode = ColorMode::Multiply;
 		this->colorModeFactor = 1.0f;
 		this->systemColor = Color::White;
+		this->renderTarget = NULL;
 	}
 
 }

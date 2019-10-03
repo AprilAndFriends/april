@@ -55,6 +55,8 @@ namespace april
 		float colorModeFactor;
 		/// @brief The current system color.
 		Color systemColor;
+		/// @brief The current unique texture ID.
+		Texture* renderTarget;
 
 		/// @brief Basic constructor.
 		RenderState();

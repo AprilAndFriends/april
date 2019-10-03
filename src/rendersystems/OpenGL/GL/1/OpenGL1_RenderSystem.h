@@ -42,9 +42,10 @@ namespace april
 		void _setDeviceModelviewMatrix(const gmat4& matrix);
 		void _setDeviceProjectionMatrix(const gmat4& matrix);
 		void _setDeviceDepthBuffer(bool enabled, bool writeEnabled);
+		void _setDeviceTexture(Texture* texture);
 		void _setDeviceBlendMode(const BlendMode& blendMode);
 		void _setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
-		void _setDeviceTexture(Texture* texture);
+		void _setDeviceRenderTarget(Texture* texture);
 
 		void _setDeviceColor(const Color& color, bool forceUpdate = false);
 		void _setDeviceMatrixMode(unsigned int mode, bool forceUpdate = false);

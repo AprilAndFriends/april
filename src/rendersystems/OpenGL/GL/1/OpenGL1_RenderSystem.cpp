@@ -201,7 +201,7 @@ namespace april
 					static gmat4 matrix;
 					matrix.setScale(currentTexture->effectiveWidth, currentTexture->effectiveHeight, 1.0f);
 					GL_SAFE_CALL(glLoadMatrixf, (matrix.data));
-	}
+				}
 				else
 				{
 					static gmat4 matrix;
@@ -349,6 +349,11 @@ namespace april
 		{
 			this->_setDeviceColor(systemColor);
 		}
+	}
+
+	void OpenGL1_RenderSystem::_setDeviceRenderTarget(Texture* texture)
+	{
+		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
 	}
 
 	void OpenGL1_RenderSystem::_setDeviceColor(const Color& color, bool forceUpdate)

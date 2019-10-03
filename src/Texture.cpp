@@ -178,7 +178,7 @@ namespace april
 		return true;
 	}
 
-	bool Texture::_createRenderTarget(int width, int height, Image::Format format)
+	bool Texture::_createRenderTarget(int width, int height)
 	{
 		if (width <= 0 || height <= 0)
 		{
@@ -188,7 +188,7 @@ namespace april
 		this->width = width;
 		this->height = height;
 		this->type = Type::RenderTarget;
-		this->format = april::rendersys->getNativeTextureFormat(format);
+		this->format = april::rendersys->getNativeTextureFormat(Image::Format::RGBX);
 		hlog::write(logTag, "Registering manual texture: " + this->_getInternalName()); // print here because type and format need to be assigned first
 		this->_checkMaxTextureSize();
 		this->_assignFormat();

@@ -311,7 +311,7 @@ namespace april
 #endif
 		this->caps.npotTextures = (extensions.contains("OES_texture_npot") || extensions.contains("ARB_texture_non_power_of_two"));
 #ifdef __ANDROID__ // seems to not work on iOS
-		this->caps.externalTextures = extensions.contains("GL_OES_EGL_image_external");
+		this->caps.externalTextures = (extensions.contains("GL_OES_EGL_image_external") && extensions.contains("GL_ARB_EGL_image_external"));
 #endif
 		// TODO - is there a way to make this work on Win32?
 #if !defined(_WIN32) || defined(_UWP)
@@ -709,6 +709,45 @@ namespace april
 		}
 	}
 
+	void OpenGLES_RenderSystem::_setDeviceRenderTarget(Texture* texture)
+	{
+		if (texture == NULL)
+		{
+			if (this->_currentIntermediateRenderTexture != NULL)
+			{
+				GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId));
+			}
+			else
+			{
+				GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, this->framebufferId));
+			}
+		}
+		else
+		{
+			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, ((OpenGLES_Texture*)texture)->framebufferId));
+		}
+		//this->renderTarget = texture;
+		/*
+		if (this->_currentIntermediateRenderTexture != NULL)
+		{
+			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, this->framebufferId));
+#ifdef _IOS // this is only required for iOS
+			GL_SAFE_CALL(glBindRenderbuffer, (GL_RENDERBUFFER, this->renderbufferId));
+#endif
+			this->_presentIntermediateRenderTexture();
+		}
+		OpenGL_RenderSystem::_devicePresentFrame(systemEnabled);
+		this->_updateIntermediateRenderTextures();
+		if (this->_currentIntermediateRenderTexture != NULL)
+		{
+			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId));
+#ifdef _IOS // this is only required for iOS
+			GL_SAFE_CALL(glBindRenderbuffer, (GL_RENDERBUFFER, 0));
+#endif
+		}
+		*/
+	}
+
 	void OpenGLES_RenderSystem::_updateShader(bool forceUpdate)
 	{
 		ShaderProgram* shader = NULL;
@@ -924,6 +963,51 @@ namespace april
 		this->_updateDeviceState(&deviceState, true);
 	}
 
+	void OpenGLES_RenderSystem::_deviceTakeScreenshot(Image::Format format, bool backBufferOnly)
+	{
+		if (backBufferOnly && this->_currentIntermediateRenderTexture == NULL)
+		{
+			OpenGL_RenderSystem::_deviceTakeScreenshot(format, backBufferOnly);
+			return;
+		}
+		int w = april::window->getWidth();
+		int h = april::window->getHeight();
+		OpenGLES_Texture* texture = NULL;
+		if (!backBufferOnly && this->deviceState->renderTarget != NULL)
+		{
+			texture = (OpenGLES_Texture*)this->deviceState->renderTarget;
+		}
+		else if (this->_currentIntermediateRenderTexture != NULL)
+		{
+			texture = (OpenGLES_Texture*)this->_currentIntermediateRenderTexture;
+		}
+		GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, (texture != NULL ? texture->framebufferId : this->framebufferId)));
+		if (texture != NULL)
+		{
+			w = texture->getWidth();
+			h = texture->getHeight();
+		}
+		unsigned char* temp = new unsigned char[w * (h + 1) * 4]; // 4 BPP and one extra row just in case some OpenGL implementations don't blit properly and cause memory access errors
+		GL_SAFE_CALL(glReadPixels, (0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, temp));
+		// GL returns all pixels flipped vertically so this needs to be corrected first
+		int stride = w * 4;
+		unsigned char* data = new unsigned char[stride * h];
+		for_iter (i, 0, h)
+		{
+			memcpy(&data[i * stride], &temp[(h - i - 1) * stride], stride);
+		}
+		delete[] temp;
+		temp = data;
+		data = NULL;
+		if (Image::convertToFormat(w, h, temp, Image::Format::RGBA, &data, format, false))
+		{
+			april::window->queueScreenshot(Image::create(w, h, data, format));
+			delete[] data;
+		}
+		delete[] temp;
+		this->_setDeviceTexture(this->deviceState->texture);
+	}
+
 	void OpenGLES_RenderSystem::_setGlTextureEnabled(bool enabled)
 	{
 		if (enabled)
@@ -961,33 +1045,6 @@ namespace april
 	void OpenGLES_RenderSystem::_setGlColorPointer(int stride, const void* pointer)
 	{
 		GL_SAFE_CALL(glVertexAttribPointer, (COLOR_ARRAY, 4, GL_UNSIGNED_BYTE, GL_TRUE, stride, pointer));
-	}
-
-	// TODOa - these need to be refactored, they can't be called directly like this
-	Texture* OpenGLES_RenderSystem::_getRenderTarget()
-	{
-		return this->renderTarget;
-	}
-
-	void OpenGLES_RenderSystem::_deviceSetRenderTarget(Texture* source)
-	{
-		OpenGLES_Texture* texture = (OpenGLES_Texture*)source;
-		if (texture == NULL)
-		{
-			if (this->_currentIntermediateRenderTexture != NULL)
-			{
-				GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId));
-			}
-			else
-			{
-				GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, this->framebufferId));
-			}
-		}
-		else
-		{
-			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, texture->framebufferId));
-		}
-		this->renderTarget = texture;
 	}
 
 }

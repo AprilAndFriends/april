@@ -47,8 +47,6 @@ namespace april
 		unsigned int getNativeColorUInt(const april::Color& color) const;
 
 		// TODOa - these need to be refactored
-		Texture* getRenderTarget();
-		void setRenderTarget(Texture* source);
 		void setPixelShader(PixelShader* pixelShader);
 		void setVertexShader(VertexShader* vertexShader);
 
@@ -58,8 +56,6 @@ namespace april
 		_D3DPRESENT_PARAMETERS_* d3dpp;
 		IDirect3DSurface9* backBuffer;
 		HWND childHWnd;
-		// TODOa - these need to be refactored
-		DirectX9_Texture* renderTarget;
 
 		void _deviceInit();
 		bool _deviceCreate(Options options);
@@ -89,6 +85,7 @@ namespace april
 		void _setDeviceTextureAddressMode(const Texture::AddressMode& textureAddressMode);
 		void _setDeviceBlendMode(const BlendMode& blendMode);
 		void _setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
+		void _setDeviceRenderTarget(Texture* texture);
 
 		void _deviceClear(bool depth);
 		void _deviceClear(const Color& color, bool depth);
@@ -99,7 +96,7 @@ namespace april
 		void _deviceRender(const RenderOperation& renderOperation, const ColoredTexturedVertex* vertices, int count);
 		void _devicePresentFrame(bool systemEnabled);
 		void _deviceCopyRenderTargetData(Texture* source, Texture* destination);
-		void _deviceTakeScreenshot(Image::Format format);
+		void _deviceTakeScreenshot(Image::Format format, bool backBufferOnly);
 
 		static D3DPRIMITIVETYPE _dx9RenderOperations[];
 

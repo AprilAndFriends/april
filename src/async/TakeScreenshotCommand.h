@@ -13,20 +13,21 @@
 #ifndef APRIL_TAKE_SCREENSHOT_COMMAND_H
 #define APRIL_TAKE_SCREENSHOT_COMMAND_H
 
-#include "AsyncCommand.h"
+#include "StateUpdateCommand.h"
 #include "Image.h"
 
 namespace april
 {
-	class TakeScreenshotCommand : public AsyncCommand
+	class TakeScreenshotCommand : public StateUpdateCommand
 	{
 	public:
-		TakeScreenshotCommand(Image::Format format);
+		TakeScreenshotCommand(const RenderState& state, Image::Format format, bool backBufferOnly);
 		
 		void execute();
 
 	protected:
 		Image::Format format;
+		bool backBufferOnly;
 
 	};
 	

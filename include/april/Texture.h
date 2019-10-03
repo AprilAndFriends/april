@@ -780,10 +780,9 @@ namespace april
 		/// @brief Creates and sets up all of the texture's internal data for render target usage.
 		/// @param[in] width Width of the raw image data.
 		/// @param[in] height Height of the raw image data.
-		/// @param[in] format The pixel format of the raw image data.
 		/// @return True if successful.
-		/// @note The format parameter will automatically be converted into the native format of the system backend.
-		virtual bool _createRenderTarget(int width, int height, Image::Format format);
+		/// @note The format will automatically be the native format of the system backend.
+		virtual bool _createRenderTarget(int width, int height);
 
 		/// @brief Creates the device texture.
 		/// @param[in] data The raw image data.

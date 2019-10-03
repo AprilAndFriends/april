@@ -88,13 +88,14 @@ namespace april
 		this->debugInfo = false;
 	}
 
-	RenderSystem::Caps::Caps()
+	RenderSystem::Caps::Caps() :
+		maxTextureSize(0),
+		npotTexturesLimited(false),
+		npotTextures(false),
+		externalTextures(false),
+		textureFormats(Image::Format::getValues()),
+		renderTarget(false)
 	{
-		this->maxTextureSize = 0;
-		this->npotTexturesLimited = false;
-		this->npotTextures = false;
-		this->textureFormats = Image::Format::getValues();
-		this->renderTarget = false;
 	}
 
 	hstr RenderSystem::Options::toString()
@@ -682,6 +683,11 @@ namespace april
 
 	Texture* RenderSystem::createTexture(int width, int height, unsigned char* data, Image::Format format, Texture::Type type)
 	{
+		if (type == Texture::Type::RenderTarget)
+		{
+			throw Exception("Use RenderSystem::createRenderTarget() to create render targets!");
+		}
+
 		if (!this->caps.externalTextures && type == Texture::Type::External)
 		{
 			type = Texture::Type::Managed;
@@ -697,7 +703,7 @@ namespace april
 			return NULL;
 		}
 		Texture* texture = this->_deviceCreateTexture(false);
-		bool result = texture->_create(width, height, data, format, type);
+		bool result = result = texture->_create(width, height, data, format, type);
 		if (!result)
 		{
 			delete texture;
@@ -710,6 +716,10 @@ namespace april
 
 	Texture* RenderSystem::createTexture(int width, int height, Color color, Image::Format format, Texture::Type type)
 	{
+		if (type == Texture::Type::RenderTarget)
+		{
+			throw Exception("Use RenderSystem::createRenderTarget() to create render targets!");
+		}
 		if (!this->caps.externalTextures && type == Texture::Type::External)
 		{
 			type = Texture::Type::Managed;
@@ -721,6 +731,20 @@ namespace april
 		}
 		Texture* texture = this->_deviceCreateTexture(false);
 		bool result = texture->_create(width, height, color, format, type);
+		if (!result)
+		{
+			delete texture;
+			return NULL;
+		}
+		hmutex::ScopeLock lock(&this->texturesMutex);
+		this->textures += texture;
+		return texture;
+	}
+
+	Texture* RenderSystem::createRenderTarget(int width, int height)
+	{
+		Texture* texture = this->_deviceCreateTexture(false);
+		bool result = texture->_createRenderTarget(width, height);
 		if (!result)
 		{
 			delete texture;
@@ -898,6 +922,23 @@ namespace april
 		this->state->colorModeFactor = colorModeFactor;
 	}
 
+	Texture* RenderSystem::getRenderTarget()
+	{
+		return this->state->renderTarget;
+	}
+
+	void RenderSystem::setRenderTarget(Texture* texture)
+	{
+		if (this->caps.renderTarget)
+		{
+			this->state->renderTarget = texture;
+		}
+		else
+		{
+			hlog::warnf(logTag, "Render targets are not supported in render system '%s'!", this->name.cStr());
+		}
+	}
+
 	void RenderSystem::_deviceChangeResolution(int width, int height, bool fullscreen)
 	{
 		hlog::warnf(logTag, "Changing resolutions is not implemented in render system '%s'!", this->name.cStr());
@@ -983,6 +1024,21 @@ namespace april
 
 	void RenderSystem::_updateDeviceState(RenderState* state, bool forceUpdate)
 	{
+		// render target
+		if (forceUpdate || this->deviceState->renderTarget != state->renderTarget)
+		{
+			if (state->renderTarget != NULL)
+			{
+				state->renderTarget->_ensureAsyncCompleted();
+				state->renderTarget->_ensureUploaded();
+				this->_setDeviceRenderTarget(state->renderTarget);
+			}
+			else
+			{
+				this->_setDeviceRenderTarget(NULL);
+			}
+			this->deviceState->renderTarget = state->renderTarget;
+		}
 		// viewport
 		if (forceUpdate || (state->viewportChanged && this->deviceState->viewport != state->viewport))
 		{
@@ -1509,9 +1565,9 @@ namespace april
 		}
 	}
 
-	void RenderSystem::takeScreenshot(Image::Format format)
+	void RenderSystem::takeScreenshot(Image::Format format, bool backBufferOnly)
 	{
-		this->_addAsyncCommand(new TakeScreenshotCommand(format));
+		this->_addAsyncCommand(new TakeScreenshotCommand(*this->state, format, backBufferOnly));
 	}
 
 	void RenderSystem::presentFrame()
@@ -1543,7 +1599,7 @@ namespace april
 		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
 	}
 
-	void RenderSystem::_deviceTakeScreenshot(Image::Format format)
+	void RenderSystem::_deviceTakeScreenshot(Image::Format format, bool backBufferOnly)
 	{
 		hlog::warnf(logTag, "Taking screenshots is not implemented in render system '%s'!", this->name.cStr());
 	}
@@ -1623,7 +1679,7 @@ namespace april
 			texture = this->_deviceCreateTexture(false);
 			texture->setFilter(Texture::Filter::Nearest); // optimization since they are rendered pixel perfect anyway
 			this->_intermediateRenderTextures += texture;
-			result = texture->_createRenderTarget(width, height, april::Image::Format::RGBX);
+			result = texture->_createRenderTarget(width, height);
 			if (result)
 			{
 				texture->_loadAsync();
@@ -1719,17 +1775,6 @@ namespace april
 		return count;
 	}
 	
-	Texture* RenderSystem::getRenderTarget()
-	{
-		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
-		return NULL;
-	}
-
-	void RenderSystem::setRenderTarget(Texture* texture)
-	{
-		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
-	}
-
 	void RenderSystem::setPixelShader(april::PixelShader* pixelShader)
 	{
 		hlog::warnf(logTag, "Pixel shaders are not implemented in render system '%s'!", this->name.cStr());
