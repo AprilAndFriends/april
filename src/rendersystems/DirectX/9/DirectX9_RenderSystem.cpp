@@ -870,7 +870,6 @@ namespace april
 				this->d3dDevice->SetRenderTarget(0, ((DirectX9_Texture*)this->_currentIntermediateRenderTexture)->_getSurface());
 			}
 			this->d3dDevice->BeginScene();
-			this->_updateDeviceState(this->state, true);
 			hlog::write(logTag, "Direct3D9 Device restored.");
 		}
 		else

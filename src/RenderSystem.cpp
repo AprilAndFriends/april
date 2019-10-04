@@ -1022,10 +1022,10 @@ namespace april
 		this->state->projectionMatrixChanged = true;
 	}
 
-	void RenderSystem::_updateDeviceState(RenderState* state, bool forceUpdate)
+	void RenderSystem::_updateDeviceState(RenderState* state, bool forceUpdate, bool ignoreRenderTarget)
 	{
 		// render target
-		if (forceUpdate || this->deviceState->renderTarget != state->renderTarget)
+		if (!ignoreRenderTarget && (forceUpdate || this->deviceState->renderTarget != state->renderTarget))
 		{
 			if (state->renderTarget != NULL)
 			{
@@ -1739,11 +1739,12 @@ namespace april
 				this->_lastIntermediateRenderTexture = this->_currentIntermediateRenderTexture;
 			}
 			int width = this->_currentIntermediateRenderTexture->getWidth();
+			//this->_currentIntermediateRenderTexture = NULL;
 			int height = this->_currentIntermediateRenderTexture->getHeight();
 			this->_intermediateState->viewport.setSize(width, height);
 			this->_intermediateState->projectionMatrix.setOrthoProjection(grectf(1.0f - 2.0f * this->pixelOffset / width, 1.0f - 2.0f * this->pixelOffset / height, 2.0f, 2.0f));
 			this->_intermediateState->texture = this->_lastIntermediateRenderTexture;
-			this->_updateDeviceState(this->_intermediateState, true);
+			this->_updateDeviceState(this->_intermediateState, true, true);
 			this->_deviceClear(false);
 			this->_deviceRender(RenderOperation::TriangleList, this->_intermediateRenderVertices, APRIL_INTERMEDIATE_TEXTURE_VERTICES_COUNT);
 			if (this->_updateLastIntermediateRenderTexture)

@@ -159,7 +159,6 @@ namespace april
 		unsigned int framebufferId;
 		unsigned int renderbufferId;
 		// TODOa - these need to be refactored
-		OpenGLES_Texture* renderTarget;
 		ShaderProgram* deviceState_shader;
 
 		void _deviceInit();
@@ -173,7 +172,7 @@ namespace april
 		void _createShaders();
 		void _destroyShaders();
 
-		void _updateDeviceState(RenderState* state, bool forceUpdate = false);
+		void _updateDeviceState(RenderState* state, bool forceUpdate = false, bool ignoreRenderTarget = false);
 
 		void _setDeviceModelviewMatrix(const gmat4& matrix);
 		void _setDeviceProjectionMatrix(const gmat4& matrix);

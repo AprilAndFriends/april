@@ -69,7 +69,8 @@
 
 namespace april
 {
-	OpenGLES_RenderSystem::ShaderProgram::ShaderProgram() : glShaderProgram(0)
+	OpenGLES_RenderSystem::ShaderProgram::ShaderProgram() :
+		glShaderProgram(0)
 	{
 	}
 
@@ -129,8 +130,14 @@ namespace april
 		return true;
 	}
 
-	OpenGLES_RenderSystem::OpenGLES_RenderSystem() : OpenGL_RenderSystem(), deviceState_matrixChanged(true), deviceState_systemColorChanged(true),
-		deviceState_colorModeFactorChanged(true), framebufferId(0), renderbufferId(0), renderTarget(NULL), deviceState_shader(NULL)
+	OpenGLES_RenderSystem::OpenGLES_RenderSystem() :
+		OpenGL_RenderSystem(),
+		deviceState_matrixChanged(true),
+		deviceState_systemColorChanged(true),
+		deviceState_colorModeFactorChanged(true),
+		framebufferId(0),
+		renderbufferId(0),
+		deviceState_shader(NULL)
 	{
 #ifdef __ANDROID__
 		this->etc1Supported = false;
@@ -245,7 +252,6 @@ namespace april
 		this->deviceState_systemColorChanged = true;
 		this->deviceState_colorModeFactorChanged = true;
 		this->deviceState_shader = NULL;
-		this->renderTarget = NULL;
 	}
 
 	bool OpenGLES_RenderSystem::_deviceCreate(RenderSystem::Options options)
@@ -278,7 +284,6 @@ namespace april
 			hlog::errorf(logTag, "The render system option 'intermediate render texture' must be enabled when using window type '%s' on Android! Otherwise rendering issues WILL happen!", window->getName().cStr());
 		}
 #endif
-		this->renderTarget = NULL;
 	}
 
 	void OpenGLES_RenderSystem::_deviceSuspend()
@@ -311,7 +316,7 @@ namespace april
 #endif
 		this->caps.npotTextures = (extensions.contains("OES_texture_npot") || extensions.contains("ARB_texture_non_power_of_two"));
 #ifdef __ANDROID__ // seems to not work on iOS
-		this->caps.externalTextures = (extensions.contains("GL_OES_EGL_image_external") && extensions.contains("GL_ARB_EGL_image_external"));
+		this->caps.externalTextures = extensions.contains("GL_OES_EGL_image_external");
 #endif
 		// TODO - is there a way to make this work on Win32?
 #if !defined(_WIN32) || defined(_UWP)
@@ -338,8 +343,8 @@ namespace april
 		this->deviceState_systemColorChanged = true;
 		this->deviceState_colorModeFactorChanged = true;
 		this->deviceState_shader = NULL;
-#ifdef _IOS // this is only required for iOS
 		GL_SAFE_CALL(glGetIntegerv, (GL_FRAMEBUFFER_BINDING, (GLint*)&this->framebufferId));
+#ifdef _IOS // this is only required for iOS
 		GL_SAFE_CALL(glGetIntegerv, (GL_RENDERBUFFER_BINDING, (GLint*)&this->renderbufferId));
 #endif
 		this->_updateIntermediateRenderTextures();
@@ -609,9 +614,9 @@ namespace april
 #endif
 	}
 
-	void OpenGLES_RenderSystem::_updateDeviceState(RenderState* state, bool forceUpdate)
+	void OpenGLES_RenderSystem::_updateDeviceState(RenderState* state, bool forceUpdate, bool ignoreRenderTarget)
 	{
-		OpenGL_RenderSystem::_updateDeviceState(state, forceUpdate);
+		OpenGL_RenderSystem::_updateDeviceState(state, forceUpdate, ignoreRenderTarget);
 		this->_updateShader(forceUpdate);
 	}
 	
@@ -726,26 +731,6 @@ namespace april
 		{
 			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, ((OpenGLES_Texture*)texture)->framebufferId));
 		}
-		//this->renderTarget = texture;
-		/*
-		if (this->_currentIntermediateRenderTexture != NULL)
-		{
-			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, this->framebufferId));
-#ifdef _IOS // this is only required for iOS
-			GL_SAFE_CALL(glBindRenderbuffer, (GL_RENDERBUFFER, this->renderbufferId));
-#endif
-			this->_presentIntermediateRenderTexture();
-		}
-		OpenGL_RenderSystem::_devicePresentFrame(systemEnabled);
-		this->_updateIntermediateRenderTextures();
-		if (this->_currentIntermediateRenderTexture != NULL)
-		{
-			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId));
-#ifdef _IOS // this is only required for iOS
-			GL_SAFE_CALL(glBindRenderbuffer, (GL_RENDERBUFFER, 0));
-#endif
-		}
-		*/
 	}
 
 	void OpenGLES_RenderSystem::_updateShader(bool forceUpdate)
@@ -927,7 +912,6 @@ namespace april
 			this->_presentIntermediateRenderTexture();
 		}
 		OpenGL_RenderSystem::_devicePresentFrame(systemEnabled);
-		this->_updateIntermediateRenderTextures();
 		if (this->_currentIntermediateRenderTexture != NULL)
 		{
 			GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, ((OpenGLES_Texture*)this->_currentIntermediateRenderTexture)->framebufferId));

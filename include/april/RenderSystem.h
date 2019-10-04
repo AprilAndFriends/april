@@ -707,9 +707,11 @@ namespace april
 		VertexShader* _createVertexShaderFromSource(bool fromResource, chstr filename);
 
 		/// @brief Updates the device state based on the current render system state. This method only updates things tha have changed to improve performance.
+		/// @param[in] state The state.
 		/// @param[in] forceUpdate If true, will force an update of the entire device state, regardless of the current state.
+		/// @param[in] ignoreRenderTarget If true, will ignore render target setup (used for intermediate render textures).
 		/// @note The parameter forceUpdate is useful when the device is in an unknown or inconsistent state, but should be used with care as it invalidates all optimizations.
-		virtual void _updateDeviceState(RenderState* state, bool forceUpdate = false);
+		virtual void _updateDeviceState(RenderState* state, bool forceUpdate = false, bool ignoreRenderTarget = false);
 		/// @brief Adds a render command to the queue.
 		/// @param[in] command The command to add.
 		void _addAsyncCommand(AsyncCommand* command);
