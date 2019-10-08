@@ -1027,15 +1027,18 @@ namespace april
 		// render target
 		if (!ignoreRenderTarget && (forceUpdate || this->deviceState->renderTarget != state->renderTarget))
 		{
-			if (state->renderTarget != NULL)
+			if (this->caps.renderTarget)
 			{
-				state->renderTarget->_ensureAsyncCompleted();
-				state->renderTarget->_ensureUploaded();
-				this->_setDeviceRenderTarget(state->renderTarget);
-			}
-			else
-			{
-				this->_setDeviceRenderTarget(NULL);
+				if (state->renderTarget != NULL)
+				{
+					state->renderTarget->_ensureAsyncCompleted();
+					state->renderTarget->_ensureUploaded();
+					this->_setDeviceRenderTarget(state->renderTarget);
+				}
+				else
+				{
+					this->_setDeviceRenderTarget(NULL);
+				}
 			}
 			this->deviceState->renderTarget = state->renderTarget;
 		}

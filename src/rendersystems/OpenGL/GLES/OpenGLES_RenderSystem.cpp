@@ -949,13 +949,10 @@ namespace april
 
 	void OpenGLES_RenderSystem::_deviceTakeScreenshot(Image::Format format, bool backBufferOnly)
 	{
-		if (backBufferOnly && this->_currentIntermediateRenderTexture == NULL)
-		{
-			OpenGL_RenderSystem::_deviceTakeScreenshot(format, backBufferOnly);
-			return;
-		}
+		int glFormat = GL_RGBA;
 		int w = april::window->getWidth();
 		int h = april::window->getHeight();
+		Image::Format dataFormat = Image::Format::RGBX;
 		OpenGLES_Texture* texture = NULL;
 		if (!backBufferOnly && this->deviceState->renderTarget != NULL)
 		{
@@ -965,14 +962,16 @@ namespace april
 		{
 			texture = (OpenGLES_Texture*)this->_currentIntermediateRenderTexture;
 		}
-		GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, (texture != NULL ? texture->framebufferId : this->framebufferId)));
 		if (texture != NULL)
 		{
+			glFormat = texture->glFormat;
 			w = texture->getWidth();
 			h = texture->getHeight();
+			dataFormat = texture->getFormat();
 		}
+		GL_SAFE_CALL(glBindFramebuffer, (GL_FRAMEBUFFER, (texture != NULL ? texture->framebufferId : this->framebufferId)));
 		unsigned char* temp = new unsigned char[w * (h + 1) * 4]; // 4 BPP and one extra row just in case some OpenGL implementations don't blit properly and cause memory access errors
-		GL_SAFE_CALL(glReadPixels, (0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, temp));
+		GL_SAFE_CALL(glReadPixels, (0, 0, w, h, glFormat, GL_UNSIGNED_BYTE, temp));
 		// GL returns all pixels flipped vertically so this needs to be corrected first
 		int stride = w * 4;
 		unsigned char* data = new unsigned char[stride * h];
@@ -983,13 +982,13 @@ namespace april
 		delete[] temp;
 		temp = data;
 		data = NULL;
-		if (Image::convertToFormat(w, h, temp, Image::Format::RGBA, &data, format, false))
+		if (Image::convertToFormat(w, h, temp, dataFormat, &data, format, false))
 		{
 			april::window->queueScreenshot(Image::create(w, h, data, format));
 			delete[] data;
 		}
 		delete[] temp;
-		this->_setDeviceTexture(this->deviceState->texture);
+		this->_updateDeviceState(this->deviceState, true);
 	}
 
 	void OpenGLES_RenderSystem::_setGlTextureEnabled(bool enabled)

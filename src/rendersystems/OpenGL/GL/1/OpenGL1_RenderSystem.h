@@ -47,6 +47,8 @@ namespace april
 		void _setDeviceColorMode(const ColorMode& colorMode, float colorModeFactor, bool useTexture, bool useColor, const Color& systemColor);
 		void _setDeviceRenderTarget(Texture* texture);
 
+		void _deviceTakeScreenshot(Image::Format format, bool backBufferOnly);
+
 		void _setDeviceColor(const Color& color, bool forceUpdate = false);
 		void _setDeviceMatrixMode(unsigned int mode, bool forceUpdate = false);
 		void _setGlTextureEnabled(bool enabled);

@@ -356,6 +356,31 @@ namespace april
 		hlog::warnf(logTag, "Render targets are not implemented in render system '%s'!", this->name.cStr());
 	}
 
+	void OpenGL1_RenderSystem::_deviceTakeScreenshot(Image::Format format, bool backBufferOnly)
+	{
+		GL_SAFE_CALL(glReadBuffer, (GL_FRONT));
+		int w = april::window->getWidth();
+		int h = april::window->getHeight();
+		unsigned char* temp = new unsigned char[w * (h + 1) * 4]; // 4 BPP and one extra row just in case some OpenGL implementations don't blit properly and cause a memory leak
+		GL_SAFE_CALL(glReadPixels, (0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, temp));
+		// GL returns all pixels flipped vertically so this needs to be corrected first
+		int stride = w * 4;
+		unsigned char* data = new unsigned char[stride * h];
+		for_iter (i, 0, h)
+		{
+			memcpy(&data[i * stride], &temp[(h - i - 1) * stride], stride);
+		}
+		delete[] temp;
+		temp = data;
+		data = NULL;
+		if (Image::convertToFormat(w, h, temp, Image::Format::RGBX, &data, format, false))
+		{
+			april::window->queueScreenshot(Image::create(w, h, data, format));
+			delete[] data;
+		}
+		delete[] temp;
+	}
+
 	void OpenGL1_RenderSystem::_setDeviceColor(const Color& color, bool forceUpdate)
 	{
 		if (forceUpdate || this->deviceState_color != color)

@@ -172,8 +172,17 @@ namespace april
 
 	void OpenGL_RenderSystem::_setDeviceViewport(cgrecti rect)
 	{
+		int height = april::window->getHeight();
+		if (this->caps.renderTarget && this->deviceState->renderTarget != NULL)
+		{
+			height = this->deviceState->renderTarget->getHeight();
+		}
+		else if (this->_currentIntermediateRenderTexture != NULL)
+		{
+			height = this->_currentIntermediateRenderTexture->getHeight();
+		}
 		// because GL has to defy screen logic and has (0,0) in the bottom left corner
-		GL_SAFE_CALL(glViewport, (rect.x, april::window->getHeight() - rect.h - rect.y, rect.w, rect.h));
+		GL_SAFE_CALL(glViewport, (rect.x, height - rect.h - rect.y, rect.w, rect.h));
 	}
 
 	void OpenGL_RenderSystem::_setDeviceDepthBuffer(bool enabled, bool writeEnabled)
@@ -412,30 +421,6 @@ namespace april
 			this->deviceState_colorStride = stride;
 			this->deviceState_colorPointer = pointer;
 		}
-	}
-
-	void OpenGL_RenderSystem::_deviceTakeScreenshot(Image::Format format, bool backBufferOnly)
-	{
-		int w = april::window->getWidth();
-		int h = april::window->getHeight();
-		unsigned char* temp = new unsigned char[w * (h + 1) * 4]; // 4 BPP and one extra row just in case some OpenGL implementations don't blit properly and cause a memory leak
-		GL_SAFE_CALL(glReadPixels, (0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, temp));
-		// GL returns all pixels flipped vertically so this needs to be corrected first
-		int stride = w * 4;
-		unsigned char* data = new unsigned char[stride * h];
-		for_iter (i, 0, h)
-		{
-			memcpy(&data[i * stride], &temp[(h - i - 1) * stride], stride);
-		}
-		delete[] temp;
-		temp = data;
-		data = NULL;
-		if (Image::convertToFormat(w, h, temp, Image::Format::RGBX, &data, format, false))
-		{
-			april::window->queueScreenshot(Image::create(w, h, data, format));
-			delete[] data;
-		}
-		delete[] temp;
 	}
 
 	Image::Format OpenGL_RenderSystem::getNativeTextureFormat(Image::Format format) const
