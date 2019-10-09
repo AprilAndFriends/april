@@ -26,7 +26,6 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 		}
 		else if (name.startsWith("iPad2,"))
 		{
-			info.name = "iPad 2";
 			if (name == "iPad2,5" || name == "iPad2,6" || name == "iPad2,7") // iPad Mini
 			{
 				info.name = "iPad Mini";
@@ -34,12 +33,13 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			}
 			else
 			{
+				info.name = "iPad 2";
 				info.displayDpi = 132;
 			}
 		}
 		else if (name.startsWith("iPad3,"))
 		{
-			if (name == "iPad3,4" || name == "iPad3,5" || name == "iPad3,6") // iPad4
+			if (name == "iPad3,4" || name == "iPad3,5" || name == "iPad3,6") // iPad 4
 			{
 				info.name = "iPad 4";
 			}
@@ -51,7 +51,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 		}
 		else if (name.startsWith("iPad4,"))
 		{
-			if (name == "iPad4,4" || name == "iPad4,5") // iPad Mini 2
+			if (name == "iPad4,4" || name == "iPad4,5" || name == "iPad4,6") // iPad Mini 2
 			{
 				info.name = "iPad Mini 2";
 				info.displayDpi = 326;
@@ -69,15 +69,12 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 		}
 		else if (name.startsWith("iPad5,"))
 		{
+			info.name = "iPad Air 2";
+			info.displayDpi = 264;
 			if (name == "iPad5,1" || name == "iPad5,2") // iPad Mini 4
 			{
 				info.name = "iPad Mini 4";
 				info.displayDpi = 326;
-			}
-			else
-			{
-				info.name = "iPad Air 2";
-				info.displayDpi = 264;
 			}
 		}
 		else if (name.startsWith("iPad6,"))
@@ -93,15 +90,29 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 		{
 			info.name = "iPad Pro";
 			info.displayDpi = 264;
-			if (name == "iPad7,5" || name == "iPad7,6") // 9.7"
+			if (name == "iPad7,5" || name == "iPad7,6")
 			{
 				info.name = "iPad 6";
+			}
+			else if (name == "iPad7,11" || name == "iPad7,12")
+			{
+				info.name = "iPad 7";
 			}
 		}
 		else if (name.startsWith("iPad8,"))
 		{
 			info.name = "iPad Pro";
 			info.displayDpi = 264;
+		}
+		else if (name.startsWith("iPad11,"))
+		{
+			info.name = "iPad Air 3";
+			info.displayDpi = 264;
+			if (name == "iPad11,1" || name == "iPad11,2") // iPad Mini 5
+			{
+				info.name = "iPad Mini 5";
+				info.displayDpi = 326;
+			}
 		}
 		else
 		{
@@ -273,12 +284,30 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 			}
 			else if (name == "iPhone11,2")
 			{
-				info.name = "iPhone XS";
+				info.name = "iPhone Xs";
 				info.displayDpi = 458;
 			}
 			else
 			{
-				info.name = "iPhone XS MAX";
+				info.name = "iPhone Xs Max";
+				info.displayDpi = 458;
+			}
+		}
+		else if (name.startsWith("iPhone12,"))
+		{
+			if (name == "iPhone11,5")
+			{
+				info.name = "iPhone 11 Pro Max";
+				info.displayDpi = 326;
+			}
+			else if (name == "iPhone11,3")
+			{
+				info.name = "iPhone 11 Pro";
+				info.displayDpi = 458;
+			}
+			else
+			{
+				info.name = "iPhone 11";
 				info.displayDpi = 458;
 			}
 		}
@@ -318,6 +347,11 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 		else if (name == "iPod7,1")
 		{
 			info.name = "iPod Touch 6";
+			info.displayDpi = 326;
+		}
+		else if (name == "iPod9,1")
+		{
+			info.name = "iPod Touch 7";
 			info.displayDpi = 326;
 		}
 		else
