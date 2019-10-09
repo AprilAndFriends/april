@@ -43,7 +43,6 @@ namespace april
 			NSArray* langs = [bundle preferredLocalizations];
 			langs = [langs count] ? langs : [NSLocale preferredLanguages];
 			NSString* locale = [langs objectAtIndex:0];
-
 			hstr fullLocale = [[NSLocale canonicalLanguageIdentifierFromString:locale] UTF8String];
 			if (fullLocale.contains("-"))
 			{
@@ -59,43 +58,27 @@ namespace april
 			}
 			info.locale = info.locale.lowered();
 			info.localeVariant = info.localeVariant.uppered();
-
 			size_t size = 255;
 			char cname[256] = {'\0'};
 			sysctlbyname("hw.machine", cname, &size, NULL, 0);
 			hstr name = cname;
 			info.name = name; // defaults for unknown devices
 			info.osType = SystemInfo::OsType::iOS;
-			info.deviceName = [[[UIDevice currentDevice] name] UTF8String];
+			info.deviceName = [[UIDevice currentDevice].name UTF8String];
+			hstr model = [[UIDevice currentDevice].model UTF8String];
 			info.displayDpi = 0;
 			UIScreen* mainScreen = [UIScreen mainScreen];
-			float scale = [mainScreen scale];
-			float nativeScale;
-			if ([mainScreen respondsToSelector:@selector(nativeScale:)])
-			{
-				nativeScale = [mainScreen nativeScale];
-			}
-			else // older than iOS8
-			{
-				nativeScale = scale;
-			}
-			info.displayScaleFactor = scale;
-			
-			int w = mainScreen.bounds.size.width * scale;
-			int h = mainScreen.bounds.size.height * scale;
-			hlog::writef(logTag, "iOS screen dimensions: %.0f x %.0f points, %d x %d pixes, scale: %.2f, nativeScale: %.2f", mainScreen.bounds.size.width, mainScreen.bounds.size.height, w, h, scale, nativeScale);
+			info.displayScaleFactor = [mainScreen scale];
+			int w = mainScreen.nativeBounds.size.width;
+			int h = mainScreen.nativeBounds.size.height;
+			hlog::writef(logTag, "iOS screen dimensions: %.0fx%.0f points, %dx%d pixels, scale: %.2f, nativeScale: %.2f", mainScreen.bounds.size.width, mainScreen.bounds.size.height, w, h, info.displayScaleFactor, [mainScreen nativeScale]);
 			// forcing a w:h ratio where w > h
-			info.displayResolution.set((float)hmax(w, h), (float)hmin(w, h));
+			info.displayResolution.set(hmax(w, h), hmin(w, h));
 			info.osVersion.set(hstr::fromUnicode([[UIDevice currentDevice].systemVersion UTF8String]));
-
+			NSProcessInfo* processInfo = [NSProcessInfo processInfo];
+			info.cpuCores = (int)[processInfo processorCount];
+			info.ram = (int)([processInfo physicalMemory] / 1024 / 1024);
 			getStaticiOSInfo(name, info);
-//			Probably not needed, in order to report correct cores on simulator using static info
-//			-- commented out by kspes@20151221, remove completely if it didn't affect anything after a while
-//			int systemCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
-//			if (systemCores > info.cpuCores)
-//			{
-//				info.cpuCores = systemCores;
-//			}
 		}
 	}
 
