@@ -40,7 +40,7 @@ class FrameJpt(Frame):
 	def _create_elements(self):
 		self.label_title = Label(self, text = self.title)
 		functions = (self._button_browse_0, self._button_browse_1, self._button_browse_2)
-		for i in xrange(0, len(self.files)):
+		for i in range(0, len(self.files)):
 			self.labels.append(Label(self, width = 10, text = self.files[i]))
 			self.entries.append(Entry(self, width = 50))
 			self.buttons.append(Button(self, width = 8, text = "Select", command = functions[i]))
@@ -48,7 +48,7 @@ class FrameJpt(Frame):
 		
 	def _setup_elements(self):
 		self.label_title.grid(padx = 6, pady = 4, row = 0, sticky = W, columnspan = 3)
-		for i in xrange(0, len(self.files)):
+		for i in range(0, len(self.files)):
 			self.labels[i].grid(padx = 6, pady = 4, row = i + 1, sticky = W)
 			self.entries[i].grid(padx = 6, pady = 4, row = i + 1, column = 1)
 			self.buttons[i].grid(padx = 6, pady = 4, row = i + 1, column = 2)

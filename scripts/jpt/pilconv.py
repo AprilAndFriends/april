@@ -4,8 +4,8 @@ import sys
 try:
 	import Image
 except:
-	print "ERROR! Please install PIL to use this script."
-	print "http://www.pythonware.com/products/pil"
+	print("ERROR! Please install PIL to use this script.")
+	print("http://www.pythonware.com/products/pil")
 	sys.exit()
 
 class PilConv:
