@@ -131,7 +131,7 @@ namespace april
 	
 	void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
 	{
-		if (info.name.startsWith("iPhone X"))
+		if (info.displayResolution.x / info.displayResolution.y >= 2.0f)
 		{
 			int notchMargin = 132; // Apple's 44pt @3x
 			if (landscape)
