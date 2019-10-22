@@ -86,8 +86,8 @@ namespace april
 				dispatch_async(dispatch_get_main_queue(),
 				^{
 					_insets = [UIApplication sharedApplication].delegate.window.safeAreaInsets;
-				}
-			});
+				});
+			}
 		}
 	}
 
