@@ -81,10 +81,10 @@ namespace april
 			info.ram = (int)([processInfo physicalMemory] / 1024 / 1024);
 			getStaticiOSInfo(name, info);
 			// making sure it's only called from the main thread
-			dispatch_async(dispatch_get_main_queue(),
-			^{
-				if (@available(iOS 11.0, *))
-				{
+			if (@available(iOS 11.0, *))
+			{
+				dispatch_async(dispatch_get_main_queue(),
+				^{
 					_insets = [UIApplication sharedApplication].delegate.window.safeAreaInsets;
 				}
 			});
