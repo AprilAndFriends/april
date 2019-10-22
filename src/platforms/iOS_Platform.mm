@@ -80,7 +80,14 @@ namespace april
 			info.cpuCores = (int)[processInfo processorCount];
 			info.ram = (int)([processInfo physicalMemory] / 1024 / 1024);
 			getStaticiOSInfo(name, info);
-			_insets = [UIApplication sharedApplication].delegate.window.safeAreaInsets;
+			// making sure it's only called from the main thread
+			dispatch_async(dispatch_get_main_queue(),
+			^{
+				if (@available(iOS 11.0, *))
+				{
+					_insets = [UIApplication sharedApplication].delegate.window.safeAreaInsets;
+				}
+			});
 		}
 	}
 
@@ -89,8 +96,7 @@ namespace april
 		static hstr bundleId;
 		if (bundleId == "")
 		{
-			NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
-			bundleId = [bundleIdentifier UTF8String];
+			bundleId = [[[NSBundle mainBundle] bundleIdentifier] UTF8String];
 		}
 		return bundleId;
 	}
@@ -139,7 +145,6 @@ namespace april
 		{
 			topLeft.set((int)(_insets.left * info.displayScaleFactor), (int)(_insets.top * info.displayScaleFactor));
 			bottomRight.set((int)(_insets.right * info.displayScaleFactor), (int)(_insets.bottom * info.displayScaleFactor));
-			return;
 		}
 	}
 
