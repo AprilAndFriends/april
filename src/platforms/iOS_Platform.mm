@@ -33,6 +33,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 namespace april
 {
 	extern SystemInfo info;
+	static UIEdgeInsets _insets;
 	
 	void _setupSystemInfo_platform(SystemInfo& info)
 	{
@@ -79,6 +80,7 @@ namespace april
 			info.cpuCores = (int)[processInfo processorCount];
 			info.ram = (int)([processInfo physicalMemory] / 1024 / 1024);
 			getStaticiOSInfo(name, info);
+			_insets = [UIApplication sharedApplication].delegate.window.safeAreaInsets;
 		}
 	}
 
@@ -131,22 +133,14 @@ namespace april
 	
 	void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
 	{
-		if (info.displayResolution.x / info.displayResolution.y >= 2.0f)
-		{
-			int notchMargin = 132; // Apple's 44pt @3x
-			if (landscape)
-			{
-				int homeButtonMargin = 69; // Apple's 23pt @3x
-				topLeft.set(notchMargin, 0);
-				bottomRight.set(notchMargin, homeButtonMargin);
-				return;
-			}
-			topLeft.set(0, notchMargin);
-			bottomRight.set(0, notchMargin);
-			return;
-		}
 		topLeft.set(0, 0);
 		bottomRight.set(0, 0);
+		if (@available(iOS 11.0, *))
+		{
+			topLeft.set((int)(_insets.left * info.displayScaleFactor), (int)(_insets.top * info.displayScaleFactor));
+			bottomRight.set((int)(_insets.right * info.displayScaleFactor), (int)(_insets.bottom * info.displayScaleFactor));
+			return;
+		}
 	}
 
 	bool _openUrl_platform(chstr url)
