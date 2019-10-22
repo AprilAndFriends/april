@@ -105,9 +105,8 @@ namespace april
 	{
 		hstr cwd = hdir::cwd();
 		hstr path;
-		NSSearchPathDirectory destDir;
-		destDir = NSDocumentDirectory;
-		NSAutoreleasePool *arp = [[NSAutoreleasePool alloc] init]; 
+		NSSearchPathDirectory destDir = NSDocumentDirectory;
+		NSAutoreleasePool* arp = [[NSAutoreleasePool alloc] init];
 		CFArrayRef destDirArr = (CFArrayRef)NSSearchPathForDirectoriesInDomains(destDir, NSUserDomainMask, YES);
 		CFStringRef destDirPath = (CFStringRef)CFArrayGetValueAtIndex(destDirArr, 0);
 		char* cpath_alloc = NULL;
