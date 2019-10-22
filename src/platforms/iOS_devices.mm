@@ -295,12 +295,12 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info)
 		}
 		else if (name.startsWith("iPhone12,"))
 		{
-			if (name == "iPhone11,5")
+			if (name == "iPhone12,5")
 			{
 				info.name = "iPhone 11 Pro Max";
 				info.displayDpi = 326;
 			}
-			else if (name == "iPhone11,3")
+			else if (name == "iPhone12,3")
 			{
 				info.name = "iPhone 11 Pro";
 				info.displayDpi = 458;
