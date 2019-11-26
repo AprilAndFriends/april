@@ -33,6 +33,7 @@ void getStaticiOSInfo(chstr name, april::SystemInfo& info);
 namespace april
 {
 	extern SystemInfo info;
+	static UIEdgeInsets _insets;
 	
 	void _setupSystemInfo_platform(SystemInfo& info)
 	{
@@ -91,6 +92,15 @@ namespace april
 			info.osVersion.set(hstr::fromUnicode([[UIDevice currentDevice].systemVersion UTF8String]));
 
 			getStaticiOSInfo(name, info);
+			// making sure it's only called from the main thread
+			if (@available(iOS 11.0, *))
+			{
+				dispatch_async(dispatch_get_main_queue(),
+				^{
+					_insets = [UIApplication sharedApplication].delegate.window.safeAreaInsets;
+				});
+			}
+
 //			Probably not needed, in order to report correct cores on simulator using static info
 //			-- commented out by kspes@20151221, remove completely if it didn't affect anything after a while
 //			int systemCores = (int)sysconf(_SC_NPROCESSORS_ONLN);
@@ -150,22 +160,13 @@ namespace april
 	
 	void _getNotchOffsets_platform(gvec2i& topLeft, gvec2i& bottomRight, bool landscape)
 	{
-		if (info.displayResolution.x / info.displayResolution.y >= 2.0f) // iPhoneX, iPhone11 with notches, hardcoded for now
-		{
-			int notchMargin = 132; // Apple's 44pt @3x
-			if (landscape)
-			{
-				int homeButtonMargin = 69; // Apple's 23pt @3x
-				topLeft.set(notchMargin, 0);
-				bottomRight.set(notchMargin, homeButtonMargin);
-				return;
-			}
-			topLeft.set(0, notchMargin);
-			bottomRight.set(0, notchMargin);
-			return;
-		}
 		topLeft.set(0, 0);
 		bottomRight.set(0, 0);
+		if (@available(iOS 11.0, *))
+		{
+			topLeft.set((int)(_insets.left * info.displayScaleFactor), (int)(_insets.top * info.displayScaleFactor));
+			bottomRight.set((int)(_insets.right * info.displayScaleFactor), (int)(_insets.bottom * info.displayScaleFactor));
+		}
 	}
 
 	bool _openUrl_platform(chstr url)
